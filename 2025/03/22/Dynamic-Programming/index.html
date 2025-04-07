@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/logo-180.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/logo-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/logo-16.png">
+  <link rel="mask-icon" href="/images/logo-512.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null,"use":"Gitalk","text":true},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="Core Concepts Steps to Solve Problems with Dynamic Programming Define the State Formulate the Transition Initialize the Boundary Conditions Choose an Order Return the Final Result   Classic Examples">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Dynamic Programming">
+<meta property="og:url" content="http://example.com/2025/03/22/Dynamic-Programming/index.html">
+<meta property="og:site_name" content="Alexandar May&#39;s Blog">
+<meta property="og:description" content="Core Concepts Steps to Solve Problems with Dynamic Programming Define the State Formulate the Transition Initialize the Boundary Conditions Choose an Order Return the Final Result   Classic Examples">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2025-03-22T02:38:23.000Z">
+<meta property="article:modified_time" content="2025-03-22T05:04:19.000Z">
+<meta property="article:author" content="Alexandar May">
+<meta property="article:tag" content="Data Structure and Alogrithm">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/2025/03/22/Dynamic-Programming/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>Dynamic Programming | Alexandar May's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+
+
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Alexandar May's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+   
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2025/03/22/Dynamic-Programming/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+      <meta itemprop="name" content="Alexandar May">
+      <meta itemprop="description" content="The Perseverance Rover">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Alexandar May's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Dynamic Programming
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-03-22 10:38:23 / Modified: 13:04:19" itemprop="dateCreated datePublished" datetime="2025-03-22T10:38:23+08:00">2025-03-22</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Data-Structure-and-Alogrithm/" itemprop="url" rel="index"><span itemprop="name">Data Structure and Alogrithm</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>6.5k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>6 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <ol>
+<li><a href="#core-concepts">Core Concepts</a></li>
+<li><a href="#step-solve">Steps to Solve Problems with Dynamic Programming</a><ul>
+<li><a href="#define">Define the State</a></li>
+<li><a href="#formulate">Formulate the Transition</a></li>
+<li><a href="#boundary-conditions">Initialize the Boundary Conditions</a></li>
+<li><a href="#choose-order">Choose an Order</a></li>
+<li><a href="#final-result">Return the Final Result</a></li>
+</ul>
+</li>
+<li><a href="#classic-examples">Classic Examples</a><ul>
+<li><a href="#fibonacci-sequence">Fibonacci Sequence</a></li>
+<li><a href="#01-knapsack-problem">0&#x2F;1 Knapsack Problem</a></li>
+</ul>
+</li>
+<li><a href="#conclusion">Conclusion</a><span id="more"></span></li>
+</ol>
+<h2 id="Core-concepts"><a href="#Core-concepts" class="headerlink" title="Core concepts"></a>Core concepts</h2><p><strong>Dynamic programming</strong><a name="core-concepts"></a> is both a mathematical optimization method and an algorithmic paradigm. The method was developed by Richard Bellman in the 1950s and has found applications in numerous fields, from aerospace engineering to economics. It is a powerful technique used to solve complex problems by breaking them down into simpler subproblems. It’s widely used in computer science for optimization problems, and once you grasp its core idea, it becomes an invaluable tool in your programming toolkit.</p>
+<p>A DP solution hinges on two properties:</p>
+<ul>
+<li><strong>Overlapping Subproblems</strong>: Means that the problem can be broken down into smaller subproblems, where the solutions to the subproblems are overlapping. Having subproblems that are overlapping means that the solution to one subproblem is part of the solution to another subproblem. I will take <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Fibonacci_sequence">Fibonacci sequence</a> as an example in the coming section.</li>
+<li><strong>Optimal Substructure</strong>: Means that the complete solution to a problem can be constructed from the solutions of its smaller subproblems. So not only must the problem have overlapping subproblems, the substructure must also be optimal so that there is a way to piece the solutions to the subproblems together to form the complete solution. I will take the classical <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Knapsack_problem">The 0&#x2F;1 Knapsack Problem</a> as an example, the optimal solution when the knapsack capacity is <code>W</code> can be derived by considering whether to include an item and combining it with the optimal solution when the knapsack capacity is <code>W - weight[i]</code>.</li>
+</ul>
+<h2 id="Steps-to-Solve-Problems-with-Dynamic-Programming"><a href="#Steps-to-Solve-Problems-with-Dynamic-Programming" class="headerlink" title="Steps to Solve Problems with Dynamic Programming:"></a>Steps to Solve Problems with Dynamic Programming:<a name="step-solve"></a></h2><h3 id="Define-the-State"><a href="#Define-the-State" class="headerlink" title="Define the State:"></a><strong>Define the State</strong>:<a name="define"></a></h3><p>Identify parameters that uniquely describe a subproblem (e.g., indices, capacities). For example, in the 0&#x2F;1 knapsack problem, the state can be defined as <code>dp[i][j]</code>, which represents the maximum value that can be obtained when considering the first i items and a knapsack capacity of j.</p>
+<h3 id="Formulate-the-Transition"><a href="#Formulate-the-Transition" class="headerlink" title="Formulate the Transition:"></a><strong>Formulate the Transition</strong>:<a name="formulate"></a></h3><p>Derive a recurrence relation that expresses the state in terms of smaller states.</p>
+<h3 id="Initialize-the-Boundary-Conditions"><a href="#Initialize-the-Boundary-Conditions" class="headerlink" title="Initialize the Boundary Conditions:"></a><strong>Initialize the Boundary Conditions</strong>:<a name="boundary-conditions"></a></h3><p>Initialize the Boundary Conditions: Determine the initial values of the states, which are usually the base cases of the problem. For example, in the 0&#x2F;1 knapsack problem, <code>dp[0][j]=0</code> (when there are no items, the value is 0 regardless of the knapsack capacity), and <code>dp[i][0]=0</code> (when the knapsack capacity is 0, the value is 0 regardless of the number of items).</p>
+<h3 id="Choose-an-Order"><a href="#Choose-an-Order" class="headerlink" title="Choose an Order:"></a><strong>Choose an Order</strong>:<a name="choose-order"></a></h3><p>Decide whether to solve states top‑down (recursion + memo) or bottom‑up (iteration + table). If using the tabular method(the latter one), fill the state table step-by-step according to the state - transition equation and the initial conditions. This step is usually achieved through nested loops.</p>
+<h3 id="Return-the-Final-Result"><a href="#Return-the-Final-Result" class="headerlink" title="Return the Final Result:"></a><strong>Return the Final Result</strong>:<a name="final-result"></a></h3><p>According to the requirements of the problem, obtain the final solution from the state table. For example, in the 0&#x2F;1 knapsack problem, the final result is dp[n][W], that is, the maximum value when considering all n items and a knapsack capacity of <code>W</code>. </p>
+<h2 id="Classic-Examples"><a href="#Classic-Examples" class="headerlink" title="Classic Examples"></a>Classic Examples</h2><h3 id="Find-The-nth-Fibonacci-Number"><a href="#Find-The-nth-Fibonacci-Number" class="headerlink" title="Find The nth Fibonacci Number"></a>Find The nth Fibonacci Number</h3><p>Let us say we want an algorithm that finds the nth Fibonacci number. We don’t know how to find the nth Fibonacci number yet, except that we want to use Dynamic Programming to design the algorithm.</p>
+<blockquote>
+<p>The Fibonacci numbers is a sequence of numbers starting with 0 and 1 and the next numbers are created by adding the two previous numbers.<br>The 8 first Fibonacci numbers are: <strong>0, 1, 1, 2, 3, 5, 8, 13</strong><br>And counting from 0, the 4th Fibonacci number <code>F(4)</code> is <strong>3</strong>.<br>In general, this is how a Fibonacci number is created based on the two previous:<br>                    <code>F(n) = F(n-1) + F(n-2)</code></p>
+</blockquote>
+<h4 id="Naive-Recursive-Approach"><a href="#Naive-Recursive-Approach" class="headerlink" title="Naive Recursive Approach"></a>Naive Recursive Approach</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">public int Fib2(int n)</span><br><span class="line">&#123;</span><br><span class="line">    if (n &lt; 2) return n;</span><br><span class="line">    return Fib(n - 1) + Fib(n - 2);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>Time  Complexity: <strong>O(2<sup>n</sup>)</strong></li>
+<li>Space Complexity: <strong>O(n)</strong><br>This works, but it is inefficient. For <code>n=40</code>, it takes noticeable time because it recalculates the same Fibonacci numbers repeatedly.</li>
+</ul>
+<h4 id="Bottom-Up-DP-Tabulation"><a href="#Bottom-Up-DP-Tabulation" class="headerlink" title="Bottom-Up DP (Tabulation)"></a>Bottom-Up DP (Tabulation)</h4><p>We can optimize it using memoization, where we store results in an array:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">public int Fib(int n)</span><br><span class="line">&#123;</span><br><span class="line">    if (n &lt; 2) return n;</span><br><span class="line">    int[] dp = new int[n + 1];</span><br><span class="line">    dp[0] = 0;</span><br><span class="line">    dp[1] = 1;</span><br><span class="line">    for(int i = 2; i &lt;= n; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        dp[i] = dp[i - 1] + dp[i - 2];</span><br><span class="line">    &#125;</span><br><span class="line">    return dp[n];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>Time  Complexity: <strong>O(n)</strong></li>
+<li>Space Complexity: <strong>O(n)</strong></li>
+</ul>
+<p>In this version, we fill the <code>dp</code> array from the base cases up to <code>n</code>. It’s still <strong>O(n)</strong> time complexity, but it avoids recursion overhead, making it slightly faster in practice.<br>More efficiently, We only need to maintain two values as we don’t need to record the whole sequence.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">public int Fib(int n)</span><br><span class="line">&#123;</span><br><span class="line">    if (n &lt; 2) return n;</span><br><span class="line">    int[] dp = new int[2] &#123;0,1&#125;;</span><br><span class="line">    for(int i = 2; i &lt;= n; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        int temp = dp[0] + dp[1];</span><br><span class="line">        dp[0] = dp[1];</span><br><span class="line">        dp[1] = temp;</span><br><span class="line">    &#125;</span><br><span class="line">    return dp[1];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>Time  Complexity: <strong>O(n)</strong></li>
+<li>Space Complexity: <strong>O(1)</strong></li>
+</ul>
+<h3 id="The-0-1-Knapsack-Problem"><a href="#The-0-1-Knapsack-Problem" class="headerlink" title="The 0&#x2F;1 Knapsack Problem"></a>The 0&#x2F;1 Knapsack Problem</h3><p>Given items with weight array weights and value array values, and a knapsack with capacity capacity, find the maximum value that can be carried.<br>Solving the 0&#x2F;1 Knapsack Problem helps businesses decide which projects to fund within a budget, maximizing profit without overspending. It is also used in logistics to optimize the loading of goods into trucks and planes, ensuring the most valuable, or highest prioritized, items are included without exceeding weight limits.</p>
+<p><u>Rules</u>:<br>    - Every item has a weight and value.<br>    - Your knapsack has a weight limit.<br>    - Choose which items you want to bring with you in the knapsack.<br>You can either take an item or not, you cannot take half of an item for example.<br><u>Goal</u>:<br>    - Maximize the total value of the items in the knapsack.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">public int Knapsack01(int[] w, int[] v, int cap)</span><br><span class="line">&#123;</span><br><span class="line">    int n = w.Length;</span><br><span class="line">    int[,] dp = new int[n + 1,cap + 1]; </span><br><span class="line">    for (int j = 0; j &lt;= cap; j++)</span><br><span class="line">    &#123;</span><br><span class="line">        dp[0, j] = 0;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    for (int i = 0; i &lt;= n; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        dp[i, 0] = 0;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    for(int i= 1; i &lt;= n; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        for(int j =1;j&lt;= cap; j++)</span><br><span class="line">        &#123;</span><br><span class="line">            if (j &lt; w[i-1])</span><br><span class="line">            &#123;</span><br><span class="line">                dp[i, j] = dp[i - 1, j];</span><br><span class="line">            &#125;</span><br><span class="line">            else</span><br><span class="line">            &#123;</span><br><span class="line">                dp[i, j] = Math.Max(dp[i - 1, j], v[i - 1] + dp[i - 1, j - w[i - 1]]);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return dp[n, cap];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Below is the optimized version, we use a one-dimensional array dp. By updating the dp array in reverse order, we ensure that each item is considered only once, thus avoiding redundant calculations and overwriting problems.</p>
+<ul>
+<li>Reduces space complexity from O(n×capacity) to O(capacity)</li>
+<li>Reverse iteration prevents value overwrite issues</li>
+<li>More efficient memory usage</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">public int Knapsack01(int[] w, int[] v, int cap)</span><br><span class="line">&#123;</span><br><span class="line">    int n = w.Length;</span><br><span class="line">    int[] dp = new int[cap + 1];</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    for (int i = 0; i &lt; n; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        //In order to select the item only once, we need to traverse from back to front </span><br><span class="line">        for (int j = cap; j &gt;= w[i]; j--)</span><br><span class="line">        &#123;</span><br><span class="line">            dp[j] = Math.Max(dp[j], v[i] + dp[j - w[i]]);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return dp[cap];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion "></a>Conclusion <a name="conclusion"></a></h2><p>Dynamic programming transforms inefficient recursive solutions into efficient ones by leveraging memory. Whether you choose memoization or tabulation, the key is to avoid redundant work. Arrays or dictionaries are perfect for storing intermediate results, making DP both practical and elegant.By reasonably defining the state, deriving the state-transition equation, and initializing the boundary conditions, we can efficiently solve complex problems using dynamic programming. In practical applications, pay attention to techniques such as space optimization to improve the efficiency and performance of the algorithm.</p>
+<link rel="stylesheet" href="/css/folder.css" type="text/css"><script src="/js/folder.js" type="text/javascript" async></script>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Data-Structure-and-Alogrithm/" rel="tag"># Data Structure and Alogrithm</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/03/15/BinaryTree/" rel="prev" title="Binary Tree">
+      <i class="fa fa-chevron-left"></i> Binary Tree
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="gitalk-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Core-concepts"><span class="nav-number">1.</span> <span class="nav-text">Core concepts</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Steps-to-Solve-Problems-with-Dynamic-Programming"><span class="nav-number">2.</span> <span class="nav-text">Steps to Solve Problems with Dynamic Programming:</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Define-the-State"><span class="nav-number">2.1.</span> <span class="nav-text">Define the State:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Formulate-the-Transition"><span class="nav-number">2.2.</span> <span class="nav-text">Formulate the Transition:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Initialize-the-Boundary-Conditions"><span class="nav-number">2.3.</span> <span class="nav-text">Initialize the Boundary Conditions:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Choose-an-Order"><span class="nav-number">2.4.</span> <span class="nav-text">Choose an Order:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Return-the-Final-Result"><span class="nav-number">2.5.</span> <span class="nav-text">Return the Final Result:</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Classic-Examples"><span class="nav-number">3.</span> <span class="nav-text">Classic Examples</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Find-The-nth-Fibonacci-Number"><span class="nav-number">3.1.</span> <span class="nav-text">Find The nth Fibonacci Number</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Naive-Recursive-Approach"><span class="nav-number">3.1.1.</span> <span class="nav-text">Naive Recursive Approach</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Bottom-Up-DP-Tabulation"><span class="nav-number">3.1.2.</span> <span class="nav-text">Bottom-Up DP (Tabulation)</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#The-0-1-Knapsack-Problem"><span class="nav-number">3.2.</span> <span class="nav-text">The 0&#x2F;1 Knapsack Problem</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Conclusion"><span class="nav-number">4.</span> <span class="nav-text">Conclusion </span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Alexandar May"
+      src="/uploads/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Alexandar May</p>
+  <div class="site-description" itemprop="description">The Perseverance Rover</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">5</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://stackoverflow.com/users/9644964/alexandar-may-msft?tab=answers&sort=votes" title="StackOverflow → https:&#x2F;&#x2F;stackoverflow.com&#x2F;users&#x2F;9644964&#x2F;alexandar-may-msft?tab&#x3D;answers&amp;sort&#x3D;votes" rel="noopener" target="_blank"><i class="fab fa-stack-overflow fa-fw"></i>StackOverflow</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Alexandar May</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">Symbols count total: </span>
+    <span title="Symbols count total">27k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">Reading time total &asymp;</span>
+    <span title="Reading time total">25 mins.</span>
+    
+    
+</div>
+
+<!--
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+   </div>
+--><script color="0,0,255" opacity="0.5" zIndex="-1" count="99" src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1/dist/canvas-nest.js"></script>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : 'Ov23liVJTzqy1rzaDXXM',
+      clientSecret: '5e785a7d46e69f7509e6c2f7730855a55944df33',
+      repo        : 'blog-comment',
+      owner       : 'BODYsuperman',
+      admin       : ['BODYsuperman'],
+      id          : '2b6a6070f85dc21c3952a03e9a6af53f',
+        language: '',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+
+</body>
+</html>
