@@ -22,27 +22,27 @@
 
   <meta name="description" content="What is RabbitMQ  Core Concepts   Environment Setup Docker (Recommended)   Managing Users and Permissions Scenario: Producer sends messages, Consumer receives messages Producer Code Consumer Code Run">
 <meta property="og:type" content="article">
-<meta property="og:title" content="RabbitMQ">
-<meta property="og:url" content="http://example.com/2025/03/29/RabbitMQ/index.html">
+<meta property="og:title" content="RabbitMQ:One broker to queue them all">
+<meta property="og:url" content="http://example.com/2025/03/29/RabbitMQ-One-broker-to-queue-them-all/index.html">
 <meta property="og:site_name" content="Alexandar May&#39;s Blog">
 <meta property="og:description" content="What is RabbitMQ  Core Concepts   Environment Setup Docker (Recommended)   Managing Users and Permissions Scenario: Producer sends messages, Consumer receives messages Producer Code Consumer Code Run">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="http://example.com/images/rabbit07.png">
-<meta property="og:image" content="http://example.com/images/rabbit06.png">
-<meta property="og:image" content="http://example.com/images/rabbit04.png">
-<meta property="og:image" content="http://example.com/images/rabbit05.png">
-<meta property="og:image" content="http://example.com/images/rabbit08.png">
-<meta property="og:image" content="http://example.com/images/rabbit09.png">
-<meta property="article:published_time" content="2025-03-29T09:31:25.000Z">
+<meta property="og:image" content="http://example.com/2025/03/29/RabbitMQ-One-broker-to-queue-them-all/rabbit07.png">
+<meta property="og:image" content="http://example.com/2025/03/29/RabbitMQ-One-broker-to-queue-them-all/rabbit06.png">
+<meta property="og:image" content="http://example.com/2025/03/29/RabbitMQ-One-broker-to-queue-them-all/rabbit04.png">
+<meta property="og:image" content="http://example.com/2025/03/29/RabbitMQ-One-broker-to-queue-them-all/rabbit05.png">
+<meta property="og:image" content="http://example.com/2025/03/29/RabbitMQ-One-broker-to-queue-them-all/rabbit08.png">
+<meta property="og:image" content="http://example.com/2025/03/29/RabbitMQ-One-broker-to-queue-them-all/rabbit09.png">
+<meta property="article:published_time" content="2025-03-29T08:48:27.000Z">
 <meta property="article:modified_time" content="2025-03-29T10:04:19.000Z">
 <meta property="article:author" content="Alexandar May">
 <meta property="article:tag" content="RabbitMQ">
 <meta property="article:tag" content="MessageQueue">
 <meta property="article:tag" content="MiddleWare">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://example.com/images/rabbit07.png">
+<meta name="twitter:image" content="http://example.com/2025/03/29/RabbitMQ-One-broker-to-queue-them-all/rabbit07.png">
 
-<link rel="canonical" href="http://example.com/2025/03/29/RabbitMQ/">
+<link rel="canonical" href="http://example.com/2025/03/29/RabbitMQ-One-broker-to-queue-them-all/">
 
 
 <script id="page-configurations">
@@ -55,7 +55,7 @@
   };
 </script>
 
-  <title>RabbitMQ | Alexandar May's Blog</title>
+  <title>RabbitMQ:One broker to queue them all | Alexandar May's Blog</title>
   
 
 
@@ -178,7 +178,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2025/03/29/RabbitMQ/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2025/03/29/RabbitMQ-One-broker-to-queue-them-all/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/uploads/avatar.jpg">
@@ -191,7 +191,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          RabbitMQ
+          RabbitMQ:One broker to queue them all
         </h1>
 
         <div class="post-meta">
@@ -202,7 +202,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2025-03-29 17:31:25 / Modified: 18:04:19" itemprop="dateCreated datePublished" datetime="2025-03-29T17:31:25+08:00">2025-03-29</time>
+              <time title="Created: 2025-03-29 16:48:27 / Modified: 18:04:19" itemprop="dateCreated datePublished" datetime="2025-03-29T16:48:27+08:00">2025-03-29</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -307,7 +307,7 @@
 <td>An application-layer protocol that defines communication standards for reliable message passing.</td>
 </tr>
 </tbody></table>
-<p><img src="/images/rabbit07.png" alt="pic"></p>
+<p><img src="/2025/03/29/RabbitMQ-One-broker-to-queue-them-all/rabbit07.png" alt="pic"></p>
 <h2 id="Environment-Setup"><a href="#Environment-Setup" class="headerlink" title="Environment Setup"></a>Environment Setup<a name="setup"></a></h2><h3 id="Docker-Recommended"><a href="#Docker-Recommended" class="headerlink" title="Docker (Recommended): "></a>Docker (Recommended): <a name="docker"></a></h3><p>Pulling the RabbitMQ Docker Imag</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull rabbitmq:management</span><br></pre></td></tr></table></figure>
 <p>Start a RabbitMQ instance and mount a custom configuration file from your host to the container.</p>
@@ -316,11 +316,11 @@
 <li>-d runs the container in detached mode.</li>
 <li>–name assigns a name to the container.</li>
 <li>-p maps the ports from the container to your host machine. Port 5672 is for RabbitMQ server, and 15672 is for the management UI.<br>Access the RabbitMQ Management Console:</li>
-<li>Open a web browser and navigate to <a target="_blank" rel="noopener" href="http://localhost:15672/">http://localhost:15672/</a>.<br><img src="/images/rabbit06.png" alt="pic"></li>
+<li>Open a web browser and navigate to <a target="_blank" rel="noopener" href="http://localhost:15672/">http://localhost:15672/</a>.<br><img src="/2025/03/29/RabbitMQ-One-broker-to-queue-them-all/rabbit06.png" alt="pic"></li>
 <li>Log in with the default username you set  and password you set in the above command.</li>
 </ul>
-<h2 id="Managing-Users-and-Permissions"><a href="#Managing-Users-and-Permissions" class="headerlink" title="Managing Users and Permissions"></a>Managing Users and Permissions<a name="user"></a></h2><p>To add a user, use rabbitmqctl add_user.<br><img src="/images/rabbit04.png" alt="pic"></p>
-<p>To grant permissions to a user in a virtual host, use rabbitmqctl set_permissions:<br><img src="/images/rabbit05.png" alt="pic"><br>To list users in a cluster, use rabbitmqctl list_users:</p>
+<h2 id="Managing-Users-and-Permissions"><a href="#Managing-Users-and-Permissions" class="headerlink" title="Managing Users and Permissions"></a>Managing Users and Permissions<a name="user"></a></h2><p>To add a user, use rabbitmqctl add_user.<br><img src="/2025/03/29/RabbitMQ-One-broker-to-queue-them-all/rabbit04.png" alt="pic"></p>
+<p>To grant permissions to a user in a virtual host, use rabbitmqctl set_permissions:<br><img src="/2025/03/29/RabbitMQ-One-broker-to-queue-them-all/rabbit05.png" alt="pic"><br>To list users in a cluster, use rabbitmqctl list_users:</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rabbitmqctl list_users</span><br></pre></td></tr></table></figure>
 <p>To delete a user, use rabbitmqctl delete_user:</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rabbitmqctl delete_user &#x27;username&#x27;</span><br></pre></td></tr></table></figure>
@@ -331,7 +331,7 @@
 <h2 id="Scenario-Producer-sends-messages-Consumer-receives-messages"><a href="#Scenario-Producer-sends-messages-Consumer-receives-messages" class="headerlink" title="Scenario: Producer sends messages, Consumer receives messages"></a>Scenario: Producer sends messages, Consumer receives messages<a name="simple"></a></h2><h3 id="Producer-Code"><a href="#Producer-Code" class="headerlink" title="Producer Code"></a>Producer Code<a name="producer"></a></h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">class Producer</span><br><span class="line">&#123;</span><br><span class="line">    private const string QueueName = &quot;simple_queue&quot;;</span><br><span class="line"></span><br><span class="line">    public static void SendMessage(string message)</span><br><span class="line">    &#123;</span><br><span class="line">        var factory = new ConnectionFactory() &#123; </span><br><span class="line">            HostName = &quot;***&quot;,</span><br><span class="line">            VirtualHost = &quot;visual_knitting&quot;,</span><br><span class="line">            UserName = &quot;admin&quot;,</span><br><span class="line">            Password = &quot;123456&quot;,</span><br><span class="line">            Port = 5672</span><br><span class="line">         &#125;;</span><br><span class="line">        using (var connection = factory.CreateConnection())</span><br><span class="line">        using (var channel = connection.CreateModel())</span><br><span class="line">        &#123;</span><br><span class="line">            channel.QueueDeclare(</span><br><span class="line">                queue: QueueName,</span><br><span class="line">                durable: false,  // Store in memory (non-persistent)</span><br><span class="line">                exclusive: false, // Non-exclusive queue</span><br><span class="line">                autoDelete: false, // Do not auto-delete when empty</span><br><span class="line">                arguments: null</span><br><span class="line">            );</span><br><span class="line"></span><br><span class="line">            var body = Encoding.UTF8.GetBytes(message);</span><br><span class="line">            channel.BasicPublish(</span><br><span class="line">                exchange: &quot;&quot;,       // Use default exchange (direct to queue)</span><br><span class="line">                routingKey: QueueName, // Routing key matches queue name</span><br><span class="line">                basicProperties: null,</span><br><span class="line">                body: body</span><br><span class="line">            );</span><br><span class="line">            Console.WriteLine($&quot;[Producer] Sent: &#123;message&#125;&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h3 id="Consumer-Code"><a href="#Consumer-Code" class="headerlink" title="Consumer Code"></a>Consumer Code<a name="consumer"></a></h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">class Consumer</span><br><span class="line">&#123;</span><br><span class="line">    private const string QueueName = &quot;simple_queue&quot;;</span><br><span class="line"></span><br><span class="line">    public static void StartListening()</span><br><span class="line">    &#123;</span><br><span class="line">        var factory = new ConnectionFactory() &#123; </span><br><span class="line"></span><br><span class="line">            var factory = new ConnectionFactory() &#123; </span><br><span class="line">            HostName = &quot;***&quot;,</span><br><span class="line">            VirtualHost = &quot;visual_knitting&quot;,</span><br><span class="line">            UserName = &quot;admin&quot;,</span><br><span class="line">            Password = &quot;123456&quot;,</span><br><span class="line">            Port = 5672</span><br><span class="line">         &#125;;</span><br><span class="line">         &#125;;</span><br><span class="line">        using (var connection = factory.CreateConnection())</span><br><span class="line">        using (var channel = connection.CreateModel())</span><br><span class="line">        &#123;</span><br><span class="line">            channel.QueueDeclare(QueueName, false, false, false, null);</span><br><span class="line"></span><br><span class="line">            var consumer = new EventingBasicConsumer(channel);</span><br><span class="line">            consumer.Received += (model, ea) =&gt;</span><br><span class="line">            &#123;</span><br><span class="line">                var body = ea.Body.ToArray();</span><br><span class="line">                var message = Encoding.UTF8.GetString(body);</span><br><span class="line">                Console.WriteLine($&quot;[Consumer] Received: &#123;message&#125;&quot;);</span><br><span class="line">            &#125;;</span><br><span class="line"></span><br><span class="line">            channel.BasicConsume(</span><br><span class="line">                queue: QueueName,</span><br><span class="line">                autoAck: true,  // Auto-acknowledge messages upon receipt</span><br><span class="line">                consumer: consumer</span><br><span class="line">            );</span><br><span class="line"></span><br><span class="line">            Console.WriteLine(&quot;Consumer is waiting for messages. Press any key to exit.&quot;);</span><br><span class="line">            Console.ReadKey();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h3 id="Run-the-test"><a href="#Run-the-test" class="headerlink" title="Run the test:"></a>Run the test:<a name="test"></a></h3><p>Send a message from the Producer:<br> <img src="/images/rabbit08.png" alt="pic"><br>Consumer output:<br> <img src="/images/rabbit09.png" alt="pic"></p>
+<h3 id="Run-the-test"><a href="#Run-the-test" class="headerlink" title="Run the test:"></a>Run the test:<a name="test"></a></h3><p>Send a message from the Producer:<br> <img src="/2025/03/29/RabbitMQ-One-broker-to-queue-them-all/rabbit08.png" alt="pic"><br>Consumer output:<br> <img src="/2025/03/29/RabbitMQ-One-broker-to-queue-them-all/rabbit09.png" alt="pic"></p>
 <h2 id="Advanced-Features-Ensure-Reliable-Message-Delivery"><a href="#Advanced-Features-Ensure-Reliable-Message-Delivery" class="headerlink" title="Advanced Features: Ensure Reliable Message Delivery"></a>Advanced Features: Ensure Reliable Message Delivery<a name="ensure"></a></h2><h3 id="Message-Persistence"><a href="#Message-Persistence" class="headerlink" title="Message Persistence"></a>Message Persistence<a name="persistence"></a></h3><p><strong>Scenario: Prevent message loss on RabbitMQ restart</strong></p>
 <ul>
 <li>Queue Persistence: Set durable: true when declaring the queue.</li>
@@ -370,7 +370,10 @@
     <a href="/2025/03/22/Dynamic-Programming/" rel="prev" title="Dynamic Programming">
       <i class="fa fa-chevron-left"></i> Dynamic Programming
     </a></div>
-      <div class="post-nav-item"></div>
+      <div class="post-nav-item">
+    <a href="/2025/04/05/Hash-Table/" rel="next" title="Hash Table">
+      Hash Table <i class="fa fa-chevron-right"></i>
+    </a></div>
     </div>
       </footer>
     
@@ -446,7 +449,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">6</span>
+          <span class="site-state-item-count">7</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -501,13 +504,13 @@
       <i class="fa fa-chart-area"></i>
     </span>
       <span class="post-meta-item-text">Symbols count total: </span>
-    <span title="Symbols count total">34k</span>
+    <span title="Symbols count total">44k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">Reading time total &asymp;</span>
-    <span title="Reading time total">30 mins.</span>
+    <span title="Reading time total">40 mins.</span>
     
     
 </div>
@@ -600,7 +603,7 @@ NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
       repo        : 'blog-comment',
       owner       : 'BODYsuperman',
       admin       : ['BODYsuperman'],
-      id          : '949f8135ee4019329c039020a4eeaa82',
+      id          : '290fb9ba7331560714ca55cbdbd66bd0',
         language: '',
       distractionFreeMode: true
     });
