@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/logo-180.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/logo-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/logo-16.png">
+  <link rel="mask-icon" href="/images/logo-512.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null,"use":"Gitalk","text":true},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="Introduction   Stack Overview   Key Features   Applications   Queue Overview   Key Features   Applications   Types of Queues   Implementing Stack   With Array   With Linked List   Implementing Queue">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Stack &amp; Queue">
+<meta property="og:url" content="http://example.com/2025/04/12/Stack-Queue/index.html">
+<meta property="og:site_name" content="Alexandar May&#39;s Blog">
+<meta property="og:description" content="Introduction   Stack Overview   Key Features   Applications   Queue Overview   Key Features   Applications   Types of Queues   Implementing Stack   With Array   With Linked List   Implementing Queue">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/2025/03/15/BinaryTree/sq1.png">
+<meta property="article:published_time" content="2025-04-12T10:40:32.000Z">
+<meta property="article:modified_time" content="2025-04-12T10:04:19.000Z">
+<meta property="article:author" content="Alexandar May">
+<meta property="article:tag" content="Data Structure and Alogrithm">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2025/03/15/BinaryTree/sq1.png">
+
+<link rel="canonical" href="http://example.com/2025/04/12/Stack-Queue/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>Stack & Queue | Alexandar May's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+
+
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Alexandar May's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+   
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2025/04/12/Stack-Queue/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+      <meta itemprop="name" content="Alexandar May">
+      <meta itemprop="description" content="The Perseverance Rover">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Alexandar May's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Stack & Queue
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-04-12 18:40:32 / Modified: 18:04:19" itemprop="dateCreated datePublished" datetime="2025-04-12T18:40:32+08:00">2025-04-12</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Data-Structure-and-Alogrithm/" itemprop="url" rel="index"><span itemprop="name">Data Structure and Alogrithm</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>7.6k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>7 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <ol>
+<li><a href="#introduction">Introduction</a>  </li>
+<li><a href="#stack-overview">Stack Overview</a>  <ul>
+<li><a href="#key-features-of-stack">Key Features</a>  </li>
+<li><a href="#applications-of-stack">Applications</a></li>
+</ul>
+</li>
+<li><a href="#queue-overview">Queue Overview</a>  <ul>
+<li><a href="#key-features-of-queue">Key Features</a>  </li>
+<li><a href="#applications-of-queue">Applications</a>  </li>
+<li><a href="#type">Types of Queues</a></li>
+</ul>
+</li>
+<li><a href="#implementing-stack">Implementing Stack</a>  <ul>
+<li><a href="#stack-implementation-using-array">With Array</a>  </li>
+<li><a href="#stack-implementation-using-linked-list">With Linked List</a></li>
+</ul>
+</li>
+<li><a href="#implementing-queue">Implementing Queue</a>  <ul>
+<li><a href="#queue-implementation-using-array">With Array</a>  </li>
+<li><a href="#queue-implementation-using-linked-list">With Linked List</a></li>
+</ul>
+</li>
+<li><a href="#implementing-queue-with-two-stacks">Implementing Queue with Two Stacks</a>  </li>
+<li><a href="#implementing-stack-with-one-queue">Implement Stack using just one Queue</a>  </li>
+<li><a href="#summary">Summary</a>  <span id="more"></span></li>
+</ol>
+<h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction<a name="introduction"></a></h2><p>Stack is a linear data structure that follows <strong>Last In, First Out(LIFO)</strong> Principle, the last element inserted is the first to be popped out. It means both insertion and deletion operations happen at one end only.While Queue follows the principle of <strong>First In, First out (FIFO)</strong>, where the first element added to the queue is the first one to be removed. </p>
+<ul>
+<li><strong>Stack</strong>: Follows <strong>Last-In-First-Out (LIFO)</strong>.  </li>
+<li><strong>Queue</strong>: Follows <strong>First-In-First-Out (FIFO)</strong>.</li>
+</ul>
+<h2 id="Stack-Overview"><a href="#Stack-Overview" class="headerlink" title="Stack Overview"></a>Stack Overview<a name="stack-overview"></a></h2><h3 id="Key-Features-of-Stack"><a href="#Key-Features-of-Stack" class="headerlink" title="Key Features of Stack"></a>Key Features of Stack<a name="key-features-of-stack"></a></h3><ul>
+<li><strong>Top</strong>: The only accessible end for insertions&#x2F;deletions.  </li>
+<li><strong>Operations</strong>:  <ul>
+<li>push() to insert an element into the stack</li>
+<li>pop() to remove an element from the stack</li>
+<li>top() Returns the top element of the stack.</li>
+<li>isEmpty() returns true if stack is empty else false.</li>
+<li>isFull() returns true if the stack is full else false.</li>
+</ul>
+</li>
+</ul>
+<h3 id="Applications-of-Stack"><a href="#Applications-of-Stack" class="headerlink" title="Applications of Stack"></a>Applications of Stack<a name="applications-of-stack"></a></h3><ul>
+<li>Function call management (call stack).  </li>
+<li>Undo&#x2F;Redo functionality.  </li>
+<li>Syntax parsing (e.g., matching parentheses).</li>
+</ul>
+<h2 id="Queue-Overview"><a href="#Queue-Overview" class="headerlink" title="Queue Overview"></a>Queue Overview<a name="queue-overview"></a></h2><h3 id="Key-Features-of-Queue"><a href="#Key-Features-of-Queue" class="headerlink" title="Key Features of Queue"></a>Key Features of Queue<a name="key-features-of-queue"></a></h3><ul>
+<li><strong>Front&#x2F;Back</strong>: Elements enter at the back and exit from the front.  </li>
+<li><strong>Operations</strong>:  <ul>
+<li>Enqueue: Adds an element to the end (rear) of the queue. If the queue is full, an overflow error occurs.</li>
+<li>Dequeue: Removes the element from the front of the queue. If the queue is empty, an underflow error occurs.</li>
+<li>Peek&#x2F;Front: Returns the element at the front without removing it.</li>
+<li>Size: Returns the number of elements in the queue.</li>
+<li>isEmpty: Returns true if the queue is empty, otherwise false.</li>
+<li>isFull: Returns true if the queue is full, otherwise false.</li>
+</ul>
+</li>
+</ul>
+<h3 id="Applications-of-Queue"><a href="#Applications-of-Queue" class="headerlink" title="Applications of Queue"></a>Applications of Queue<a name="applications-of-queue"></a></h3><ul>
+<li>Task scheduling (e.g., printers managing print jobs).  </li>
+<li>Breadth-First Search (BFS) in graph algorithms.  </li>
+<li>Buffering data streams.</li>
+</ul>
+<h3 id="Types-of-Queues"><a href="#Types-of-Queues" class="headerlink" title="Types of Queues"></a>Types of Queues<a name="type"></a></h3><ol>
+<li>Simple Queue: Simple Queue simply follows FIFO Structure. We can only insert the element at the back and remove the element from the front of the queue. A simple queue is efficiently implemented either using a linked list or a circular array.</li>
+<li>Double-Ended Queue (Deque): In a double-ended queue the insertion and deletion operations, both can be performed from both ends. They are of two types:<br>Input Restricted Queue: This is a simple queue. In this type of queue, the input can be taken from only one end but deletion can be done from any of the ends.<br>Output Restricted Queue: This is also a simple queue. In this type of queue, the input can be taken from both ends but deletion can be done from only one end.</li>
+<li>Priority Queue: A priority queue is a special queue where the elements are accessed based on the priority assigned to them. They are of two types:</li>
+</ol>
+<ul>
+<li>Ascending Priority Queue: In Ascending Priority Queue, the elements are arranged in increasing order of their priority values. Element with smallest priority value is popped first.</li>
+<li>Descending Priority Queue: In Descending Priority Queue, the elements are arranged in decreasing order of their priority values. Element with largest priority is popped first.<br><img src="/2025/03/15/BinaryTree/sq1.png" alt="pic"></li>
+</ul>
+<h2 id="Implementing-Stack"><a href="#Implementing-Stack" class="headerlink" title="Implementing Stack "></a>Implementing Stack <a name="implementing-stack"></a></h2><h3 id="Stack-Implementation-Using-Array"><a href="#Stack-Implementation-Using-Array" class="headerlink" title="Stack Implementation Using Array"></a>Stack Implementation Using Array<a name="stack-implementation-using-array"></a></h3><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">ArrayStack</span>&lt;<span class="title">T</span>&gt;</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> T[] _array;</span><br><span class="line">    <span class="keyword">private</span> <span class="built_in">int</span> _topIndex;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">ArrayStack</span>(<span class="params"><span class="built_in">int</span> capacity = <span class="number">4</span></span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        _array = <span class="keyword">new</span> T[capacity];</span><br><span class="line">        _topIndex = <span class="number">-1</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Push</span>(<span class="params">T item</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (_topIndex == _array.Length - <span class="number">1</span>)</span><br><span class="line">            Array.Resize(<span class="keyword">ref</span> _array, _array.Length * <span class="number">2</span>);</span><br><span class="line">        _array[++_topIndex] = item;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> T <span class="title">Pop</span>()</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (IsEmpty()) <span class="keyword">throw</span> <span class="keyword">new</span> InvalidOperationException(<span class="string">&quot;Stack is empty.&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> _array[_topIndex--];</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> T <span class="title">Peek</span>()</span> =&gt; IsEmpty() ? <span class="keyword">throw</span> <span class="keyword">new</span> InvalidOperationException(<span class="string">&quot;Stack is empty.&quot;</span>) : _array[_topIndex];</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="built_in">bool</span> <span class="title">IsEmpty</span>()</span> =&gt; _topIndex == <span class="number">-1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="Stack-Implementation-Using-Linked-List"><a href="#Stack-Implementation-Using-Linked-List" class="headerlink" title="Stack Implementation Using Linked List"></a>Stack Implementation Using Linked List<a name="stack-implementation-using-linked-list"></a></h3><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Node</span>&lt;<span class="title">T</span>&gt;</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> T Value;</span><br><span class="line">    <span class="keyword">public</span> Node&lt;T&gt; Next;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Node</span>(<span class="params">T <span class="keyword">value</span></span>)</span> =&gt; Value = <span class="keyword">value</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">LinkedListStack</span>&lt;<span class="title">T</span>&gt;</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> Node&lt;T&gt; _top;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Push</span>(<span class="params">T item</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">var</span> newNode = <span class="keyword">new</span> Node&lt;T&gt;(item) &#123; Next = _top &#125;;</span><br><span class="line">        _top = newNode;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> T <span class="title">Pop</span>()</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (_top == <span class="literal">null</span>) <span class="keyword">throw</span> <span class="keyword">new</span> InvalidOperationException(<span class="string">&quot;Stack is empty.&quot;</span>);</span><br><span class="line">        <span class="keyword">var</span> <span class="keyword">value</span> = _top.Value;</span><br><span class="line">        _top = _top.Next;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">value</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> T <span class="title">Peek</span>()</span> =&gt; _top == <span class="literal">null</span> ? <span class="keyword">throw</span> <span class="keyword">new</span> InvalidOperationException(<span class="string">&quot;Stack is empty.&quot;</span>) : _top.Value;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="built_in">bool</span> <span class="title">IsEmpty</span>()</span> =&gt; _top == <span class="literal">null</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="Implementing-Queue"><a href="#Implementing-Queue" class="headerlink" title="Implementing Queue"></a>Implementing Queue<a name="implementing-queue"></a></h2><h3 id="Queue-Implementation-Using-Array"><a href="#Queue-Implementation-Using-Array" class="headerlink" title="Queue Implementation Using Array"></a>Queue Implementation Using Array<a name="queue-implementation-using-array"></a></h3><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">ArrayQueue</span>&lt;<span class="title">T</span>&gt;</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> T[] _array;</span><br><span class="line">    <span class="keyword">private</span> <span class="built_in">int</span> _front;</span><br><span class="line">    <span class="keyword">private</span> <span class="built_in">int</span> _back;</span><br><span class="line">    <span class="keyword">private</span> <span class="built_in">int</span> _count;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">ArrayQueue</span>(<span class="params"><span class="built_in">int</span> capacity = <span class="number">4</span></span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        _array = <span class="keyword">new</span> T[capacity];</span><br><span class="line">        _front = <span class="number">0</span>;</span><br><span class="line">        _back = <span class="number">0</span>;</span><br><span class="line">        _count = <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Enqueue</span>(<span class="params">T item</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (_count == _array.Length)</span><br><span class="line">            Array.Resize(<span class="keyword">ref</span> _array, _array.Length * <span class="number">2</span>);</span><br><span class="line">        _array[_back % _array.Length] = item;</span><br><span class="line">        _back++;</span><br><span class="line">        _count++;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> T <span class="title">Dequeue</span>()</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (IsEmpty()) <span class="keyword">throw</span> <span class="keyword">new</span> InvalidOperationException(<span class="string">&quot;Queue is empty.&quot;</span>);</span><br><span class="line">        <span class="keyword">var</span> <span class="keyword">value</span> = _array[_front % _array.Length];</span><br><span class="line">        _front++;</span><br><span class="line">        _count--;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">value</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> T <span class="title">Peek</span>()</span> =&gt; IsEmpty() ? <span class="keyword">throw</span> <span class="keyword">new</span> InvalidOperationException(<span class="string">&quot;Queue is empty.&quot;</span>) : _array[_front % _array.Length];</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="built_in">bool</span> <span class="title">IsEmpty</span>()</span> =&gt; _count == <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="Queue-Implementation-Using-Linked-List"><a href="#Queue-Implementation-Using-Linked-List" class="headerlink" title="Queue Implementation Using Linked List"></a>Queue Implementation Using Linked List<a name="queue-implementation-using-linked-list"></a></h3><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">LinkedListQueue</span>&lt;<span class="title">T</span>&gt;</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> Node&lt;T&gt; _front;</span><br><span class="line">    <span class="keyword">private</span> Node&lt;T&gt; _back;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Enqueue</span>(<span class="params">T item</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">var</span> newNode = <span class="keyword">new</span> Node&lt;T&gt;(item);</span><br><span class="line">        <span class="keyword">if</span> (_back != <span class="literal">null</span>) _back.Next = newNode;</span><br><span class="line">        _back = newNode;</span><br><span class="line">        <span class="keyword">if</span> (_front == <span class="literal">null</span>) _front = _back;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> T <span class="title">Dequeue</span>()</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (_front == <span class="literal">null</span>) <span class="keyword">throw</span> <span class="keyword">new</span> InvalidOperationException(<span class="string">&quot;Queue is empty.&quot;</span>);</span><br><span class="line">        <span class="keyword">var</span> <span class="keyword">value</span> = _front.Value;</span><br><span class="line">        _front = _front.Next;</span><br><span class="line">        <span class="keyword">if</span> (_front == <span class="literal">null</span>) _back = <span class="literal">null</span>;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">value</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> T <span class="title">Peek</span>()</span> =&gt; _front == <span class="literal">null</span> ? <span class="keyword">throw</span> <span class="keyword">new</span> InvalidOperationException(<span class="string">&quot;Queue is empty.&quot;</span>) : _front.Value;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="built_in">bool</span> <span class="title">IsEmpty</span>()</span> =&gt; _front == <span class="literal">null</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="Implementing-Queue-using-Stacks"><a href="#Implementing-Queue-using-Stacks" class="headerlink" title="Implementing Queue using Stacks "></a>Implementing Queue using Stacks <a name="implementing-queue-with-two-stacks"></a></h2><p>Use two stacks (inStack and outStack) to simulate FIFO behavior:</p>
+<ul>
+<li>inStack handles enqueue operations (Enqueue).</li>
+<li>outStack handles dequeue operations (Dequeue). When outStack is empty, pop all elements from inStack and push them into outStack to reverse the order.<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">StackToQueue</span>&lt;<span class="title">T</span>&gt; &#123;</span><br><span class="line">    <span class="keyword">private</span> Stack&lt;T&gt; _inStack;</span><br><span class="line">    <span class="keyword">private</span> Stack&lt;T&gt; _outStack;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">StackToQueue</span>()</span> &#123;</span><br><span class="line">        _inStack = <span class="keyword">new</span> Stack&lt;T&gt;();</span><br><span class="line">        _outStack = <span class="keyword">new</span> Stack&lt;T&gt;();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Enqueue</span>(<span class="params">T item</span>)</span> &#123;</span><br><span class="line">        _inStack.Push(item);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> T <span class="title">Dequeue</span>()</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (IsEmpty()) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> InvalidOperationException(<span class="string">&quot;Queue is empty&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        MoveInToOut(); <span class="comment">// Ensure outStack has elements</span></span><br><span class="line">        <span class="keyword">return</span> _outStack.Pop();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> T <span class="title">Peek</span>()</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (IsEmpty()) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> InvalidOperationException(<span class="string">&quot;Queue is empty&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        MoveInToOut();</span><br><span class="line">        <span class="keyword">return</span> _outStack.Peek();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">MoveInToOut</span>()</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (_outStack.Count == <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">while</span> (_inStack.Count &gt; <span class="number">0</span>) &#123;</span><br><span class="line">                _outStack.Push(_inStack.Pop());</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="built_in">bool</span> <span class="title">IsEmpty</span>()</span> =&gt; _inStack.Count + _outStack.Count == <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">int</span> Count =&gt; _inStack.Count + _outStack.Count;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="Implement-Stack-using-just-one-Queue"><a href="#Implement-Stack-using-just-one-Queue" class="headerlink" title="Implement Stack using just one Queue"></a>Implement Stack using just one Queue<a name="implementing-stack-with-one-queue"></a></h3><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">MyStack</span> &#123;</span><br><span class="line">    Queue&lt;<span class="built_in">int</span>&gt; myQueue;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">MyStack</span>()</span> &#123;</span><br><span class="line">        myQueue = <span class="keyword">new</span> Queue&lt;<span class="built_in">int</span>&gt;();</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Push</span>(<span class="params"><span class="built_in">int</span> x</span>)</span> &#123;</span><br><span class="line">        myQueue.Enqueue(x);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="built_in">int</span> <span class="title">Pop</span>()</span> &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; myQueue.Count<span class="number">-1</span>; i++)</span><br><span class="line">        &#123;</span><br><span class="line">            myQueue.Enqueue(myQueue.Dequeue());</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> myQueue.Dequeue();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//reuse Pop()</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="built_in">int</span> <span class="title">Top</span>()</span> &#123;</span><br><span class="line">        <span class="built_in">int</span> res = Pop();</span><br><span class="line">        myQueue.Enqueue(res);</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="built_in">bool</span> <span class="title">Empty</span>()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> (myQueue.Count == <span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="Summary"><a href="#Summary" class="headerlink" title="Summary"></a>Summary<a name="summary"></a></h2><table>
+<thead>
+<tr>
+<th align="center"><strong>Data Structure</strong></th>
+<th align="center"><strong>Logical Characteristic</strong></th>
+<th align="center"><strong>Typical Scenarios</strong></th>
+<th align="center"><strong>Advantages of Array-base</strong></th>
+<th align="center"><strong>Advantages of Linked List-based</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">Stack</td>
+<td align="center">LIFO</td>
+<td align="center">Expression evaluation, Undo operations</td>
+<td align="center">Fast access</td>
+<td align="center">No need for pre-allocation</td>
+</tr>
+<tr>
+<td align="center">Queue</td>
+<td align="center">FIFO</td>
+<td align="center">Task scheduling, Message queues</td>
+<td align="center">Continuous memory</td>
+<td align="center">Flexible dynamic resizing</td>
+</tr>
+</tbody></table>
+<h3 id="Significance-of-Mutual-Implementation"><a href="#Significance-of-Mutual-Implementation" class="headerlink" title="Significance of Mutual Implementation"></a>Significance of Mutual Implementation</h3><ul>
+<li><strong>Queue using Stacks</strong>: Understand the conversion between LIFO and FIFO, leveraging stack properties to simulate queue behavior.</li>
+<li><strong>Stack using Queues</strong>: Deeply understand the underlying principles of data structures and master algorithm design in complex scenarios.</li>
+</ul>
+<link rel="stylesheet" href="/css/folder.css" type="text/css"><script src="/js/folder.js" type="text/javascript" async></script>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Data-Structure-and-Alogrithm/" rel="tag"># Data Structure and Alogrithm</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/04/05/Hash-Table/" rel="prev" title="Hash Table">
+      <i class="fa fa-chevron-left"></i> Hash Table
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="gitalk-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Introduction"><span class="nav-number">1.</span> <span class="nav-text">Introduction</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Stack-Overview"><span class="nav-number">2.</span> <span class="nav-text">Stack Overview</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Key-Features-of-Stack"><span class="nav-number">2.1.</span> <span class="nav-text">Key Features of Stack</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Applications-of-Stack"><span class="nav-number">2.2.</span> <span class="nav-text">Applications of Stack</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Queue-Overview"><span class="nav-number">3.</span> <span class="nav-text">Queue Overview</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Key-Features-of-Queue"><span class="nav-number">3.1.</span> <span class="nav-text">Key Features of Queue</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Applications-of-Queue"><span class="nav-number">3.2.</span> <span class="nav-text">Applications of Queue</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Types-of-Queues"><span class="nav-number">3.3.</span> <span class="nav-text">Types of Queues</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Implementing-Stack"><span class="nav-number">4.</span> <span class="nav-text">Implementing Stack </span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Stack-Implementation-Using-Array"><span class="nav-number">4.1.</span> <span class="nav-text">Stack Implementation Using Array</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Stack-Implementation-Using-Linked-List"><span class="nav-number">4.2.</span> <span class="nav-text">Stack Implementation Using Linked List</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Implementing-Queue"><span class="nav-number">5.</span> <span class="nav-text">Implementing Queue</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Queue-Implementation-Using-Array"><span class="nav-number">5.1.</span> <span class="nav-text">Queue Implementation Using Array</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Queue-Implementation-Using-Linked-List"><span class="nav-number">5.2.</span> <span class="nav-text">Queue Implementation Using Linked List</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Implementing-Queue-using-Stacks"><span class="nav-number">6.</span> <span class="nav-text">Implementing Queue using Stacks </span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Implement-Stack-using-just-one-Queue"><span class="nav-number">6.1.</span> <span class="nav-text">Implement Stack using just one Queue</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Summary"><span class="nav-number">7.</span> <span class="nav-text">Summary</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Significance-of-Mutual-Implementation"><span class="nav-number">7.1.</span> <span class="nav-text">Significance of Mutual Implementation</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Alexandar May"
+      src="/uploads/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Alexandar May</p>
+  <div class="site-description" itemprop="description">The Perseverance Rover</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">8</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://stackoverflow.com/users/9644964/alexandar-may-msft?tab=answers&sort=votes" title="StackOverflow → https:&#x2F;&#x2F;stackoverflow.com&#x2F;users&#x2F;9644964&#x2F;alexandar-may-msft?tab&#x3D;answers&amp;sort&#x3D;votes" rel="noopener" target="_blank"><i class="fab fa-stack-overflow fa-fw"></i>StackOverflow</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Alexandar May</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">Symbols count total: </span>
+    <span title="Symbols count total">52k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">Reading time total &asymp;</span>
+    <span title="Reading time total">47 mins.</span>
+    
+    
+</div>
+
+<!--
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+   </div>
+--><script color="0,0,255" opacity="0.5" zIndex="-1" count="99" src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1/dist/canvas-nest.js"></script>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : 'Ov23liVJTzqy1rzaDXXM',
+      clientSecret: '5e785a7d46e69f7509e6c2f7730855a55944df33',
+      repo        : 'blog-comment',
+      owner       : 'BODYsuperman',
+      admin       : ['BODYsuperman'],
+      id          : '1533fa552ac6173c448c0fcd8237a5a5',
+        language: '',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+
+</body>
+</html>
