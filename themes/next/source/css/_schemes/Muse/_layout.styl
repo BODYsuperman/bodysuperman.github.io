@@ -1,0 +1,32 @@
+.header-inner, .main-inner, .footer-inner {
+  +mobile() {
+    width: auto;
+  }
+}
+
+.header-inner {
+  padding-top: 0px !important;
+
+  +mobile() {
+    padding-top: 50px;
+  }
+}
+
+.main-inner {
+  margin-top: 10px;
+  padding-bottom: 20px;
+}
+
+.content {
+
+  padding-top: 20px;
+  +mobile() {
+    padding-top: 35px;
+  }
+}
+
+
+embed {
+  display: block;
+  margin: 0 auto 25px auto;
+}
