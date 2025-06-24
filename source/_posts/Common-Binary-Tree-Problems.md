@@ -30,13 +30,13 @@ Hello everyone, this is Alex. As we know, a tree is a frequently-used data struc
 ```
 file system
 -----------
-     /    <-- root
-  /      \
-...       home
-      /          \
-   ugrad        course
-    /       /      |     \
-  ...      cs101  cs112  cs113  
+       /   <-- root
+      /      \
+...          home
+    /          \
+   ugrad       course
+ /            /    |   \
+...        cs101 cs112 cs113  
 ```
 Also there are some other applications using trees:
 - 1. Manipulate hierarchical data.
