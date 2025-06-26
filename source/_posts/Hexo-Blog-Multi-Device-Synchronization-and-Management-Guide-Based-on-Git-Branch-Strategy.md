@@ -44,6 +44,7 @@ A couple of days ago, I am thinking if I can update blogs using multiple devices
 - Sudden situations (such as computer failure) leading to source code loss
 
 So I write this to build a complete Hexo multi-device synchronization solution through Git branch strategies, achieving seamless synchronization and management of source code across devices.
+
 ## Core Principles of Hexo Multi-Device Synchronization<a name="core-principles-of-hexo"></a>
 ### Hexo Directory Structure and Version Control Strategy<a name="hexo-directory"></a>
 
