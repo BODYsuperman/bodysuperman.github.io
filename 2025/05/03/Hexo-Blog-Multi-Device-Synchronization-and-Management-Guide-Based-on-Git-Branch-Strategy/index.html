@@ -12,12 +12,12 @@
 
 <link rel="stylesheet" href="/css/main.css">
 
-
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|monospace:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
 <link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null,"use":"Gitalk","text":true},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null,"use":"Gitalk","text":true},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="Introduction: The Necessity of Multi-Device Collaboration Core Principles of Hexo Multi-Device Synchronization Hexo Directory Structure and Version Control Strategy Git Branch Division of Labor Model">
@@ -184,6 +184,7 @@
     <i class="fa fa-arrow-up"></i>
     <span>0%</span>
   </div>
+  <div class="reading-progress-bar"></div>
 
 
     <main class="main">
@@ -309,13 +310,13 @@
 </li>
 <li><a href="#conclusion-best-practices">Conclusion: Best Practices for Multi-Device Synchronization</a><span id="more"></span></li>
 </ul>
-<h2 id="Introduction-The-Necessity-of-Multi-Device-Collaboration"><a href="#Introduction-The-Necessity-of-Multi-Device-Collaboration" class="headerlink" title="Introduction:The Necessity of Multi-Device Collaboration"></a>Introduction:The Necessity of Multi-Device Collaboration<a name="introduction-the-necessity"></a></h2><p>A couple of days ago, I am thinking if I can update blogs using multiple devices (such as home computers, office computers, laptops) which has become the norm from my perspective.As an efficient static blog generator,Hexo’s default deployment mechanism only pushes static files to GitHub Pages, but source code files (Markdown articles, theme configurations, plugins) are not synchronized, leading to the following pain points in multi-device collaboration:</p>
+<h2 id="Introduction-The-Necessity-of-Multi-Device-Collaboration"><a href="#Introduction-The-Necessity-of-Multi-Device-Collaboration" class="headerlink" title="Introduction:The Necessity of Multi-Device Collaboration"></a>Introduction:The Necessity of Multi-Device Collaboration<a name="introduction-the-necessity"></a></h2><p>A couple of days ago, I am thinking if I can update blogs using multiple devices (such as home computers, office computers, laptops) which has become the norm from my perspective. As an efficient static blog generator, Hexo’s default deployment mechanism only pushes static files to GitHub Pages, but source code files (Markdown articles, theme configurations, plugins) are not synchronized, leading to the following pain points in multi-device collaboration:</p>
 <ul>
 <li>Scattered storage of source code, unable to manage uniformly</li>
 <li>Repeated construction of environment configurations, low efficiency</li>
 <li>Sudden situations (such as computer failure) leading to source code loss</li>
 </ul>
-<p>So I write this to build a complete Hexo multi-device synchronization solution through Git branch strategies,achieving seamless synchronization and management of source code across devices.</p>
+<p>So I write this to build a complete Hexo multi-device synchronization solution through Git branch strategies, achieving seamless synchronization and management of source code across devices.</p>
 <h2 id="Core-Principles-of-Hexo-Multi-Device-Synchronization"><a href="#Core-Principles-of-Hexo-Multi-Device-Synchronization" class="headerlink" title="Core Principles of Hexo Multi-Device Synchronization"></a>Core Principles of Hexo Multi-Device Synchronization<a name="core-principles-of-hexo"></a></h2><h3 id="Hexo-Directory-Structure-and-Version-Control-Strategy"><a href="#Hexo-Directory-Structure-and-Version-Control-Strategy" class="headerlink" title="Hexo Directory Structure and Version Control Strategy"></a>Hexo Directory Structure and Version Control Strategy<a name="hexo-directory"></a></h3><p>In the Hexo blog directory structure, the following <code>files/directories</code> require special attention:</p>
 <table>
 <thead>
@@ -589,7 +590,7 @@
 </div>
 
 <!--
-  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a>
    </div>
 --><script color="0,0,255" opacity="0.5" zIndex="-1" count="99" src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1/dist/canvas-nest.js"></script>
 
@@ -637,7 +638,7 @@
 <script src="/js/motion.js"></script>
 
 
-<script src="/js/schemes/muse.js"></script>
+<script src="/js/schemes/pisces.js"></script>
 
 
 <script src="/js/next-boot.js"></script>
