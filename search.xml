@@ -518,245 +518,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Dynamic Programming</title>
-    <url>/2025/03/22/Dynamic-Programming/</url>
-    <content><![CDATA[<ol>
-<li><a href="#core-concepts">Core Concepts</a></li>
-<li><a href="#step-solve">Steps to Solve Problems with Dynamic Programming</a><ul>
-<li><a href="#define">Define the State</a></li>
-<li><a href="#formulate">Formulate the Transition</a></li>
-<li><a href="#boundary-conditions">Initialize the Boundary Conditions</a></li>
-<li><a href="#choose-order">Choose an Order</a></li>
-<li><a href="#final-result">Return the Final Result</a></li>
-</ul>
-</li>
-<li><a href="#classic-examples">Classic Examples</a><ul>
-<li><a href="#fibonacci-sequence">Fibonacci Sequence</a></li>
-<li><a href="#01-knapsack-problem">0&#x2F;1 Knapsack Problem</a></li>
-</ul>
-</li>
-<li><a href="#conclusion">Conclusion</a><span id="more"></span></li>
-</ol>
-<h2 id="Core-concepts"><a href="#Core-concepts" class="headerlink" title="Core concepts"></a>Core concepts</h2><p><strong>Dynamic programming</strong><a name="core-concepts"></a> is both a mathematical optimization method and an algorithmic paradigm. The method was developed by Richard Bellman in the 1950s and has found applications in numerous fields, from aerospace engineering to economics. It is a powerful technique used to solve complex problems by breaking them down into simpler subproblems. It’s widely used in computer science for optimization problems, and once you grasp its core idea, it becomes an invaluable tool in your programming toolkit.</p>
-<p>A DP solution hinges on two properties:</p>
-<ul>
-<li><strong>Overlapping Subproblems</strong>: Means that the problem can be broken down into smaller subproblems, where the solutions to the subproblems are overlapping. Having subproblems that are overlapping means that the solution to one subproblem is part of the solution to another subproblem. I will take <a href="https://en.wikipedia.org/wiki/Fibonacci_sequence">Fibonacci sequence</a> as an example in the coming section.</li>
-<li><strong>Optimal Substructure</strong>: Means that the complete solution to a problem can be constructed from the solutions of its smaller subproblems. So not only must the problem have overlapping subproblems, the substructure must also be optimal so that there is a way to piece the solutions to the subproblems together to form the complete solution. I will take the classical <a href="https://en.wikipedia.org/wiki/Knapsack_problem">The 0&#x2F;1 Knapsack Problem</a> as an example, the optimal solution when the knapsack capacity is <code>W</code> can be derived by considering whether to include an item and combining it with the optimal solution when the knapsack capacity is <code>W - weight[i]</code>.</li>
-</ul>
-<h2 id="Steps-to-Solve-Problems-with-Dynamic-Programming"><a href="#Steps-to-Solve-Problems-with-Dynamic-Programming" class="headerlink" title="Steps to Solve Problems with Dynamic Programming:"></a>Steps to Solve Problems with Dynamic Programming:<a name="step-solve"></a></h2><h3 id="Define-the-State"><a href="#Define-the-State" class="headerlink" title="Define the State:"></a><strong>Define the State</strong>:<a name="define"></a></h3><p>Identify parameters that uniquely describe a subproblem (e.g., indices, capacities). For example, in the 0&#x2F;1 knapsack problem, the state can be defined as <code>dp[i][j]</code>, which represents the maximum value that can be obtained when considering the first i items and a knapsack capacity of j.</p>
-<h3 id="Formulate-the-Transition"><a href="#Formulate-the-Transition" class="headerlink" title="Formulate the Transition:"></a><strong>Formulate the Transition</strong>:<a name="formulate"></a></h3><p>Derive a recurrence relation that expresses the state in terms of smaller states.</p>
-<h3 id="Initialize-the-Boundary-Conditions"><a href="#Initialize-the-Boundary-Conditions" class="headerlink" title="Initialize the Boundary Conditions:"></a><strong>Initialize the Boundary Conditions</strong>:<a name="boundary-conditions"></a></h3><p>Initialize the Boundary Conditions: Determine the initial values of the states, which are usually the base cases of the problem. For example, in the 0&#x2F;1 knapsack problem, <code>dp[0][j]=0</code> (when there are no items, the value is 0 regardless of the knapsack capacity), and <code>dp[i][0]=0</code> (when the knapsack capacity is 0, the value is 0 regardless of the number of items).</p>
-<h3 id="Choose-an-Order"><a href="#Choose-an-Order" class="headerlink" title="Choose an Order:"></a><strong>Choose an Order</strong>:<a name="choose-order"></a></h3><p>Decide whether to solve states top‑down (recursion + memo) or bottom‑up (iteration + table). If using the tabular method(the latter one), fill the state table step-by-step according to the state - transition equation and the initial conditions. This step is usually achieved through nested loops.</p>
-<h3 id="Return-the-Final-Result"><a href="#Return-the-Final-Result" class="headerlink" title="Return the Final Result:"></a><strong>Return the Final Result</strong>:<a name="final-result"></a></h3><p>According to the requirements of the problem, obtain the final solution from the state table. For example, in the 0&#x2F;1 knapsack problem, the final result is dp[n][W], that is, the maximum value when considering all n items and a knapsack capacity of <code>W</code>. </p>
-<h2 id="Classic-Examples"><a href="#Classic-Examples" class="headerlink" title="Classic Examples"></a>Classic Examples</h2><h3 id="Find-The-nth-Fibonacci-Number"><a href="#Find-The-nth-Fibonacci-Number" class="headerlink" title="Find The nth Fibonacci Number"></a>Find The nth Fibonacci Number<a name="fibonacci-sequence"></a></h3><p>Let us say we want an algorithm that finds the nth Fibonacci number. We don’t know how to find the nth Fibonacci number yet, except that we want to use Dynamic Programming to design the algorithm.</p>
-<blockquote>
-<p>The Fibonacci numbers is a sequence of numbers starting with 0 and 1 and the next numbers are created by adding the two previous numbers.<br>The 8 first Fibonacci numbers are: <strong>0, 1, 1, 2, 3, 5, 8, 13</strong><br>And counting from 0, the 4th Fibonacci number <code>F(4)</code> is <strong>3</strong>.<br>In general, this is how a Fibonacci number is created based on the two previous:<br>                    <code>F(n) = F(n-1) + F(n-2)</code></p>
-</blockquote>
-<h4 id="Naive-Recursive-Approach"><a href="#Naive-Recursive-Approach" class="headerlink" title="Naive Recursive Approach"></a>Naive Recursive Approach</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public int Fib2(int n)</span><br><span class="line">&#123;</span><br><span class="line">    if (n &lt; 2) return n;</span><br><span class="line">    return Fib(n - 1) + Fib(n - 2);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>Time  Complexity: <strong>O(2<sup>n</sup>)</strong></li>
-<li>Space Complexity: <strong>O(n)</strong><br>This works, but it is inefficient. For <code>n=40</code>, it takes noticeable time because it recalculates the same Fibonacci numbers repeatedly.</li>
-</ul>
-<h4 id="Bottom-Up-DP-Tabulation"><a href="#Bottom-Up-DP-Tabulation" class="headerlink" title="Bottom-Up DP (Tabulation)"></a>Bottom-Up DP (Tabulation)</h4><p>We can optimize it using memoization, where we store results in an array:</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public int Fib(int n)</span><br><span class="line">&#123;</span><br><span class="line">    if (n &lt; 2) return n;</span><br><span class="line">    int[] dp = new int[n + 1];</span><br><span class="line">    dp[0] = 0;</span><br><span class="line">    dp[1] = 1;</span><br><span class="line">    for(int i = 2; i &lt;= n; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        dp[i] = dp[i - 1] + dp[i - 2];</span><br><span class="line">    &#125;</span><br><span class="line">    return dp[n];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>Time  Complexity: <strong>O(n)</strong></li>
-<li>Space Complexity: <strong>O(n)</strong></li>
-</ul>
-<p>In this version, we fill the <code>dp</code> array from the base cases up to <code>n</code>. It’s still <strong>O(n)</strong> time complexity, but it avoids recursion overhead, making it slightly faster in practice.<br>More efficiently, We only need to maintain two values as we don’t need to record the whole sequence.</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public int Fib(int n)</span><br><span class="line">&#123;</span><br><span class="line">    if (n &lt; 2) return n;</span><br><span class="line">    int[] dp = new int[2] &#123;0,1&#125;;</span><br><span class="line">    for(int i = 2; i &lt;= n; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        int temp = dp[0] + dp[1];</span><br><span class="line">        dp[0] = dp[1];</span><br><span class="line">        dp[1] = temp;</span><br><span class="line">    &#125;</span><br><span class="line">    return dp[1];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>Time  Complexity: <strong>O(n)</strong></li>
-<li>Space Complexity: <strong>O(1)</strong></li>
-</ul>
-<h3 id="The-0-1-Knapsack-Problem"><a href="#The-0-1-Knapsack-Problem" class="headerlink" title="The 0&#x2F;1 Knapsack Problem"></a>The 0&#x2F;1 Knapsack Problem<a name="01-knapsack-problem"></a></h3><p>Given items with weight array weights and value array values, and a knapsack with capacity capacity, find the maximum value that can be carried.<br>Solving the 0&#x2F;1 Knapsack Problem helps businesses decide which projects to fund within a budget, maximizing profit without overspending. It is also used in logistics to optimize the loading of goods into trucks and planes, ensuring the most valuable, or highest prioritized, items are included without exceeding weight limits.</p>
-<p><u>Rules</u>:<br>    - Every item has a weight and value.<br>    - Your knapsack has a weight limit.<br>    - Choose which items you want to bring with you in the knapsack.<br>You can either take an item or not, you cannot take half of an item for example.<br><u>Goal</u>:<br>    - Maximize the total value of the items in the knapsack.</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public int Knapsack01(int[] w, int[] v, int cap)</span><br><span class="line">&#123;</span><br><span class="line">    int n = w.Length;</span><br><span class="line">    int[,] dp = new int[n + 1,cap + 1]; </span><br><span class="line">    for (int j = 0; j &lt;= cap; j++)</span><br><span class="line">    &#123;</span><br><span class="line">        dp[0, j] = 0;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    for (int i = 0; i &lt;= n; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        dp[i, 0] = 0;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    for(int i= 1; i &lt;= n; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        for(int j =1;j&lt;= cap; j++)</span><br><span class="line">        &#123;</span><br><span class="line">            if (j &lt; w[i-1])</span><br><span class="line">            &#123;</span><br><span class="line">                dp[i, j] = dp[i - 1, j];</span><br><span class="line">            &#125;</span><br><span class="line">            else</span><br><span class="line">            &#123;</span><br><span class="line">                dp[i, j] = Math.Max(dp[i - 1, j], v[i - 1] + dp[i - 1, j - w[i - 1]]);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return dp[n, cap];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>Below is the optimized version, we use a one-dimensional array dp. By updating the dp array in reverse order, we ensure that each item is considered only once, thus avoiding redundant calculations and overwriting problems.</p>
-<ul>
-<li>Reduces space complexity from O(n×capacity) to O(capacity)</li>
-<li>Reverse iteration prevents value overwrite issues</li>
-<li>More efficient memory usage</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public int Knapsack01(int[] w, int[] v, int cap)</span><br><span class="line">&#123;</span><br><span class="line">    int n = w.Length;</span><br><span class="line">    int[] dp = new int[cap + 1];</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    for (int i = 0; i &lt; n; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        //In order to select the item only once, we need to traverse from back to front </span><br><span class="line">        for (int j = cap; j &gt;= w[i]; j--)</span><br><span class="line">        &#123;</span><br><span class="line">            dp[j] = Math.Max(dp[j], v[i] + dp[j - w[i]]);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return dp[cap];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion "></a>Conclusion <a name="conclusion"></a></h2><p>Dynamic programming transforms inefficient recursive solutions into efficient ones by leveraging memory. Whether you choose memoization or tabulation, the key is to avoid redundant work. Arrays or dictionaries are perfect for storing intermediate results, making DP both practical and elegant.By reasonably defining the state, deriving the state-transition equation, and initializing the boundary conditions, we can efficiently solve complex problems using dynamic programming. In practical applications, pay attention to techniques such as space optimization to improve the efficiency and performance of the algorithm.</p>
-<link rel="stylesheet" href="/css/folder.css" type="text/css"><script src="/js/folder.js" type="text/javascript" async></script>]]></content>
-      <categories>
-        <category>Data Structure and Alogrithm</category>
-      </categories>
-      <tags>
-        <tag>Data Structure and Alogrithm</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Hexo Blog Multi-Device Synchronization and Management Guide Based on Git Branch Strategy</title>
-    <url>/2025/05/03/Hexo-Blog-Multi-Device-Synchronization-and-Management-Guide-Based-on-Git-Branch-Strategy/</url>
-    <content><![CDATA[<ul>
-<li><a href="#introduction-the-necessity">Introduction: The Necessity of Multi-Device Collaboration</a></li>
-<li><a href="#core-principles-of-hexo">Core Principles of Hexo Multi-Device Synchronization</a><ul>
-<li><a href="#hexo-directory">Hexo Directory Structure and Version Control Strategy</a></li>
-<li><a href="#git-branch">Git Branch Division of Labor Model</a></li>
-</ul>
-</li>
-<li><a href="#old-computer-operation">Old Computer Operation Guide: Building Remote Synchronization Foundation</a><ul>
-<li><a href="#creating-and-configuring-remote-branches">Creating and Configuring Remote Branches</a></li>
-<li><a href="#local-environment">Local Environment and Remote Repository Synchronization</a></li>
-<li><a href="#gitignore-key-configuration">.gitignore Key Configuration</a></li>
-</ul>
-</li>
-<li><a href="#new-computer-environment">New Computer Environment Setup: Restoring Blog from Remote Repository</a><ul>
-<li><a href="#ssh-key-configuration">SSH Key Configuration and Environment Dependency Installation</a></li>
-<li><a href="#remote-repository">Remote Repository Cloning and Dependency Recovery</a></li>
-<li><a href="#first-run-verification">First Run Verification and Configuration Check</a></li>
-</ul>
-</li>
-<li><a href="#daily-update-workflow">Daily Update Workflow: Dual Branch Collaborative Operation</a><ul>
-<li><a href="#source-code">Source Code Update and Submission Process</a></li>
-<li><a href="#static-file">Static File Deployment and Branch Synchronization</a></li>
-<li><a href="#automation-script">Automation Script to Optimize Workflow</a></li>
-</ul>
-</li>
-<li><a href="#common-problems">Common Problems and Solutions</a><ul>
-<li><a href="#branch-switching">Branch Switching Conflict Handling</a></li>
-<li><a href="#environment-dependency">Environment Dependency Inconsistency Issue</a></li>
-<li><a href="#theme-and-pluginy">Theme and Plugin Synchronization Abnormality</a></li>
-</ul>
-</li>
-<li><a href="#advanced-tips-private">Advanced Tips: Private Repositories and Multi-Branch Strategies</a><ul>
-<li><a href="#private-repositories">Private Repositories to Protect Source Code Security</a></li>
-<li><a href="#multi-branch-collaborative-development-model">Multi-Branch Collaborative Development Model</a></li>
-</ul>
-</li>
-<li><a href="#conclusion-best-practices">Conclusion: Best Practices for Multi-Device Synchronization</a><span id="more"></span></li>
-</ul>
-<h2 id="Introduction-The-Necessity-of-Multi-Device-Collaboration"><a href="#Introduction-The-Necessity-of-Multi-Device-Collaboration" class="headerlink" title="Introduction:The Necessity of Multi-Device Collaboration"></a>Introduction:The Necessity of Multi-Device Collaboration<a name="introduction-the-necessity"></a></h2><p>A couple of days ago, I am thinking if I can update blogs using multiple devices (such as home computers, office computers, laptops) which has become the norm from my perspective. As an efficient static blog generator, Hexo’s default deployment mechanism only pushes static files to GitHub Pages, but source code files (Markdown articles, theme configurations, plugins) are not synchronized, leading to the following pain points in multi-device collaboration:</p>
-<ul>
-<li>Scattered storage of source code, unable to manage uniformly</li>
-<li>Repeated construction of environment configurations, low efficiency</li>
-<li>Sudden situations (such as computer failure) leading to source code loss</li>
-</ul>
-<p>So I write this to build a complete Hexo multi-device synchronization solution through Git branch strategies, achieving seamless synchronization and management of source code across devices.</p>
-<h2 id="Core-Principles-of-Hexo-Multi-Device-Synchronization"><a href="#Core-Principles-of-Hexo-Multi-Device-Synchronization" class="headerlink" title="Core Principles of Hexo Multi-Device Synchronization"></a>Core Principles of Hexo Multi-Device Synchronization<a name="core-principles-of-hexo"></a></h2><h3 id="Hexo-Directory-Structure-and-Version-Control-Strategy"><a href="#Hexo-Directory-Structure-and-Version-Control-Strategy" class="headerlink" title="Hexo Directory Structure and Version Control Strategy"></a>Hexo Directory Structure and Version Control Strategy<a name="hexo-directory"></a></h3><p>In the Hexo blog directory structure, the following <code>files/directories</code> require special attention:</p>
-<table>
-<thead>
-<tr>
-<th>Directory&#x2F;File</th>
-<th>Function</th>
-<th>Version Control Strategy</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><code>node_modules/</code></td>
-<td>Dependency package directory</td>
-<td>Ignored (regenerated via <code>package.json</code>)</td>
-</tr>
-<tr>
-<td><code>themes/</code></td>
-<td>Theme files</td>
-<td>Must be synchronized (contains custom configurations)</td>
-</tr>
-<tr>
-<td><code>public/</code></td>
-<td>Static generated files</td>
-<td>Ignored (generated by <code>hexo g</code>)</td>
-</tr>
-<tr>
-<td><code>source/</code></td>
-<td>Blog source code(Markdown)</td>
-<td>Must be synchronized</td>
-</tr>
-<tr>
-<td><code>_config.yml</code></td>
-<td>Global configuration file</td>
-<td>Must be synchronized</td>
-</tr>
-<tr>
-<td><code>package.json</code></td>
-<td>Dependency description file</td>
-<td>Must be synchronized</td>
-</tr>
-</tbody></table>
-<h3 id="Git-Branch-Division-of-Labor-Model"><a href="#Git-Branch-Division-of-Labor-Model" class="headerlink" title="Git Branch Division of Labor Model"></a>Git Branch Division of Labor Model<a name="git-branch"></a></h3><p>A dual-branch strategy is higly recommended:</p>
-<ul>
-<li><strong>Source branch (e.g., <code>hexo01</code> or <code>source</code>)</strong>: Stores Hexo source code (Markdown, themes, configurations)</li>
-<li><strong>Deployment branch (e.g., <code>master</code> or <code>gh-pages</code>)</strong>: Stores static generated files (automatically pushed by <code>hexo deploy</code>)</li>
-</ul>
-<h4 id="Core-logic"><a href="#Core-logic" class="headerlink" title="Core logic:"></a>Core logic:</h4><ol>
-<li>The source branch serves as the “development branch” where all manual modifications are completed.</li>
-<li>The deployment branch serves as the “production branch” only receiving static generated files. When pushing to the “development branch” using <code>git push origin hexo01</code>, the “production branch” will be automatically synchronized.</li>
-<li>The two branches are isolated through <code>.gitignore</code> configuration.</li>
-</ol>
-<h2 id="Old-Computer-Operation-Guide"><a href="#Old-Computer-Operation-Guide" class="headerlink" title="Old Computer Operation Guide:"></a>Old Computer Operation Guide:</h2><h3 id="Creating-and-Configuring-Remote-Branches"><a href="#Creating-and-Configuring-Remote-Branches" class="headerlink" title="Creating and Configuring Remote Branches"></a>Creating and Configuring Remote Branches<a name="creating-and-configuring-remote-branches"></a></h3><ol>
-<li><strong>Remote repository preparation</strong><br>Create a repository <code>username.github.io</code> on GitHub and execute the following operations:<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Create hexo source branch</span></span><br><span class="line">git branch hexo</span><br><span class="line"><span class="comment"># Set hexo as the default branch, this is a key step!</span></span><br><span class="line">git branch --set-upstream-to=origin/hexo hexo</span><br></pre></td></tr></table></figure></li>
-<li><strong>Local environment initialization</strong><br>  Execute in the blog root directory:<br>  Initialize Git repository<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git init</span><br><span class="line"><span class="comment"># Add remote repository</span></span><br><span class="line">git remote add origin git@github.com:username/username.github.io.git</span><br></pre></td></tr></table></figure></li>
-</ol>
-<h3 id="Local-Environment-and-Remote-Repository-Synchronization"><a href="#Local-Environment-and-Remote-Repository-Synchronization" class="headerlink" title="Local Environment and Remote Repository Synchronization"></a>Local Environment and Remote Repository Synchronization<a name="local-environmen"></a></h3><ol>
-<li>Clean and copy files<br>Retain the <strong>.git</strong> folder and delete other files<br>Copy the original Hexo directory (except .deploy_git&#x2F;) to the current directory<br>Commit source code to the remote branch<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Add all files</span></span><br><span class="line">git add .</span><br><span class="line"><span class="comment"># Commit changes</span></span><br><span class="line">git commit -m <span class="string">&quot;Init hexo source branch&quot;</span></span><br><span class="line"><span class="comment"># Push to the remote hexo branch</span></span><br><span class="line">git push origin hexo</span><br></pre></td></tr></table></figure></li>
-</ol>
-<h3 id="gitignore-Key-Configuration"><a href="#gitignore-Key-Configuration" class="headerlink" title=".gitignore Key Configuration "></a>.gitignore Key Configuration <a name="gitignore-key-configuratio"></a></h3><p>Create <strong>.gitignore</strong> file in the project root directory with the following content:</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">.DS_Store</span><br><span class="line">Thumbs.db</span><br><span class="line">db.json</span><br><span class="line">*.log</span><br><span class="line">node_modules/</span><br><span class="line">public/</span><br><span class="line">.deploy*/</span><br></pre></td></tr></table></figure>
-<h2 id="New-Computer-Environment-Setup"><a href="#New-Computer-Environment-Setup" class="headerlink" title="New Computer Environment Setup "></a>New Computer Environment Setup <a name="new-computer-environment"></a></h2><h3 id="SSH-Key-Configuration-and-Environment-Dependency-Installation"><a href="#SSH-Key-Configuration-and-Environment-Dependency-Installation" class="headerlink" title="SSH Key Configuration and Environment Dependency Installation "></a>SSH Key Configuration and Environment Dependency Installation <a name="ssh-key-configuratio"></a></h3><ol>
-<li>Generate and add SSH key<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ssh-keygen -t rsa -C <span class="string">&quot;your_email@example.com&quot;</span></span><br></pre></td></tr></table></figure></li>
-<li>Add the generated public key like <strong>id_rsa.pub</strong> to <code>GitHub&#39;s Settings &gt; SSH and GPG Keys</code>, mac is under <code>~/.ssh</code> and windows is under <code>C:\Users\username\.ssh</code></li>
-<li>Configure Git global information<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git config --global user.name <span class="string">&quot;YourName&quot;</span></span><br><span class="line">git config --global user.email <span class="string">&quot;your_email@example.com&quot;</span></span><br></pre></td></tr></table></figure></li>
-</ol>
-<h3 id="Remote-Repository-Cloning-and-Dependency-Recovery"><a href="#Remote-Repository-Cloning-and-Dependency-Recovery" class="headerlink" title="Remote Repository Cloning and Dependency Recovery "></a>Remote Repository Cloning and Dependency Recovery <a name="remote-repository"></a></h3><ol>
-<li>Clone the source branch<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git <span class="built_in">clone</span> -b hexo git@github.com:username/username.github.io.git blog</span><br><span class="line"><span class="built_in">cd</span> blog</span><br></pre></td></tr></table></figure>
-2.Install dependencies<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Install Hexo CLI</span></span><br><span class="line">npm install -g hexo-cli</span><br><span class="line"><span class="comment"># Install project dependencies</span></span><br><span class="line">npm install</span><br><span class="line"><span class="comment"># Install deployment plugins</span></span><br><span class="line">npm install hexo-deployer-git</span><br></pre></td></tr></table></figure>
-<strong>Note</strong>:make sure you use the same version of (Node.js)[<a href="https://nodejs.org/en/download]">https://nodejs.org/en/download]</a> to install the tools above otherwise there may be some compatibility problems.</li>
-</ol>
-<h3 id="First-Run-Verification-and-Configuration-Check"><a href="#First-Run-Verification-and-Configuration-Check" class="headerlink" title="First Run Verification and Configuration Check "></a>First Run Verification and Configuration Check <a name="first-run-verification"></a></h3><p>Local preview verification</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo clean</span><br><span class="line">hexo g &amp;&amp; hexo s</span><br></pre></td></tr></table></figure>
-<p>Access <a href="http://localhost:4000/">http://localhost:4000</a> to confirm the blog runs normally<br>Deployment configuration check<br>Ensure the deployment configuration in <code>_config.yml</code> points to the <code>master</code> branch:</p>
-<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">deploy:</span></span><br><span class="line">  <span class="attr">type:</span> <span class="string">git</span></span><br><span class="line">  <span class="attr">repo:</span> <span class="string">git@github.com:username/username.github.io.git</span></span><br><span class="line">  <span class="attr">branch:</span> <span class="string">master</span></span><br></pre></td></tr></table></figure>
-<h2 id="Daily-Update-Workflow-Dual-Branch-Collaborative-Operation"><a href="#Daily-Update-Workflow-Dual-Branch-Collaborative-Operation" class="headerlink" title="Daily Update Workflow: Dual Branch Collaborative Operation "></a>Daily Update Workflow: Dual Branch Collaborative Operation <a name="daily-update-workflow"></a></h2><h3 id="Source-Code-Update-and-Submission-Process"><a href="#Source-Code-Update-and-Submission-Process" class="headerlink" title="Source Code Update and Submission Process "></a>Source Code Update and Submission Process <a name="source-cod"></a></h3><ol>
-<li>Pull the latest source code<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git pull origin hexo</span><br></pre></td></tr></table></figure></li>
-<li>Modify and commit<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Add a new article</span></span><br><span class="line">hexo new <span class="string">&quot;New Article&quot;</span></span><br><span class="line"><span class="comment"># Commit changes</span></span><br><span class="line">git add .</span><br><span class="line">git commit -m <span class="string">&quot;Update blog content&quot;</span></span><br><span class="line"><span class="comment"># Push to the remote source branch</span></span><br><span class="line">git push origin hexo</span><br></pre></td></tr></table></figure></li>
-</ol>
-<h3 id="Automation-Script-to-Optimize-Workflow"><a href="#Automation-Script-to-Optimize-Workflow" class="headerlink" title="Automation Script to Optimize Workflow "></a>Automation Script to Optimize Workflow <a name="automation-script"></a></h3><p>Create a <code>deploy.sh</code> script to simplify the process:</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"><span class="comment"># ================ Hexo Automated Deployment Script (hexo01 branch) ================</span></span><br><span class="line"><span class="comment"># Usage: Execute in the blog root directory with ./deploy.sh &quot;Commit message&quot;</span></span><br><span class="line"><span class="comment"># If no commit message is provided, a default timestamp message will be used</span></span><br><span class="line"><span class="comment"># ================================================================</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Define color output</span></span><br><span class="line">COLOR_RED=<span class="string">&quot;\033[31m&quot;</span></span><br><span class="line">COLOR_GREEN=<span class="string">&quot;\033[32m&quot;</span></span><br><span class="line">COLOR_YELLOW=<span class="string">&quot;\033[33m&quot;</span></span><br><span class="line">COLOR_RESET=<span class="string">&quot;\033[0m&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Check if commit message is provided, otherwise use default</span></span><br><span class="line">COMMIT_MSG=<span class="variable">$&#123;1:-&quot;Auto deploy at $(date +&#x27;%Y-%m-%d %H:%M:%S&#x27;)&quot;&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">&quot;<span class="variable">$&#123;COLOR_YELLOW&#125;</span>==== Starting Hexo Blog Deployment ====<span class="variable">$&#123;COLOR_RESET&#125;</span>&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Step 0: Pull latest source code (hexo01 branch)</span></span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">&quot;<span class="variable">$&#123;COLOR_GREEN&#125;</span>[0/4] Pulling latest source code...<span class="variable">$&#123;COLOR_RESET&#125;</span>&quot;</span></span><br><span class="line">git pull origin hexo01</span><br><span class="line"><span class="keyword">if</span> [ $? -ne 0 ]; <span class="keyword">then</span></span><br><span class="line">    <span class="built_in">echo</span> -e <span class="string">&quot;<span class="variable">$&#123;COLOR_RED&#125;</span>Failed to pull source code! Please resolve conflicts manually and retry.<span class="variable">$&#123;COLOR_RESET&#125;</span>&quot;</span></span><br><span class="line">    <span class="built_in">exit</span> 1</span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Step 1: Clean and generate static files</span></span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">&quot;<span class="variable">$&#123;COLOR_GREEN&#125;</span>[1/4] Cleaning and generating static files...<span class="variable">$&#123;COLOR_RESET&#125;</span>&quot;</span></span><br><span class="line">hexo clean &amp;&amp; hexo generate</span><br><span class="line"><span class="keyword">if</span> [ $? -ne 0 ]; <span class="keyword">then</span></span><br><span class="line">    <span class="built_in">echo</span> -e <span class="string">&quot;<span class="variable">$&#123;COLOR_RED&#125;</span>Failed to generate static files!<span class="variable">$&#123;COLOR_RESET&#125;</span>&quot;</span></span><br><span class="line">    <span class="built_in">exit</span> 1</span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"><span class="comment"># Step 2: Deploy to GitHub Pages</span></span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">&quot;<span class="variable">$&#123;COLOR_GREEN&#125;</span>[2/4] Deploying to GitHub Pages...<span class="variable">$&#123;COLOR_RESET&#125;</span>&quot;</span></span><br><span class="line">hexo deploy</span><br><span class="line"><span class="keyword">if</span> [ $? -ne 0 ]; <span class="keyword">then</span></span><br><span class="line">    <span class="built_in">echo</span> -e <span class="string">&quot;<span class="variable">$&#123;COLOR_RED&#125;</span>Failed to deploy to GitHub Pages!<span class="variable">$&#123;COLOR_RESET&#125;</span>&quot;</span></span><br><span class="line">    <span class="built_in">exit</span> 1</span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"><span class="comment"># Step 3: Commit source code changes to hexo01 branch</span></span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">&quot;<span class="variable">$&#123;COLOR_GREEN&#125;</span>[3/4] Committing source code changes...<span class="variable">$&#123;COLOR_RESET&#125;</span>&quot;</span></span><br><span class="line">git add .</span><br><span class="line">git commit -m <span class="string">&quot;<span class="variable">$COMMIT_MSG</span>&quot;</span></span><br><span class="line"><span class="keyword">if</span> [ $? -ne 0 ]; <span class="keyword">then</span></span><br><span class="line">    <span class="built_in">echo</span> -e <span class="string">&quot;<span class="variable">$&#123;COLOR_YELLOW&#125;</span>No changes to commit.<span class="variable">$&#123;COLOR_RESET&#125;</span>&quot;</span></span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">    <span class="comment"># Step 4: Push source code to GitHub</span></span><br><span class="line">    <span class="built_in">echo</span> -e <span class="string">&quot;<span class="variable">$&#123;COLOR_GREEN&#125;</span>[4/4] Pushing source code to GitHub (hexo01 branch)...<span class="variable">$&#123;COLOR_RESET&#125;</span>&quot;</span></span><br><span class="line">    git push origin hexo01</span><br><span class="line">    <span class="keyword">if</span> [ $? -ne 0 ]; <span class="keyword">then</span></span><br><span class="line">        <span class="built_in">echo</span> -e <span class="string">&quot;<span class="variable">$&#123;COLOR_RED&#125;</span>Failed to push source code to GitHub!<span class="variable">$&#123;COLOR_RESET&#125;</span>&quot;</span></span><br><span class="line">        <span class="built_in">exit</span> 1</span><br><span class="line">    <span class="keyword">fi</span></span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">&quot;<span class="variable">$&#123;COLOR_YELLOW&#125;</span>==== Hexo Blog Deployment Completed ====<span class="variable">$&#123;COLOR_RESET&#125;</span>&quot;</span></span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">&quot;<span class="variable">$&#123;COLOR_GREEN&#125;</span>View blog: https://your-username.github.io<span class="variable">$&#123;COLOR_RESET&#125;</span>&quot;</span></span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">&quot;<span class="variable">$&#123;COLOR_GREEN&#125;</span>View source: https://github.com/your-username/your-repo/tree/hexo01<span class="variable">$&#123;COLOR_RESET&#125;</span>&quot;</span></span><br></pre></td></tr></table></figure>
-<p>Grant execution permissions and run:</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">chmod</span> +x deploy.sh</span><br><span class="line">./deploy.sh <span class="string">&quot;Update description&quot;</span></span><br></pre></td></tr></table></figure>
-<h2 id="Common-Problems-and-Solutions"><a href="#Common-Problems-and-Solutions" class="headerlink" title="Common Problems and Solutions "></a>Common Problems and Solutions <a name="automation-script"></a></h2><h3 id="Branch-Switching-Conflict-Handling"><a href="#Branch-Switching-Conflict-Handling" class="headerlink" title="Branch Switching Conflict Handling "></a>Branch Switching Conflict Handling <a name="branch-switchin"></a></h3><p>When switching branches causes node_modules conflicts, execute:</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Stash current changes</span></span><br><span class="line">git stash</span><br><span class="line"><span class="comment"># Switch branches</span></span><br><span class="line">git checkout hexo</span><br><span class="line"><span class="comment"># Restore changes</span></span><br><span class="line">git stash pop</span><br><span class="line"><span class="comment"># Clean untracked files</span></span><br><span class="line">git clean -fdx</span><br><span class="line"><span class="comment"># Reinstall dependencies</span></span><br><span class="line">npm install</span><br></pre></td></tr></table></figure>
-<p>If you can not run hexo command like <code>hexo s</code> on <strong>Mac</strong>,this is because the default terminal on Mac is zsh (which can actually be queried with an echo $SHELL command), and the user environment variable file is~&#x2F;. zshrc. After executing the following command, the environment variable configuration was successful: </p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;PATH=&quot;$PATH:./node_modules/.bin&quot;&#x27;</span> &gt;&gt; ~/.zshrc</span><br></pre></td></tr></table></figure>
-<h3 id="Environment-Dependency-Inconsistency-Issue"><a href="#Environment-Dependency-Inconsistency-Issue" class="headerlink" title="Environment Dependency Inconsistency Issue "></a>Environment Dependency Inconsistency Issue <a name="environment-dependenc"></a></h3><p>Ensure <code>Node.js</code> versions are consistent across devices, which can be locked via <code>package.json</code>:</p>
-<figure class="highlight json"><table><tr><td class="code"><pre><span class="line"><span class="attr">&quot;engines&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;node&quot;</span><span class="punctuation">:</span> <span class="string">&quot;14.x&quot;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
-<p>On new devices, execute:</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">npm install --no-save</span><br></pre></td></tr></table></figure>
-
-<h3 id="Theme-and-Plugin-Synchronization-Abnormality"><a href="#Theme-and-Plugin-Synchronization-Abnormality" class="headerlink" title="Theme and Plugin Synchronization Abnormality"></a>Theme and Plugin Synchronization Abnormality<a name="theme-and-pluginy"></a></h3><ol>
-<li>Check for nested Git in themes<br>Delete .git folders in theme directories:<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">find themes/ -<span class="built_in">type</span> d -name <span class="string">&quot;.git&quot;</span> -<span class="built_in">exec</span> <span class="built_in">rm</span> -rf &#123;&#125; \;</span><br></pre></td></tr></table></figure></li>
-<li>Manually synchronize theme updates<br>If the theme is updated, manage it via Git submodule:<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git submodule add &lt;theme-repo&gt; themes/&lt;theme-name&gt;</span><br></pre></td></tr></table></figure></li>
-</ol>
-<h2 id="Advanced-Tips-Private-Repositories-and-Multi-Branch-Strategies"><a href="#Advanced-Tips-Private-Repositories-and-Multi-Branch-Strategies" class="headerlink" title="Advanced Tips: Private Repositories and Multi-Branch Strategies "></a>Advanced Tips: Private Repositories and Multi-Branch Strategies <a name="advanced-tips-private"></a></h2><h3 id="Private-Repositories-to-Protect-Source-Code-Security"><a href="#Private-Repositories-to-Protect-Source-Code-Security" class="headerlink" title="Private Repositories to Protect Source Code Security "></a>Private Repositories to Protect Source Code Security <a name="private-repositories"></a></h3><ol>
-<li>Create a private repository<br>Create a new private repository <code>hexo-source</code> on GitHub to store source code</li>
-<li>Migrate the source branch<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Remove old remote</span></span><br><span class="line">git remote remove origin</span><br><span class="line"><span class="comment"># Add new private repository</span></span><br><span class="line">git remote add origin git@github.com:username/hexo-source.git</span><br><span class="line"><span class="comment"># Push the source branch</span></span><br><span class="line">git push -u origin hexo</span><br></pre></td></tr></table></figure></li>
-<li>Configure dual deployment targets<br>Add to _config.yml:<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">deploy:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">type:</span> <span class="string">git</span></span><br><span class="line">    <span class="attr">repo:</span> <span class="string">git@github.com:username/hexo-source.git</span></span><br><span class="line">    <span class="attr">branch:</span> <span class="string">hexo</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">type:</span> <span class="string">git</span></span><br><span class="line">    <span class="attr">repo:</span> <span class="string">git@github.com:username/username.github.io.git</span></span><br><span class="line">    <span class="attr">branch:</span> <span class="string">main</span></span><br></pre></td></tr></table></figure></li>
-</ol>
-<h3 id="Multi-Branch-Collaborative-Development-Model"><a href="#Multi-Branch-Collaborative-Development-Model" class="headerlink" title="Multi-Branch Collaborative Development Model"></a>Multi-Branch Collaborative Development Model<a name="multi-branch-collaborative-development-model"></a></h3><ol>
-<li>Feature branch workflow<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Create a feature branch</span></span><br><span class="line">git checkout -b feature/new-theme</span><br><span class="line"><span class="comment"># After development, merge into the hexo branch</span></span><br><span class="line">git checkout hexo</span><br><span class="line">git merge feature/new-theme</span><br><span class="line">git push origin hexo</span><br></pre></td></tr></table></figure></li>
-</ol>
-<h2 id="Best-Practices-for-Multi-Device-Synchronization"><a href="#Best-Practices-for-Multi-Device-Synchronization" class="headerlink" title="Best Practices for Multi-Device Synchronization"></a>Best Practices for Multi-Device Synchronization<a name="conclusion-best-practices"></a></h2><ol>
-<li>Core principles:<br>- Separate storage of source code and static files<br>- Manage dependencies via package.json<br>- Always pull before committing to avoid conflicts</li>
-<li>Operation checklist:<br>- For new devices: <code>git clone -b hexo + npm install</code><br>- Daily updates: <code>git pull</code> → edit → <code>git push</code> → <code>hexo deploy</code>(must need git pull firstly)<br>- Environment migration: Only requires Git cloning + dependency installation, no need for re-initialization</li>
-<li>Advanced suggestions:<br>- Use GitHub Actions for automated deployment<br>- Regularly back up source branches to other cloud storages<br>- Adopt branch protection strategies for team collaboration</li>
-</ol>
-<link rel="stylesheet" href="/css/folder.css" type="text/css"><script src="/js/folder.js" type="text/javascript" async></script>]]></content>
-      <categories>
-        <category>Blog</category>
-        <category>Hexo</category>
-      </categories>
-      <tags>
-        <tag>Hexo</tag>
-        <tag>Git</tag>
-        <tag>Multi-Device Synchronization</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Design Patterns</title>
     <url>/2025/04/19/Design-Patterns/</url>
     <content><![CDATA[<ol>
@@ -1078,97 +839,70 @@ Use Cases:</li>
       </tags>
   </entry>
   <entry>
-    <title>KMP Algorithm</title>
-    <url>/2025/03/08/KMP-Algorithm/</url>
-    <content><![CDATA[<h1 id="The-KMP-Algorithm"><a href="#The-KMP-Algorithm" class="headerlink" title="The KMP Algorithm"></a>The KMP Algorithm</h1><ol>
-<li><a href="#introduction">Introduction to KMP Algorithm</a> </li>
-<li><a href="#naive">Naive Pattern Searching Algorithm</a></li>
-<li><a href="#core">Core Idea of the KMP Algorithm</a><ul>
-<li><a href="#generate">How to generate the next array(LSP array)</a></li>
-<li><a href="#match">KMP Matching Process</a></li>
+    <title>Dynamic Programming</title>
+    <url>/2025/03/22/Dynamic-Programming/</url>
+    <content><![CDATA[<ol>
+<li><a href="#core-concepts">Core Concepts</a></li>
+<li><a href="#step-solve">Steps to Solve Problems with Dynamic Programming</a><ul>
+<li><a href="#define">Define the State</a></li>
+<li><a href="#formulate">Formulate the Transition</a></li>
+<li><a href="#boundary-conditions">Initialize the Boundary Conditions</a></li>
+<li><a href="#choose-order">Choose an Order</a></li>
+<li><a href="#final-result">Return the Final Result</a></li>
 </ul>
 </li>
-<li><a href="#java">Code Implementation using Java</a></li>
-<li><a href="#analyse">Complexity Analysis</a><span id="more"></span></li>
+<li><a href="#classic-examples">Classic Examples</a><ul>
+<li><a href="#fibonacci-sequence">Fibonacci Sequence</a></li>
+<li><a href="#01-knapsack-problem">0&#x2F;1 Knapsack Problem</a></li>
+</ul>
+</li>
+<li><a href="#conclusion">Conclusion</a><span id="more"></span></li>
 </ol>
-<h2 id="1-KMP-Algorithm"><a href="#1-KMP-Algorithm" class="headerlink" title="1.KMP Algorithm "></a>1.KMP Algorithm <a name="introduction"></a></h2><p>In computer science,the<strong>Knuth–Morris–Pratt</strong> algorithm(<strong>KMP algorithm</strong>) is a <a href="https://en.wikipedia.org/wiki/String-searching_algorithm">string-searching algorithm</a> that searches for occurrences of a word W within a main text string S by employing the observation that when a mismatch occurs, the word itself embodies sufficient information to determine where the next match could begin, thus bypassing re-examination of previously matched characters.It is an efficient string-matching technique that avoids unnecessary character comparisons by leveraging precomputed pattern data.Unlike the naive approach, KMP achieves <strong>O(n+m)</strong> time complexity, where <code>n=text</code> length and <code>m=pattern</code> length.</p>
-<p>For example:</p>
+<h2 id="Core-concepts"><a href="#Core-concepts" class="headerlink" title="Core concepts"></a>Core concepts</h2><p><strong>Dynamic programming</strong><a name="core-concepts"></a> is both a mathematical optimization method and an algorithmic paradigm. The method was developed by Richard Bellman in the 1950s and has found applications in numerous fields, from aerospace engineering to economics. It is a powerful technique used to solve complex problems by breaking them down into simpler subproblems. It’s widely used in computer science for optimization problems, and once you grasp its core idea, it becomes an invaluable tool in your programming toolkit.</p>
+<p>A DP solution hinges on two properties:</p>
 <ul>
-<li>Text string S &#x3D; “ABABDABACDABABCABAB”</li>
-<li>Pattern string P &#x3D; “ABABC”<br>We need to find the position where <code>P</code> first appears in <code>S</code>.</li>
+<li><strong>Overlapping Subproblems</strong>: Means that the problem can be broken down into smaller subproblems, where the solutions to the subproblems are overlapping. Having subproblems that are overlapping means that the solution to one subproblem is part of the solution to another subproblem. I will take <a href="https://en.wikipedia.org/wiki/Fibonacci_sequence">Fibonacci sequence</a> as an example in the coming section.</li>
+<li><strong>Optimal Substructure</strong>: Means that the complete solution to a problem can be constructed from the solutions of its smaller subproblems. So not only must the problem have overlapping subproblems, the substructure must also be optimal so that there is a way to piece the solutions to the subproblems together to form the complete solution. I will take the classical <a href="https://en.wikipedia.org/wiki/Knapsack_problem">The 0&#x2F;1 Knapsack Problem</a> as an example, the optimal solution when the knapsack capacity is <code>W</code> can be derived by considering whether to include an item and combining it with the optimal solution when the knapsack capacity is <code>W - weight[i]</code>.</li>
 </ul>
-<h2 id="2-Naive-brute-force-Pattern-Searching-Algorithm"><a href="#2-Naive-brute-force-Pattern-Searching-Algorithm" class="headerlink" title="2. Naive(brute force) Pattern Searching Algorithm "></a>2. Naive(brute force) Pattern Searching Algorithm <a name="naive"></a></h2><ul>
-<li>We start at every index in the text and compare it with the first character of the pattern, if they match we move to the next character in both text and pattern.</li>
-<li>If there is a mismatch, we start the same process for the next index of the text.<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">S: A B A B D A B A C D A B A B C A B A B</span><br><span class="line">P: A B A B C</span><br></pre></td></tr></table></figure>
-When a mismatch occurs, the text pointer backtracks to i&#x3D;2, and the pattern pointer backtracks to j&#x3D;0.<br><strong>Disadvantage</strong>: The time complexity is<strong>O(n×m)</strong>(where n is the length of the text and m is the length of the pattern), which is inefficient.</li>
-</ul>
-<h2 id="3-Core-Idea-of-the-KMP-Algorithm"><a href="#3-Core-Idea-of-the-KMP-Algorithm" class="headerlink" title="3. Core Idea of the KMP Algorithm"></a>3. Core Idea of the KMP Algorithm<a name="core"></a></h2><p><strong>Core</strong>: Make use of the matched information to avoid invalid backtracking.<br><strong>Key points</strong>:</p>
+<h2 id="Steps-to-Solve-Problems-with-Dynamic-Programming"><a href="#Steps-to-Solve-Problems-with-Dynamic-Programming" class="headerlink" title="Steps to Solve Problems with Dynamic Programming:"></a>Steps to Solve Problems with Dynamic Programming:<a name="step-solve"></a></h2><h3 id="Define-the-State"><a href="#Define-the-State" class="headerlink" title="Define the State:"></a><strong>Define the State</strong>:<a name="define"></a></h3><p>Identify parameters that uniquely describe a subproblem (e.g., indices, capacities). For example, in the 0&#x2F;1 knapsack problem, the state can be defined as <code>dp[i][j]</code>, which represents the maximum value that can be obtained when considering the first i items and a knapsack capacity of j.</p>
+<h3 id="Formulate-the-Transition"><a href="#Formulate-the-Transition" class="headerlink" title="Formulate the Transition:"></a><strong>Formulate the Transition</strong>:<a name="formulate"></a></h3><p>Derive a recurrence relation that expresses the state in terms of smaller states.</p>
+<h3 id="Initialize-the-Boundary-Conditions"><a href="#Initialize-the-Boundary-Conditions" class="headerlink" title="Initialize the Boundary Conditions:"></a><strong>Initialize the Boundary Conditions</strong>:<a name="boundary-conditions"></a></h3><p>Initialize the Boundary Conditions: Determine the initial values of the states, which are usually the base cases of the problem. For example, in the 0&#x2F;1 knapsack problem, <code>dp[0][j]=0</code> (when there are no items, the value is 0 regardless of the knapsack capacity), and <code>dp[i][0]=0</code> (when the knapsack capacity is 0, the value is 0 regardless of the number of items).</p>
+<h3 id="Choose-an-Order"><a href="#Choose-an-Order" class="headerlink" title="Choose an Order:"></a><strong>Choose an Order</strong>:<a name="choose-order"></a></h3><p>Decide whether to solve states top‑down (recursion + memo) or bottom‑up (iteration + table). If using the tabular method(the latter one), fill the state table step-by-step according to the state - transition equation and the initial conditions. This step is usually achieved through nested loops.</p>
+<h3 id="Return-the-Final-Result"><a href="#Return-the-Final-Result" class="headerlink" title="Return the Final Result:"></a><strong>Return the Final Result</strong>:<a name="final-result"></a></h3><p>According to the requirements of the problem, obtain the final solution from the state table. For example, in the 0&#x2F;1 knapsack problem, the final result is dp[n][W], that is, the maximum value when considering all n items and a knapsack capacity of <code>W</code>. </p>
+<h2 id="Classic-Examples"><a href="#Classic-Examples" class="headerlink" title="Classic Examples"></a>Classic Examples</h2><h3 id="Find-The-nth-Fibonacci-Number"><a href="#Find-The-nth-Fibonacci-Number" class="headerlink" title="Find The nth Fibonacci Number"></a>Find The nth Fibonacci Number<a name="fibonacci-sequence"></a></h3><p>Let us say we want an algorithm that finds the nth Fibonacci number. We don’t know how to find the nth Fibonacci number yet, except that we want to use Dynamic Programming to design the algorithm.</p>
+<blockquote>
+<p>The Fibonacci numbers is a sequence of numbers starting with 0 and 1 and the next numbers are created by adding the two previous numbers.<br>The 8 first Fibonacci numbers are: <strong>0, 1, 1, 2, 3, 5, 8, 13</strong><br>And counting from 0, the 4th Fibonacci number <code>F(4)</code> is <strong>3</strong>.<br>In general, this is how a Fibonacci number is created based on the two previous:<br>                    <code>F(n) = F(n-1) + F(n-2)</code></p>
+</blockquote>
+<h4 id="Naive-Recursive-Approach"><a href="#Naive-Recursive-Approach" class="headerlink" title="Naive Recursive Approach"></a>Naive Recursive Approach</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public int Fib2(int n)</span><br><span class="line">&#123;</span><br><span class="line">    if (n &lt; 2) return n;</span><br><span class="line">    return Fib(n - 1) + Fib(n - 2);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <ul>
-<li>Preprocess the pattern string <code>P</code> to generate the <code>LPS </code> array(here I use next array), which records the length of the longest common prefix and suffix for each position.</li>
-<li>During matching, use the <code>LPS</code> array to quickly find the backtracking position of the pattern string.</li>
-<li><strong>LPS</strong> is the <strong>Longest Proper Prefix</strong> which is also a <strong>Suffix</strong>. A proper prefix is a prefix that does not include whole string.</li>
+<li>Time  Complexity: <strong>O(2<sup>n</sup>)</strong></li>
+<li>Space Complexity: <strong>O(n)</strong><br>This works, but it is inefficient. For <code>n=40</code>, it takes noticeable time because it recalculates the same Fibonacci numbers repeatedly.</li>
 </ul>
-<h3 id="How-to-generate-the-next-array-LSP-array"><a href="#How-to-generate-the-next-array-LSP-array" class="headerlink" title="How to generate the next array(LSP array)"></a>How to generate the next array(LSP array)<a name="generate"></a></h3><p>The <code>next[j]</code> represents the length of the longest common prefix and suffix of the first <code>j</code> characters of the pattern string <code>P</code>.<br><strong>Rules</strong>:</p>
+<h4 id="Bottom-Up-DP-Tabulation"><a href="#Bottom-Up-DP-Tabulation" class="headerlink" title="Bottom-Up DP (Tabulation)"></a>Bottom-Up DP (Tabulation)</h4><p>We can optimize it using memoization, where we store results in an array:</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public int Fib(int n)</span><br><span class="line">&#123;</span><br><span class="line">    if (n &lt; 2) return n;</span><br><span class="line">    int[] dp = new int[n + 1];</span><br><span class="line">    dp[0] = 0;</span><br><span class="line">    dp[1] = 1;</span><br><span class="line">    for(int i = 2; i &lt;= n; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        dp[i] = dp[i - 1] + dp[i - 2];</span><br><span class="line">    &#125;</span><br><span class="line">    return dp[n];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <ul>
-<li><code>Prefix</code>: A continuous substring starting from the first character (excluding the last character).</li>
-<li><code>Suffix</code>: A continuous substring ending with the last character (excluding the first character).</li>
-<li><code>Longest common prefix and suffix</code>: The longest identical prefix and suffix.</li>
+<li>Time  Complexity: <strong>O(n)</strong></li>
+<li>Space Complexity: <strong>O(n)</strong></li>
 </ul>
-<p>Example: Pattern&#x3D;”ABABC”</p>
-<table>
-<thead>
-<tr>
-<th align="center"><strong>j</strong></th>
-<th align="center">0</th>
-<th align="center">1</th>
-<th align="center">2</th>
-<th align="center">3</th>
-<th align="center">4</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">char</td>
-<td align="center">A</td>
-<td align="center">B</td>
-<td align="center">A</td>
-<td align="center">B</td>
-<td align="center">C</td>
-</tr>
-<tr>
-<td align="center">next[j]</td>
-<td align="center">0</td>
-<td align="center">0</td>
-<td align="center">1</td>
-<td align="center">2</td>
-<td align="center">0</td>
-</tr>
-</tbody></table>
-<h3 id="KMP-Matching-Process"><a href="#KMP-Matching-Process" class="headerlink" title="KMP Matching Process"></a>KMP Matching Process<a name="match"></a></h3><ul>
-<li>Initialize pointers: Set the text pointer i &#x3D; 0 and the pattern pointer j &#x3D; 0.</li>
-<li>Compare characters one by one:<ul>
-<li>If S[i] &#x3D;&#x3D; P[j], move both i and j to the right.</li>
-<li>If there is a mismatch:<ul>
-<li>If j &gt; 0, set j &#x3D; next[j - 1] (backtrack using the next array).</li>
-<li>If j &#x3D;&#x3D; 0, move i to the right.</li>
+<p>In this version, we fill the <code>dp</code> array from the base cases up to <code>n</code>. It’s still <strong>O(n)</strong> time complexity, but it avoids recursion overhead, making it slightly faster in practice.<br>More efficiently, We only need to maintain two values as we don’t need to record the whole sequence.</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public int Fib(int n)</span><br><span class="line">&#123;</span><br><span class="line">    if (n &lt; 2) return n;</span><br><span class="line">    int[] dp = new int[2] &#123;0,1&#125;;</span><br><span class="line">    for(int i = 2; i &lt;= n; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        int temp = dp[0] + dp[1];</span><br><span class="line">        dp[0] = dp[1];</span><br><span class="line">        dp[1] = temp;</span><br><span class="line">    &#125;</span><br><span class="line">    return dp[1];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>Time  Complexity: <strong>O(n)</strong></li>
+<li>Space Complexity: <strong>O(1)</strong></li>
 </ul>
-</li>
+<h3 id="The-0-1-Knapsack-Problem"><a href="#The-0-1-Knapsack-Problem" class="headerlink" title="The 0&#x2F;1 Knapsack Problem"></a>The 0&#x2F;1 Knapsack Problem<a name="01-knapsack-problem"></a></h3><p>Given items with weight array weights and value array values, and a knapsack with capacity capacity, find the maximum value that can be carried.<br>Solving the 0&#x2F;1 Knapsack Problem helps businesses decide which projects to fund within a budget, maximizing profit without overspending. It is also used in logistics to optimize the loading of goods into trucks and planes, ensuring the most valuable, or highest prioritized, items are included without exceeding weight limits.</p>
+<p><u>Rules</u>:<br>    - Every item has a weight and value.<br>    - Your knapsack has a weight limit.<br>    - Choose which items you want to bring with you in the knapsack.<br>You can either take an item or not, you cannot take half of an item for example.<br><u>Goal</u>:<br>    - Maximize the total value of the items in the knapsack.</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public int Knapsack01(int[] w, int[] v, int cap)</span><br><span class="line">&#123;</span><br><span class="line">    int n = w.Length;</span><br><span class="line">    int[,] dp = new int[n + 1,cap + 1]; </span><br><span class="line">    for (int j = 0; j &lt;= cap; j++)</span><br><span class="line">    &#123;</span><br><span class="line">        dp[0, j] = 0;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    for (int i = 0; i &lt;= n; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        dp[i, 0] = 0;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    for(int i= 1; i &lt;= n; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        for(int j =1;j&lt;= cap; j++)</span><br><span class="line">        &#123;</span><br><span class="line">            if (j &lt; w[i-1])</span><br><span class="line">            &#123;</span><br><span class="line">                dp[i, j] = dp[i - 1, j];</span><br><span class="line">            &#125;</span><br><span class="line">            else</span><br><span class="line">            &#123;</span><br><span class="line">                dp[i, j] = Math.Max(dp[i - 1, j], v[i - 1] + dp[i - 1, j - w[i - 1]]);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return dp[n, cap];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Below is the optimized version, we use a one-dimensional array dp. By updating the dp array in reverse order, we ensure that each item is considered only once, thus avoiding redundant calculations and overwriting problems.</p>
+<ul>
+<li>Reduces space complexity from O(n×capacity) to O(capacity)</li>
+<li>Reverse iteration prevents value overwrite issues</li>
+<li>More efficient memory usage</li>
 </ul>
-</li>
-<li>Matching success: When j &#x3D;&#x3D; m, return i - m</li>
-</ul>
-<p>The whole Matching process:</p>
-<ol>
-<li>Initially, i &#x3D; 0, j &#x3D; 0 → S[0]&#x3D;A &#x3D;&#x3D; P[0] → i &#x3D; 1, j &#x3D; 1.</li>
-<li>S[1]&#x3D;B &#x3D;&#x3D; P[1] → i &#x3D; 2, j &#x3D; 2.</li>
-<li>S[2]&#x3D;A &#x3D;&#x3D; P[2] → i &#x3D; 3, j &#x3D; 3.</li>
-<li>S[3]&#x3D;B &#x3D;&#x3D; P[3] → i &#x3D; 4, j &#x3D; 4.</li>
-<li>S[4]&#x3D;D ≠ P[4]&#x3D;C → j &#x3D; next[3]&#x3D;2.</li>
-<li>S[4]&#x3D;D ≠ P[2]&#x3D;A → j &#x3D; next[1]&#x3D;0.</li>
-<li>S[4]&#x3D;D ≠ P[0]&#x3D;A → i &#x3D; 5, j &#x3D; 0.</li>
-<li>Continue matching until the position of <code>P</code> is found.</li>
-</ol>
-<h2 id="4-Code-Implementation-using-Java"><a href="#4-Code-Implementation-using-Java" class="headerlink" title="4. Code Implementation using Java "></a>4. Code Implementation using Java <a name="java"></a></h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public class KMPAlgorithm &#123;</span><br><span class="line">    public static int kmpSearch(String s, String p) &#123;</span><br><span class="line">        int n = s.length();</span><br><span class="line">        int m = p.length();</span><br><span class="line">        int[] next = computeNext(p);</span><br><span class="line">        int i = 0;</span><br><span class="line">        int j = 0;</span><br><span class="line">        while (i &lt; n) &#123;</span><br><span class="line">            if (s.charAt(i) == p.charAt(j)) &#123;</span><br><span class="line">                i++;</span><br><span class="line">                j++;</span><br><span class="line">                if (j == m) &#123;</span><br><span class="line">                    return i - m;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; else &#123;</span><br><span class="line">                if (j &gt; 0) &#123;</span><br><span class="line">                    j = next[j - 1];</span><br><span class="line">                &#125; else &#123;</span><br><span class="line">                    i++;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        return -1;</span><br><span class="line">&#125;</span><br><span class="line">public static int[] computeNext(String p) &#123;</span><br><span class="line">    int m = p.length();</span><br><span class="line">    int[] next = new int[m];</span><br><span class="line">    int j = 0;</span><br><span class="line">    for (int i = 1; i &lt; m; i++) &#123;</span><br><span class="line">            while (j &gt; 0 &amp;&amp; p.charAt(i) != p.charAt(j)) &#123;</span><br><span class="line">                j = next[j - 1];</span><br><span class="line">            &#125;</span><br><span class="line">            if (p.charAt(i) == p.charAt(j)) &#123;</span><br><span class="line">                j++;</span><br><span class="line">            &#125;</span><br><span class="line">            next[i] = j;</span><br><span class="line">        &#125;</span><br><span class="line">    return next;</span><br><span class="line">&#125;</span><br><span class="line">public static void main(String[] args) &#123;</span><br><span class="line">        String s = &quot;ABABDABACDABABCABAB&quot;;</span><br><span class="line">        String p = &quot;ABABCABAB&quot;;</span><br><span class="line">        int index = kmpSearch(s, p);</span><br><span class="line">        if (index != -1) &#123;</span><br><span class="line">            System.out.println(&quot;The pattern string first appears at position: &quot; + index);</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            System.out.println(&quot;The pattern string was not found.&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="5-Complexity-Analysis"><a href="#5-Complexity-Analysis" class="headerlink" title="5. Complexity Analysis "></a>5. Complexity Analysis <a name="analyse"></a></h2><p><strong>Time complexity</strong>: Pre - processing the next array takes <code>O(m)</code> time, and the matching process takes <code>O(n)</code> time. So the total time complexity is <strong>O(n+m)</strong>.<br><strong>Space complexity</strong>: Storing the next array requires <strong>O(m)</strong> space.</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public int Knapsack01(int[] w, int[] v, int cap)</span><br><span class="line">&#123;</span><br><span class="line">    int n = w.Length;</span><br><span class="line">    int[] dp = new int[cap + 1];</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    for (int i = 0; i &lt; n; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        //In order to select the item only once, we need to traverse from back to front </span><br><span class="line">        for (int j = cap; j &gt;= w[i]; j--)</span><br><span class="line">        &#123;</span><br><span class="line">            dp[j] = Math.Max(dp[j], v[i] + dp[j - w[i]]);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return dp[cap];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion "></a>Conclusion <a name="conclusion"></a></h2><p>Dynamic programming transforms inefficient recursive solutions into efficient ones by leveraging memory. Whether you choose memoization or tabulation, the key is to avoid redundant work. Arrays or dictionaries are perfect for storing intermediate results, making DP both practical and elegant.By reasonably defining the state, deriving the state-transition equation, and initializing the boundary conditions, we can efficiently solve complex problems using dynamic programming. In practical applications, pay attention to techniques such as space optimization to improve the efficiency and performance of the algorithm.</p>
 <link rel="stylesheet" href="/css/folder.css" type="text/css"><script src="/js/folder.js" type="text/javascript" async></script>]]></content>
       <categories>
         <category>Data Structure and Alogrithm</category>
@@ -1357,45 +1091,263 @@ When a mismatch occurs, the text pointer backtracks to i&#x3D;2, and the pattern
       </tags>
   </entry>
   <entry>
-    <title>Singly Linked List</title>
-    <url>/2025/02/18/Single-Linked-List/</url>
-    <content><![CDATA[<h2 id="Singly-Linked-List-Concepts-and-Operations"><a href="#Singly-Linked-List-Concepts-and-Operations" class="headerlink" title="Singly Linked List: Concepts and Operations"></a>Singly Linked List: Concepts and Operations</h2><ol>
-<li><a href="#1-overview-of-singly-linked-list">Overview of Singly Linked List</a></li>
-<li><a href="#2-advantages-of-linked-list">Advantages of Linked List</a></li>
-<li><a href="#3-types-of-linked-list">Types of Linked List</a></li>
-<li><a href="#4-how-to-create-a-linked-list">How to Create a Linked List</a></li>
-<li><a href="#5-various-operations-on-linked-list">Various Operations on Linked List</a><span id="more"></span></li>
-</ol>
-<h3 id="Overview-of-Singly-Linked-List"><a href="#Overview-of-Singly-Linked-List" class="headerlink" title="Overview of Singly Linked List "></a>Overview of Singly Linked List <a name="1-overview-of-singly-linked-list"></a></h3><p><strong>What is a Linked List?</strong><br>In C#, a linked list is a linear data structure that stores elements in non - contiguous memory locations.<br>Each node consists of two parts:</p>
-<ol>
-<li><strong>Data</strong>: Each node of a linked list can store a piece of data.</li>
-<li><strong>Address</strong>: Each node of a linked list contains the address of the next node, referred to as “Next”.</li>
-</ol>
-<p><img src="/images/1.png" alt="pic"><br>The first node of a linked list is referenced by a pointer called <strong>“Head”</strong>.</p>
-<h3 id="Advantages-of-Linked-List"><a href="#Advantages-of-Linked-List" class="headerlink" title="Advantages of Linked List "></a>Advantages of Linked List <a name="2-advantages-of-linked-list"></a></h3><ol>
-<li>They are dynamic in nature and allocate memory as needed.</li>
-<li>Insertion and deletion operations are easy to implement.</li>
-<li>Other data structures such as stacks and queues can also be easily implemented using linked lists.</li>
-<li>They have fast access times and can be expanded in constant time without memory overhead.</li>
-<li>Since there is no need to define an initial size for a linked list, memory utilization is efficient.</li>
-<li>Backtracking is possible in doubly - linked lists.</li>
-</ol>
-<p><strong>Node Class</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public class Node&lt;T&gt;</span><br><span class="line">&#123;</span><br><span class="line">    public T Data &#123; get; set; &#125;</span><br><span class="line">    public Node&lt;T&gt; Next &#123; get; set; &#125;</span><br><span class="line">    public Node(T data)</span><br><span class="line">    &#123;</span><br><span class="line">        Data = data;</span><br><span class="line">        Next = null;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="Types-of-Linked-List"><a href="#Types-of-Linked-List" class="headerlink" title="Types of Linked List "></a>Types of Linked List <a name="3-types-of-linked-list"></a></h3><ul>
-<li><strong>Singly linked lists</strong></li>
-<li><strong>Doubly linked lists</strong></li>
-<li><strong>Circular linked lists</strong></li>
-<li><strong>Circular doubly linked lists</strong></li>
+    <title>Hexo Blog Multi-Device Synchronization and Management Guide Based on Git Branch Strategy</title>
+    <url>/2025/05/03/Hexo-Blog-Multi-Device-Synchronization-and-Management-Guide-Based-on-Git-Branch-Strategy/</url>
+    <content><![CDATA[<ul>
+<li><a href="#introduction-the-necessity">Introduction: The Necessity of Multi-Device Collaboration</a></li>
+<li><a href="#core-principles-of-hexo">Core Principles of Hexo Multi-Device Synchronization</a><ul>
+<li><a href="#hexo-directory">Hexo Directory Structure and Version Control Strategy</a></li>
+<li><a href="#git-branch">Git Branch Division of Labor Model</a></li>
 </ul>
-<h3 id="How-to-Create-a-Linked-List"><a href="#How-to-Create-a-Linked-List" class="headerlink" title="How to Create a Linked List "></a>How to Create a Linked List <a name="4-how-to-create-a-linked-list"></a></h3><p>Combined with the above node class, you can gradually build a linked list by instantiating nodes and setting their Next pointers. For example:</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Node&lt;int&gt; node1 = new Node&lt;int&gt;(1);</span><br><span class="line">Node&lt;int&gt; node2 = new Node&lt;int&gt;(2);</span><br><span class="line">node1.Next = node2;</span><br></pre></td></tr></table></figure>
-<p>&#x2F;&#x2F; Here, node1 serves as the head node to build a simple linked list</p>
-<h3 id="Various-Operations-on-Linked-List"><a href="#Various-Operations-on-Linked-List" class="headerlink" title="Various Operations on Linked List "></a>Various Operations on Linked List <a name="5-various-operations-on-linked-list"></a></h3><p>Linked List Class Definition</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public class LinkedList&lt;T&gt;</span><br><span class="line">&#123;</span><br><span class="line">    // The head node of the linked list</span><br><span class="line">    private Node&lt;T&gt; head;</span><br><span class="line">    // The length of the linked list</span><br><span class="line">    private int length;</span><br><span class="line"></span><br><span class="line">    public LinkedList()</span><br><span class="line">    &#123;</span><br><span class="line">        head = null;</span><br><span class="line">        length = 0;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public int Length =&gt; length;</span><br><span class="line">    public bool IsEmpty() =&gt; (length == 0);</span><br><span class="line"></span><br><span class="line">    // Add a new node at the beginning of the linked list</span><br><span class="line">    public void AddFirst(T data)</span><br><span class="line">    &#123;</span><br><span class="line">        Node&lt;T&gt; newNode = new Node&lt;T&gt;(data);</span><br><span class="line">        newNode.Next = head;</span><br><span class="line">        // Update the new node as the head of the linked list</span><br><span class="line">        head = newNode;</span><br><span class="line">        length++;</span><br><span class="line">    &#125;</span><br><span class="line">    // Add a new node at the end of the linked list</span><br><span class="line">    public void AddTail(T data)</span><br><span class="line">    &#123;</span><br><span class="line">        Node&lt;T&gt; newNode = new Node&lt;T&gt;(data);</span><br><span class="line">        if (head == null)</span><br><span class="line">        &#123;</span><br><span class="line">            head = newNode;</span><br><span class="line">            return;</span><br><span class="line">        &#125;</span><br><span class="line">        Node&lt;T&gt; current = head;</span><br><span class="line">        while (current.Next != null)</span><br><span class="line">        &#123;</span><br><span class="line">            current = current.Next;</span><br><span class="line">        &#125;</span><br><span class="line">        current.Next = newNode;</span><br><span class="line">        length++;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void DeleteElemets(T Data)</span><br><span class="line">    &#123;</span><br><span class="line">        Node&lt;T&gt; dummyHead = new Node&lt;T&gt;(default(T));</span><br><span class="line">        dummyHead.Next = head;</span><br><span class="line">        Node&lt;T&gt; temp = dummyHead;</span><br><span class="line">        while (temp.Next != null)</span><br><span class="line">        &#123;</span><br><span class="line">            if (temp.Next.Data.Equals(Data))</span><br><span class="line">            &#123;</span><br><span class="line">                temp.Next = temp.Next.Next;</span><br><span class="line">                length--;</span><br><span class="line">            &#125;</span><br><span class="line">            else</span><br><span class="line">            &#123;</span><br><span class="line">                temp = temp.Next;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        // return dummyHead.Next;</span><br><span class="line">    &#125;</span><br><span class="line">    public void Delete(T Data)</span><br><span class="line">    &#123;</span><br><span class="line">        if (head == null) return;</span><br><span class="line">        if (head.Data.Equals(Data))</span><br><span class="line">        &#123;</span><br><span class="line">            head = head.Next;</span><br><span class="line">            length--;</span><br><span class="line">            return;</span><br><span class="line">        &#125;</span><br><span class="line">        Node&lt;T&gt; current = head;</span><br><span class="line">        while (current != null &amp;&amp; current.Next != null)</span><br><span class="line">        &#123;</span><br><span class="line">            if (current.Next.Data.Equals(Data))</span><br><span class="line">            &#123;</span><br><span class="line">                current.Next = current.Next.Next;</span><br><span class="line">                length--;</span><br><span class="line">                return;</span><br><span class="line">            &#125;</span><br><span class="line">            current = current.Next;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    public void DeleteAtHead()</span><br><span class="line">    &#123;</span><br><span class="line">        if (head == null) return;</span><br><span class="line">        head = head.Next;</span><br><span class="line">        length--;</span><br><span class="line">    &#125;</span><br><span class="line">    public void Find(T Data)</span><br><span class="line">    &#123;</span><br><span class="line">        if (head == null)</span><br><span class="line">        &#123;</span><br><span class="line">            Console.WriteLine(&quot;The Linked List is null, can&#x27;t find the data&quot;);</span><br><span class="line">            return;</span><br><span class="line">        &#125;</span><br><span class="line">        Node&lt;T&gt; current = head;</span><br><span class="line">        while (current != null)</span><br><span class="line">        &#123;</span><br><span class="line">            if (current.Data.Equals(Data))</span><br><span class="line">            &#123;</span><br><span class="line">                Console.WriteLine(&quot;Found the data: &quot; + Data);</span><br><span class="line">                return;</span><br><span class="line">            &#125;</span><br><span class="line">            current = current.Next;</span><br><span class="line">        &#125;</span><br><span class="line">        Console.WriteLine(&quot;Not Found the data: &quot; + Data);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void InsertAt(int index, T data)</span><br><span class="line">    &#123;</span><br><span class="line">        if (index &lt; 0)</span><br><span class="line">        &#123;</span><br><span class="line">            throw new ArgumentOutOfRangeException(&quot;Index&quot;, index, &quot;Index must be non - negative&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">        Node&lt;T&gt; newNode = new Node&lt;T&gt;(data);</span><br><span class="line">        if (index == 0)</span><br><span class="line">        &#123;</span><br><span class="line">            AddFirst(data);</span><br><span class="line">            return;</span><br><span class="line">        &#125;</span><br><span class="line">        Node&lt;T&gt; current = head;</span><br><span class="line">        for (int i = 0; i &lt; index - 1; i++)</span><br><span class="line">        &#123;</span><br><span class="line">            if (current == null || current.Next == null)</span><br><span class="line">            &#123;</span><br><span class="line">                throw new ArgumentOutOfRangeException(&quot;Index&quot;, index, &quot;Index is out of range&quot;);</span><br><span class="line">            &#125;</span><br><span class="line">            current = current.Next;</span><br><span class="line">        &#125;</span><br><span class="line">        newNode.Next = current.Next;</span><br><span class="line">        current.Next = newNode;</span><br><span class="line">        length++;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void Print()</span><br><span class="line">    &#123;</span><br><span class="line">        Node&lt;T&gt; current = head;</span><br><span class="line">        if (current == null)</span><br><span class="line">        &#123;</span><br><span class="line">            Console.WriteLine(&quot;null&quot;);</span><br><span class="line">            return;</span><br><span class="line">        &#125;</span><br><span class="line">        while (current != null)</span><br><span class="line">        &#123;</span><br><span class="line">            Console.Write(current.Data + &quot;-&gt;&quot;);</span><br><span class="line">            current = current.Next;</span><br><span class="line">        &#125;</span><br><span class="line">        Console.Write(&quot;null&quot;);</span><br><span class="line">        Console.WriteLine();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="Additional-Exercises"><a href="#Additional-Exercises" class="headerlink" title="Additional Exercises:"></a>Additional Exercises:</h3><h4 id="How-to-Reverse-a-Linked-List"><a href="#How-to-Reverse-a-Linked-List" class="headerlink" title="How to Reverse a Linked List?"></a>How to Reverse a Linked List?</h4><p>The time complexity is , and the space complexity is .</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public void ReverseList()</span><br><span class="line">&#123;</span><br><span class="line">    if (head.Next == null || head.Next.Next == null)</span><br><span class="line">    &#123;</span><br><span class="line">        return;</span><br><span class="line">    &#125;</span><br><span class="line">    Node&lt;T&gt; pre = null;</span><br><span class="line">    Node&lt;T&gt; current = head;</span><br><span class="line">    Node&lt;T&gt; temp = null;</span><br><span class="line">    while (current != null)</span><br><span class="line">    &#123;</span><br><span class="line">        // Store the key node to prevent data loss</span><br><span class="line">        temp = current.Next;</span><br><span class="line">        current.Next = pre;</span><br><span class="line">        pre = current;</span><br><span class="line">        current = temp;</span><br><span class="line">    &#125;</span><br><span class="line">    head = pre;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="How-to-Find-the-k-th-Node-from-the-End-of-the-Linked-List"><a href="#How-to-Find-the-k-th-Node-from-the-End-of-the-Linked-List" class="headerlink" title="How to Find the k - th Node from the End of the Linked List"></a>How to Find the k - th Node from the End of the Linked List</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public Node&lt;T&gt; FindKthToLast(int k)</span><br><span class="line">&#123;</span><br><span class="line">    if (head == null || k &lt;= 0)</span><br><span class="line">    &#123;</span><br><span class="line">        return null;</span><br><span class="line">    &#125;</span><br><span class="line">    Node&lt;T&gt; fast = head;</span><br><span class="line">    Node&lt;T&gt; slow = head;</span><br><span class="line">    // Let the fast pointer move k steps first, and the remaining is N - K steps, which is the K - th step from the end</span><br><span class="line">    for (int i = 0; i &lt; k; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        if (fast == null)</span><br><span class="line">        &#123;</span><br><span class="line">            return null;</span><br><span class="line">        &#125;</span><br><span class="line">        fast = fast.Next;</span><br><span class="line">    &#125;</span><br><span class="line">    // Move the fast and slow pointers together, and the slow pointer moves N - K steps</span><br><span class="line">    while (fast != null)</span><br><span class="line">    &#123;</span><br><span class="line">        fast = fast.Next;</span><br><span class="line">        slow = slow.Next;</span><br><span class="line">    &#125;</span><br><span class="line">    return slow;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><a href="#old-computer-operation">Old Computer Operation Guide: Building Remote Synchronization Foundation</a><ul>
+<li><a href="#creating-and-configuring-remote-branches">Creating and Configuring Remote Branches</a></li>
+<li><a href="#local-environment">Local Environment and Remote Repository Synchronization</a></li>
+<li><a href="#gitignore-key-configuration">.gitignore Key Configuration</a></li>
+</ul>
+</li>
+<li><a href="#new-computer-environment">New Computer Environment Setup: Restoring Blog from Remote Repository</a><ul>
+<li><a href="#ssh-key-configuration">SSH Key Configuration and Environment Dependency Installation</a></li>
+<li><a href="#remote-repository">Remote Repository Cloning and Dependency Recovery</a></li>
+<li><a href="#first-run-verification">First Run Verification and Configuration Check</a></li>
+</ul>
+</li>
+<li><a href="#daily-update-workflow">Daily Update Workflow: Dual Branch Collaborative Operation</a><ul>
+<li><a href="#source-code">Source Code Update and Submission Process</a></li>
+<li><a href="#static-file">Static File Deployment and Branch Synchronization</a></li>
+<li><a href="#automation-script">Automation Script to Optimize Workflow</a></li>
+</ul>
+</li>
+<li><a href="#common-problems">Common Problems and Solutions</a><ul>
+<li><a href="#branch-switching">Branch Switching Conflict Handling</a></li>
+<li><a href="#environment-dependency">Environment Dependency Inconsistency Issue</a></li>
+<li><a href="#theme-and-pluginy">Theme and Plugin Synchronization Abnormality</a></li>
+</ul>
+</li>
+<li><a href="#advanced-tips-private">Advanced Tips: Private Repositories and Multi-Branch Strategies</a><ul>
+<li><a href="#private-repositories">Private Repositories to Protect Source Code Security</a></li>
+<li><a href="#multi-branch-collaborative-development-model">Multi-Branch Collaborative Development Model</a></li>
+</ul>
+</li>
+<li><a href="#conclusion-best-practices">Conclusion: Best Practices for Multi-Device Synchronization</a><span id="more"></span></li>
+</ul>
+<h2 id="Introduction-The-Necessity-of-Multi-Device-Collaboration"><a href="#Introduction-The-Necessity-of-Multi-Device-Collaboration" class="headerlink" title="Introduction:The Necessity of Multi-Device Collaboration"></a>Introduction:The Necessity of Multi-Device Collaboration<a name="introduction-the-necessity"></a></h2><p>A couple of days ago, I am thinking if I can update blogs using multiple devices (such as home computers, office computers, laptops) which has become the norm from my perspective. As an efficient static blog generator, Hexo’s default deployment mechanism only pushes static files to GitHub Pages, but source code files (Markdown articles, theme configurations, plugins) are not synchronized, leading to the following pain points in multi-device collaboration:</p>
+<ul>
+<li>Scattered storage of source code, unable to manage uniformly</li>
+<li>Repeated construction of environment configurations, low efficiency</li>
+<li>Sudden situations (such as computer failure) leading to source code loss</li>
+</ul>
+<p>So I write this to build a complete Hexo multi-device synchronization solution through Git branch strategies, achieving seamless synchronization and management of source code across devices.</p>
+<h2 id="Core-Principles-of-Hexo-Multi-Device-Synchronization"><a href="#Core-Principles-of-Hexo-Multi-Device-Synchronization" class="headerlink" title="Core Principles of Hexo Multi-Device Synchronization"></a>Core Principles of Hexo Multi-Device Synchronization<a name="core-principles-of-hexo"></a></h2><h3 id="Hexo-Directory-Structure-and-Version-Control-Strategy"><a href="#Hexo-Directory-Structure-and-Version-Control-Strategy" class="headerlink" title="Hexo Directory Structure and Version Control Strategy"></a>Hexo Directory Structure and Version Control Strategy<a name="hexo-directory"></a></h3><p>In the Hexo blog directory structure, the following <code>files/directories</code> require special attention:</p>
+<table>
+<thead>
+<tr>
+<th>Directory&#x2F;File</th>
+<th>Function</th>
+<th>Version Control Strategy</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>node_modules/</code></td>
+<td>Dependency package directory</td>
+<td>Ignored (regenerated via <code>package.json</code>)</td>
+</tr>
+<tr>
+<td><code>themes/</code></td>
+<td>Theme files</td>
+<td>Must be synchronized (contains custom configurations)</td>
+</tr>
+<tr>
+<td><code>public/</code></td>
+<td>Static generated files</td>
+<td>Ignored (generated by <code>hexo g</code>)</td>
+</tr>
+<tr>
+<td><code>source/</code></td>
+<td>Blog source code(Markdown)</td>
+<td>Must be synchronized</td>
+</tr>
+<tr>
+<td><code>_config.yml</code></td>
+<td>Global configuration file</td>
+<td>Must be synchronized</td>
+</tr>
+<tr>
+<td><code>package.json</code></td>
+<td>Dependency description file</td>
+<td>Must be synchronized</td>
+</tr>
+</tbody></table>
+<h3 id="Git-Branch-Division-of-Labor-Model"><a href="#Git-Branch-Division-of-Labor-Model" class="headerlink" title="Git Branch Division of Labor Model"></a>Git Branch Division of Labor Model<a name="git-branch"></a></h3><p>A dual-branch strategy is higly recommended:</p>
+<ul>
+<li><strong>Source branch (e.g., <code>hexo01</code> or <code>source</code>)</strong>: Stores Hexo source code (Markdown, themes, configurations)</li>
+<li><strong>Deployment branch (e.g., <code>master</code> or <code>gh-pages</code>)</strong>: Stores static generated files (automatically pushed by <code>hexo deploy</code>)</li>
+</ul>
+<h4 id="Core-logic"><a href="#Core-logic" class="headerlink" title="Core logic:"></a>Core logic:</h4><ol>
+<li>The source branch serves as the “development branch” where all manual modifications are completed.</li>
+<li>The deployment branch serves as the “production branch” only receiving static generated files. When pushing to the “development branch” using <code>git push origin hexo01</code>, the “production branch” will be automatically synchronized.</li>
+<li>The two branches are isolated through <code>.gitignore</code> configuration.</li>
+</ol>
+<h2 id="Old-Computer-Operation-Guide"><a href="#Old-Computer-Operation-Guide" class="headerlink" title="Old Computer Operation Guide:"></a>Old Computer Operation Guide:</h2><h3 id="Creating-and-Configuring-Remote-Branches"><a href="#Creating-and-Configuring-Remote-Branches" class="headerlink" title="Creating and Configuring Remote Branches"></a>Creating and Configuring Remote Branches<a name="creating-and-configuring-remote-branches"></a></h3><ol>
+<li><strong>Remote repository preparation</strong><br>Create a repository <code>username.github.io</code> on GitHub and execute the following operations:<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Create hexo source branch</span></span><br><span class="line">git branch hexo</span><br><span class="line"><span class="comment"># Set hexo as the default branch, this is a key step!</span></span><br><span class="line">git branch --set-upstream-to=origin/hexo hexo</span><br></pre></td></tr></table></figure></li>
+<li><strong>Local environment initialization</strong><br>  Execute in the blog root directory:<br>  Initialize Git repository<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git init</span><br><span class="line"><span class="comment"># Add remote repository</span></span><br><span class="line">git remote add origin git@github.com:username/username.github.io.git</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h3 id="Local-Environment-and-Remote-Repository-Synchronization"><a href="#Local-Environment-and-Remote-Repository-Synchronization" class="headerlink" title="Local Environment and Remote Repository Synchronization"></a>Local Environment and Remote Repository Synchronization<a name="local-environmen"></a></h3><ol>
+<li>Clean and copy files<br>Retain the <strong>.git</strong> folder and delete other files<br>Copy the original Hexo directory (except .deploy_git&#x2F;) to the current directory<br>Commit source code to the remote branch<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Add all files</span></span><br><span class="line">git add .</span><br><span class="line"><span class="comment"># Commit changes</span></span><br><span class="line">git commit -m <span class="string">&quot;Init hexo source branch&quot;</span></span><br><span class="line"><span class="comment"># Push to the remote hexo branch</span></span><br><span class="line">git push origin hexo</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h3 id="gitignore-Key-Configuration"><a href="#gitignore-Key-Configuration" class="headerlink" title=".gitignore Key Configuration "></a>.gitignore Key Configuration <a name="gitignore-key-configuratio"></a></h3><p>Create <strong>.gitignore</strong> file in the project root directory with the following content:</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">.DS_Store</span><br><span class="line">Thumbs.db</span><br><span class="line">db.json</span><br><span class="line">*.log</span><br><span class="line">node_modules/</span><br><span class="line">public/</span><br><span class="line">.deploy*/</span><br></pre></td></tr></table></figure>
+<h2 id="New-Computer-Environment-Setup"><a href="#New-Computer-Environment-Setup" class="headerlink" title="New Computer Environment Setup "></a>New Computer Environment Setup <a name="new-computer-environment"></a></h2><h3 id="SSH-Key-Configuration-and-Environment-Dependency-Installation"><a href="#SSH-Key-Configuration-and-Environment-Dependency-Installation" class="headerlink" title="SSH Key Configuration and Environment Dependency Installation "></a>SSH Key Configuration and Environment Dependency Installation <a name="ssh-key-configuratio"></a></h3><ol>
+<li>Generate and add SSH key<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ssh-keygen -t rsa -C <span class="string">&quot;your_email@example.com&quot;</span></span><br></pre></td></tr></table></figure></li>
+<li>Add the generated public key like <strong>id_rsa.pub</strong> to <code>GitHub&#39;s Settings &gt; SSH and GPG Keys</code>, mac is under <code>~/.ssh</code> and windows is under <code>C:\Users\username\.ssh</code></li>
+<li>Configure Git global information<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git config --global user.name <span class="string">&quot;YourName&quot;</span></span><br><span class="line">git config --global user.email <span class="string">&quot;your_email@example.com&quot;</span></span><br></pre></td></tr></table></figure></li>
+</ol>
+<h3 id="Remote-Repository-Cloning-and-Dependency-Recovery"><a href="#Remote-Repository-Cloning-and-Dependency-Recovery" class="headerlink" title="Remote Repository Cloning and Dependency Recovery "></a>Remote Repository Cloning and Dependency Recovery <a name="remote-repository"></a></h3><ol>
+<li>Clone the source branch<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git <span class="built_in">clone</span> -b hexo git@github.com:username/username.github.io.git blog</span><br><span class="line"><span class="built_in">cd</span> blog</span><br></pre></td></tr></table></figure>
+2.Install dependencies<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Install Hexo CLI</span></span><br><span class="line">npm install -g hexo-cli</span><br><span class="line"><span class="comment"># Install project dependencies</span></span><br><span class="line">npm install</span><br><span class="line"><span class="comment"># Install deployment plugins</span></span><br><span class="line">npm install hexo-deployer-git</span><br></pre></td></tr></table></figure>
+<strong>Note</strong>:make sure you use the same version of (Node.js)[<a href="https://nodejs.org/en/download]">https://nodejs.org/en/download]</a> to install the tools above otherwise there may be some compatibility problems.</li>
+</ol>
+<h3 id="First-Run-Verification-and-Configuration-Check"><a href="#First-Run-Verification-and-Configuration-Check" class="headerlink" title="First Run Verification and Configuration Check "></a>First Run Verification and Configuration Check <a name="first-run-verification"></a></h3><p>Local preview verification</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo clean</span><br><span class="line">hexo g &amp;&amp; hexo s</span><br></pre></td></tr></table></figure>
+<p>Access <a href="http://localhost:4000/">http://localhost:4000</a> to confirm the blog runs normally<br>Deployment configuration check<br>Ensure the deployment configuration in <code>_config.yml</code> points to the <code>master</code> branch:</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">deploy:</span></span><br><span class="line">  <span class="attr">type:</span> <span class="string">git</span></span><br><span class="line">  <span class="attr">repo:</span> <span class="string">git@github.com:username/username.github.io.git</span></span><br><span class="line">  <span class="attr">branch:</span> <span class="string">master</span></span><br></pre></td></tr></table></figure>
+<h2 id="Daily-Update-Workflow-Dual-Branch-Collaborative-Operation"><a href="#Daily-Update-Workflow-Dual-Branch-Collaborative-Operation" class="headerlink" title="Daily Update Workflow: Dual Branch Collaborative Operation "></a>Daily Update Workflow: Dual Branch Collaborative Operation <a name="daily-update-workflow"></a></h2><h3 id="Source-Code-Update-and-Submission-Process"><a href="#Source-Code-Update-and-Submission-Process" class="headerlink" title="Source Code Update and Submission Process "></a>Source Code Update and Submission Process <a name="source-cod"></a></h3><ol>
+<li>Pull the latest source code<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git pull origin hexo</span><br></pre></td></tr></table></figure></li>
+<li>Modify and commit<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Add a new article</span></span><br><span class="line">hexo new <span class="string">&quot;New Article&quot;</span></span><br><span class="line"><span class="comment"># Commit changes</span></span><br><span class="line">git add .</span><br><span class="line">git commit -m <span class="string">&quot;Update blog content&quot;</span></span><br><span class="line"><span class="comment"># Push to the remote source branch</span></span><br><span class="line">git push origin hexo</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h3 id="Automation-Script-to-Optimize-Workflow"><a href="#Automation-Script-to-Optimize-Workflow" class="headerlink" title="Automation Script to Optimize Workflow "></a>Automation Script to Optimize Workflow <a name="automation-script"></a></h3><p>Create a <code>deploy.sh</code> script to simplify the process:</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"><span class="comment"># ================ Hexo Automated Deployment Script (hexo01 branch) ================</span></span><br><span class="line"><span class="comment"># Usage: Execute in the blog root directory with ./deploy.sh &quot;Commit message&quot;</span></span><br><span class="line"><span class="comment"># If no commit message is provided, a default timestamp message will be used</span></span><br><span class="line"><span class="comment"># ================================================================</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Define color output</span></span><br><span class="line">COLOR_RED=<span class="string">&quot;\033[31m&quot;</span></span><br><span class="line">COLOR_GREEN=<span class="string">&quot;\033[32m&quot;</span></span><br><span class="line">COLOR_YELLOW=<span class="string">&quot;\033[33m&quot;</span></span><br><span class="line">COLOR_RESET=<span class="string">&quot;\033[0m&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Check if commit message is provided, otherwise use default</span></span><br><span class="line">COMMIT_MSG=<span class="variable">$&#123;1:-&quot;Auto deploy at $(date +&#x27;%Y-%m-%d %H:%M:%S&#x27;)&quot;&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">&quot;<span class="variable">$&#123;COLOR_YELLOW&#125;</span>==== Starting Hexo Blog Deployment ====<span class="variable">$&#123;COLOR_RESET&#125;</span>&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Step 0: Pull latest source code (hexo01 branch)</span></span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">&quot;<span class="variable">$&#123;COLOR_GREEN&#125;</span>[0/4] Pulling latest source code...<span class="variable">$&#123;COLOR_RESET&#125;</span>&quot;</span></span><br><span class="line">git pull origin hexo01</span><br><span class="line"><span class="keyword">if</span> [ $? -ne 0 ]; <span class="keyword">then</span></span><br><span class="line">    <span class="built_in">echo</span> -e <span class="string">&quot;<span class="variable">$&#123;COLOR_RED&#125;</span>Failed to pull source code! Please resolve conflicts manually and retry.<span class="variable">$&#123;COLOR_RESET&#125;</span>&quot;</span></span><br><span class="line">    <span class="built_in">exit</span> 1</span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Step 1: Clean and generate static files</span></span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">&quot;<span class="variable">$&#123;COLOR_GREEN&#125;</span>[1/4] Cleaning and generating static files...<span class="variable">$&#123;COLOR_RESET&#125;</span>&quot;</span></span><br><span class="line">hexo clean &amp;&amp; hexo generate</span><br><span class="line"><span class="keyword">if</span> [ $? -ne 0 ]; <span class="keyword">then</span></span><br><span class="line">    <span class="built_in">echo</span> -e <span class="string">&quot;<span class="variable">$&#123;COLOR_RED&#125;</span>Failed to generate static files!<span class="variable">$&#123;COLOR_RESET&#125;</span>&quot;</span></span><br><span class="line">    <span class="built_in">exit</span> 1</span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"><span class="comment"># Step 2: Deploy to GitHub Pages</span></span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">&quot;<span class="variable">$&#123;COLOR_GREEN&#125;</span>[2/4] Deploying to GitHub Pages...<span class="variable">$&#123;COLOR_RESET&#125;</span>&quot;</span></span><br><span class="line">hexo deploy</span><br><span class="line"><span class="keyword">if</span> [ $? -ne 0 ]; <span class="keyword">then</span></span><br><span class="line">    <span class="built_in">echo</span> -e <span class="string">&quot;<span class="variable">$&#123;COLOR_RED&#125;</span>Failed to deploy to GitHub Pages!<span class="variable">$&#123;COLOR_RESET&#125;</span>&quot;</span></span><br><span class="line">    <span class="built_in">exit</span> 1</span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"><span class="comment"># Step 3: Commit source code changes to hexo01 branch</span></span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">&quot;<span class="variable">$&#123;COLOR_GREEN&#125;</span>[3/4] Committing source code changes...<span class="variable">$&#123;COLOR_RESET&#125;</span>&quot;</span></span><br><span class="line">git add .</span><br><span class="line">git commit -m <span class="string">&quot;<span class="variable">$COMMIT_MSG</span>&quot;</span></span><br><span class="line"><span class="keyword">if</span> [ $? -ne 0 ]; <span class="keyword">then</span></span><br><span class="line">    <span class="built_in">echo</span> -e <span class="string">&quot;<span class="variable">$&#123;COLOR_YELLOW&#125;</span>No changes to commit.<span class="variable">$&#123;COLOR_RESET&#125;</span>&quot;</span></span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">    <span class="comment"># Step 4: Push source code to GitHub</span></span><br><span class="line">    <span class="built_in">echo</span> -e <span class="string">&quot;<span class="variable">$&#123;COLOR_GREEN&#125;</span>[4/4] Pushing source code to GitHub (hexo01 branch)...<span class="variable">$&#123;COLOR_RESET&#125;</span>&quot;</span></span><br><span class="line">    git push origin hexo01</span><br><span class="line">    <span class="keyword">if</span> [ $? -ne 0 ]; <span class="keyword">then</span></span><br><span class="line">        <span class="built_in">echo</span> -e <span class="string">&quot;<span class="variable">$&#123;COLOR_RED&#125;</span>Failed to push source code to GitHub!<span class="variable">$&#123;COLOR_RESET&#125;</span>&quot;</span></span><br><span class="line">        <span class="built_in">exit</span> 1</span><br><span class="line">    <span class="keyword">fi</span></span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">&quot;<span class="variable">$&#123;COLOR_YELLOW&#125;</span>==== Hexo Blog Deployment Completed ====<span class="variable">$&#123;COLOR_RESET&#125;</span>&quot;</span></span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">&quot;<span class="variable">$&#123;COLOR_GREEN&#125;</span>View blog: https://your-username.github.io<span class="variable">$&#123;COLOR_RESET&#125;</span>&quot;</span></span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">&quot;<span class="variable">$&#123;COLOR_GREEN&#125;</span>View source: https://github.com/your-username/your-repo/tree/hexo01<span class="variable">$&#123;COLOR_RESET&#125;</span>&quot;</span></span><br></pre></td></tr></table></figure>
+<p>Grant execution permissions and run:</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">chmod</span> +x deploy.sh</span><br><span class="line">./deploy.sh <span class="string">&quot;Update description&quot;</span></span><br></pre></td></tr></table></figure>
+<h2 id="Common-Problems-and-Solutions"><a href="#Common-Problems-and-Solutions" class="headerlink" title="Common Problems and Solutions "></a>Common Problems and Solutions <a name="automation-script"></a></h2><h3 id="Branch-Switching-Conflict-Handling"><a href="#Branch-Switching-Conflict-Handling" class="headerlink" title="Branch Switching Conflict Handling "></a>Branch Switching Conflict Handling <a name="branch-switchin"></a></h3><p>When switching branches causes node_modules conflicts, execute:</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Stash current changes</span></span><br><span class="line">git stash</span><br><span class="line"><span class="comment"># Switch branches</span></span><br><span class="line">git checkout hexo</span><br><span class="line"><span class="comment"># Restore changes</span></span><br><span class="line">git stash pop</span><br><span class="line"><span class="comment"># Clean untracked files</span></span><br><span class="line">git clean -fdx</span><br><span class="line"><span class="comment"># Reinstall dependencies</span></span><br><span class="line">npm install</span><br></pre></td></tr></table></figure>
+<p>If you can not run hexo command like <code>hexo s</code> on <strong>Mac</strong>,this is because the default terminal on Mac is zsh (which can actually be queried with an echo $SHELL command), and the user environment variable file is~&#x2F;. zshrc. After executing the following command, the environment variable configuration was successful: </p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;PATH=&quot;$PATH:./node_modules/.bin&quot;&#x27;</span> &gt;&gt; ~/.zshrc</span><br></pre></td></tr></table></figure>
+<h3 id="Environment-Dependency-Inconsistency-Issue"><a href="#Environment-Dependency-Inconsistency-Issue" class="headerlink" title="Environment Dependency Inconsistency Issue "></a>Environment Dependency Inconsistency Issue <a name="environment-dependenc"></a></h3><p>Ensure <code>Node.js</code> versions are consistent across devices, which can be locked via <code>package.json</code>:</p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line"><span class="attr">&quot;engines&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;node&quot;</span><span class="punctuation">:</span> <span class="string">&quot;14.x&quot;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+<p>On new devices, execute:</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">npm install --no-save</span><br></pre></td></tr></table></figure>
+
+<h3 id="Theme-and-Plugin-Synchronization-Abnormality"><a href="#Theme-and-Plugin-Synchronization-Abnormality" class="headerlink" title="Theme and Plugin Synchronization Abnormality"></a>Theme and Plugin Synchronization Abnormality<a name="theme-and-pluginy"></a></h3><ol>
+<li>Check for nested Git in themes<br>Delete .git folders in theme directories:<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">find themes/ -<span class="built_in">type</span> d -name <span class="string">&quot;.git&quot;</span> -<span class="built_in">exec</span> <span class="built_in">rm</span> -rf &#123;&#125; \;</span><br></pre></td></tr></table></figure></li>
+<li>Manually synchronize theme updates<br>If the theme is updated, manage it via Git submodule:<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git submodule add &lt;theme-repo&gt; themes/&lt;theme-name&gt;</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h2 id="Advanced-Tips-Private-Repositories-and-Multi-Branch-Strategies"><a href="#Advanced-Tips-Private-Repositories-and-Multi-Branch-Strategies" class="headerlink" title="Advanced Tips: Private Repositories and Multi-Branch Strategies "></a>Advanced Tips: Private Repositories and Multi-Branch Strategies <a name="advanced-tips-private"></a></h2><h3 id="Private-Repositories-to-Protect-Source-Code-Security"><a href="#Private-Repositories-to-Protect-Source-Code-Security" class="headerlink" title="Private Repositories to Protect Source Code Security "></a>Private Repositories to Protect Source Code Security <a name="private-repositories"></a></h3><ol>
+<li>Create a private repository<br>Create a new private repository <code>hexo-source</code> on GitHub to store source code</li>
+<li>Migrate the source branch<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Remove old remote</span></span><br><span class="line">git remote remove origin</span><br><span class="line"><span class="comment"># Add new private repository</span></span><br><span class="line">git remote add origin git@github.com:username/hexo-source.git</span><br><span class="line"><span class="comment"># Push the source branch</span></span><br><span class="line">git push -u origin hexo</span><br></pre></td></tr></table></figure></li>
+<li>Configure dual deployment targets<br>Add to _config.yml:<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">deploy:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">type:</span> <span class="string">git</span></span><br><span class="line">    <span class="attr">repo:</span> <span class="string">git@github.com:username/hexo-source.git</span></span><br><span class="line">    <span class="attr">branch:</span> <span class="string">hexo</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">type:</span> <span class="string">git</span></span><br><span class="line">    <span class="attr">repo:</span> <span class="string">git@github.com:username/username.github.io.git</span></span><br><span class="line">    <span class="attr">branch:</span> <span class="string">main</span></span><br></pre></td></tr></table></figure></li>
+</ol>
+<h3 id="Multi-Branch-Collaborative-Development-Model"><a href="#Multi-Branch-Collaborative-Development-Model" class="headerlink" title="Multi-Branch Collaborative Development Model"></a>Multi-Branch Collaborative Development Model<a name="multi-branch-collaborative-development-model"></a></h3><ol>
+<li>Feature branch workflow<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Create a feature branch</span></span><br><span class="line">git checkout -b feature/new-theme</span><br><span class="line"><span class="comment"># After development, merge into the hexo branch</span></span><br><span class="line">git checkout hexo</span><br><span class="line">git merge feature/new-theme</span><br><span class="line">git push origin hexo</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h2 id="Best-Practices-for-Multi-Device-Synchronization"><a href="#Best-Practices-for-Multi-Device-Synchronization" class="headerlink" title="Best Practices for Multi-Device Synchronization"></a>Best Practices for Multi-Device Synchronization<a name="conclusion-best-practices"></a></h2><ol>
+<li>Core principles:<br>- Separate storage of source code and static files<br>- Manage dependencies via package.json<br>- Always pull before committing to avoid conflicts</li>
+<li>Operation checklist:<br>- For new devices: <code>git clone -b hexo + npm install</code><br>- Daily updates: <code>git pull</code> → edit → <code>git push</code> → <code>hexo deploy</code>(must need git pull firstly)<br>- Environment migration: Only requires Git cloning + dependency installation, no need for re-initialization</li>
+<li>Advanced suggestions:<br>- Use GitHub Actions for automated deployment<br>- Regularly back up source branches to other cloud storages<br>- Adopt branch protection strategies for team collaboration</li>
+</ol>
+<link rel="stylesheet" href="/css/folder.css" type="text/css"><script src="/js/folder.js" type="text/javascript" async></script>]]></content>
+      <categories>
+        <category>Blog</category>
+        <category>Hexo</category>
+      </categories>
+      <tags>
+        <tag>Hexo</tag>
+        <tag>Git</tag>
+        <tag>Multi-Device Synchronization</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>KMP Algorithm</title>
+    <url>/2025/03/08/KMP-Algorithm/</url>
+    <content><![CDATA[<h1 id="The-KMP-Algorithm"><a href="#The-KMP-Algorithm" class="headerlink" title="The KMP Algorithm"></a>The KMP Algorithm</h1><ol>
+<li><a href="#introduction">Introduction to KMP Algorithm</a> </li>
+<li><a href="#naive">Naive Pattern Searching Algorithm</a></li>
+<li><a href="#core">Core Idea of the KMP Algorithm</a><ul>
+<li><a href="#generate">How to generate the next array(LSP array)</a></li>
+<li><a href="#match">KMP Matching Process</a></li>
+</ul>
+</li>
+<li><a href="#java">Code Implementation using Java</a></li>
+<li><a href="#analyse">Complexity Analysis</a><span id="more"></span></li>
+</ol>
+<h2 id="1-KMP-Algorithm"><a href="#1-KMP-Algorithm" class="headerlink" title="1.KMP Algorithm "></a>1.KMP Algorithm <a name="introduction"></a></h2><p>In computer science,the<strong>Knuth–Morris–Pratt</strong> algorithm(<strong>KMP algorithm</strong>) is a <a href="https://en.wikipedia.org/wiki/String-searching_algorithm">string-searching algorithm</a> that searches for occurrences of a word W within a main text string S by employing the observation that when a mismatch occurs, the word itself embodies sufficient information to determine where the next match could begin, thus bypassing re-examination of previously matched characters.It is an efficient string-matching technique that avoids unnecessary character comparisons by leveraging precomputed pattern data.Unlike the naive approach, KMP achieves <strong>O(n+m)</strong> time complexity, where <code>n=text</code> length and <code>m=pattern</code> length.</p>
+<p>For example:</p>
+<ul>
+<li>Text string S &#x3D; “ABABDABACDABABCABAB”</li>
+<li>Pattern string P &#x3D; “ABABC”<br>We need to find the position where <code>P</code> first appears in <code>S</code>.</li>
+</ul>
+<h2 id="2-Naive-brute-force-Pattern-Searching-Algorithm"><a href="#2-Naive-brute-force-Pattern-Searching-Algorithm" class="headerlink" title="2. Naive(brute force) Pattern Searching Algorithm "></a>2. Naive(brute force) Pattern Searching Algorithm <a name="naive"></a></h2><ul>
+<li>We start at every index in the text and compare it with the first character of the pattern, if they match we move to the next character in both text and pattern.</li>
+<li>If there is a mismatch, we start the same process for the next index of the text.<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">S: A B A B D A B A C D A B A B C A B A B</span><br><span class="line">P: A B A B C</span><br></pre></td></tr></table></figure>
+When a mismatch occurs, the text pointer backtracks to i&#x3D;2, and the pattern pointer backtracks to j&#x3D;0.<br><strong>Disadvantage</strong>: The time complexity is<strong>O(n×m)</strong>(where n is the length of the text and m is the length of the pattern), which is inefficient.</li>
+</ul>
+<h2 id="3-Core-Idea-of-the-KMP-Algorithm"><a href="#3-Core-Idea-of-the-KMP-Algorithm" class="headerlink" title="3. Core Idea of the KMP Algorithm"></a>3. Core Idea of the KMP Algorithm<a name="core"></a></h2><p><strong>Core</strong>: Make use of the matched information to avoid invalid backtracking.<br><strong>Key points</strong>:</p>
+<ul>
+<li>Preprocess the pattern string <code>P</code> to generate the <code>LPS </code> array(here I use next array), which records the length of the longest common prefix and suffix for each position.</li>
+<li>During matching, use the <code>LPS</code> array to quickly find the backtracking position of the pattern string.</li>
+<li><strong>LPS</strong> is the <strong>Longest Proper Prefix</strong> which is also a <strong>Suffix</strong>. A proper prefix is a prefix that does not include whole string.</li>
+</ul>
+<h3 id="How-to-generate-the-next-array-LSP-array"><a href="#How-to-generate-the-next-array-LSP-array" class="headerlink" title="How to generate the next array(LSP array)"></a>How to generate the next array(LSP array)<a name="generate"></a></h3><p>The <code>next[j]</code> represents the length of the longest common prefix and suffix of the first <code>j</code> characters of the pattern string <code>P</code>.<br><strong>Rules</strong>:</p>
+<ul>
+<li><code>Prefix</code>: A continuous substring starting from the first character (excluding the last character).</li>
+<li><code>Suffix</code>: A continuous substring ending with the last character (excluding the first character).</li>
+<li><code>Longest common prefix and suffix</code>: The longest identical prefix and suffix.</li>
+</ul>
+<p>Example: Pattern&#x3D;”ABABC”</p>
+<table>
+<thead>
+<tr>
+<th align="center"><strong>j</strong></th>
+<th align="center">0</th>
+<th align="center">1</th>
+<th align="center">2</th>
+<th align="center">3</th>
+<th align="center">4</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">char</td>
+<td align="center">A</td>
+<td align="center">B</td>
+<td align="center">A</td>
+<td align="center">B</td>
+<td align="center">C</td>
+</tr>
+<tr>
+<td align="center">next[j]</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">1</td>
+<td align="center">2</td>
+<td align="center">0</td>
+</tr>
+</tbody></table>
+<h3 id="KMP-Matching-Process"><a href="#KMP-Matching-Process" class="headerlink" title="KMP Matching Process"></a>KMP Matching Process<a name="match"></a></h3><ul>
+<li>Initialize pointers: Set the text pointer i &#x3D; 0 and the pattern pointer j &#x3D; 0.</li>
+<li>Compare characters one by one:<ul>
+<li>If S[i] &#x3D;&#x3D; P[j], move both i and j to the right.</li>
+<li>If there is a mismatch:<ul>
+<li>If j &gt; 0, set j &#x3D; next[j - 1] (backtrack using the next array).</li>
+<li>If j &#x3D;&#x3D; 0, move i to the right.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Matching success: When j &#x3D;&#x3D; m, return i - m</li>
+</ul>
+<p>The whole Matching process:</p>
+<ol>
+<li>Initially, i &#x3D; 0, j &#x3D; 0 → S[0]&#x3D;A &#x3D;&#x3D; P[0] → i &#x3D; 1, j &#x3D; 1.</li>
+<li>S[1]&#x3D;B &#x3D;&#x3D; P[1] → i &#x3D; 2, j &#x3D; 2.</li>
+<li>S[2]&#x3D;A &#x3D;&#x3D; P[2] → i &#x3D; 3, j &#x3D; 3.</li>
+<li>S[3]&#x3D;B &#x3D;&#x3D; P[3] → i &#x3D; 4, j &#x3D; 4.</li>
+<li>S[4]&#x3D;D ≠ P[4]&#x3D;C → j &#x3D; next[3]&#x3D;2.</li>
+<li>S[4]&#x3D;D ≠ P[2]&#x3D;A → j &#x3D; next[1]&#x3D;0.</li>
+<li>S[4]&#x3D;D ≠ P[0]&#x3D;A → i &#x3D; 5, j &#x3D; 0.</li>
+<li>Continue matching until the position of <code>P</code> is found.</li>
+</ol>
+<h2 id="4-Code-Implementation-using-Java"><a href="#4-Code-Implementation-using-Java" class="headerlink" title="4. Code Implementation using Java "></a>4. Code Implementation using Java <a name="java"></a></h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public class KMPAlgorithm &#123;</span><br><span class="line">    public static int kmpSearch(String s, String p) &#123;</span><br><span class="line">        int n = s.length();</span><br><span class="line">        int m = p.length();</span><br><span class="line">        int[] next = computeNext(p);</span><br><span class="line">        int i = 0;</span><br><span class="line">        int j = 0;</span><br><span class="line">        while (i &lt; n) &#123;</span><br><span class="line">            if (s.charAt(i) == p.charAt(j)) &#123;</span><br><span class="line">                i++;</span><br><span class="line">                j++;</span><br><span class="line">                if (j == m) &#123;</span><br><span class="line">                    return i - m;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; else &#123;</span><br><span class="line">                if (j &gt; 0) &#123;</span><br><span class="line">                    j = next[j - 1];</span><br><span class="line">                &#125; else &#123;</span><br><span class="line">                    i++;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        return -1;</span><br><span class="line">&#125;</span><br><span class="line">public static int[] computeNext(String p) &#123;</span><br><span class="line">    int m = p.length();</span><br><span class="line">    int[] next = new int[m];</span><br><span class="line">    int j = 0;</span><br><span class="line">    for (int i = 1; i &lt; m; i++) &#123;</span><br><span class="line">            while (j &gt; 0 &amp;&amp; p.charAt(i) != p.charAt(j)) &#123;</span><br><span class="line">                j = next[j - 1];</span><br><span class="line">            &#125;</span><br><span class="line">            if (p.charAt(i) == p.charAt(j)) &#123;</span><br><span class="line">                j++;</span><br><span class="line">            &#125;</span><br><span class="line">            next[i] = j;</span><br><span class="line">        &#125;</span><br><span class="line">    return next;</span><br><span class="line">&#125;</span><br><span class="line">public static void main(String[] args) &#123;</span><br><span class="line">        String s = &quot;ABABDABACDABABCABAB&quot;;</span><br><span class="line">        String p = &quot;ABABCABAB&quot;;</span><br><span class="line">        int index = kmpSearch(s, p);</span><br><span class="line">        if (index != -1) &#123;</span><br><span class="line">            System.out.println(&quot;The pattern string first appears at position: &quot; + index);</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            System.out.println(&quot;The pattern string was not found.&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="5-Complexity-Analysis"><a href="#5-Complexity-Analysis" class="headerlink" title="5. Complexity Analysis "></a>5. Complexity Analysis <a name="analyse"></a></h2><p><strong>Time complexity</strong>: Pre - processing the next array takes <code>O(m)</code> time, and the matching process takes <code>O(n)</code> time. So the total time complexity is <strong>O(n+m)</strong>.<br><strong>Space complexity</strong>: Storing the next array requires <strong>O(m)</strong> space.</p>
 <link rel="stylesheet" href="/css/folder.css" type="text/css"><script src="/js/folder.js" type="text/javascript" async></script>]]></content>
       <categories>
         <category>Data Structure and Alogrithm</category>
@@ -1519,80 +1471,45 @@ When a mismatch occurs, the text pointer backtracks to i&#x3D;2, and the pattern
       </tags>
   </entry>
   <entry>
-    <title>Doubly Linked List</title>
-    <url>/2025/02/19/doublylinkedlist/</url>
-    <content><![CDATA[<h1 id="Doubly-Linked-List-in-C-A-Fun-and-Practical-Guide"><a href="#Doubly-Linked-List-in-C-A-Fun-and-Practical-Guide" class="headerlink" title="Doubly Linked List in C#: A Fun and Practical Guide"></a>Doubly Linked List in C#: A Fun and Practical Guide</h1><ol>
-<li><a href="#what-is-a-doubly-linked-list">What is a Doubly Linked List?</a></li>
-<li><a href="#creating-a-doubly-linked-list-class">Creating a Doubly Linked List Class</a></li>
-<li><a href="#insertion-operations">Insertion Operations</a><ul>
-<li><a href="#insert-at-the-beginning">Insert at the Beginning</a></li>
-<li><a href="#insert-at-the-end">Insert at the End</a></li>
-<li><a href="#insert-after-a-spefific-node">Insert after a spefific Node</a></li>
-</ul>
-</li>
-<li><a href="#deletion-operations">Deletion Operations</a><span id="more"></span></li>
-<li><a href="#traversal">Traversal</a><ul>
-<li><a href="#forward-traversal">Forward Traversal</a></li>
-<li><a href="#backward-traversal">Backward Traversal</a></li>
-</ul>
-</li>
-<li><a href="#search">Search Node</a></li>
-<li><a href="#complexity">Complexity Analysis</a></li>
-<li><a href="#use">Use Cases</a></li>
-<li><a href="#conclusion">Conclusion</a></li>
+    <title>Singly Linked List</title>
+    <url>/2025/02/18/Single-Linked-List/</url>
+    <content><![CDATA[<h2 id="Singly-Linked-List-Concepts-and-Operations"><a href="#Singly-Linked-List-Concepts-and-Operations" class="headerlink" title="Singly Linked List: Concepts and Operations"></a>Singly Linked List: Concepts and Operations</h2><ol>
+<li><a href="#1-overview-of-singly-linked-list">Overview of Singly Linked List</a></li>
+<li><a href="#2-advantages-of-linked-list">Advantages of Linked List</a></li>
+<li><a href="#3-types-of-linked-list">Types of Linked List</a></li>
+<li><a href="#4-how-to-create-a-linked-list">How to Create a Linked List</a></li>
+<li><a href="#5-various-operations-on-linked-list">Various Operations on Linked List</a><span id="more"></span></li>
 </ol>
-<h2 id="1-What-is-a-Doubly-Linked-List"><a href="#1-What-is-a-Doubly-Linked-List" class="headerlink" title="1. What is a Doubly Linked List?"></a>1. What is a Doubly Linked List?<a name="what-is-a-doubly-linked-list"></a></h2><p>In a Doubly Linked List, each node contains two links - the first link points to the previous node and the next link points to the next node in the sequence.The prev pointer of the first node and next pointer of the last node will point to null.<br><img src="/uploads/2.png" alt="pic"></p>
-<p>Let us start by defining the <code>Node</code> class using C#:</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public class Node&lt;T&gt;</span><br><span class="line">&#123;</span><br><span class="line">    public T Data &#123; get; set; &#125; </span><br><span class="line">    public Node&lt;T&gt; Next &#123; get; set; &#125;</span><br><span class="line">    public Node&lt;T&gt; Prev &#123; get; set; &#125;</span><br><span class="line"></span><br><span class="line">    public Node (T data)</span><br><span class="line">    &#123;</span><br><span class="line">        Data = data;</span><br><span class="line">        Next = null;</span><br><span class="line">        Prev = null;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="2-Creating-a-Doubly-Linked-List-Class"><a href="#2-Creating-a-Doubly-Linked-List-Class" class="headerlink" title="2. Creating a Doubly Linked List Class "></a>2. Creating a Doubly Linked List Class <a name="creating-a-doubly-linked-list-class"></a></h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public class DoublyLinkedList&lt;T&gt;</span><br><span class="line">&#123;</span><br><span class="line">    private Node&lt;T&gt; head;</span><br><span class="line">    private Node&lt;T&gt; tail;</span><br><span class="line"></span><br><span class="line">    private int size;</span><br><span class="line">    public DoublyLinkedList()</span><br><span class="line">    &#123;</span><br><span class="line">        head = null;</span><br><span class="line">        tail = null;</span><br><span class="line">        size = 0;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public int Size() =&gt; size;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="3-Insertion-Operations"><a href="#3-Insertion-Operations" class="headerlink" title="3. Insertion Operations "></a>3. Insertion Operations <a name="insertion-operations"></a></h2><h3 id="Insert-at-the-Beginning"><a href="#Insert-at-the-Beginning" class="headerlink" title="Insert at the Beginning "></a>Insert at the Beginning <a name="insert-at-the-beginning"></a></h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public void AddFirst(T data)</span><br><span class="line">&#123;</span><br><span class="line">     Node&lt;T&gt; newNode = new Node&lt;T&gt;(data);</span><br><span class="line">     if (head == null)</span><br><span class="line">     &#123;</span><br><span class="line">         head = tail = newNode;</span><br><span class="line">     &#125;</span><br><span class="line">     else</span><br><span class="line">     &#123;</span><br><span class="line">         newNode.Next = head;</span><br><span class="line">         head.Prev = newNode;</span><br><span class="line">         head = newNode;</span><br><span class="line">     &#125;</span><br><span class="line"></span><br><span class="line">     size++;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="Insert-at-the-End"><a href="#Insert-at-the-End" class="headerlink" title="Insert at the End "></a>Insert at the End <a name="insert-at-the-end"></a></h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public void AddTail(T data)</span><br><span class="line"> &#123;</span><br><span class="line">     Node&lt;T&gt; newNode = new Node&lt;T&gt;(data);</span><br><span class="line">     if (head == null)</span><br><span class="line">     &#123;</span><br><span class="line">         head = tail = newNode;</span><br><span class="line">     &#125;</span><br><span class="line">     else</span><br><span class="line">     &#123;</span><br><span class="line">         tail.Next = newNode;</span><br><span class="line">         newNode.Prev = tail;</span><br><span class="line">         tail = newNode;</span><br><span class="line">     &#125;</span><br><span class="line">     size++;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="Insert-after-a-specific-Node"><a href="#Insert-after-a-specific-Node" class="headerlink" title="Insert after a specific Node "></a>Insert after a specific Node <a name="insert-after-a-spefific-node"></a></h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public void InsertAt(T data, int index)</span><br><span class="line">&#123;</span><br><span class="line">     if (index &lt; 0 || index&gt; size)</span><br><span class="line">     &#123;</span><br><span class="line">         throw new ArgumentOutOfRangeException(&quot;Index&quot;, index, &quot;Index must be non - negative&quot;);</span><br><span class="line">     &#125;</span><br><span class="line">     if(index == 0)</span><br><span class="line">     &#123;</span><br><span class="line">         AddFirst(data);</span><br><span class="line">         return;</span><br><span class="line">     &#125;</span><br><span class="line">     else if (index == size)</span><br><span class="line">     &#123;</span><br><span class="line">         AddTail(data);</span><br><span class="line">         return;</span><br><span class="line">     &#125;</span><br><span class="line">     else</span><br><span class="line">     &#123;</span><br><span class="line">         Node&lt;T&gt; current = head;</span><br><span class="line">         for (int i = 0; i &lt; index - 1; i++)</span><br><span class="line">         &#123;</span><br><span class="line">             current = current.Next;</span><br><span class="line">         &#125;</span><br><span class="line">         Node&lt;T&gt; newNode = new Node&lt;T&gt;(data);</span><br><span class="line">         newNode.Next = current.Next;</span><br><span class="line">         newNode.Prev = current;</span><br><span class="line">         current.Next.Prev = newNode;</span><br><span class="line">         current.Next = newNode;</span><br><span class="line">         size++;</span><br><span class="line">     &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="4-Deletion-Operation"><a href="#4-Deletion-Operation" class="headerlink" title="4. Deletion Operation "></a>4. Deletion Operation <a name="deletion-operations"></a></h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public void Delete(T Data)</span><br><span class="line"> &#123;</span><br><span class="line">     Node&lt;T&gt; current = head;</span><br><span class="line"></span><br><span class="line">     while (current != null)</span><br><span class="line">     &#123;</span><br><span class="line">         if (current.Data.Equals(Data))</span><br><span class="line">         &#123;</span><br><span class="line">             //if the node is not the head</span><br><span class="line">             if (current.Prev != null)</span><br><span class="line">             &#123;</span><br><span class="line">                 current.Prev.Next = current.Next;</span><br><span class="line">             &#125;</span><br><span class="line">             else</span><br><span class="line">             &#123;</span><br><span class="line">                 head = current.Next;</span><br><span class="line">             &#125;</span><br><span class="line"></span><br><span class="line">             if (current.Next != null)</span><br><span class="line">             &#123;</span><br><span class="line">                 current.Next.Prev = current.Prev;</span><br><span class="line">             &#125;</span><br><span class="line">             else</span><br><span class="line">             &#123;</span><br><span class="line">                 tail = current.Prev;</span><br><span class="line">             &#125;</span><br><span class="line">             size--;</span><br><span class="line">             return;</span><br><span class="line">         &#125;</span><br><span class="line"></span><br><span class="line">         current = current.Next;</span><br><span class="line">     &#125;</span><br><span class="line">     Console.WriteLine(&quot;Node with data &#123;0&#125; not found&quot;, Data);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="5-Traversal"><a href="#5-Traversal" class="headerlink" title="5. Traversal "></a>5. Traversal <a name="traversal"></a></h2><h3 id="Forward-Traversal"><a href="#Forward-Traversal" class="headerlink" title="Forward Traversal "></a>Forward Traversal <a name="forward-traversal"></a></h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public void PrintForward()</span><br><span class="line">&#123;</span><br><span class="line">    Node&lt;T&gt; current = head;</span><br><span class="line">    while (current != null)</span><br><span class="line">    &#123;</span><br><span class="line">        Console.Write(current.Data + &quot; &quot;);</span><br><span class="line">        current = current.Next;</span><br><span class="line">    &#125;</span><br><span class="line">    Console.WriteLine();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="Backward-Traversal"><a href="#Backward-Traversal" class="headerlink" title="Backward Traversal "></a>Backward Traversal <a name="backward-traversal"></a></h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public void PrintBackward()</span><br><span class="line">&#123;</span><br><span class="line">    Node&lt;T&gt; current = tail;</span><br><span class="line">    while (current != null)</span><br><span class="line">    &#123;</span><br><span class="line">        Console.Write(current.Data + &quot; &quot;);</span><br><span class="line">        current = current.Prev;</span><br><span class="line">    &#125;</span><br><span class="line">    Console.WriteLine();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="6-Search-Node"><a href="#6-Search-Node" class="headerlink" title="6. Search Node "></a>6. Search Node <a name="search"></a></h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public void Find(T Data)</span><br><span class="line">&#123;</span><br><span class="line">     Node&lt;T&gt; current = head;</span><br><span class="line">     while (current != null)</span><br><span class="line">     &#123;</span><br><span class="line">         if (current.Data.Equals(Data))</span><br><span class="line">         &#123;</span><br><span class="line">             Console.WriteLine(&quot;Found: &quot; + Data);</span><br><span class="line">             return;</span><br><span class="line">         &#125;</span><br><span class="line">         current = current.Next;</span><br><span class="line">     &#125;</span><br><span class="line">     Console.WriteLine(&quot;Not Found: &quot; + Data);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="7-Complexity-Analysis"><a href="#7-Complexity-Analysis" class="headerlink" title="7. Complexity Analysis "></a>7. Complexity Analysis <a name="Complexity"></a></h2><table>
-<thead>
-<tr>
-<th align="center">Operation</th>
-<th align="center">Time Complexity</th>
-<th align="center">Space Complexity</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">Insertion</td>
-<td align="center">O(1)&#x2F;O(n)</td>
-<td align="center">O(1)</td>
-</tr>
-<tr>
-<td align="center">Deletion</td>
-<td align="center">O(1)</td>
-<td align="center">O(1)</td>
-</tr>
-<tr>
-<td align="center">Search</td>
-<td align="center">O(n)</td>
-<td align="center">O(1)</td>
-</tr>
-<tr>
-<td align="center">Traverse</td>
-<td align="center">O(n)</td>
-<td align="center">O(1)</td>
-</tr>
-</tbody></table>
-<h2 id="8-Use-Cases"><a href="#8-Use-Cases" class="headerlink" title="8. Use Cases "></a>8. Use Cases <a name="use"></a></h2><ul>
-<li>Browser history management</li>
-<li>Music&#x2F;Video playlists</li>
-<li>Undo&#x2F;Redo functionality</li>
-<li>Navigation systems</li>
+<h3 id="Overview-of-Singly-Linked-List"><a href="#Overview-of-Singly-Linked-List" class="headerlink" title="Overview of Singly Linked List "></a>Overview of Singly Linked List <a name="1-overview-of-singly-linked-list"></a></h3><p><strong>What is a Linked List?</strong><br>In C#, a linked list is a linear data structure that stores elements in non - contiguous memory locations.<br>Each node consists of two parts:</p>
+<ol>
+<li><strong>Data</strong>: Each node of a linked list can store a piece of data.</li>
+<li><strong>Address</strong>: Each node of a linked list contains the address of the next node, referred to as “Next”.</li>
+</ol>
+<p><img src="/images/1.png" alt="pic"><br>The first node of a linked list is referenced by a pointer called <strong>“Head”</strong>.</p>
+<h3 id="Advantages-of-Linked-List"><a href="#Advantages-of-Linked-List" class="headerlink" title="Advantages of Linked List "></a>Advantages of Linked List <a name="2-advantages-of-linked-list"></a></h3><ol>
+<li>They are dynamic in nature and allocate memory as needed.</li>
+<li>Insertion and deletion operations are easy to implement.</li>
+<li>Other data structures such as stacks and queues can also be easily implemented using linked lists.</li>
+<li>They have fast access times and can be expanded in constant time without memory overhead.</li>
+<li>Since there is no need to define an initial size for a linked list, memory utilization is efficient.</li>
+<li>Backtracking is possible in doubly - linked lists.</li>
+</ol>
+<p><strong>Node Class</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public class Node&lt;T&gt;</span><br><span class="line">&#123;</span><br><span class="line">    public T Data &#123; get; set; &#125;</span><br><span class="line">    public Node&lt;T&gt; Next &#123; get; set; &#125;</span><br><span class="line">    public Node(T data)</span><br><span class="line">    &#123;</span><br><span class="line">        Data = data;</span><br><span class="line">        Next = null;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="Types-of-Linked-List"><a href="#Types-of-Linked-List" class="headerlink" title="Types of Linked List "></a>Types of Linked List <a name="3-types-of-linked-list"></a></h3><ul>
+<li><strong>Singly linked lists</strong></li>
+<li><strong>Doubly linked lists</strong></li>
+<li><strong>Circular linked lists</strong></li>
+<li><strong>Circular doubly linked lists</strong></li>
 </ul>
-<h2 id="9-Conclusion"><a href="#9-Conclusion" class="headerlink" title="9. Conclusion  "></a>9. Conclusion  <a name="conclusion"></a></h2><p><strong>Doubly Linked Lists</strong> provide enhanced flexibility compared to single linked lists at the cost of additional memory usage.They are particularly useful in scenarios requiring bidirectional traversal and frequent modifications.When implementing DLLs, careful pointer management is crucial to avoid broken links and memory leaks.</p>
+<h3 id="How-to-Create-a-Linked-List"><a href="#How-to-Create-a-Linked-List" class="headerlink" title="How to Create a Linked List "></a>How to Create a Linked List <a name="4-how-to-create-a-linked-list"></a></h3><p>Combined with the above node class, you can gradually build a linked list by instantiating nodes and setting their Next pointers. For example:</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Node&lt;int&gt; node1 = new Node&lt;int&gt;(1);</span><br><span class="line">Node&lt;int&gt; node2 = new Node&lt;int&gt;(2);</span><br><span class="line">node1.Next = node2;</span><br></pre></td></tr></table></figure>
+<p>&#x2F;&#x2F; Here, node1 serves as the head node to build a simple linked list</p>
+<h3 id="Various-Operations-on-Linked-List"><a href="#Various-Operations-on-Linked-List" class="headerlink" title="Various Operations on Linked List "></a>Various Operations on Linked List <a name="5-various-operations-on-linked-list"></a></h3><p>Linked List Class Definition</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public class LinkedList&lt;T&gt;</span><br><span class="line">&#123;</span><br><span class="line">    // The head node of the linked list</span><br><span class="line">    private Node&lt;T&gt; head;</span><br><span class="line">    // The length of the linked list</span><br><span class="line">    private int length;</span><br><span class="line"></span><br><span class="line">    public LinkedList()</span><br><span class="line">    &#123;</span><br><span class="line">        head = null;</span><br><span class="line">        length = 0;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public int Length =&gt; length;</span><br><span class="line">    public bool IsEmpty() =&gt; (length == 0);</span><br><span class="line"></span><br><span class="line">    // Add a new node at the beginning of the linked list</span><br><span class="line">    public void AddFirst(T data)</span><br><span class="line">    &#123;</span><br><span class="line">        Node&lt;T&gt; newNode = new Node&lt;T&gt;(data);</span><br><span class="line">        newNode.Next = head;</span><br><span class="line">        // Update the new node as the head of the linked list</span><br><span class="line">        head = newNode;</span><br><span class="line">        length++;</span><br><span class="line">    &#125;</span><br><span class="line">    // Add a new node at the end of the linked list</span><br><span class="line">    public void AddTail(T data)</span><br><span class="line">    &#123;</span><br><span class="line">        Node&lt;T&gt; newNode = new Node&lt;T&gt;(data);</span><br><span class="line">        if (head == null)</span><br><span class="line">        &#123;</span><br><span class="line">            head = newNode;</span><br><span class="line">            return;</span><br><span class="line">        &#125;</span><br><span class="line">        Node&lt;T&gt; current = head;</span><br><span class="line">        while (current.Next != null)</span><br><span class="line">        &#123;</span><br><span class="line">            current = current.Next;</span><br><span class="line">        &#125;</span><br><span class="line">        current.Next = newNode;</span><br><span class="line">        length++;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void DeleteElemets(T Data)</span><br><span class="line">    &#123;</span><br><span class="line">        Node&lt;T&gt; dummyHead = new Node&lt;T&gt;(default(T));</span><br><span class="line">        dummyHead.Next = head;</span><br><span class="line">        Node&lt;T&gt; temp = dummyHead;</span><br><span class="line">        while (temp.Next != null)</span><br><span class="line">        &#123;</span><br><span class="line">            if (temp.Next.Data.Equals(Data))</span><br><span class="line">            &#123;</span><br><span class="line">                temp.Next = temp.Next.Next;</span><br><span class="line">                length--;</span><br><span class="line">            &#125;</span><br><span class="line">            else</span><br><span class="line">            &#123;</span><br><span class="line">                temp = temp.Next;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        // return dummyHead.Next;</span><br><span class="line">    &#125;</span><br><span class="line">    public void Delete(T Data)</span><br><span class="line">    &#123;</span><br><span class="line">        if (head == null) return;</span><br><span class="line">        if (head.Data.Equals(Data))</span><br><span class="line">        &#123;</span><br><span class="line">            head = head.Next;</span><br><span class="line">            length--;</span><br><span class="line">            return;</span><br><span class="line">        &#125;</span><br><span class="line">        Node&lt;T&gt; current = head;</span><br><span class="line">        while (current != null &amp;&amp; current.Next != null)</span><br><span class="line">        &#123;</span><br><span class="line">            if (current.Next.Data.Equals(Data))</span><br><span class="line">            &#123;</span><br><span class="line">                current.Next = current.Next.Next;</span><br><span class="line">                length--;</span><br><span class="line">                return;</span><br><span class="line">            &#125;</span><br><span class="line">            current = current.Next;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    public void DeleteAtHead()</span><br><span class="line">    &#123;</span><br><span class="line">        if (head == null) return;</span><br><span class="line">        head = head.Next;</span><br><span class="line">        length--;</span><br><span class="line">    &#125;</span><br><span class="line">    public void Find(T Data)</span><br><span class="line">    &#123;</span><br><span class="line">        if (head == null)</span><br><span class="line">        &#123;</span><br><span class="line">            Console.WriteLine(&quot;The Linked List is null, can&#x27;t find the data&quot;);</span><br><span class="line">            return;</span><br><span class="line">        &#125;</span><br><span class="line">        Node&lt;T&gt; current = head;</span><br><span class="line">        while (current != null)</span><br><span class="line">        &#123;</span><br><span class="line">            if (current.Data.Equals(Data))</span><br><span class="line">            &#123;</span><br><span class="line">                Console.WriteLine(&quot;Found the data: &quot; + Data);</span><br><span class="line">                return;</span><br><span class="line">            &#125;</span><br><span class="line">            current = current.Next;</span><br><span class="line">        &#125;</span><br><span class="line">        Console.WriteLine(&quot;Not Found the data: &quot; + Data);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void InsertAt(int index, T data)</span><br><span class="line">    &#123;</span><br><span class="line">        if (index &lt; 0)</span><br><span class="line">        &#123;</span><br><span class="line">            throw new ArgumentOutOfRangeException(&quot;Index&quot;, index, &quot;Index must be non - negative&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">        Node&lt;T&gt; newNode = new Node&lt;T&gt;(data);</span><br><span class="line">        if (index == 0)</span><br><span class="line">        &#123;</span><br><span class="line">            AddFirst(data);</span><br><span class="line">            return;</span><br><span class="line">        &#125;</span><br><span class="line">        Node&lt;T&gt; current = head;</span><br><span class="line">        for (int i = 0; i &lt; index - 1; i++)</span><br><span class="line">        &#123;</span><br><span class="line">            if (current == null || current.Next == null)</span><br><span class="line">            &#123;</span><br><span class="line">                throw new ArgumentOutOfRangeException(&quot;Index&quot;, index, &quot;Index is out of range&quot;);</span><br><span class="line">            &#125;</span><br><span class="line">            current = current.Next;</span><br><span class="line">        &#125;</span><br><span class="line">        newNode.Next = current.Next;</span><br><span class="line">        current.Next = newNode;</span><br><span class="line">        length++;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void Print()</span><br><span class="line">    &#123;</span><br><span class="line">        Node&lt;T&gt; current = head;</span><br><span class="line">        if (current == null)</span><br><span class="line">        &#123;</span><br><span class="line">            Console.WriteLine(&quot;null&quot;);</span><br><span class="line">            return;</span><br><span class="line">        &#125;</span><br><span class="line">        while (current != null)</span><br><span class="line">        &#123;</span><br><span class="line">            Console.Write(current.Data + &quot;-&gt;&quot;);</span><br><span class="line">            current = current.Next;</span><br><span class="line">        &#125;</span><br><span class="line">        Console.Write(&quot;null&quot;);</span><br><span class="line">        Console.WriteLine();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="Additional-Exercises"><a href="#Additional-Exercises" class="headerlink" title="Additional Exercises:"></a>Additional Exercises:</h3><h4 id="How-to-Reverse-a-Linked-List"><a href="#How-to-Reverse-a-Linked-List" class="headerlink" title="How to Reverse a Linked List?"></a>How to Reverse a Linked List?</h4><p>The time complexity is , and the space complexity is .</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public void ReverseList()</span><br><span class="line">&#123;</span><br><span class="line">    if (head.Next == null || head.Next.Next == null)</span><br><span class="line">    &#123;</span><br><span class="line">        return;</span><br><span class="line">    &#125;</span><br><span class="line">    Node&lt;T&gt; pre = null;</span><br><span class="line">    Node&lt;T&gt; current = head;</span><br><span class="line">    Node&lt;T&gt; temp = null;</span><br><span class="line">    while (current != null)</span><br><span class="line">    &#123;</span><br><span class="line">        // Store the key node to prevent data loss</span><br><span class="line">        temp = current.Next;</span><br><span class="line">        current.Next = pre;</span><br><span class="line">        pre = current;</span><br><span class="line">        current = temp;</span><br><span class="line">    &#125;</span><br><span class="line">    head = pre;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="How-to-Find-the-k-th-Node-from-the-End-of-the-Linked-List"><a href="#How-to-Find-the-k-th-Node-from-the-End-of-the-Linked-List" class="headerlink" title="How to Find the k - th Node from the End of the Linked List"></a>How to Find the k - th Node from the End of the Linked List</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public Node&lt;T&gt; FindKthToLast(int k)</span><br><span class="line">&#123;</span><br><span class="line">    if (head == null || k &lt;= 0)</span><br><span class="line">    &#123;</span><br><span class="line">        return null;</span><br><span class="line">    &#125;</span><br><span class="line">    Node&lt;T&gt; fast = head;</span><br><span class="line">    Node&lt;T&gt; slow = head;</span><br><span class="line">    // Let the fast pointer move k steps first, and the remaining is N - K steps, which is the K - th step from the end</span><br><span class="line">    for (int i = 0; i &lt; k; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        if (fast == null)</span><br><span class="line">        &#123;</span><br><span class="line">            return null;</span><br><span class="line">        &#125;</span><br><span class="line">        fast = fast.Next;</span><br><span class="line">    &#125;</span><br><span class="line">    // Move the fast and slow pointers together, and the slow pointer moves N - K steps</span><br><span class="line">    while (fast != null)</span><br><span class="line">    &#123;</span><br><span class="line">        fast = fast.Next;</span><br><span class="line">        slow = slow.Next;</span><br><span class="line">    &#125;</span><br><span class="line">    return slow;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <link rel="stylesheet" href="/css/folder.css" type="text/css"><script src="/js/folder.js" type="text/javascript" async></script>]]></content>
       <categories>
         <category>Data Structure and Alogrithm</category>
@@ -1717,6 +1634,89 @@ When a mismatch occurs, the text pointer backtracks to i&#x3D;2, and the pattern
 <li><strong>Queue using Stacks</strong>: Understand the conversion between LIFO and FIFO, leveraging stack properties to simulate queue behavior.</li>
 <li><strong>Stack using Queues</strong>: Deeply understand the underlying principles of data structures and master algorithm design in complex scenarios.</li>
 </ul>
+<link rel="stylesheet" href="/css/folder.css" type="text/css"><script src="/js/folder.js" type="text/javascript" async></script>]]></content>
+      <categories>
+        <category>Data Structure and Alogrithm</category>
+      </categories>
+      <tags>
+        <tag>Data Structure and Alogrithm</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Doubly Linked List</title>
+    <url>/2025/02/19/doublylinkedlist/</url>
+    <content><![CDATA[<h1 id="Doubly-Linked-List-in-C-A-Fun-and-Practical-Guide"><a href="#Doubly-Linked-List-in-C-A-Fun-and-Practical-Guide" class="headerlink" title="Doubly Linked List in C#: A Fun and Practical Guide"></a>Doubly Linked List in C#: A Fun and Practical Guide</h1><ol>
+<li><a href="#what-is-a-doubly-linked-list">What is a Doubly Linked List?</a></li>
+<li><a href="#creating-a-doubly-linked-list-class">Creating a Doubly Linked List Class</a></li>
+<li><a href="#insertion-operations">Insertion Operations</a><ul>
+<li><a href="#insert-at-the-beginning">Insert at the Beginning</a></li>
+<li><a href="#insert-at-the-end">Insert at the End</a></li>
+<li><a href="#insert-after-a-spefific-node">Insert after a spefific Node</a></li>
+</ul>
+</li>
+<li><a href="#deletion-operations">Deletion Operations</a><span id="more"></span></li>
+<li><a href="#traversal">Traversal</a><ul>
+<li><a href="#forward-traversal">Forward Traversal</a></li>
+<li><a href="#backward-traversal">Backward Traversal</a></li>
+</ul>
+</li>
+<li><a href="#search">Search Node</a></li>
+<li><a href="#complexity">Complexity Analysis</a></li>
+<li><a href="#use">Use Cases</a></li>
+<li><a href="#conclusion">Conclusion</a></li>
+</ol>
+<h2 id="1-What-is-a-Doubly-Linked-List"><a href="#1-What-is-a-Doubly-Linked-List" class="headerlink" title="1. What is a Doubly Linked List?"></a>1. What is a Doubly Linked List?<a name="what-is-a-doubly-linked-list"></a></h2><p>In a Doubly Linked List, each node contains two links - the first link points to the previous node and the next link points to the next node in the sequence.The prev pointer of the first node and next pointer of the last node will point to null.<br><img src="/uploads/2.png" alt="pic"></p>
+<p>Let us start by defining the <code>Node</code> class using C#:</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public class Node&lt;T&gt;</span><br><span class="line">&#123;</span><br><span class="line">    public T Data &#123; get; set; &#125; </span><br><span class="line">    public Node&lt;T&gt; Next &#123; get; set; &#125;</span><br><span class="line">    public Node&lt;T&gt; Prev &#123; get; set; &#125;</span><br><span class="line"></span><br><span class="line">    public Node (T data)</span><br><span class="line">    &#123;</span><br><span class="line">        Data = data;</span><br><span class="line">        Next = null;</span><br><span class="line">        Prev = null;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="2-Creating-a-Doubly-Linked-List-Class"><a href="#2-Creating-a-Doubly-Linked-List-Class" class="headerlink" title="2. Creating a Doubly Linked List Class "></a>2. Creating a Doubly Linked List Class <a name="creating-a-doubly-linked-list-class"></a></h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public class DoublyLinkedList&lt;T&gt;</span><br><span class="line">&#123;</span><br><span class="line">    private Node&lt;T&gt; head;</span><br><span class="line">    private Node&lt;T&gt; tail;</span><br><span class="line"></span><br><span class="line">    private int size;</span><br><span class="line">    public DoublyLinkedList()</span><br><span class="line">    &#123;</span><br><span class="line">        head = null;</span><br><span class="line">        tail = null;</span><br><span class="line">        size = 0;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public int Size() =&gt; size;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-Insertion-Operations"><a href="#3-Insertion-Operations" class="headerlink" title="3. Insertion Operations "></a>3. Insertion Operations <a name="insertion-operations"></a></h2><h3 id="Insert-at-the-Beginning"><a href="#Insert-at-the-Beginning" class="headerlink" title="Insert at the Beginning "></a>Insert at the Beginning <a name="insert-at-the-beginning"></a></h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public void AddFirst(T data)</span><br><span class="line">&#123;</span><br><span class="line">     Node&lt;T&gt; newNode = new Node&lt;T&gt;(data);</span><br><span class="line">     if (head == null)</span><br><span class="line">     &#123;</span><br><span class="line">         head = tail = newNode;</span><br><span class="line">     &#125;</span><br><span class="line">     else</span><br><span class="line">     &#123;</span><br><span class="line">         newNode.Next = head;</span><br><span class="line">         head.Prev = newNode;</span><br><span class="line">         head = newNode;</span><br><span class="line">     &#125;</span><br><span class="line"></span><br><span class="line">     size++;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Insert-at-the-End"><a href="#Insert-at-the-End" class="headerlink" title="Insert at the End "></a>Insert at the End <a name="insert-at-the-end"></a></h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public void AddTail(T data)</span><br><span class="line"> &#123;</span><br><span class="line">     Node&lt;T&gt; newNode = new Node&lt;T&gt;(data);</span><br><span class="line">     if (head == null)</span><br><span class="line">     &#123;</span><br><span class="line">         head = tail = newNode;</span><br><span class="line">     &#125;</span><br><span class="line">     else</span><br><span class="line">     &#123;</span><br><span class="line">         tail.Next = newNode;</span><br><span class="line">         newNode.Prev = tail;</span><br><span class="line">         tail = newNode;</span><br><span class="line">     &#125;</span><br><span class="line">     size++;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Insert-after-a-specific-Node"><a href="#Insert-after-a-specific-Node" class="headerlink" title="Insert after a specific Node "></a>Insert after a specific Node <a name="insert-after-a-spefific-node"></a></h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public void InsertAt(T data, int index)</span><br><span class="line">&#123;</span><br><span class="line">     if (index &lt; 0 || index&gt; size)</span><br><span class="line">     &#123;</span><br><span class="line">         throw new ArgumentOutOfRangeException(&quot;Index&quot;, index, &quot;Index must be non - negative&quot;);</span><br><span class="line">     &#125;</span><br><span class="line">     if(index == 0)</span><br><span class="line">     &#123;</span><br><span class="line">         AddFirst(data);</span><br><span class="line">         return;</span><br><span class="line">     &#125;</span><br><span class="line">     else if (index == size)</span><br><span class="line">     &#123;</span><br><span class="line">         AddTail(data);</span><br><span class="line">         return;</span><br><span class="line">     &#125;</span><br><span class="line">     else</span><br><span class="line">     &#123;</span><br><span class="line">         Node&lt;T&gt; current = head;</span><br><span class="line">         for (int i = 0; i &lt; index - 1; i++)</span><br><span class="line">         &#123;</span><br><span class="line">             current = current.Next;</span><br><span class="line">         &#125;</span><br><span class="line">         Node&lt;T&gt; newNode = new Node&lt;T&gt;(data);</span><br><span class="line">         newNode.Next = current.Next;</span><br><span class="line">         newNode.Prev = current;</span><br><span class="line">         current.Next.Prev = newNode;</span><br><span class="line">         current.Next = newNode;</span><br><span class="line">         size++;</span><br><span class="line">     &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="4-Deletion-Operation"><a href="#4-Deletion-Operation" class="headerlink" title="4. Deletion Operation "></a>4. Deletion Operation <a name="deletion-operations"></a></h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public void Delete(T Data)</span><br><span class="line"> &#123;</span><br><span class="line">     Node&lt;T&gt; current = head;</span><br><span class="line"></span><br><span class="line">     while (current != null)</span><br><span class="line">     &#123;</span><br><span class="line">         if (current.Data.Equals(Data))</span><br><span class="line">         &#123;</span><br><span class="line">             //if the node is not the head</span><br><span class="line">             if (current.Prev != null)</span><br><span class="line">             &#123;</span><br><span class="line">                 current.Prev.Next = current.Next;</span><br><span class="line">             &#125;</span><br><span class="line">             else</span><br><span class="line">             &#123;</span><br><span class="line">                 head = current.Next;</span><br><span class="line">             &#125;</span><br><span class="line"></span><br><span class="line">             if (current.Next != null)</span><br><span class="line">             &#123;</span><br><span class="line">                 current.Next.Prev = current.Prev;</span><br><span class="line">             &#125;</span><br><span class="line">             else</span><br><span class="line">             &#123;</span><br><span class="line">                 tail = current.Prev;</span><br><span class="line">             &#125;</span><br><span class="line">             size--;</span><br><span class="line">             return;</span><br><span class="line">         &#125;</span><br><span class="line"></span><br><span class="line">         current = current.Next;</span><br><span class="line">     &#125;</span><br><span class="line">     Console.WriteLine(&quot;Node with data &#123;0&#125; not found&quot;, Data);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="5-Traversal"><a href="#5-Traversal" class="headerlink" title="5. Traversal "></a>5. Traversal <a name="traversal"></a></h2><h3 id="Forward-Traversal"><a href="#Forward-Traversal" class="headerlink" title="Forward Traversal "></a>Forward Traversal <a name="forward-traversal"></a></h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public void PrintForward()</span><br><span class="line">&#123;</span><br><span class="line">    Node&lt;T&gt; current = head;</span><br><span class="line">    while (current != null)</span><br><span class="line">    &#123;</span><br><span class="line">        Console.Write(current.Data + &quot; &quot;);</span><br><span class="line">        current = current.Next;</span><br><span class="line">    &#125;</span><br><span class="line">    Console.WriteLine();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Backward-Traversal"><a href="#Backward-Traversal" class="headerlink" title="Backward Traversal "></a>Backward Traversal <a name="backward-traversal"></a></h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public void PrintBackward()</span><br><span class="line">&#123;</span><br><span class="line">    Node&lt;T&gt; current = tail;</span><br><span class="line">    while (current != null)</span><br><span class="line">    &#123;</span><br><span class="line">        Console.Write(current.Data + &quot; &quot;);</span><br><span class="line">        current = current.Prev;</span><br><span class="line">    &#125;</span><br><span class="line">    Console.WriteLine();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="6-Search-Node"><a href="#6-Search-Node" class="headerlink" title="6. Search Node "></a>6. Search Node <a name="search"></a></h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public void Find(T Data)</span><br><span class="line">&#123;</span><br><span class="line">     Node&lt;T&gt; current = head;</span><br><span class="line">     while (current != null)</span><br><span class="line">     &#123;</span><br><span class="line">         if (current.Data.Equals(Data))</span><br><span class="line">         &#123;</span><br><span class="line">             Console.WriteLine(&quot;Found: &quot; + Data);</span><br><span class="line">             return;</span><br><span class="line">         &#125;</span><br><span class="line">         current = current.Next;</span><br><span class="line">     &#125;</span><br><span class="line">     Console.WriteLine(&quot;Not Found: &quot; + Data);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="7-Complexity-Analysis"><a href="#7-Complexity-Analysis" class="headerlink" title="7. Complexity Analysis "></a>7. Complexity Analysis <a name="Complexity"></a></h2><table>
+<thead>
+<tr>
+<th align="center">Operation</th>
+<th align="center">Time Complexity</th>
+<th align="center">Space Complexity</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">Insertion</td>
+<td align="center">O(1)&#x2F;O(n)</td>
+<td align="center">O(1)</td>
+</tr>
+<tr>
+<td align="center">Deletion</td>
+<td align="center">O(1)</td>
+<td align="center">O(1)</td>
+</tr>
+<tr>
+<td align="center">Search</td>
+<td align="center">O(n)</td>
+<td align="center">O(1)</td>
+</tr>
+<tr>
+<td align="center">Traverse</td>
+<td align="center">O(n)</td>
+<td align="center">O(1)</td>
+</tr>
+</tbody></table>
+<h2 id="8-Use-Cases"><a href="#8-Use-Cases" class="headerlink" title="8. Use Cases "></a>8. Use Cases <a name="use"></a></h2><ul>
+<li>Browser history management</li>
+<li>Music&#x2F;Video playlists</li>
+<li>Undo&#x2F;Redo functionality</li>
+<li>Navigation systems</li>
+</ul>
+<h2 id="9-Conclusion"><a href="#9-Conclusion" class="headerlink" title="9. Conclusion  "></a>9. Conclusion  <a name="conclusion"></a></h2><p><strong>Doubly Linked Lists</strong> provide enhanced flexibility compared to single linked lists at the cost of additional memory usage.They are particularly useful in scenarios requiring bidirectional traversal and frequent modifications.When implementing DLLs, careful pointer management is crucial to avoid broken links and memory leaks.</p>
 <link rel="stylesheet" href="/css/folder.css" type="text/css"><script src="/js/folder.js" type="text/javascript" async></script>]]></content>
       <categories>
         <category>Data Structure and Alogrithm</category>
