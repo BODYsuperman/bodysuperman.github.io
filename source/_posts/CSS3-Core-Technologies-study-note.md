@@ -21,7 +21,7 @@ tags:
   - [2.1 Basic Selectors](#basic)
   - [2.2 Relationship Selectors](#re)
   - [2.3 Pseudo-Classes & Pseudo-Elements](#pse)
-  - [2.3 Attribute Selectors](#attr)
+  - [2.4 Attribute Selectors](#attr)
 - [3. Text Styling & Layout](#text)
   - [3.1 Font Styles](#fonts)
   - [3.2 Text Layout](#textly)
