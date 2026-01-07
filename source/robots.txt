@@ -1,0 +1,149 @@
+# 默认规则 - 对所有爬虫
+User-agent: *
+Allow: /
+Disallow: /*.js$
+Disallow: /*.css$
+Disallow: /*.php$
+Disallow: /search/
+Disallow: /admin/
+Disallow: /wp-admin/
+Disallow: /wp-login/
+Disallow: /dashboard/
+Disallow: /private/
+Disallow: /tmp/
+Disallow: /backup/
+Disallow: /api/
+Disallow: /cgi-bin/
+Disallow: /node_modules/
+Disallow: /vendor/
+Disallow: /uploads/
+Disallow: /downloads/
+
+# 爬取延迟设置
+Crawl-delay: 2
+
+# ===== 搜索引擎 =====
+# Google
+User-agent: Googlebot
+Allow: /
+Disallow: /draft/
+Disallow: /test/
+Crawl-delay: 1
+
+# Google 图片
+User-agent: Googlebot-Image
+Allow: /images/
+Disallow: /private-images/
+
+# Google 移动版
+User-agent: Googlebot-Mobile
+Allow: /
+
+# Bing
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1
+
+# ===== 禁止的爬虫 =====
+# 百度（完全禁止）
+User-agent: Baiduspider
+Disallow: /
+# 或者部分禁止：
+# Disallow: /archives/
+# Disallow: /api/
+# Disallow: /comments/
+
+User-agent: Baiduspider-image
+Disallow: /
+
+User-agent: Baiduspider-video
+Disallow: /
+
+# 字节跳动
+User-agent: Bytespider
+Disallow: /
+
+# 其他垃圾/采集爬虫
+User-agent: 360Spider
+Disallow: /
+
+User-agent: HaosouSpider
+Disallow: /
+
+User-agent: Sogou web spider
+Disallow: /
+
+User-agent: YisouSpider
+Disallow: /
+
+User-agent: YandexBot
+Disallow: /
+
+User-agent: YandexImages
+Disallow: /
+
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
+
+User-agent: DotBot
+Disallow: /
+
+User-agent: Alexa
+Disallow: /
+
+User-agent: TurnitinBot
+Disallow: /
+
+User-agent: CCBot
+Disallow: /
+
+# ===== 恶意采集工具 =====
+User-agent: Scrapy
+Disallow: /
+
+User-agent: HttpClient
+Disallow: /
+
+User-agent: python-requests
+Disallow: /
+
+User-agent: Python-urllib
+Disallow: /
+
+User-agent: Java
+Disallow: /
+
+User-agent: curl
+Disallow: /
+
+User-agent: Wget
+Disallow: /
+
+User-agent: PostmanRuntime
+Disallow: /
+
+User-agent: node-fetch
+Disallow: /
+
+# ===== RSS 阅读器 =====
+User-agent: FeedFetcher-Google
+Allow: /atom.xml
+Allow: /rss.xml
+Disallow: /
+
+User-agent: FeedDemon
+Disallow: /
+
+User-agent: Feedly
+Disallow: /
+
+# ===== 站点地图 =====
+Sitemap: https://www.alexsuperman.cn/sitemap.xml
+Sitemap: https://www.alexsuperman.cn/baidusitemap.xml
+Sitemap: https://www.alexsuperman.cn/sitemap.txt
