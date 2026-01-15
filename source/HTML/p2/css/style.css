@@ -1,0 +1,118 @@
+:root {
+  --cardHeight: 40vw;
+  --cardMargin: 4vw;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+
+}
+
+ul,
+ol {
+  list-style: none;
+}
+
+body {
+  background-color: #3a1d2b;
+  font-size: calc(1em + .5vw);
+}
+
+/* 头部制作 */
+.header {
+  display: grid;
+  justify-items: center;
+  align-items: center;
+  /* 在pc端 100wv 包含了垂直滚动条 */
+  width: 80vw;
+  margin: 0 auto;
+  height: 100vh;
+  background-color: #3a1d2b;
+  color: #fff;
+  text-align: center;
+}
+
+.header h1 {
+  font-size: 4.5vw;
+  margin-bottom: 1vw;
+}
+
+.header p {
+  font-size: 2vw;
+}
+
+/* 主体部分 */
+.main {
+  width: 80vw;
+  margin: 0 auto;
+  /* background-color: pink; */
+}
+
+/* 动画效果 */
+@keyframes scale {
+  0% {
+    transform: scaleX(1);
+  }
+
+  100% {
+    transform: scaleX(0.8);
+  }
+
+}
+
+.main li {
+  overflow: hidden;
+  position: sticky;
+  top: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  height: var(--cardHeight);
+  margin-bottom: var(--cardMargin);
+  background-color: #fff;
+  box-shadow: 0 0.2em 1em rgba(0, 0, 0, 0.1), 0 1em 2em rgba(0, 0, 0, 0.1);
+  border-radius: 1em;
+  animation: scale 1s ease-in-out forwards;
+  /* 视图时间线 */
+  animation-timeline: view();
+}
+
+.main li img {
+  width: 100%;
+}
+
+.main .l {
+  display: grid;
+  justify-items: center;
+  align-items: center;
+
+}
+
+.main .l>div {
+  width: 80%;
+}
+
+.main .l h2 {
+  font-weight: 300;
+  font-size: 2.5em;
+}
+
+.main .l p {
+  margin: 1em 0
+}
+
+.main .l a {
+  text-decoration: none;
+  color: #fff;
+  background-color: rgb(188 87 36);
+  padding: .5em;
+  border-radius: .25em;
+}
+
+/* 文字部分 */
+.article {
+  width: 50vw;
+  margin: 0 auto;
+  color: #fff;
+}

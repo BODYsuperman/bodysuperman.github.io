@@ -32,8 +32,9 @@ skip_render:
   - robots.txt
   - CNAME                 # GitHub Pages 自定义域名
   - README.md            # 项目说明
+  - "HTML/*"
 
-# Writing
+# WritingHTML
 new_post_name: :title.md # File name of new posts
 default_layout: post
 titlecase: false # Transform title into titlecase
