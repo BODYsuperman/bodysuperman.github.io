@@ -32,7 +32,7 @@ skip_render:
   - robots.txt
   - CNAME                 # GitHub Pages 自定义域名
   - README.md            # 项目说明
-  - "HTML/*"
+  - "HTML/**"
 
 # WritingHTML
 new_post_name: :title.md # File name of new posts
