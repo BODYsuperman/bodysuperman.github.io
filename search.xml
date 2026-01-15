@@ -1112,172 +1112,6 @@ or <figure class="highlight css"><table><tr><td class="code"><pre><span class="l
       </tags>
   </entry>
   <entry>
-    <title>Hexo Blog Multi-Device Synchronization and Management Guide Based on Git Branch Strategy</title>
-    <url>/2025/05/03/Hexo-Blog-Multi-Device-Synchronization-and-Management-Guide-Based-on-Git-Branch-Strategy/</url>
-    <content><![CDATA[<ul>
-<li><a href="#introduction-the-necessity">Introduction: The Necessity of Multi-Device Collaboration</a></li>
-<li><a href="#core-principles-of-hexo">Core Principles of Hexo Multi-Device Synchronization</a><ul>
-<li><a href="#hexo-directory">Hexo Directory Structure and Version Control Strategy</a></li>
-<li><a href="#git-branch">Git Branch Division of Labor Model</a></li>
-</ul>
-</li>
-<li><a href="#old-computer-operation">Old Computer Operation Guide: Building Remote Synchronization Foundation</a><ul>
-<li><a href="#creating-and-configuring-remote-branches">Creating and Configuring Remote Branches</a></li>
-<li><a href="#local-environment">Local Environment and Remote Repository Synchronization</a></li>
-<li><a href="#gitignore-key-configuration">.gitignore Key Configuration</a></li>
-</ul>
-</li>
-<li><a href="#new-computer-environment">New Computer Environment Setup: Restoring Blog from Remote Repository</a><ul>
-<li><a href="#ssh-key-configuration">SSH Key Configuration and Environment Dependency Installation</a></li>
-<li><a href="#remote-repository">Remote Repository Cloning and Dependency Recovery</a></li>
-<li><a href="#first-run-verification">First Run Verification and Configuration Check</a></li>
-</ul>
-</li>
-<li><a href="#daily-update-workflow">Daily Update Workflow: Dual Branch Collaborative Operation</a><ul>
-<li><a href="#source-code">Source Code Update and Submission Process</a></li>
-<li><a href="#static-file">Static File Deployment and Branch Synchronization</a></li>
-<li><a href="#automation-script">Automation Script to Optimize Workflow</a></li>
-</ul>
-</li>
-<li><a href="#common-problems">Common Problems and Solutions</a><ul>
-<li><a href="#branch-switching">Branch Switching Conflict Handling</a></li>
-<li><a href="#environment-dependency">Environment Dependency Inconsistency Issue</a></li>
-<li><a href="#theme-and-pluginy">Theme and Plugin Synchronization Abnormality</a></li>
-</ul>
-</li>
-<li><a href="#advanced-tips-private">Advanced Tips: Private Repositories and Multi-Branch Strategies</a><ul>
-<li><a href="#private-repositories">Private Repositories to Protect Source Code Security</a></li>
-<li><a href="#multi-branch-collaborative-development-model">Multi-Branch Collaborative Development Model</a></li>
-</ul>
-</li>
-<li><a href="#conclusion-best-practices">Conclusion: Best Practices for Multi-Device Synchronization</a><span id="more"></span></li>
-</ul>
-<h2 id="Introduction-The-Necessity-of-Multi-Device-Collaboration"><a href="#Introduction-The-Necessity-of-Multi-Device-Collaboration" class="headerlink" title="Introduction:The Necessity of Multi-Device Collaboration"></a>Introduction:The Necessity of Multi-Device Collaboration<a name="introduction-the-necessity"></a></h2><p>A couple of days ago, I am thinking if I can update blogs using multiple devices (such as home computers, office computers, laptops) which has become the norm from my perspective. As an efficient static blog generator, Hexo’s default deployment mechanism only pushes static files to GitHub Pages, but source code files (Markdown articles, theme configurations, plugins) are not synchronized, leading to the following pain points in multi-device collaboration:</p>
-<ul>
-<li>Scattered storage of source code, unable to manage uniformly</li>
-<li>Repeated construction of environment configurations, low efficiency</li>
-<li>Sudden situations (such as computer failure) leading to source code loss</li>
-</ul>
-<p>So I write this to build a complete Hexo multi-device synchronization solution through Git branch strategies, achieving seamless synchronization and management of source code across devices.</p>
-<h2 id="Core-Principles-of-Hexo-Multi-Device-Synchronization"><a href="#Core-Principles-of-Hexo-Multi-Device-Synchronization" class="headerlink" title="Core Principles of Hexo Multi-Device Synchronization"></a>Core Principles of Hexo Multi-Device Synchronization<a name="core-principles-of-hexo"></a></h2><h3 id="Hexo-Directory-Structure-and-Version-Control-Strategy"><a href="#Hexo-Directory-Structure-and-Version-Control-Strategy" class="headerlink" title="Hexo Directory Structure and Version Control Strategy"></a>Hexo Directory Structure and Version Control Strategy<a name="hexo-directory"></a></h3><p>In the Hexo blog directory structure, the following <code>files/directories</code> require special attention:</p>
-<table>
-<thead>
-<tr>
-<th>Directory&#x2F;File</th>
-<th>Function</th>
-<th>Version Control Strategy</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><code>node_modules/</code></td>
-<td>Dependency package directory</td>
-<td>Ignored (regenerated via <code>package.json</code>)</td>
-</tr>
-<tr>
-<td><code>themes/</code></td>
-<td>Theme files</td>
-<td>Must be synchronized (contains custom configurations)</td>
-</tr>
-<tr>
-<td><code>public/</code></td>
-<td>Static generated files</td>
-<td>Ignored (generated by <code>hexo g</code>)</td>
-</tr>
-<tr>
-<td><code>source/</code></td>
-<td>Blog source code(Markdown)</td>
-<td>Must be synchronized</td>
-</tr>
-<tr>
-<td><code>_config.yml</code></td>
-<td>Global configuration file</td>
-<td>Must be synchronized</td>
-</tr>
-<tr>
-<td><code>package.json</code></td>
-<td>Dependency description file</td>
-<td>Must be synchronized</td>
-</tr>
-</tbody></table>
-<h3 id="Git-Branch-Division-of-Labor-Model"><a href="#Git-Branch-Division-of-Labor-Model" class="headerlink" title="Git Branch Division of Labor Model"></a>Git Branch Division of Labor Model<a name="git-branch"></a></h3><p>A dual-branch strategy is higly recommended:</p>
-<ul>
-<li><strong>Source branch (e.g., <code>hexo01</code> or <code>source</code>)</strong>: Stores Hexo source code (Markdown, themes, configurations)</li>
-<li><strong>Deployment branch (e.g., <code>master</code> or <code>gh-pages</code>)</strong>: Stores static generated files (automatically pushed by <code>hexo deploy</code>)</li>
-</ul>
-<h4 id="Core-logic"><a href="#Core-logic" class="headerlink" title="Core logic:"></a>Core logic:</h4><ol>
-<li>The source branch serves as the “development branch” where all manual modifications are completed.</li>
-<li>The deployment branch serves as the “production branch” only receiving static generated files. When pushing to the “development branch” using <code>git push origin hexo01</code>, the “production branch” will be automatically synchronized.</li>
-<li>The two branches are isolated through <code>.gitignore</code> configuration.</li>
-</ol>
-<h2 id="Old-Computer-Operation-Guide"><a href="#Old-Computer-Operation-Guide" class="headerlink" title="Old Computer Operation Guide:"></a>Old Computer Operation Guide:</h2><h3 id="Creating-and-Configuring-Remote-Branches"><a href="#Creating-and-Configuring-Remote-Branches" class="headerlink" title="Creating and Configuring Remote Branches"></a>Creating and Configuring Remote Branches<a name="creating-and-configuring-remote-branches"></a></h3><ol>
-<li><strong>Remote repository preparation</strong><br>Create a repository <code>username.github.io</code> on GitHub and execute the following operations:<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Create hexo source branch</span></span><br><span class="line">git branch hexo</span><br><span class="line"><span class="comment"># Set hexo as the default branch, this is a key step!</span></span><br><span class="line">git branch --set-upstream-to=origin/hexo hexo</span><br></pre></td></tr></table></figure></li>
-<li><strong>Local environment initialization</strong><br>  Execute in the blog root directory:<br>  Initialize Git repository<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git init</span><br><span class="line"><span class="comment"># Add remote repository</span></span><br><span class="line">git remote add origin git@github.com:username/username.github.io.git</span><br></pre></td></tr></table></figure></li>
-</ol>
-<h3 id="Local-Environment-and-Remote-Repository-Synchronization"><a href="#Local-Environment-and-Remote-Repository-Synchronization" class="headerlink" title="Local Environment and Remote Repository Synchronization"></a>Local Environment and Remote Repository Synchronization<a name="local-environmen"></a></h3><ol>
-<li>Clean and copy files<br>Retain the <strong>.git</strong> folder and delete other files<br>Copy the original Hexo directory (except .deploy_git&#x2F;) to the current directory<br>Commit source code to the remote branch<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Add all files</span></span><br><span class="line">git add .</span><br><span class="line"><span class="comment"># Commit changes</span></span><br><span class="line">git commit -m <span class="string">&quot;Init hexo source branch&quot;</span></span><br><span class="line"><span class="comment"># Push to the remote hexo branch</span></span><br><span class="line">git push origin hexo</span><br></pre></td></tr></table></figure></li>
-</ol>
-<h3 id="gitignore-Key-Configuration"><a href="#gitignore-Key-Configuration" class="headerlink" title=".gitignore Key Configuration "></a>.gitignore Key Configuration <a name="gitignore-key-configuratio"></a></h3><p>Create <strong>.gitignore</strong> file in the project root directory with the following content:</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">.DS_Store</span><br><span class="line">Thumbs.db</span><br><span class="line">db.json</span><br><span class="line">*.log</span><br><span class="line">node_modules/</span><br><span class="line">public/</span><br><span class="line">.deploy*/</span><br></pre></td></tr></table></figure>
-<h2 id="New-Computer-Environment-Setup"><a href="#New-Computer-Environment-Setup" class="headerlink" title="New Computer Environment Setup "></a>New Computer Environment Setup <a name="new-computer-environment"></a></h2><h3 id="SSH-Key-Configuration-and-Environment-Dependency-Installation"><a href="#SSH-Key-Configuration-and-Environment-Dependency-Installation" class="headerlink" title="SSH Key Configuration and Environment Dependency Installation "></a>SSH Key Configuration and Environment Dependency Installation <a name="ssh-key-configuratio"></a></h3><ol>
-<li>Generate and add SSH key<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ssh-keygen -t rsa -C <span class="string">&quot;your_email@example.com&quot;</span></span><br></pre></td></tr></table></figure></li>
-<li>Add the generated public key like <strong>id_rsa.pub</strong> to <code>GitHub&#39;s Settings &gt; SSH and GPG Keys</code>, mac is under <code>~/.ssh</code> and windows is under <code>C:\Users\username\.ssh</code></li>
-<li>Configure Git global information<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git config --global user.name <span class="string">&quot;YourName&quot;</span></span><br><span class="line">git config --global user.email <span class="string">&quot;your_email@example.com&quot;</span></span><br></pre></td></tr></table></figure></li>
-</ol>
-<h3 id="Remote-Repository-Cloning-and-Dependency-Recovery"><a href="#Remote-Repository-Cloning-and-Dependency-Recovery" class="headerlink" title="Remote Repository Cloning and Dependency Recovery "></a>Remote Repository Cloning and Dependency Recovery <a name="remote-repository"></a></h3><ol>
-<li>Clone the source branch<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git <span class="built_in">clone</span> -b hexo git@github.com:username/username.github.io.git blog</span><br><span class="line"><span class="built_in">cd</span> blog</span><br></pre></td></tr></table></figure>
-2.Install dependencies<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Install Hexo CLI</span></span><br><span class="line">npm install -g hexo-cli</span><br><span class="line"><span class="comment"># Install project dependencies</span></span><br><span class="line">npm install</span><br><span class="line"><span class="comment"># Install deployment plugins</span></span><br><span class="line">npm install hexo-deployer-git</span><br></pre></td></tr></table></figure>
-<strong>Note</strong>:make sure you use the same version of (Node.js)[<a href="https://nodejs.org/en/download]">https://nodejs.org/en/download]</a> to install the tools above otherwise there may be some compatibility problems.</li>
-</ol>
-<h3 id="First-Run-Verification-and-Configuration-Check"><a href="#First-Run-Verification-and-Configuration-Check" class="headerlink" title="First Run Verification and Configuration Check "></a>First Run Verification and Configuration Check <a name="first-run-verification"></a></h3><p>Local preview verification</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo clean</span><br><span class="line">hexo g &amp;&amp; hexo s</span><br></pre></td></tr></table></figure>
-<p>Access <a href="http://localhost:4000/">http://localhost:4000</a> to confirm the blog runs normally<br>Deployment configuration check<br>Ensure the deployment configuration in <code>_config.yml</code> points to the <code>master</code> branch:</p>
-<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">deploy:</span></span><br><span class="line">  <span class="attr">type:</span> <span class="string">git</span></span><br><span class="line">  <span class="attr">repo:</span> <span class="string">git@github.com:username/username.github.io.git</span></span><br><span class="line">  <span class="attr">branch:</span> <span class="string">master</span></span><br></pre></td></tr></table></figure>
-<h2 id="Daily-Update-Workflow-Dual-Branch-Collaborative-Operation"><a href="#Daily-Update-Workflow-Dual-Branch-Collaborative-Operation" class="headerlink" title="Daily Update Workflow: Dual Branch Collaborative Operation "></a>Daily Update Workflow: Dual Branch Collaborative Operation <a name="daily-update-workflow"></a></h2><h3 id="Source-Code-Update-and-Submission-Process"><a href="#Source-Code-Update-and-Submission-Process" class="headerlink" title="Source Code Update and Submission Process "></a>Source Code Update and Submission Process <a name="source-cod"></a></h3><ol>
-<li>Pull the latest source code<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git pull origin hexo</span><br></pre></td></tr></table></figure></li>
-<li>Modify and commit<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Add a new article</span></span><br><span class="line">hexo new <span class="string">&quot;New Article&quot;</span></span><br><span class="line"><span class="comment"># Commit changes</span></span><br><span class="line">git add .</span><br><span class="line">git commit -m <span class="string">&quot;Update blog content&quot;</span></span><br><span class="line"><span class="comment"># Push to the remote source branch</span></span><br><span class="line">git push origin hexo</span><br></pre></td></tr></table></figure></li>
-</ol>
-<h3 id="Automation-Script-to-Optimize-Workflow"><a href="#Automation-Script-to-Optimize-Workflow" class="headerlink" title="Automation Script to Optimize Workflow "></a>Automation Script to Optimize Workflow <a name="automation-script"></a></h3><p>Create a <code>deploy.sh</code> script to simplify the process:</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"><span class="comment"># ================ Hexo Automated Deployment Script (hexo01 branch) ================</span></span><br><span class="line"><span class="comment"># Usage: Execute in the blog root directory with ./deploy.sh &quot;Commit message&quot;</span></span><br><span class="line"><span class="comment"># If no commit message is provided, a default timestamp message will be used</span></span><br><span class="line"><span class="comment"># ================================================================</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Define color output</span></span><br><span class="line">COLOR_RED=<span class="string">&quot;\033[31m&quot;</span></span><br><span class="line">COLOR_GREEN=<span class="string">&quot;\033[32m&quot;</span></span><br><span class="line">COLOR_YELLOW=<span class="string">&quot;\033[33m&quot;</span></span><br><span class="line">COLOR_RESET=<span class="string">&quot;\033[0m&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Check if commit message is provided, otherwise use default</span></span><br><span class="line">COMMIT_MSG=<span class="variable">$&#123;1:-&quot;Auto deploy at $(date +&#x27;%Y-%m-%d %H:%M:%S&#x27;)&quot;&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">&quot;<span class="variable">$&#123;COLOR_YELLOW&#125;</span>==== Starting Hexo Blog Deployment ====<span class="variable">$&#123;COLOR_RESET&#125;</span>&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Step 0: Pull latest source code (hexo01 branch)</span></span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">&quot;<span class="variable">$&#123;COLOR_GREEN&#125;</span>[0/4] Pulling latest source code...<span class="variable">$&#123;COLOR_RESET&#125;</span>&quot;</span></span><br><span class="line">git pull origin hexo01</span><br><span class="line"><span class="keyword">if</span> [ $? -ne 0 ]; <span class="keyword">then</span></span><br><span class="line">    <span class="built_in">echo</span> -e <span class="string">&quot;<span class="variable">$&#123;COLOR_RED&#125;</span>Failed to pull source code! Please resolve conflicts manually and retry.<span class="variable">$&#123;COLOR_RESET&#125;</span>&quot;</span></span><br><span class="line">    <span class="built_in">exit</span> 1</span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Step 1: Clean and generate static files</span></span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">&quot;<span class="variable">$&#123;COLOR_GREEN&#125;</span>[1/4] Cleaning and generating static files...<span class="variable">$&#123;COLOR_RESET&#125;</span>&quot;</span></span><br><span class="line">hexo clean &amp;&amp; hexo generate</span><br><span class="line"><span class="keyword">if</span> [ $? -ne 0 ]; <span class="keyword">then</span></span><br><span class="line">    <span class="built_in">echo</span> -e <span class="string">&quot;<span class="variable">$&#123;COLOR_RED&#125;</span>Failed to generate static files!<span class="variable">$&#123;COLOR_RESET&#125;</span>&quot;</span></span><br><span class="line">    <span class="built_in">exit</span> 1</span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"><span class="comment"># Step 2: Deploy to GitHub Pages</span></span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">&quot;<span class="variable">$&#123;COLOR_GREEN&#125;</span>[2/4] Deploying to GitHub Pages...<span class="variable">$&#123;COLOR_RESET&#125;</span>&quot;</span></span><br><span class="line">hexo deploy</span><br><span class="line"><span class="keyword">if</span> [ $? -ne 0 ]; <span class="keyword">then</span></span><br><span class="line">    <span class="built_in">echo</span> -e <span class="string">&quot;<span class="variable">$&#123;COLOR_RED&#125;</span>Failed to deploy to GitHub Pages!<span class="variable">$&#123;COLOR_RESET&#125;</span>&quot;</span></span><br><span class="line">    <span class="built_in">exit</span> 1</span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"><span class="comment"># Step 3: Commit source code changes to hexo01 branch</span></span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">&quot;<span class="variable">$&#123;COLOR_GREEN&#125;</span>[3/4] Committing source code changes...<span class="variable">$&#123;COLOR_RESET&#125;</span>&quot;</span></span><br><span class="line">git add .</span><br><span class="line">git commit -m <span class="string">&quot;<span class="variable">$COMMIT_MSG</span>&quot;</span></span><br><span class="line"><span class="keyword">if</span> [ $? -ne 0 ]; <span class="keyword">then</span></span><br><span class="line">    <span class="built_in">echo</span> -e <span class="string">&quot;<span class="variable">$&#123;COLOR_YELLOW&#125;</span>No changes to commit.<span class="variable">$&#123;COLOR_RESET&#125;</span>&quot;</span></span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">    <span class="comment"># Step 4: Push source code to GitHub</span></span><br><span class="line">    <span class="built_in">echo</span> -e <span class="string">&quot;<span class="variable">$&#123;COLOR_GREEN&#125;</span>[4/4] Pushing source code to GitHub (hexo01 branch)...<span class="variable">$&#123;COLOR_RESET&#125;</span>&quot;</span></span><br><span class="line">    git push origin hexo01</span><br><span class="line">    <span class="keyword">if</span> [ $? -ne 0 ]; <span class="keyword">then</span></span><br><span class="line">        <span class="built_in">echo</span> -e <span class="string">&quot;<span class="variable">$&#123;COLOR_RED&#125;</span>Failed to push source code to GitHub!<span class="variable">$&#123;COLOR_RESET&#125;</span>&quot;</span></span><br><span class="line">        <span class="built_in">exit</span> 1</span><br><span class="line">    <span class="keyword">fi</span></span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">&quot;<span class="variable">$&#123;COLOR_YELLOW&#125;</span>==== Hexo Blog Deployment Completed ====<span class="variable">$&#123;COLOR_RESET&#125;</span>&quot;</span></span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">&quot;<span class="variable">$&#123;COLOR_GREEN&#125;</span>View blog: https://your-username.github.io<span class="variable">$&#123;COLOR_RESET&#125;</span>&quot;</span></span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">&quot;<span class="variable">$&#123;COLOR_GREEN&#125;</span>View source: https://github.com/your-username/your-repo/tree/hexo01<span class="variable">$&#123;COLOR_RESET&#125;</span>&quot;</span></span><br></pre></td></tr></table></figure>
-<p>Grant execution permissions and run:</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">chmod</span> +x deploy.sh</span><br><span class="line">./deploy.sh <span class="string">&quot;Update description&quot;</span></span><br></pre></td></tr></table></figure>
-<h2 id="Common-Problems-and-Solutions"><a href="#Common-Problems-and-Solutions" class="headerlink" title="Common Problems and Solutions "></a>Common Problems and Solutions <a name="automation-script"></a></h2><h3 id="Branch-Switching-Conflict-Handling"><a href="#Branch-Switching-Conflict-Handling" class="headerlink" title="Branch Switching Conflict Handling "></a>Branch Switching Conflict Handling <a name="branch-switchin"></a></h3><p>When switching branches causes node_modules conflicts, execute:</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Stash current changes</span></span><br><span class="line">git stash</span><br><span class="line"><span class="comment"># Switch branches</span></span><br><span class="line">git checkout hexo</span><br><span class="line"><span class="comment"># Restore changes</span></span><br><span class="line">git stash pop</span><br><span class="line"><span class="comment"># Clean untracked files</span></span><br><span class="line">git clean -fdx</span><br><span class="line"><span class="comment"># Reinstall dependencies</span></span><br><span class="line">npm install</span><br></pre></td></tr></table></figure>
-<p>If you can not run hexo command like <code>hexo s</code> on <strong>Mac</strong>,this is because the default terminal on Mac is zsh (which can actually be queried with an echo $SHELL command), and the user environment variable file is~&#x2F;. zshrc. After executing the following command, the environment variable configuration was successful: </p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;PATH=&quot;$PATH:./node_modules/.bin&quot;&#x27;</span> &gt;&gt; ~/.zshrc</span><br></pre></td></tr></table></figure>
-<h3 id="Environment-Dependency-Inconsistency-Issue"><a href="#Environment-Dependency-Inconsistency-Issue" class="headerlink" title="Environment Dependency Inconsistency Issue "></a>Environment Dependency Inconsistency Issue <a name="environment-dependenc"></a></h3><p>Ensure <code>Node.js</code> versions are consistent across devices, which can be locked via <code>package.json</code>:</p>
-<figure class="highlight json"><table><tr><td class="code"><pre><span class="line"><span class="attr">&quot;engines&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;node&quot;</span><span class="punctuation">:</span> <span class="string">&quot;14.x&quot;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
-<p>On new devices, execute:</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">npm install --no-save</span><br></pre></td></tr></table></figure>
-
-<h3 id="Theme-and-Plugin-Synchronization-Abnormality"><a href="#Theme-and-Plugin-Synchronization-Abnormality" class="headerlink" title="Theme and Plugin Synchronization Abnormality"></a>Theme and Plugin Synchronization Abnormality<a name="theme-and-pluginy"></a></h3><ol>
-<li>Check for nested Git in themes<br>Delete .git folders in theme directories:<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">find themes/ -<span class="built_in">type</span> d -name <span class="string">&quot;.git&quot;</span> -<span class="built_in">exec</span> <span class="built_in">rm</span> -rf &#123;&#125; \;</span><br></pre></td></tr></table></figure></li>
-<li>Manually synchronize theme updates<br>If the theme is updated, manage it via Git submodule:<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git submodule add &lt;theme-repo&gt; themes/&lt;theme-name&gt;</span><br></pre></td></tr></table></figure></li>
-</ol>
-<h2 id="Advanced-Tips-Private-Repositories-and-Multi-Branch-Strategies"><a href="#Advanced-Tips-Private-Repositories-and-Multi-Branch-Strategies" class="headerlink" title="Advanced Tips: Private Repositories and Multi-Branch Strategies "></a>Advanced Tips: Private Repositories and Multi-Branch Strategies <a name="advanced-tips-private"></a></h2><h3 id="Private-Repositories-to-Protect-Source-Code-Security"><a href="#Private-Repositories-to-Protect-Source-Code-Security" class="headerlink" title="Private Repositories to Protect Source Code Security "></a>Private Repositories to Protect Source Code Security <a name="private-repositories"></a></h3><ol>
-<li>Create a private repository<br>Create a new private repository <code>hexo-source</code> on GitHub to store source code</li>
-<li>Migrate the source branch<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Remove old remote</span></span><br><span class="line">git remote remove origin</span><br><span class="line"><span class="comment"># Add new private repository</span></span><br><span class="line">git remote add origin git@github.com:username/hexo-source.git</span><br><span class="line"><span class="comment"># Push the source branch</span></span><br><span class="line">git push -u origin hexo</span><br></pre></td></tr></table></figure></li>
-<li>Configure dual deployment targets<br>Add to _config.yml:<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">deploy:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">type:</span> <span class="string">git</span></span><br><span class="line">    <span class="attr">repo:</span> <span class="string">git@github.com:username/hexo-source.git</span></span><br><span class="line">    <span class="attr">branch:</span> <span class="string">hexo</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">type:</span> <span class="string">git</span></span><br><span class="line">    <span class="attr">repo:</span> <span class="string">git@github.com:username/username.github.io.git</span></span><br><span class="line">    <span class="attr">branch:</span> <span class="string">main</span></span><br></pre></td></tr></table></figure></li>
-</ol>
-<h3 id="Multi-Branch-Collaborative-Development-Model"><a href="#Multi-Branch-Collaborative-Development-Model" class="headerlink" title="Multi-Branch Collaborative Development Model"></a>Multi-Branch Collaborative Development Model<a name="multi-branch-collaborative-development-model"></a></h3><ol>
-<li>Feature branch workflow<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Create a feature branch</span></span><br><span class="line">git checkout -b feature/new-theme</span><br><span class="line"><span class="comment"># After development, merge into the hexo branch</span></span><br><span class="line">git checkout hexo</span><br><span class="line">git merge feature/new-theme</span><br><span class="line">git push origin hexo</span><br></pre></td></tr></table></figure></li>
-</ol>
-<h2 id="Best-Practices-for-Multi-Device-Synchronization"><a href="#Best-Practices-for-Multi-Device-Synchronization" class="headerlink" title="Best Practices for Multi-Device Synchronization"></a>Best Practices for Multi-Device Synchronization<a name="conclusion-best-practices"></a></h2><ol>
-<li>Core principles:<br>- Separate storage of source code and static files<br>- Manage dependencies via package.json<br>- Always pull before committing to avoid conflicts</li>
-<li>Operation checklist:<br>- For new devices: <code>git clone -b hexo + npm install</code><br>- Daily updates: <code>git pull</code> → edit → <code>git push</code> → <code>hexo deploy</code>(must need git pull firstly)<br>- Environment migration: Only requires Git cloning + dependency installation, no need for re-initialization</li>
-<li>Advanced suggestions:<br>- Use GitHub Actions for automated deployment<br>- Regularly back up source branches to other cloud storages<br>- Adopt branch protection strategies for team collaboration</li>
-</ol>
-<link rel="stylesheet" href="/css/folder.css" type="text/css"><script src="/js/folder.js" type="text/javascript" async></script>]]></content>
-      <categories>
-        <category>Blog</category>
-        <category>Hexo</category>
-      </categories>
-      <tags>
-        <tag>Hexo</tag>
-        <tag>Git</tag>
-        <tag>Multi-Device Synchronization</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Design Patterns</title>
     <url>/2025/04/19/Design-Patterns/</url>
     <content><![CDATA[<ol>
@@ -1599,6 +1433,172 @@ Use Cases:</li>
       </tags>
   </entry>
   <entry>
+    <title>Hexo Blog Multi-Device Synchronization and Management Guide Based on Git Branch Strategy</title>
+    <url>/2025/05/03/Hexo-Blog-Multi-Device-Synchronization-and-Management-Guide-Based-on-Git-Branch-Strategy/</url>
+    <content><![CDATA[<ul>
+<li><a href="#introduction-the-necessity">Introduction: The Necessity of Multi-Device Collaboration</a></li>
+<li><a href="#core-principles-of-hexo">Core Principles of Hexo Multi-Device Synchronization</a><ul>
+<li><a href="#hexo-directory">Hexo Directory Structure and Version Control Strategy</a></li>
+<li><a href="#git-branch">Git Branch Division of Labor Model</a></li>
+</ul>
+</li>
+<li><a href="#old-computer-operation">Old Computer Operation Guide: Building Remote Synchronization Foundation</a><ul>
+<li><a href="#creating-and-configuring-remote-branches">Creating and Configuring Remote Branches</a></li>
+<li><a href="#local-environment">Local Environment and Remote Repository Synchronization</a></li>
+<li><a href="#gitignore-key-configuration">.gitignore Key Configuration</a></li>
+</ul>
+</li>
+<li><a href="#new-computer-environment">New Computer Environment Setup: Restoring Blog from Remote Repository</a><ul>
+<li><a href="#ssh-key-configuration">SSH Key Configuration and Environment Dependency Installation</a></li>
+<li><a href="#remote-repository">Remote Repository Cloning and Dependency Recovery</a></li>
+<li><a href="#first-run-verification">First Run Verification and Configuration Check</a></li>
+</ul>
+</li>
+<li><a href="#daily-update-workflow">Daily Update Workflow: Dual Branch Collaborative Operation</a><ul>
+<li><a href="#source-code">Source Code Update and Submission Process</a></li>
+<li><a href="#static-file">Static File Deployment and Branch Synchronization</a></li>
+<li><a href="#automation-script">Automation Script to Optimize Workflow</a></li>
+</ul>
+</li>
+<li><a href="#common-problems">Common Problems and Solutions</a><ul>
+<li><a href="#branch-switching">Branch Switching Conflict Handling</a></li>
+<li><a href="#environment-dependency">Environment Dependency Inconsistency Issue</a></li>
+<li><a href="#theme-and-pluginy">Theme and Plugin Synchronization Abnormality</a></li>
+</ul>
+</li>
+<li><a href="#advanced-tips-private">Advanced Tips: Private Repositories and Multi-Branch Strategies</a><ul>
+<li><a href="#private-repositories">Private Repositories to Protect Source Code Security</a></li>
+<li><a href="#multi-branch-collaborative-development-model">Multi-Branch Collaborative Development Model</a></li>
+</ul>
+</li>
+<li><a href="#conclusion-best-practices">Conclusion: Best Practices for Multi-Device Synchronization</a><span id="more"></span></li>
+</ul>
+<h2 id="Introduction-The-Necessity-of-Multi-Device-Collaboration"><a href="#Introduction-The-Necessity-of-Multi-Device-Collaboration" class="headerlink" title="Introduction:The Necessity of Multi-Device Collaboration"></a>Introduction:The Necessity of Multi-Device Collaboration<a name="introduction-the-necessity"></a></h2><p>A couple of days ago, I am thinking if I can update blogs using multiple devices (such as home computers, office computers, laptops) which has become the norm from my perspective. As an efficient static blog generator, Hexo’s default deployment mechanism only pushes static files to GitHub Pages, but source code files (Markdown articles, theme configurations, plugins) are not synchronized, leading to the following pain points in multi-device collaboration:</p>
+<ul>
+<li>Scattered storage of source code, unable to manage uniformly</li>
+<li>Repeated construction of environment configurations, low efficiency</li>
+<li>Sudden situations (such as computer failure) leading to source code loss</li>
+</ul>
+<p>So I write this to build a complete Hexo multi-device synchronization solution through Git branch strategies, achieving seamless synchronization and management of source code across devices.</p>
+<h2 id="Core-Principles-of-Hexo-Multi-Device-Synchronization"><a href="#Core-Principles-of-Hexo-Multi-Device-Synchronization" class="headerlink" title="Core Principles of Hexo Multi-Device Synchronization"></a>Core Principles of Hexo Multi-Device Synchronization<a name="core-principles-of-hexo"></a></h2><h3 id="Hexo-Directory-Structure-and-Version-Control-Strategy"><a href="#Hexo-Directory-Structure-and-Version-Control-Strategy" class="headerlink" title="Hexo Directory Structure and Version Control Strategy"></a>Hexo Directory Structure and Version Control Strategy<a name="hexo-directory"></a></h3><p>In the Hexo blog directory structure, the following <code>files/directories</code> require special attention:</p>
+<table>
+<thead>
+<tr>
+<th>Directory&#x2F;File</th>
+<th>Function</th>
+<th>Version Control Strategy</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>node_modules/</code></td>
+<td>Dependency package directory</td>
+<td>Ignored (regenerated via <code>package.json</code>)</td>
+</tr>
+<tr>
+<td><code>themes/</code></td>
+<td>Theme files</td>
+<td>Must be synchronized (contains custom configurations)</td>
+</tr>
+<tr>
+<td><code>public/</code></td>
+<td>Static generated files</td>
+<td>Ignored (generated by <code>hexo g</code>)</td>
+</tr>
+<tr>
+<td><code>source/</code></td>
+<td>Blog source code(Markdown)</td>
+<td>Must be synchronized</td>
+</tr>
+<tr>
+<td><code>_config.yml</code></td>
+<td>Global configuration file</td>
+<td>Must be synchronized</td>
+</tr>
+<tr>
+<td><code>package.json</code></td>
+<td>Dependency description file</td>
+<td>Must be synchronized</td>
+</tr>
+</tbody></table>
+<h3 id="Git-Branch-Division-of-Labor-Model"><a href="#Git-Branch-Division-of-Labor-Model" class="headerlink" title="Git Branch Division of Labor Model"></a>Git Branch Division of Labor Model<a name="git-branch"></a></h3><p>A dual-branch strategy is higly recommended:</p>
+<ul>
+<li><strong>Source branch (e.g., <code>hexo01</code> or <code>source</code>)</strong>: Stores Hexo source code (Markdown, themes, configurations)</li>
+<li><strong>Deployment branch (e.g., <code>master</code> or <code>gh-pages</code>)</strong>: Stores static generated files (automatically pushed by <code>hexo deploy</code>)</li>
+</ul>
+<h4 id="Core-logic"><a href="#Core-logic" class="headerlink" title="Core logic:"></a>Core logic:</h4><ol>
+<li>The source branch serves as the “development branch” where all manual modifications are completed.</li>
+<li>The deployment branch serves as the “production branch” only receiving static generated files. When pushing to the “development branch” using <code>git push origin hexo01</code>, the “production branch” will be automatically synchronized.</li>
+<li>The two branches are isolated through <code>.gitignore</code> configuration.</li>
+</ol>
+<h2 id="Old-Computer-Operation-Guide"><a href="#Old-Computer-Operation-Guide" class="headerlink" title="Old Computer Operation Guide:"></a>Old Computer Operation Guide:</h2><h3 id="Creating-and-Configuring-Remote-Branches"><a href="#Creating-and-Configuring-Remote-Branches" class="headerlink" title="Creating and Configuring Remote Branches"></a>Creating and Configuring Remote Branches<a name="creating-and-configuring-remote-branches"></a></h3><ol>
+<li><strong>Remote repository preparation</strong><br>Create a repository <code>username.github.io</code> on GitHub and execute the following operations:<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Create hexo source branch</span></span><br><span class="line">git branch hexo</span><br><span class="line"><span class="comment"># Set hexo as the default branch, this is a key step!</span></span><br><span class="line">git branch --set-upstream-to=origin/hexo hexo</span><br></pre></td></tr></table></figure></li>
+<li><strong>Local environment initialization</strong><br>  Execute in the blog root directory:<br>  Initialize Git repository<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git init</span><br><span class="line"><span class="comment"># Add remote repository</span></span><br><span class="line">git remote add origin git@github.com:username/username.github.io.git</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h3 id="Local-Environment-and-Remote-Repository-Synchronization"><a href="#Local-Environment-and-Remote-Repository-Synchronization" class="headerlink" title="Local Environment and Remote Repository Synchronization"></a>Local Environment and Remote Repository Synchronization<a name="local-environmen"></a></h3><ol>
+<li>Clean and copy files<br>Retain the <strong>.git</strong> folder and delete other files<br>Copy the original Hexo directory (except .deploy_git&#x2F;) to the current directory<br>Commit source code to the remote branch<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Add all files</span></span><br><span class="line">git add .</span><br><span class="line"><span class="comment"># Commit changes</span></span><br><span class="line">git commit -m <span class="string">&quot;Init hexo source branch&quot;</span></span><br><span class="line"><span class="comment"># Push to the remote hexo branch</span></span><br><span class="line">git push origin hexo</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h3 id="gitignore-Key-Configuration"><a href="#gitignore-Key-Configuration" class="headerlink" title=".gitignore Key Configuration "></a>.gitignore Key Configuration <a name="gitignore-key-configuratio"></a></h3><p>Create <strong>.gitignore</strong> file in the project root directory with the following content:</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">.DS_Store</span><br><span class="line">Thumbs.db</span><br><span class="line">db.json</span><br><span class="line">*.log</span><br><span class="line">node_modules/</span><br><span class="line">public/</span><br><span class="line">.deploy*/</span><br></pre></td></tr></table></figure>
+<h2 id="New-Computer-Environment-Setup"><a href="#New-Computer-Environment-Setup" class="headerlink" title="New Computer Environment Setup "></a>New Computer Environment Setup <a name="new-computer-environment"></a></h2><h3 id="SSH-Key-Configuration-and-Environment-Dependency-Installation"><a href="#SSH-Key-Configuration-and-Environment-Dependency-Installation" class="headerlink" title="SSH Key Configuration and Environment Dependency Installation "></a>SSH Key Configuration and Environment Dependency Installation <a name="ssh-key-configuratio"></a></h3><ol>
+<li>Generate and add SSH key<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ssh-keygen -t rsa -C <span class="string">&quot;your_email@example.com&quot;</span></span><br></pre></td></tr></table></figure></li>
+<li>Add the generated public key like <strong>id_rsa.pub</strong> to <code>GitHub&#39;s Settings &gt; SSH and GPG Keys</code>, mac is under <code>~/.ssh</code> and windows is under <code>C:\Users\username\.ssh</code></li>
+<li>Configure Git global information<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git config --global user.name <span class="string">&quot;YourName&quot;</span></span><br><span class="line">git config --global user.email <span class="string">&quot;your_email@example.com&quot;</span></span><br></pre></td></tr></table></figure></li>
+</ol>
+<h3 id="Remote-Repository-Cloning-and-Dependency-Recovery"><a href="#Remote-Repository-Cloning-and-Dependency-Recovery" class="headerlink" title="Remote Repository Cloning and Dependency Recovery "></a>Remote Repository Cloning and Dependency Recovery <a name="remote-repository"></a></h3><ol>
+<li>Clone the source branch<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git <span class="built_in">clone</span> -b hexo git@github.com:username/username.github.io.git blog</span><br><span class="line"><span class="built_in">cd</span> blog</span><br></pre></td></tr></table></figure>
+2.Install dependencies<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Install Hexo CLI</span></span><br><span class="line">npm install -g hexo-cli</span><br><span class="line"><span class="comment"># Install project dependencies</span></span><br><span class="line">npm install</span><br><span class="line"><span class="comment"># Install deployment plugins</span></span><br><span class="line">npm install hexo-deployer-git</span><br></pre></td></tr></table></figure>
+<strong>Note</strong>:make sure you use the same version of (Node.js)[<a href="https://nodejs.org/en/download]">https://nodejs.org/en/download]</a> to install the tools above otherwise there may be some compatibility problems.</li>
+</ol>
+<h3 id="First-Run-Verification-and-Configuration-Check"><a href="#First-Run-Verification-and-Configuration-Check" class="headerlink" title="First Run Verification and Configuration Check "></a>First Run Verification and Configuration Check <a name="first-run-verification"></a></h3><p>Local preview verification</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo clean</span><br><span class="line">hexo g &amp;&amp; hexo s</span><br></pre></td></tr></table></figure>
+<p>Access <a href="http://localhost:4000/">http://localhost:4000</a> to confirm the blog runs normally<br>Deployment configuration check<br>Ensure the deployment configuration in <code>_config.yml</code> points to the <code>master</code> branch:</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">deploy:</span></span><br><span class="line">  <span class="attr">type:</span> <span class="string">git</span></span><br><span class="line">  <span class="attr">repo:</span> <span class="string">git@github.com:username/username.github.io.git</span></span><br><span class="line">  <span class="attr">branch:</span> <span class="string">master</span></span><br></pre></td></tr></table></figure>
+<h2 id="Daily-Update-Workflow-Dual-Branch-Collaborative-Operation"><a href="#Daily-Update-Workflow-Dual-Branch-Collaborative-Operation" class="headerlink" title="Daily Update Workflow: Dual Branch Collaborative Operation "></a>Daily Update Workflow: Dual Branch Collaborative Operation <a name="daily-update-workflow"></a></h2><h3 id="Source-Code-Update-and-Submission-Process"><a href="#Source-Code-Update-and-Submission-Process" class="headerlink" title="Source Code Update and Submission Process "></a>Source Code Update and Submission Process <a name="source-cod"></a></h3><ol>
+<li>Pull the latest source code<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git pull origin hexo</span><br></pre></td></tr></table></figure></li>
+<li>Modify and commit<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Add a new article</span></span><br><span class="line">hexo new <span class="string">&quot;New Article&quot;</span></span><br><span class="line"><span class="comment"># Commit changes</span></span><br><span class="line">git add .</span><br><span class="line">git commit -m <span class="string">&quot;Update blog content&quot;</span></span><br><span class="line"><span class="comment"># Push to the remote source branch</span></span><br><span class="line">git push origin hexo</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h3 id="Automation-Script-to-Optimize-Workflow"><a href="#Automation-Script-to-Optimize-Workflow" class="headerlink" title="Automation Script to Optimize Workflow "></a>Automation Script to Optimize Workflow <a name="automation-script"></a></h3><p>Create a <code>deploy.sh</code> script to simplify the process:</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"><span class="comment"># ================ Hexo Automated Deployment Script (hexo01 branch) ================</span></span><br><span class="line"><span class="comment"># Usage: Execute in the blog root directory with ./deploy.sh &quot;Commit message&quot;</span></span><br><span class="line"><span class="comment"># If no commit message is provided, a default timestamp message will be used</span></span><br><span class="line"><span class="comment"># ================================================================</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Define color output</span></span><br><span class="line">COLOR_RED=<span class="string">&quot;\033[31m&quot;</span></span><br><span class="line">COLOR_GREEN=<span class="string">&quot;\033[32m&quot;</span></span><br><span class="line">COLOR_YELLOW=<span class="string">&quot;\033[33m&quot;</span></span><br><span class="line">COLOR_RESET=<span class="string">&quot;\033[0m&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Check if commit message is provided, otherwise use default</span></span><br><span class="line">COMMIT_MSG=<span class="variable">$&#123;1:-&quot;Auto deploy at $(date +&#x27;%Y-%m-%d %H:%M:%S&#x27;)&quot;&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">&quot;<span class="variable">$&#123;COLOR_YELLOW&#125;</span>==== Starting Hexo Blog Deployment ====<span class="variable">$&#123;COLOR_RESET&#125;</span>&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Step 0: Pull latest source code (hexo01 branch)</span></span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">&quot;<span class="variable">$&#123;COLOR_GREEN&#125;</span>[0/4] Pulling latest source code...<span class="variable">$&#123;COLOR_RESET&#125;</span>&quot;</span></span><br><span class="line">git pull origin hexo01</span><br><span class="line"><span class="keyword">if</span> [ $? -ne 0 ]; <span class="keyword">then</span></span><br><span class="line">    <span class="built_in">echo</span> -e <span class="string">&quot;<span class="variable">$&#123;COLOR_RED&#125;</span>Failed to pull source code! Please resolve conflicts manually and retry.<span class="variable">$&#123;COLOR_RESET&#125;</span>&quot;</span></span><br><span class="line">    <span class="built_in">exit</span> 1</span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Step 1: Clean and generate static files</span></span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">&quot;<span class="variable">$&#123;COLOR_GREEN&#125;</span>[1/4] Cleaning and generating static files...<span class="variable">$&#123;COLOR_RESET&#125;</span>&quot;</span></span><br><span class="line">hexo clean &amp;&amp; hexo generate</span><br><span class="line"><span class="keyword">if</span> [ $? -ne 0 ]; <span class="keyword">then</span></span><br><span class="line">    <span class="built_in">echo</span> -e <span class="string">&quot;<span class="variable">$&#123;COLOR_RED&#125;</span>Failed to generate static files!<span class="variable">$&#123;COLOR_RESET&#125;</span>&quot;</span></span><br><span class="line">    <span class="built_in">exit</span> 1</span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"><span class="comment"># Step 2: Deploy to GitHub Pages</span></span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">&quot;<span class="variable">$&#123;COLOR_GREEN&#125;</span>[2/4] Deploying to GitHub Pages...<span class="variable">$&#123;COLOR_RESET&#125;</span>&quot;</span></span><br><span class="line">hexo deploy</span><br><span class="line"><span class="keyword">if</span> [ $? -ne 0 ]; <span class="keyword">then</span></span><br><span class="line">    <span class="built_in">echo</span> -e <span class="string">&quot;<span class="variable">$&#123;COLOR_RED&#125;</span>Failed to deploy to GitHub Pages!<span class="variable">$&#123;COLOR_RESET&#125;</span>&quot;</span></span><br><span class="line">    <span class="built_in">exit</span> 1</span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"><span class="comment"># Step 3: Commit source code changes to hexo01 branch</span></span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">&quot;<span class="variable">$&#123;COLOR_GREEN&#125;</span>[3/4] Committing source code changes...<span class="variable">$&#123;COLOR_RESET&#125;</span>&quot;</span></span><br><span class="line">git add .</span><br><span class="line">git commit -m <span class="string">&quot;<span class="variable">$COMMIT_MSG</span>&quot;</span></span><br><span class="line"><span class="keyword">if</span> [ $? -ne 0 ]; <span class="keyword">then</span></span><br><span class="line">    <span class="built_in">echo</span> -e <span class="string">&quot;<span class="variable">$&#123;COLOR_YELLOW&#125;</span>No changes to commit.<span class="variable">$&#123;COLOR_RESET&#125;</span>&quot;</span></span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">    <span class="comment"># Step 4: Push source code to GitHub</span></span><br><span class="line">    <span class="built_in">echo</span> -e <span class="string">&quot;<span class="variable">$&#123;COLOR_GREEN&#125;</span>[4/4] Pushing source code to GitHub (hexo01 branch)...<span class="variable">$&#123;COLOR_RESET&#125;</span>&quot;</span></span><br><span class="line">    git push origin hexo01</span><br><span class="line">    <span class="keyword">if</span> [ $? -ne 0 ]; <span class="keyword">then</span></span><br><span class="line">        <span class="built_in">echo</span> -e <span class="string">&quot;<span class="variable">$&#123;COLOR_RED&#125;</span>Failed to push source code to GitHub!<span class="variable">$&#123;COLOR_RESET&#125;</span>&quot;</span></span><br><span class="line">        <span class="built_in">exit</span> 1</span><br><span class="line">    <span class="keyword">fi</span></span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">&quot;<span class="variable">$&#123;COLOR_YELLOW&#125;</span>==== Hexo Blog Deployment Completed ====<span class="variable">$&#123;COLOR_RESET&#125;</span>&quot;</span></span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">&quot;<span class="variable">$&#123;COLOR_GREEN&#125;</span>View blog: https://your-username.github.io<span class="variable">$&#123;COLOR_RESET&#125;</span>&quot;</span></span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">&quot;<span class="variable">$&#123;COLOR_GREEN&#125;</span>View source: https://github.com/your-username/your-repo/tree/hexo01<span class="variable">$&#123;COLOR_RESET&#125;</span>&quot;</span></span><br></pre></td></tr></table></figure>
+<p>Grant execution permissions and run:</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">chmod</span> +x deploy.sh</span><br><span class="line">./deploy.sh <span class="string">&quot;Update description&quot;</span></span><br></pre></td></tr></table></figure>
+<h2 id="Common-Problems-and-Solutions"><a href="#Common-Problems-and-Solutions" class="headerlink" title="Common Problems and Solutions "></a>Common Problems and Solutions <a name="automation-script"></a></h2><h3 id="Branch-Switching-Conflict-Handling"><a href="#Branch-Switching-Conflict-Handling" class="headerlink" title="Branch Switching Conflict Handling "></a>Branch Switching Conflict Handling <a name="branch-switchin"></a></h3><p>When switching branches causes node_modules conflicts, execute:</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Stash current changes</span></span><br><span class="line">git stash</span><br><span class="line"><span class="comment"># Switch branches</span></span><br><span class="line">git checkout hexo</span><br><span class="line"><span class="comment"># Restore changes</span></span><br><span class="line">git stash pop</span><br><span class="line"><span class="comment"># Clean untracked files</span></span><br><span class="line">git clean -fdx</span><br><span class="line"><span class="comment"># Reinstall dependencies</span></span><br><span class="line">npm install</span><br></pre></td></tr></table></figure>
+<p>If you can not run hexo command like <code>hexo s</code> on <strong>Mac</strong>,this is because the default terminal on Mac is zsh (which can actually be queried with an echo $SHELL command), and the user environment variable file is~&#x2F;. zshrc. After executing the following command, the environment variable configuration was successful: </p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;PATH=&quot;$PATH:./node_modules/.bin&quot;&#x27;</span> &gt;&gt; ~/.zshrc</span><br></pre></td></tr></table></figure>
+<h3 id="Environment-Dependency-Inconsistency-Issue"><a href="#Environment-Dependency-Inconsistency-Issue" class="headerlink" title="Environment Dependency Inconsistency Issue "></a>Environment Dependency Inconsistency Issue <a name="environment-dependenc"></a></h3><p>Ensure <code>Node.js</code> versions are consistent across devices, which can be locked via <code>package.json</code>:</p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line"><span class="attr">&quot;engines&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;node&quot;</span><span class="punctuation">:</span> <span class="string">&quot;14.x&quot;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+<p>On new devices, execute:</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">npm install --no-save</span><br></pre></td></tr></table></figure>
+
+<h3 id="Theme-and-Plugin-Synchronization-Abnormality"><a href="#Theme-and-Plugin-Synchronization-Abnormality" class="headerlink" title="Theme and Plugin Synchronization Abnormality"></a>Theme and Plugin Synchronization Abnormality<a name="theme-and-pluginy"></a></h3><ol>
+<li>Check for nested Git in themes<br>Delete .git folders in theme directories:<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">find themes/ -<span class="built_in">type</span> d -name <span class="string">&quot;.git&quot;</span> -<span class="built_in">exec</span> <span class="built_in">rm</span> -rf &#123;&#125; \;</span><br></pre></td></tr></table></figure></li>
+<li>Manually synchronize theme updates<br>If the theme is updated, manage it via Git submodule:<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git submodule add &lt;theme-repo&gt; themes/&lt;theme-name&gt;</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h2 id="Advanced-Tips-Private-Repositories-and-Multi-Branch-Strategies"><a href="#Advanced-Tips-Private-Repositories-and-Multi-Branch-Strategies" class="headerlink" title="Advanced Tips: Private Repositories and Multi-Branch Strategies "></a>Advanced Tips: Private Repositories and Multi-Branch Strategies <a name="advanced-tips-private"></a></h2><h3 id="Private-Repositories-to-Protect-Source-Code-Security"><a href="#Private-Repositories-to-Protect-Source-Code-Security" class="headerlink" title="Private Repositories to Protect Source Code Security "></a>Private Repositories to Protect Source Code Security <a name="private-repositories"></a></h3><ol>
+<li>Create a private repository<br>Create a new private repository <code>hexo-source</code> on GitHub to store source code</li>
+<li>Migrate the source branch<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Remove old remote</span></span><br><span class="line">git remote remove origin</span><br><span class="line"><span class="comment"># Add new private repository</span></span><br><span class="line">git remote add origin git@github.com:username/hexo-source.git</span><br><span class="line"><span class="comment"># Push the source branch</span></span><br><span class="line">git push -u origin hexo</span><br></pre></td></tr></table></figure></li>
+<li>Configure dual deployment targets<br>Add to _config.yml:<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">deploy:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">type:</span> <span class="string">git</span></span><br><span class="line">    <span class="attr">repo:</span> <span class="string">git@github.com:username/hexo-source.git</span></span><br><span class="line">    <span class="attr">branch:</span> <span class="string">hexo</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">type:</span> <span class="string">git</span></span><br><span class="line">    <span class="attr">repo:</span> <span class="string">git@github.com:username/username.github.io.git</span></span><br><span class="line">    <span class="attr">branch:</span> <span class="string">main</span></span><br></pre></td></tr></table></figure></li>
+</ol>
+<h3 id="Multi-Branch-Collaborative-Development-Model"><a href="#Multi-Branch-Collaborative-Development-Model" class="headerlink" title="Multi-Branch Collaborative Development Model"></a>Multi-Branch Collaborative Development Model<a name="multi-branch-collaborative-development-model"></a></h3><ol>
+<li>Feature branch workflow<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Create a feature branch</span></span><br><span class="line">git checkout -b feature/new-theme</span><br><span class="line"><span class="comment"># After development, merge into the hexo branch</span></span><br><span class="line">git checkout hexo</span><br><span class="line">git merge feature/new-theme</span><br><span class="line">git push origin hexo</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h2 id="Best-Practices-for-Multi-Device-Synchronization"><a href="#Best-Practices-for-Multi-Device-Synchronization" class="headerlink" title="Best Practices for Multi-Device Synchronization"></a>Best Practices for Multi-Device Synchronization<a name="conclusion-best-practices"></a></h2><ol>
+<li>Core principles:<br>- Separate storage of source code and static files<br>- Manage dependencies via package.json<br>- Always pull before committing to avoid conflicts</li>
+<li>Operation checklist:<br>- For new devices: <code>git clone -b hexo + npm install</code><br>- Daily updates: <code>git pull</code> → edit → <code>git push</code> → <code>hexo deploy</code>(must need git pull firstly)<br>- Environment migration: Only requires Git cloning + dependency installation, no need for re-initialization</li>
+<li>Advanced suggestions:<br>- Use GitHub Actions for automated deployment<br>- Regularly back up source branches to other cloud storages<br>- Adopt branch protection strategies for team collaboration</li>
+</ol>
+<link rel="stylesheet" href="/css/folder.css" type="text/css"><script src="/js/folder.js" type="text/javascript" async></script>]]></content>
+      <categories>
+        <category>Blog</category>
+        <category>Hexo</category>
+      </categories>
+      <tags>
+        <tag>Hexo</tag>
+        <tag>Git</tag>
+        <tag>Multi-Device Synchronization</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>KMP Algorithm</title>
     <url>/2025/03/08/KMP-Algorithm/</url>
     <content><![CDATA[<h1 id="The-KMP-Algorithm"><a href="#The-KMP-Algorithm" class="headerlink" title="The KMP Algorithm"></a>The KMP Algorithm</h1><ol>
@@ -1861,6 +1861,12 @@ When a mismatch occurs, the text pointer backtracks to i&#x3D;2, and the pattern
       </tags>
   </entry>
   <entry>
+    <title>The Complete Guide to Modern CSS Layouts: From Flexbox to Grid and Beyond</title>
+    <url>/2025/11/03/The-Complete-Guide-to-Modern-CSS-Layouts-From-Flexbox-to-Grid-and-Beyond/</url>
+    <content><![CDATA[<p><a href="/HTML/p2/index.html" target="_blank">project demo1</a><br><a href="/HTML/p3/index.html" target="_blank">project demo2</a></p>
+<link rel="stylesheet" href="/css/folder.css" type="text/css"><script src="/js/folder.js" type="text/javascript" async></script>]]></content>
+  </entry>
+  <entry>
     <title>Stack &amp; Queue</title>
     <url>/2025/04/12/Stack-Queue/</url>
     <content><![CDATA[<ol>
@@ -1983,12 +1989,6 @@ When a mismatch occurs, the text pointer backtracks to i&#x3D;2, and the pattern
       <tags>
         <tag>Data Structure and Alogrithm</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>The Complete Guide to Modern CSS Layouts: From Flexbox to Grid and Beyond</title>
-    <url>/2025/11/03/The-Complete-Guide-to-Modern-CSS-Layouts-From-Flexbox-to-Grid-and-Beyond/</url>
-    <content><![CDATA[<p><a href="/HTML/p2/index.html" target="_blank">project demo1</a></p>
-<link rel="stylesheet" href="/css/folder.css" type="text/css"><script src="/js/folder.js" type="text/javascript" async></script>]]></content>
   </entry>
   <entry>
     <title>Doubly Linked List</title>
