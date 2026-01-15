@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/logo-180.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/logo-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/logo-16.png">
+  <link rel="mask-icon" href="/images/logo-512.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|monospace:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"bodysuperman.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null,"use":"Gitalk","text":true},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="Singly Linked List: Concepts and Operations Overview of Singly Linked List Advantages of Linked List Types of Linked List How to Create a Linked List Various Operations on Linked List">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Singly Linked List">
+<meta property="og:url" content="https://bodysuperman.github.io/2025/02/18/Single-Linked-List/index.html">
+<meta property="og:site_name" content="Tech with Alex&#39;s Blog">
+<meta property="og:description" content="Singly Linked List: Concepts and Operations Overview of Singly Linked List Advantages of Linked List Types of Linked List How to Create a Linked List Various Operations on Linked List">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://bodysuperman.github.io/images/1.png">
+<meta property="article:published_time" content="2025-02-18T04:39:33.000Z">
+<meta property="article:modified_time" content="2025-02-19T04:39:33.000Z">
+<meta property="article:author" content="Tech with Alex">
+<meta property="article:tag" content="Data Structure and Alogrithm">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://bodysuperman.github.io/images/1.png">
+
+<link rel="canonical" href="https://bodysuperman.github.io/2025/02/18/Single-Linked-List/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>Singly Linked List | Tech with Alex's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+
+
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Tech with Alex's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+   
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://bodysuperman.github.io/2025/02/18/Single-Linked-List/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+      <meta itemprop="name" content="Tech with Alex">
+      <meta itemprop="description" content="Per aspera ad astra.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Tech with Alex's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Singly Linked List
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2025-02-18 12:39:33" itemprop="dateCreated datePublished" datetime="2025-02-18T12:39:33+08:00">2025-02-18</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2025-02-19 12:39:33" itemprop="dateModified" datetime="2025-02-19T12:39:33+08:00">2025-02-19</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Data-Structure-and-Alogrithm/" itemprop="url" rel="index"><span itemprop="name">Data Structure and Alogrithm</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>5.5k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>5 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="Singly-Linked-List-Concepts-and-Operations"><a href="#Singly-Linked-List-Concepts-and-Operations" class="headerlink" title="Singly Linked List: Concepts and Operations"></a>Singly Linked List: Concepts and Operations</h2><ol>
+<li><a href="#1-overview-of-singly-linked-list">Overview of Singly Linked List</a></li>
+<li><a href="#2-advantages-of-linked-list">Advantages of Linked List</a></li>
+<li><a href="#3-types-of-linked-list">Types of Linked List</a></li>
+<li><a href="#4-how-to-create-a-linked-list">How to Create a Linked List</a></li>
+<li><a href="#5-various-operations-on-linked-list">Various Operations on Linked List</a><span id="more"></span></li>
+</ol>
+<h3 id="Overview-of-Singly-Linked-List"><a href="#Overview-of-Singly-Linked-List" class="headerlink" title="Overview of Singly Linked List "></a>Overview of Singly Linked List <a name="1-overview-of-singly-linked-list"></a></h3><p><strong>What is a Linked List?</strong><br>In C#, a linked list is a linear data structure that stores elements in non - contiguous memory locations.<br>Each node consists of two parts:</p>
+<ol>
+<li><strong>Data</strong>: Each node of a linked list can store a piece of data.</li>
+<li><strong>Address</strong>: Each node of a linked list contains the address of the next node, referred to as “Next”.</li>
+</ol>
+<p><img src="/images/1.png" alt="pic"><br>The first node of a linked list is referenced by a pointer called <strong>“Head”</strong>.</p>
+<h3 id="Advantages-of-Linked-List"><a href="#Advantages-of-Linked-List" class="headerlink" title="Advantages of Linked List "></a>Advantages of Linked List <a name="2-advantages-of-linked-list"></a></h3><ol>
+<li>They are dynamic in nature and allocate memory as needed.</li>
+<li>Insertion and deletion operations are easy to implement.</li>
+<li>Other data structures such as stacks and queues can also be easily implemented using linked lists.</li>
+<li>They have fast access times and can be expanded in constant time without memory overhead.</li>
+<li>Since there is no need to define an initial size for a linked list, memory utilization is efficient.</li>
+<li>Backtracking is possible in doubly - linked lists.</li>
+</ol>
+<p><strong>Node Class</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">public class Node&lt;T&gt;</span><br><span class="line">&#123;</span><br><span class="line">    public T Data &#123; get; set; &#125;</span><br><span class="line">    public Node&lt;T&gt; Next &#123; get; set; &#125;</span><br><span class="line">    public Node(T data)</span><br><span class="line">    &#123;</span><br><span class="line">        Data = data;</span><br><span class="line">        Next = null;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="Types-of-Linked-List"><a href="#Types-of-Linked-List" class="headerlink" title="Types of Linked List "></a>Types of Linked List <a name="3-types-of-linked-list"></a></h3><ul>
+<li><strong>Singly linked lists</strong></li>
+<li><strong>Doubly linked lists</strong></li>
+<li><strong>Circular linked lists</strong></li>
+<li><strong>Circular doubly linked lists</strong></li>
+</ul>
+<h3 id="How-to-Create-a-Linked-List"><a href="#How-to-Create-a-Linked-List" class="headerlink" title="How to Create a Linked List "></a>How to Create a Linked List <a name="4-how-to-create-a-linked-list"></a></h3><p>Combined with the above node class, you can gradually build a linked list by instantiating nodes and setting their Next pointers. For example:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Node&lt;int&gt; node1 = new Node&lt;int&gt;(1);</span><br><span class="line">Node&lt;int&gt; node2 = new Node&lt;int&gt;(2);</span><br><span class="line">node1.Next = node2;</span><br></pre></td></tr></table></figure>
+<p>&#x2F;&#x2F; Here, node1 serves as the head node to build a simple linked list</p>
+<h3 id="Various-Operations-on-Linked-List"><a href="#Various-Operations-on-Linked-List" class="headerlink" title="Various Operations on Linked List "></a>Various Operations on Linked List <a name="5-various-operations-on-linked-list"></a></h3><p>Linked List Class Definition</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br></pre></td><td class="code"><pre><span class="line">public class LinkedList&lt;T&gt;</span><br><span class="line">&#123;</span><br><span class="line">    // The head node of the linked list</span><br><span class="line">    private Node&lt;T&gt; head;</span><br><span class="line">    // The length of the linked list</span><br><span class="line">    private int length;</span><br><span class="line"></span><br><span class="line">    public LinkedList()</span><br><span class="line">    &#123;</span><br><span class="line">        head = null;</span><br><span class="line">        length = 0;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public int Length =&gt; length;</span><br><span class="line">    public bool IsEmpty() =&gt; (length == 0);</span><br><span class="line"></span><br><span class="line">    // Add a new node at the beginning of the linked list</span><br><span class="line">    public void AddFirst(T data)</span><br><span class="line">    &#123;</span><br><span class="line">        Node&lt;T&gt; newNode = new Node&lt;T&gt;(data);</span><br><span class="line">        newNode.Next = head;</span><br><span class="line">        // Update the new node as the head of the linked list</span><br><span class="line">        head = newNode;</span><br><span class="line">        length++;</span><br><span class="line">    &#125;</span><br><span class="line">    // Add a new node at the end of the linked list</span><br><span class="line">    public void AddTail(T data)</span><br><span class="line">    &#123;</span><br><span class="line">        Node&lt;T&gt; newNode = new Node&lt;T&gt;(data);</span><br><span class="line">        if (head == null)</span><br><span class="line">        &#123;</span><br><span class="line">            head = newNode;</span><br><span class="line">            return;</span><br><span class="line">        &#125;</span><br><span class="line">        Node&lt;T&gt; current = head;</span><br><span class="line">        while (current.Next != null)</span><br><span class="line">        &#123;</span><br><span class="line">            current = current.Next;</span><br><span class="line">        &#125;</span><br><span class="line">        current.Next = newNode;</span><br><span class="line">        length++;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void DeleteElemets(T Data)</span><br><span class="line">    &#123;</span><br><span class="line">        Node&lt;T&gt; dummyHead = new Node&lt;T&gt;(default(T));</span><br><span class="line">        dummyHead.Next = head;</span><br><span class="line">        Node&lt;T&gt; temp = dummyHead;</span><br><span class="line">        while (temp.Next != null)</span><br><span class="line">        &#123;</span><br><span class="line">            if (temp.Next.Data.Equals(Data))</span><br><span class="line">            &#123;</span><br><span class="line">                temp.Next = temp.Next.Next;</span><br><span class="line">                length--;</span><br><span class="line">            &#125;</span><br><span class="line">            else</span><br><span class="line">            &#123;</span><br><span class="line">                temp = temp.Next;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        // return dummyHead.Next;</span><br><span class="line">    &#125;</span><br><span class="line">    public void Delete(T Data)</span><br><span class="line">    &#123;</span><br><span class="line">        if (head == null) return;</span><br><span class="line">        if (head.Data.Equals(Data))</span><br><span class="line">        &#123;</span><br><span class="line">            head = head.Next;</span><br><span class="line">            length--;</span><br><span class="line">            return;</span><br><span class="line">        &#125;</span><br><span class="line">        Node&lt;T&gt; current = head;</span><br><span class="line">        while (current != null &amp;&amp; current.Next != null)</span><br><span class="line">        &#123;</span><br><span class="line">            if (current.Next.Data.Equals(Data))</span><br><span class="line">            &#123;</span><br><span class="line">                current.Next = current.Next.Next;</span><br><span class="line">                length--;</span><br><span class="line">                return;</span><br><span class="line">            &#125;</span><br><span class="line">            current = current.Next;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    public void DeleteAtHead()</span><br><span class="line">    &#123;</span><br><span class="line">        if (head == null) return;</span><br><span class="line">        head = head.Next;</span><br><span class="line">        length--;</span><br><span class="line">    &#125;</span><br><span class="line">    public void Find(T Data)</span><br><span class="line">    &#123;</span><br><span class="line">        if (head == null)</span><br><span class="line">        &#123;</span><br><span class="line">            Console.WriteLine(&quot;The Linked List is null, can&#x27;t find the data&quot;);</span><br><span class="line">            return;</span><br><span class="line">        &#125;</span><br><span class="line">        Node&lt;T&gt; current = head;</span><br><span class="line">        while (current != null)</span><br><span class="line">        &#123;</span><br><span class="line">            if (current.Data.Equals(Data))</span><br><span class="line">            &#123;</span><br><span class="line">                Console.WriteLine(&quot;Found the data: &quot; + Data);</span><br><span class="line">                return;</span><br><span class="line">            &#125;</span><br><span class="line">            current = current.Next;</span><br><span class="line">        &#125;</span><br><span class="line">        Console.WriteLine(&quot;Not Found the data: &quot; + Data);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void InsertAt(int index, T data)</span><br><span class="line">    &#123;</span><br><span class="line">        if (index &lt; 0)</span><br><span class="line">        &#123;</span><br><span class="line">            throw new ArgumentOutOfRangeException(&quot;Index&quot;, index, &quot;Index must be non - negative&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">        Node&lt;T&gt; newNode = new Node&lt;T&gt;(data);</span><br><span class="line">        if (index == 0)</span><br><span class="line">        &#123;</span><br><span class="line">            AddFirst(data);</span><br><span class="line">            return;</span><br><span class="line">        &#125;</span><br><span class="line">        Node&lt;T&gt; current = head;</span><br><span class="line">        for (int i = 0; i &lt; index - 1; i++)</span><br><span class="line">        &#123;</span><br><span class="line">            if (current == null || current.Next == null)</span><br><span class="line">            &#123;</span><br><span class="line">                throw new ArgumentOutOfRangeException(&quot;Index&quot;, index, &quot;Index is out of range&quot;);</span><br><span class="line">            &#125;</span><br><span class="line">            current = current.Next;</span><br><span class="line">        &#125;</span><br><span class="line">        newNode.Next = current.Next;</span><br><span class="line">        current.Next = newNode;</span><br><span class="line">        length++;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void Print()</span><br><span class="line">    &#123;</span><br><span class="line">        Node&lt;T&gt; current = head;</span><br><span class="line">        if (current == null)</span><br><span class="line">        &#123;</span><br><span class="line">            Console.WriteLine(&quot;null&quot;);</span><br><span class="line">            return;</span><br><span class="line">        &#125;</span><br><span class="line">        while (current != null)</span><br><span class="line">        &#123;</span><br><span class="line">            Console.Write(current.Data + &quot;-&gt;&quot;);</span><br><span class="line">            current = current.Next;</span><br><span class="line">        &#125;</span><br><span class="line">        Console.Write(&quot;null&quot;);</span><br><span class="line">        Console.WriteLine();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="Additional-Exercises"><a href="#Additional-Exercises" class="headerlink" title="Additional Exercises:"></a>Additional Exercises:</h3><h4 id="How-to-Reverse-a-Linked-List"><a href="#How-to-Reverse-a-Linked-List" class="headerlink" title="How to Reverse a Linked List?"></a>How to Reverse a Linked List?</h4><p>The time complexity is , and the space complexity is .</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">public void ReverseList()</span><br><span class="line">&#123;</span><br><span class="line">    if (head.Next == null || head.Next.Next == null)</span><br><span class="line">    &#123;</span><br><span class="line">        return;</span><br><span class="line">    &#125;</span><br><span class="line">    Node&lt;T&gt; pre = null;</span><br><span class="line">    Node&lt;T&gt; current = head;</span><br><span class="line">    Node&lt;T&gt; temp = null;</span><br><span class="line">    while (current != null)</span><br><span class="line">    &#123;</span><br><span class="line">        // Store the key node to prevent data loss</span><br><span class="line">        temp = current.Next;</span><br><span class="line">        current.Next = pre;</span><br><span class="line">        pre = current;</span><br><span class="line">        current = temp;</span><br><span class="line">    &#125;</span><br><span class="line">    head = pre;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="How-to-Find-the-k-th-Node-from-the-End-of-the-Linked-List"><a href="#How-to-Find-the-k-th-Node-from-the-End-of-the-Linked-List" class="headerlink" title="How to Find the k - th Node from the End of the Linked List"></a>How to Find the k - th Node from the End of the Linked List</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">public Node&lt;T&gt; FindKthToLast(int k)</span><br><span class="line">&#123;</span><br><span class="line">    if (head == null || k &lt;= 0)</span><br><span class="line">    &#123;</span><br><span class="line">        return null;</span><br><span class="line">    &#125;</span><br><span class="line">    Node&lt;T&gt; fast = head;</span><br><span class="line">    Node&lt;T&gt; slow = head;</span><br><span class="line">    // Let the fast pointer move k steps first, and the remaining is N - K steps, which is the K - th step from the end</span><br><span class="line">    for (int i = 0; i &lt; k; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        if (fast == null)</span><br><span class="line">        &#123;</span><br><span class="line">            return null;</span><br><span class="line">        &#125;</span><br><span class="line">        fast = fast.Next;</span><br><span class="line">    &#125;</span><br><span class="line">    // Move the fast and slow pointers together, and the slow pointer moves N - K steps</span><br><span class="line">    while (fast != null)</span><br><span class="line">    &#123;</span><br><span class="line">        fast = fast.Next;</span><br><span class="line">        slow = slow.Next;</span><br><span class="line">    &#125;</span><br><span class="line">    return slow;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<link rel="stylesheet" href="/css/folder.css" type="text/css"><script src="/js/folder.js" type="text/javascript" async></script>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Data-Structure-and-Alogrithm/" rel="tag"># Data Structure and Alogrithm</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item"></div>
+      <div class="post-nav-item">
+    <a href="/2025/02/19/doublylinkedlist/" rel="next" title="Doubly Linked List">
+      Doubly Linked List <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="gitalk-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Singly-Linked-List-Concepts-and-Operations"><span class="nav-number">1.</span> <span class="nav-text">Singly Linked List: Concepts and Operations</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Overview-of-Singly-Linked-List"><span class="nav-number">1.1.</span> <span class="nav-text">Overview of Singly Linked List </span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Advantages-of-Linked-List"><span class="nav-number">1.2.</span> <span class="nav-text">Advantages of Linked List </span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Types-of-Linked-List"><span class="nav-number">1.3.</span> <span class="nav-text">Types of Linked List </span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#How-to-Create-a-Linked-List"><span class="nav-number">1.4.</span> <span class="nav-text">How to Create a Linked List </span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Various-Operations-on-Linked-List"><span class="nav-number">1.5.</span> <span class="nav-text">Various Operations on Linked List </span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Additional-Exercises"><span class="nav-number">1.6.</span> <span class="nav-text">Additional Exercises:</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#How-to-Reverse-a-Linked-List"><span class="nav-number">1.6.1.</span> <span class="nav-text">How to Reverse a Linked List?</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#How-to-Find-the-k-th-Node-from-the-End-of-the-Linked-List"><span class="nav-number">1.6.2.</span> <span class="nav-text">How to Find the k - th Node from the End of the Linked List</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Tech with Alex"
+      src="/uploads/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Tech with Alex</p>
+  <div class="site-description" itemprop="description">Per aspera ad astra.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">14</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">17</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://stackoverflow.com/users/9644964/alexandar-may-msft?tab=answers&sort=votes" title="StackOverflow → https:&#x2F;&#x2F;stackoverflow.com&#x2F;users&#x2F;9644964&#x2F;alexandar-may-msft?tab&#x3D;answers&amp;sort&#x3D;votes" rel="noopener" target="_blank"><i class="fab fa-stack-overflow fa-fw"></i>StackOverflow</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Tech with Alex</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">Symbols count total: </span>
+    <span title="Symbols count total">149k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">Reading time total &asymp;</span>
+    <span title="Reading time total">2:16</span>
+    
+    <!--
+    
+    -->
+</div>
+
+<!--
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a>
+   </div>
+--><script color="0,0,255" opacity="0.5" zIndex="-1" count="99" src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1/dist/canvas-nest.js"></script>
+
+
+
+
+
+
+        
+
+ <script defer src="https://vercount.one/js"></script>
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv"  >
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv"  >
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : 'Ov23liVJTzqy1rzaDXXM',
+      clientSecret: '5e785a7d46e69f7509e6c2f7730855a55944df33',
+      repo        : 'blog-comment',
+      owner       : 'BODYsuperman',
+      admin       : ['BODYsuperman'],
+      id          : '6f2f678ad2fb1a8180fdf89953f7a83d',
+        language: '',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+
+</body>
+</html>

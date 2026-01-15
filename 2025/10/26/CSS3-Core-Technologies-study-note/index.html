@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/logo-180.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/logo-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/logo-16.png">
+  <link rel="mask-icon" href="/images/logo-512.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|monospace:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"bodysuperman.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null,"use":"Gitalk","text":true},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="1. Introduction to CSS3 1.1 What is CSS3? 1.2 Core Roles of CSS3 1.3 CSS Classification by Location   2. CSS3 Selectors: Target Elements Precisely 2.1 Basic Selectors 2.2 Relationship Selectors 2.3 P">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CSS3 Core Technologies study note">
+<meta property="og:url" content="https://bodysuperman.github.io/2025/10/26/CSS3-Core-Technologies-study-note/index.html">
+<meta property="og:site_name" content="Tech with Alex&#39;s Blog">
+<meta property="og:description" content="1. Introduction to CSS3 1.1 What is CSS3? 1.2 Core Roles of CSS3 1.3 CSS Classification by Location   2. CSS3 Selectors: Target Elements Precisely 2.1 Basic Selectors 2.2 Relationship Selectors 2.3 P">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://bodysuperman.github.io/2025/10/26/CSS3-Core-Technologies-study-note/web1.png">
+<meta property="article:published_time" content="2025-10-26T05:53:06.000Z">
+<meta property="article:modified_time" content="2025-10-26T11:04:19.000Z">
+<meta property="article:author" content="Tech with Alex">
+<meta property="article:tag" content="Web Development">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://bodysuperman.github.io/2025/10/26/CSS3-Core-Technologies-study-note/web1.png">
+
+<link rel="canonical" href="https://bodysuperman.github.io/2025/10/26/CSS3-Core-Technologies-study-note/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>CSS3 Core Technologies study note | Tech with Alex's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+
+
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Tech with Alex's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+   
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://bodysuperman.github.io/2025/10/26/CSS3-Core-Technologies-study-note/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+      <meta itemprop="name" content="Tech with Alex">
+      <meta itemprop="description" content="Per aspera ad astra.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Tech with Alex's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          CSS3 Core Technologies study note
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-10-26 13:53:06 / Modified: 19:04:19" itemprop="dateCreated datePublished" datetime="2025-10-26T13:53:06+08:00">2025-10-26</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/CSS3/" itemprop="url" rel="index"><span itemprop="name">CSS3</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/CSS3/HTML5/" itemprop="url" rel="index"><span itemprop="name">HTML5</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/CSS3/HTML5/Front-End-Development/" itemprop="url" rel="index"><span itemprop="name">Front-End Development</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/CSS3/HTML5/Front-End-Development/Web-Styling/" itemprop="url" rel="index"><span itemprop="name">Web Styling</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/CSS3/HTML5/Front-End-Development/Web-Styling/Responsive-Design/" itemprop="url" rel="index"><span itemprop="name">Responsive Design</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>14k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>13 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <ul>
+<li><a href="#introduction">1. Introduction to CSS3</a><ul>
+<li><a href="#what">1.1 What is CSS3?</a></li>
+<li><a href="#role">1.2 Core Roles of CSS3</a></li>
+<li><a href="#classify">1.3 CSS Classification by Location</a></li>
+</ul>
+</li>
+<li><a href="#css3selector">2. CSS3 Selectors: Target Elements Precisely</a><ul>
+<li><a href="#basic">2.1 Basic Selectors</a></li>
+<li><a href="#re">2.2 Relationship Selectors</a></li>
+<li><a href="#pse">2.3 Pseudo-Classes &amp; Pseudo-Elements</a></li>
+<li><a href="#attr">2.4 Attribute Selectors</a></li>
+</ul>
+</li>
+<li><a href="#text">3. Text Styling &amp; Layout</a><ul>
+<li><a href="#fonts">3.1 Font Styles</a></li>
+<li><a href="#textly">3.2 Text Layout</a></li>
+<li><a href="#fontshort">3.3 Font Shorthand</a></li>
+</ul>
+</li>
+<li><a href="#csssp">4. CSS Specificity (Priority)</a></li>
+<li><a href="#box-model">5. Box Model</a><ul>
+<li><a href="#box-model-c">5.1 Box Model Components</a></li>
+<li><a href="#key-p">5.2 Key Properties</a></li>
+<li><a href="#box-s">5.3 Box Sizing</a></li>
+<li><a href="#box-model-c">5.4 Box Model Components</a></li>
+<li><a href="#mccf">5.5 Margin Collapse &amp; Collapse Fix</a></li>
+</ul>
+</li>
+<li><a href="#css-b">6. CSS Backgrounds</a><ul>
+<li><a href="#b-p">6.1 Background Properties</a></li>
+<li><a href="#b-g">6.2 Background Gradients</a><span id="more"></span></li>
+</ul>
+</li>
+<li><a href="#b-s-a-t">7. Box Shadows and Transitions</a><ul>
+<li><a href="#b-shadow">7.1 Box Shadows</a></li>
+<li><a href="#trans">7.2 Transitions</a></li>
+</ul>
+</li>
+<li><a href="#text-s">8. Text Styling</a><ul>
+<li><a href="#font-p">8.1 Font Properties</a></li>
+<li><a href="#text-l">8.2 Text Layout</a></li>
+<li><a href="#text-o">8.3 Text Overflow</a></li>
+</ul>
+</li>
+<li><a href="#css-sp">9. CSS Sprites</a></li>
+<li><a href="#font-i">10. Font Icons</a><ul>
+<li><a href="#u-i-f">10.1 Using Icon Fonts</a></li>
+<li><a href="#p-i-l">10.2 Popular Icon Libraries</a></li>
+</ul>
+</li>
+<li><a href="#css-b-p">11. CSS Best Practices</a><ul>
+<li><a href="#rn-c">11.1 Reset&#x2F;Normalize CSS</a></li>
+<li><a href="#css-o">11.2 CSS Organization</a></li>
+<li><a href="#res-c">11.3 Responsive Considerations</a></li>
+<li><a href="#p-c">11.4 Example 1: Product Card (Xiaomi Style)</a></li>
+</ul>
+</li>
+<li><a href="#p-t">12. CSS Performance Tips</a></li>
+</ul>
+<h2 id="Introduction-to-CSS3"><a href="#Introduction-to-CSS3" class="headerlink" title="Introduction to CSS3:"></a>Introduction to CSS3:<a name="introduction"></a></h2><h3 id="What-is-CSS3"><a href="#What-is-CSS3" class="headerlink" title="What is CSS3?  "></a>What is CSS3?  <a name="what"></a></h3><p>CSS3 (Cascading Style Sheets Level 3) is the latest standard for styling web pages. It controls the visual presentation of HTML elements, including colors, layouts, animations, and interactions. Unlike HTML (which defines structure), CSS3 separates style from content—making code more maintainable and flexible.</p>
+<h3 id="Core-Roles-of-CSS3"><a href="#Core-Roles-of-CSS3" class="headerlink" title="Core Roles of CSS3  "></a>Core Roles of CSS3  <a name="role"></a></h3><ul>
+<li><strong>Style Enhancement</strong>: Customize fonts, colors, borders, and visual effects.</li>
+<li><strong>Layout Control</strong>: Arrange elements, create responsive designs, and manage spacing.</li>
+<li><strong>Interactive Animations</strong>: Add transitions, hover effects, and dynamic changes.</li>
+</ul>
+<h3 id="CSS-Classification-by-Location"><a href="#CSS-Classification-by-Location" class="headerlink" title="CSS Classification by Location "></a>CSS Classification by Location <a name="classify"></a></h3><ul>
+<li><p><strong>Inline Styles</strong> (Least Recommended)</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">p</span> <span class="attr">style</span>=<span class="string">&quot;color: red; font-size: 14px;&quot;</span>&gt;</span>Text content<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>Styles written inside HTML tags</li>
+<li>Controls only the current tag</li>
+<li>Used in special situations</li>
+</ul>
+</li>
+<li><p><strong>Internal Styles</strong> (Useful for Single Pages)</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">style</span>&gt;</span><span class="language-css"></span></span><br><span class="line"><span class="language-css">    <span class="selector-tag">div</span> &#123; <span class="attribute">font-size</span>: <span class="number">18px</span>; <span class="attribute">color</span>: red; &#125;</span></span><br><span class="line"><span class="language-css">  </span><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>Written in <head> section</li>
+<li>Controls all elements on current page</li>
+<li>Separates structure from style</li>
+</ul>
+</li>
+<li><p><strong>External Styles</strong> (Most Recommended)</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span>=<span class="string">&quot;stylesheet&quot;</span> <span class="attr">href</span>=<span class="string">&quot;./css/index.css&quot;</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>Separate CSS file</li>
+<li>Controls entire website</li>
+<li>Best for maintainability</li>
+</ul>
+</li>
+</ul>
+<h2 id="CSS3-Selectors-Target-Elements-Precisely"><a href="#CSS3-Selectors-Target-Elements-Precisely" class="headerlink" title="CSS3 Selectors: Target Elements Precisely"></a>CSS3 Selectors: Target Elements Precisely<a name="css3selector"></a></h2><p>Selectors are patterns to target HTML elements for styling. They are the foundation of effective CSS3 usage.</p>
+<h3 id="Basic-Selectors"><a href="#Basic-Selectors" class="headerlink" title="Basic Selectors"></a>Basic Selectors<a name="basic"></a></h3><table>
+<thead>
+<tr>
+<th align="center"><strong>Selector Type</strong></th>
+<th align="center"><strong>Syntax</strong></th>
+<th align="center"><strong>Matching Scope</strong></th>
+<th align="center"><strong>Reusability</strong></th>
+<th align="center"><strong>Example</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">Type Selector</td>
+<td align="center">tagname</td>
+<td align="center">All elements of the specified tag</td>
+<td align="center">High (for global styles)</td>
+<td align="center">div { color: pink; }</td>
+</tr>
+<tr>
+<td align="center">Class Selector</td>
+<td align="center">.classname</td>
+<td align="center">Elements with matching <code>class</code> attribute</td>
+<td align="center">High (reusable)</td>
+<td align="center">.btn { padding: 10px; }</td>
+</tr>
+<tr>
+<td align="center">ID Selector</td>
+<td align="center">#idname</td>
+<td align="center">Unique element with matching id</td>
+<td align="center">Low (one-time use)</td>
+<td align="center">#header { background: gray; }</td>
+</tr>
+<tr>
+<td align="center">Universal Selector</td>
+<td align="center">*</td>
+<td align="center">All elements on the page	Global</td>
+<td align="center">*</td>
+<td align="center">{ margin: 0; padding: 0; box-sizing: border-box;}</td>
+</tr>
+</tbody></table>
+<h3 id="Relationship-Selectors"><a href="#Relationship-Selectors" class="headerlink" title="Relationship Selectors"></a>Relationship Selectors<a name="re"></a></h3><p>Target elements based on their position relative to other elements:</p>
+<ul>
+<li><strong>Descendant Selector</strong>: <code>A B</code> (all descendants of A, including nested levels)<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ul li &#123; list-style: none; &#125;</span><br></pre></td></tr></table></figure></li>
+<li><strong>Child Selector</strong>: <code>A &gt; B</code> (only direct children of A)<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">div &gt; p &#123; color: green; &#125;</span><br></pre></td></tr></table></figure></li>
+<li><strong>Adjacent Sibling Selector</strong>: <code>A + B</code> (immediately following sibling of A)<figure class="highlight plaintext"><figcaption><span>+ p &#123; font-weight: bold; &#125;</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">```</span><br><span class="line">- **General Sibling Selector**: `A ~ B` (all siblings of A that come after)</span><br><span class="line">```h2 ~ p &#123; line-height: 1.5; &#125;```</span><br><span class="line">### Pseudo-Classes &amp; Pseudo-Elements&lt;a name=&quot;pse&quot;&gt;&lt;/a&gt;</span><br><span class="line">- **Pseudo-Classes**: Target element states (e.g., hover, focus)</span><br><span class="line">```css</span><br><span class="line">/* Link States (LVHA order) */</span><br><span class="line">a:link &#123; color: blue; &#125;      /* Unvisited */</span><br><span class="line">a:visited &#123; color: purple; &#125; /* Visited */</span><br><span class="line">a:hover &#123; color: red; &#125;      /* Mouse over */</span><br><span class="line">a:active &#123; color: green; &#125;   /* Being clicked */</span><br><span class="line"></span><br><span class="line">/* User Interaction */</span><br><span class="line">div:hover &#123; background: pink; &#125;</span><br><span class="line">input:focus &#123; border-color: blue; &#125;</span><br></pre></td></tr></table></figure></li>
+<li><strong>Structural Pseudo-Classes</strong>: Target elements by position<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* Select first/last child */</span></span><br><span class="line"><span class="selector-tag">li</span><span class="selector-pseudo">:first-child</span> &#123; <span class="attribute">color</span>: pink; &#125;</span><br><span class="line"><span class="selector-tag">li</span><span class="selector-pseudo">:last-child</span> &#123; <span class="attribute">color</span>: green; &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* Select nth child */</span></span><br><span class="line"><span class="selector-tag">li</span><span class="selector-pseudo">:nth-child</span>(<span class="number">3</span>) &#123; <span class="attribute">color</span>: blue; &#125;</span><br><span class="line"><span class="selector-tag">li</span><span class="selector-pseudo">:nth-child</span>(odd) &#123; <span class="attribute">background</span>: <span class="number">#f0f0f0</span>; &#125;  <span class="comment">/* Odd elements */</span></span><br><span class="line"><span class="selector-tag">li</span><span class="selector-pseudo">:nth-child</span>(even) &#123; <span class="attribute">background</span>: <span class="number">#fff</span>; &#125;    <span class="comment">/* Even elements */</span></span><br><span class="line"><span class="selector-tag">li</span><span class="selector-pseudo">:nth-child</span>(<span class="number">3</span>n) &#123; <span class="attribute">color</span>: red; &#125;            <span class="comment">/* Every 3rd element */</span></span><br><span class="line"><span class="selector-tag">li</span><span class="selector-pseudo">:nth-child</span>(n+<span class="number">2</span>) &#123; <span class="attribute">margin-top</span>: <span class="number">10px</span>; &#125;     <span class="comment">/* From 2nd element onward */</span></span><br></pre></td></tr></table></figure></li>
+<li><strong>Pseudo-Elements</strong>: Target specific parts of elements<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* Text selection */</span></span><br><span class="line"><span class="selector-pseudo">::selection</span> &#123; <span class="attribute">background</span>: pink; <span class="attribute">color</span>: white; &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* First line/letter */</span></span><br><span class="line"><span class="selector-tag">p</span><span class="selector-pseudo">::first-line</span> &#123; <span class="attribute">font-weight</span>: bold; &#125;</span><br><span class="line"><span class="selector-tag">p</span><span class="selector-pseudo">::first-letter</span> &#123; <span class="attribute">font-size</span>: <span class="number">2em</span>; &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* Input placeholder */</span></span><br><span class="line"><span class="selector-tag">input</span><span class="selector-pseudo">::placeholder</span> &#123; <span class="attribute">color</span>: <span class="number">#999</span>; &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* Insert content */</span></span><br><span class="line"><span class="selector-tag">div</span><span class="selector-pseudo">::before</span> &#123; <span class="attribute">content</span>: <span class="string">&quot;Start: &quot;</span>; <span class="attribute">color</span>: red; &#125;</span><br><span class="line"><span class="selector-tag">div</span><span class="selector-pseudo">::after</span> &#123; <span class="attribute">content</span>: <span class="string">&quot; - End&quot;</span>; <span class="attribute">color</span>: blue; &#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="Attribute-Selectors"><a href="#Attribute-Selectors" class="headerlink" title="Attribute Selectors"></a>Attribute Selectors<a name="attr"></a></h3><p>Target elements by attribute values:</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* Match elements with &quot;type=text&quot; */</span></span><br><span class="line"><span class="selector-tag">input</span><span class="selector-attr">[type=<span class="string">&quot;text&quot;</span>]</span> &#123; <span class="attribute">padding</span>: <span class="number">8px</span>; &#125;</span><br><span class="line"><span class="comment">/* Match elements with class containing &quot;icon&quot; */</span></span><br><span class="line"><span class="selector-attr">[class*=<span class="string">&quot;icon&quot;</span>]</span> &#123; <span class="attribute">font-size</span>: <span class="number">18px</span>; &#125;</span><br><span class="line"><span class="comment">/* Match elements with href starting with &quot;https&quot; */</span></span><br><span class="line"><span class="selector-tag">a</span><span class="selector-attr">[href^=<span class="string">&quot;https&quot;</span>]</span> &#123; <span class="attribute">color</span>: green; &#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Text-Styling-Layout"><a href="#Text-Styling-Layout" class="headerlink" title="Text Styling &amp; Layout"></a>Text Styling &amp; Layout<a name="text"></a></h2><p>Control the appearance and arrangement of text with these core properties.</p>
+<h3 id="Font-Styles"><a href="#Font-Styles" class="headerlink" title="Font Styles"></a><strong>Font Styles</strong><a name="fonts"></a></h3><table>
+<thead>
+<tr>
+<th align="center"><strong>Property</strong></th>
+<th align="center"><strong>Description</strong></th>
+<th align="center"><strong>Common Values</strong></th>
+<th align="center"><strong>Example</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">color</td>
+<td align="center">Text color</td>
+<td align="center">Keyword, Hex, RGB&#x2F;RGBA</td>
+<td align="center">color: #333;</td>
+</tr>
+<tr>
+<td align="center">font-family</td>
+<td align="center">Font type</td>
+<td align="center">System fonts, web fonts</td>
+<td align="center">font-family: “Microsoft YaHei”, sans-serif;</td>
+</tr>
+<tr>
+<td align="center">font-size</td>
+<td align="center">Text size</td>
+<td align="center"><code>px, em, rem</code></td>
+<td align="center">font-size: 16px;</td>
+</tr>
+<tr>
+<td align="center">font-weight</td>
+<td align="center">Text boldness</td>
+<td align="center">normal (400), bold (700)</td>
+<td align="center"><code>font-weight: 600;</code></td>
+</tr>
+<tr>
+<td align="center">font-style</td>
+<td align="center">Text style</td>
+<td align="center"><code>normal, italic</code></td>
+<td align="center">font-style: italic;</td>
+</tr>
+<tr>
+<td align="center">text-decoration</td>
+<td align="center">Text decoration</td>
+<td align="center"><code>none, underline, line-through</code></td>
+<td align="center"><code>text-decoration: none; (remove link underlines)</code></td>
+</tr>
+</tbody></table>
+<h3 id="Text-Layout"><a href="#Text-Layout" class="headerlink" title="Text Layout"></a>Text Layout<a name="textly"></a></h3><table>
+<thead>
+<tr>
+<th align="center"><strong>Property</strong></th>
+<th align="center">**	Description**</th>
+<th align="center"><strong>Common Values</strong></th>
+<th align="center"><strong>Example</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center"><code>text-align</code></td>
+<td align="center">Horizontal alignment</td>
+<td align="center"><code>	left, center, right, justify</code></td>
+<td align="center"><code>text-align: center;</code></td>
+</tr>
+<tr>
+<td align="center"><code>text-indent</code></td>
+<td align="center">First-line indent</td>
+<td align="center"><code>	em, px</code></td>
+<td align="center"><code>text-indent: 2em;</code> (2 characters indent)</td>
+</tr>
+<tr>
+<td align="center"><code>letter-spacing</code></td>
+<td align="center">Space between characters</td>
+<td align="center"><code>px</code> (positive&#x2F;negative)</td>
+<td align="center"><code>letter-spacing: 1px;</code></td>
+</tr>
+<tr>
+<td align="center"><code>line-height</code></td>
+<td align="center">Line spacing</td>
+<td align="center"><code>px</code>, multiplier</td>
+<td align="center"><code>line-height: 1.5;</code> (1.5x font size)</td>
+</tr>
+</tbody></table>
+<h3 id="Font-Shorthand"><a href="#Font-Shorthand" class="headerlink" title="Font Shorthand"></a>Font Shorthand<a name="fontshort"></a></h3><p>Combine multiple font properties into one declaration (order: <code>style → weight → size/line-height → family</code>):</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">body</span> &#123;</span><br><span class="line">  <span class="attribute">font</span>: normal <span class="number">400</span> <span class="number">16px</span>/<span class="number">1.5</span> <span class="string">&quot;Helvetica Neue&quot;</span>, sans-serif;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="CSS-Specificity-Priority"><a href="#CSS-Specificity-Priority" class="headerlink" title="CSS Specificity (Priority)"></a>CSS Specificity (Priority)<a name="csssp"></a></h2><table>
+<thead>
+<tr>
+<th align="center"><strong>Selector Type</strong></th>
+<th align="center"><strong>Specificity</strong></th>
+<th align="center"><strong>Example</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">!important</td>
+<td align="center">∞ (infinity)</td>
+<td align="center"><code>color: red !important;</code></td>
+</tr>
+<tr>
+<td align="center">Inline Styles</td>
+<td align="center">(1,0,0,0)</td>
+<td align="center"><code>&lt;div style=&quot;color: red&quot;</code>&gt;</td>
+</tr>
+<tr>
+<td align="center">ID Selector</td>
+<td align="center">(0,1,0,0)</td>
+<td align="center">#header</td>
+</tr>
+<tr>
+<td align="center">Class&#x2F;Attribute&#x2F;Pseudo-class</td>
+<td align="center">(0,0,1,0)</td>
+<td align="center"><code>.nav, [type=&quot;text&quot;], :hover</code></td>
+</tr>
+<tr>
+<td align="center">Type Selector&#x2F;Pseudo-element</td>
+<td align="center">(0,0,0,1)</td>
+<td align="center"><code>div, ::before</code></td>
+</tr>
+<tr>
+<td align="center">Universal Selector</td>
+<td align="center">(0,0,0,0)</td>
+<td align="center">*</td>
+</tr>
+</tbody></table>
+<p><strong>Specificity Calculation</strong>:<br><code>#nav .item a</code> &#x3D; 0,1,0,0 + 0,0,1,0 + 0,0,0,1 &#x3D; 0,1,1,1</p>
+<h2 id="Box-Model"><a href="#Box-Model" class="headerlink" title="Box Model "></a>Box Model <a name="box-model"></a></h2><h3 id="Box-Model-Components"><a href="#Box-Model-Components" class="headerlink" title="Box Model Components"></a>Box Model Components<a name="box-model-c"></a></h3><p>A box consists of four parts (from inside out):</p>
+<ul>
+<li><strong>Content</strong>: The actual content (text, images)</li>
+<li><strong>Padding</strong>: Space between content and border</li>
+<li><strong>Border</strong>: Line surrounding the padding</li>
+<li><strong>Margin</strong>: Space between the box and other elements</li>
+</ul>
+<p><img src="/2025/10/26/CSS3-Core-Technologies-study-note/web1.png" alt="pic"></p>
+<h3 id="Key-Properties"><a href="#Key-Properties" class="headerlink" title="Key Properties"></a>Key Properties<a name="key-p"></a></h3><p><strong>Padding (Inner Spacing)</strong></p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* Shorthand: top → right → bottom → left (clockwise) */</span></span><br><span class="line"><span class="selector-class">.box</span> &#123;</span><br><span class="line">  <span class="attribute">padding</span>: <span class="number">10px</span> <span class="number">20px</span> <span class="number">10px</span> <span class="number">20px</span>;</span><br><span class="line">  <span class="attribute">padding</span>: <span class="number">10px</span> <span class="number">20px</span>; <span class="comment">/* top/bottom → left/right */</span></span><br><span class="line">  <span class="attribute">padding</span>: <span class="number">10px</span>; <span class="comment">/* all sides */</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>Border</strong></p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* Shorthand: width → style → color */</span></span><br><span class="line"><span class="selector-class">.box</span> &#123;</span><br><span class="line">  <span class="attribute">border</span>: <span class="number">1px</span> solid <span class="number">#ddd</span>;</span><br><span class="line">  <span class="attribute">border-radius</span>: <span class="number">8px</span>; <span class="comment">/* rounded corners */</span></span><br><span class="line">  <span class="attribute">border-top</span>: <span class="number">2px</span> dashed red; <span class="comment">/* single-side border */</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>Margin (Outer Spacing)</strong></p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* Center a block element horizontally */</span></span><br><span class="line"><span class="selector-class">.container</span> &#123;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">1200px</span>;</span><br><span class="line">  <span class="attribute">margin</span>: <span class="number">0</span> auto; <span class="comment">/* top/bottom: 0, left/right: auto */</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="Box-Sizing"><a href="#Box-Sizing" class="headerlink" title="Box Sizing "></a>Box Sizing <a name="box-s"></a></h3><p>By default, width&#x2F;height only apply to the content. Use box-sizing to include padding and border:</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* Recommended for all projects */</span></span><br><span class="line">* &#123;</span><br><span class="line">  <span class="attribute">box-sizing</span>: border-box; <span class="comment">/* width = content + padding + border */</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="Margin-Collapse-Collapse-Fix"><a href="#Margin-Collapse-Collapse-Fix" class="headerlink" title="Margin Collapse &amp; Collapse Fix"></a>Margin Collapse &amp; Collapse Fix<a name="mccf"></a></h3><ul>
+<li><strong>Sibling Collapse</strong>: Vertical margins between block siblings merge (use only one margin)</li>
+<li><strong>Parent-Child Collapse</strong>: Child margin affects parent， fix with:<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.parent</span><span class="selector-pseudo">::after</span> &#123;</span><br><span class="line">    <span class="attribute">content</span>: <span class="string">&#x27;&#x27;</span>;</span><br><span class="line">    <span class="attribute">display</span>: block;</span><br><span class="line">    <span class="attribute">clear</span>: both;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+or <figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">overflow</span>: hidden</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="CSS-Backgrounds"><a href="#CSS-Backgrounds" class="headerlink" title="CSS Backgrounds"></a>CSS Backgrounds<a name="css-b"></a></h2><h3 id="Background-Properties"><a href="#Background-Properties" class="headerlink" title="Background Properties"></a>Background Properties<a name="b-p"></a></h3><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">div</span> &#123;</span><br><span class="line">  <span class="comment">/* Background color */</span></span><br><span class="line">  <span class="attribute">background-color</span>: <span class="number">#f0f0f0</span>;</span><br><span class="line">  </span><br><span class="line">  <span class="comment">/* Background image */</span></span><br><span class="line">  <span class="attribute">background-image</span>: <span class="built_in">url</span>(<span class="string">&#x27;image.jpg&#x27;</span>);</span><br><span class="line">  </span><br><span class="line">  <span class="comment">/* Background repeat */</span></span><br><span class="line">  <span class="attribute">background-repeat</span>: no-repeat; <span class="comment">/* no-repeat, repeat, repeat-x, repeat-y */</span></span><br><span class="line">  </span><br><span class="line">  <span class="comment">/* Background position */</span></span><br><span class="line">  <span class="attribute">background-position</span>: center center; <span class="comment">/* x-position y-position */</span></span><br><span class="line">  <span class="comment">/* Keywords: left, center, right, top, bottom */</span></span><br><span class="line">  <span class="comment">/* Values: 50% 50%, 20px 10px */</span></span><br><span class="line">  </span><br><span class="line">  <span class="comment">/* Background size */</span></span><br><span class="line">  <span class="attribute">background-size</span>: cover; <span class="comment">/* cover, contain, or specific values */</span></span><br><span class="line">  </span><br><span class="line">  <span class="comment">/* Background attachment */</span></span><br><span class="line">  <span class="attribute">background-attachment</span>: fixed; <span class="comment">/* fixed or scroll */</span></span><br><span class="line">  </span><br><span class="line">  <span class="comment">/* Shorthand */</span></span><br><span class="line">  <span class="attribute">background</span>: <span class="number">#f0f0f0</span> <span class="built_in">url</span>(<span class="string">&#x27;image.jpg&#x27;</span>) no-repeat center center/cover fixed;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="Background-Gradients"><a href="#Background-Gradients" class="headerlink" title="Background Gradients"></a>Background Gradients<a name="b-g"></a></h3><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* Linear Gradient */</span></span><br><span class="line"><span class="selector-tag">div</span> &#123;</span><br><span class="line">  <span class="attribute">background</span>: <span class="built_in">linear-gradient</span>(to right, <span class="number">#ff6b6b</span>, <span class="number">#4ecdc4</span>);</span><br><span class="line">  <span class="attribute">background</span>: <span class="built_in">linear-gradient</span>(<span class="number">90deg</span>, <span class="number">#ff6b6b</span> <span class="number">30%</span>, <span class="number">#4ecdc4</span> <span class="number">70%</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* Radial Gradient */</span></span><br><span class="line"><span class="selector-tag">div</span> &#123;</span><br><span class="line">  <span class="attribute">background</span>: <span class="built_in">radial-gradient</span>(circle, <span class="number">#ff9a9e</span>, <span class="number">#fad0c4</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* Gradient Text */</span></span><br><span class="line"><span class="selector-tag">h1</span> &#123;</span><br><span class="line">  <span class="attribute">background</span>: <span class="built_in">linear-gradient</span>(to right, pink, red);</span><br><span class="line">  -webkit-<span class="attribute">background-clip</span>: text;</span><br><span class="line">  <span class="attribute">background-clip</span>: text;</span><br><span class="line">  -webkit-<span class="selector-tag">text</span>-<span class="attribute">fill</span>-<span class="attribute">color</span>: transparent;</span><br><span class="line">  <span class="attribute">color</span>: transparent;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Box-Shadows-and-Transitions"><a href="#Box-Shadows-and-Transitions" class="headerlink" title="Box Shadows and Transitions"></a>Box Shadows and Transitions<a name="b-s-a-t"></a></h2><h3 id="Box-Shadows"><a href="#Box-Shadows" class="headerlink" title="Box Shadows"></a>Box Shadows<a name="b-shadow"></a></h3><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">div</span> &#123;</span><br><span class="line">  <span class="comment">/* Basic shadow: x-offset y-offset blur-radius spread-radius color */</span></span><br><span class="line">  <span class="attribute">box-shadow</span>: <span class="number">2px</span> <span class="number">2px</span> <span class="number">10px</span> <span class="number">0</span> <span class="built_in">rgba</span>(<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0.3</span>);</span><br><span class="line">  </span><br><span class="line">  <span class="comment">/* Multiple shadows */</span></span><br><span class="line">  <span class="attribute">box-shadow</span>: </span><br><span class="line"></span><br><span class="line"> <span class="number">2px</span> <span class="number">4px</span> <span class="built_in">rgba</span>(<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0.1</span>),</span><br><span class="line">    <span class="number">0</span> <span class="number">8px</span> <span class="number">16px</span> <span class="built_in">rgba</span>(<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0.1</span>);</span><br><span class="line">  </span><br><span class="line">  <span class="comment">/* Inset shadow (inner shadow) */</span></span><br><span class="line">  <span class="attribute">box-shadow</span>: inset <span class="number">0</span> <span class="number">0</span> <span class="number">10px</span> <span class="built_in">rgba</span>(<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0.5</span>);</span><br><span class="line">  </span><br><span class="line">  <span class="comment">/* Spread radius (positive expands, negative contracts) */</span></span><br><span class="line">  <span class="attribute">box-shadow</span>: <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">5px</span> <span class="built_in">rgba</span>(<span class="number">255</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0.5</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="Transitions"><a href="#Transitions" class="headerlink" title="Transitions"></a>Transitions<a name="trans"></a></h3><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">div</span> &#123;</span><br><span class="line">  <span class="comment">/* Shorthand: property duration timing-function delay */</span></span><br><span class="line">  <span class="attribute">transition</span>: all <span class="number">0.3s</span> ease-in-out;</span><br><span class="line">  </span><br><span class="line">  <span class="comment">/* Multiple properties */</span></span><br><span class="line">  <span class="attribute">transition</span>: </span><br><span class="line">    background-color <span class="number">0.3s</span> ease,</span><br><span class="line">    transform <span class="number">0.5s</span> <span class="built_in">cubic-bezier</span>(<span class="number">0.4</span>, <span class="number">0</span>, <span class="number">0.2</span>, <span class="number">1</span>),</span><br><span class="line">    opacity <span class="number">0.2s</span> linear <span class="number">0.1s</span>;</span><br><span class="line">  </span><br><span class="line">  <span class="comment">/* Individual properties */</span></span><br><span class="line">  <span class="attribute">transition-property</span>: width, height;</span><br><span class="line">  <span class="attribute">transition-duration</span>: <span class="number">0.3s</span>, <span class="number">0.5s</span>;</span><br><span class="line">  <span class="attribute">transition-timing-function</span>: ease-in, linear;</span><br><span class="line">  <span class="attribute">transition-delay</span>: <span class="number">0.1s</span>;</span><br><span class="line">  </span><br><span class="line">  <span class="comment">/* Common with hover */</span></span><br><span class="line">  <span class="selector-tag">div</span><span class="selector-pseudo">:hover</span> &#123;</span><br><span class="line">    <span class="attribute">background-color</span>: pink;</span><br><span class="line">    <span class="attribute">transform</span>: <span class="built_in">scale</span>(<span class="number">1.05</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Text-Styling"><a href="#Text-Styling" class="headerlink" title="Text Styling"></a>Text Styling<a name="text-s"></a></h2><h3 id="Font-Properties"><a href="#Font-Properties" class="headerlink" title="Font Properties"></a>Font Properties<a name="font-p"></a></h3><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">p</span> &#123;</span><br><span class="line">  <span class="comment">/* Font color */</span></span><br><span class="line">  <span class="attribute">color</span>: <span class="number">#333</span>;</span><br><span class="line">  <span class="attribute">color</span>: <span class="built_in">rgb</span>(<span class="number">51</span>, <span class="number">51</span>, <span class="number">51</span>);</span><br><span class="line">  <span class="attribute">color</span>: <span class="built_in">rgba</span>(<span class="number">51</span>, <span class="number">51</span>, <span class="number">51</span>, <span class="number">0.8</span>);</span><br><span class="line">  </span><br><span class="line">  <span class="comment">/* Font family */</span></span><br><span class="line">  <span class="attribute">font-family</span>: <span class="string">&quot;Helvetica Neue&quot;</span>, Helvetica, Arial, sans-serif;</span><br><span class="line">  </span><br><span class="line">  <span class="comment">/* Font size */</span></span><br><span class="line">  <span class="attribute">font-size</span>: <span class="number">16px</span>;      <span class="comment">/* Absolute */</span></span><br><span class="line">  <span class="attribute">font-size</span>: <span class="number">1rem</span>;      <span class="comment">/* Relative to root */</span></span><br><span class="line">  <span class="attribute">font-size</span>: <span class="number">1.2em</span>;     <span class="comment">/* Relative to parent */</span></span><br><span class="line">  </span><br><span class="line">  <span class="comment">/* Font style */</span></span><br><span class="line">  <span class="attribute">font-style</span>: normal;   <span class="comment">/* Normal */</span></span><br><span class="line">  <span class="attribute">font-style</span>: italic;   <span class="comment">/* Italic */</span></span><br><span class="line">  <span class="attribute">font-style</span>: oblique;  <span class="comment">/* Oblique (less common) */</span></span><br><span class="line">  </span><br><span class="line">  <span class="comment">/* Font weight */</span></span><br><span class="line">  <span class="attribute">font-weight</span>: <span class="number">400</span>;     <span class="comment">/* Normal (400) */</span></span><br><span class="line">  <span class="attribute">font-weight</span>: <span class="number">700</span>;     <span class="comment">/* Bold (700) */</span></span><br><span class="line">  <span class="attribute">font-weight</span>: normal;  <span class="comment">/* Keyword */</span></span><br><span class="line">  <span class="attribute">font-weight</span>: bold;    <span class="comment">/* Keyword */</span></span><br><span class="line">  </span><br><span class="line">  <span class="comment">/* Text decoration */</span></span><br><span class="line">  <span class="attribute">text-decoration</span>: none;          <span class="comment">/* None (common for links) */</span></span><br><span class="line">  <span class="attribute">text-decoration</span>: underline;     <span class="comment">/* Underline */</span></span><br><span class="line">  <span class="attribute">text-decoration</span>: line-through;  <span class="comment">/* Strike-through */</span></span><br><span class="line">  <span class="attribute">text-decoration</span>: overline;      <span class="comment">/* Overline */</span></span><br><span class="line">  </span><br><span class="line">  <span class="comment">/* Font shorthand */</span></span><br><span class="line">  <span class="attribute">font</span>: italic <span class="number">700</span> <span class="number">16px</span>/<span class="number">1.5</span> <span class="string">&quot;Helvetica Neue&quot;</span>, sans-serif;</span><br><span class="line">  <span class="comment">/* Order: style weight size/line-height family */</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="Text-Layout-1"><a href="#Text-Layout-1" class="headerlink" title="Text Layout"></a>Text Layout<a name="text-l"></a></h3><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">p</span> &#123;</span><br><span class="line">  <span class="comment">/* Text alignment */</span></span><br><span class="line">  <span class="attribute">text-align</span>: left;     <span class="comment">/* Default */</span></span><br><span class="line">  <span class="attribute">text-align</span>: right;</span><br><span class="line">  <span class="attribute">text-align</span>: center;</span><br><span class="line">  <span class="attribute">text-align</span>: justify;  <span class="comment">/* Full justification */</span></span><br><span class="line">  </span><br><span class="line">  <span class="comment">/* Text indent */</span></span><br><span class="line">  <span class="attribute">text-indent</span>: <span class="number">2em</span>;     <span class="comment">/* First line indent */</span></span><br><span class="line">  </span><br><span class="line">  <span class="comment">/* Letter spacing */</span></span><br><span class="line">  <span class="attribute">letter-spacing</span>: <span class="number">1px</span>;  <span class="comment">/* Character spacing */</span></span><br><span class="line">  <span class="attribute">letter-spacing</span>: -<span class="number">0.5px</span>; <span class="comment">/* Negative for tight spacing */</span></span><br><span class="line">  </span><br><span class="line">  <span class="comment">/* Line height */</span></span><br><span class="line">  <span class="attribute">line-height</span>: <span class="number">1.5</span>;     <span class="comment">/* Unitless (recommended) */</span></span><br><span class="line">  <span class="attribute">line-height</span>: <span class="number">24px</span>;    <span class="comment">/* Fixed value */</span></span><br><span class="line">  </span><br><span class="line">  <span class="comment">/* Text transform */</span></span><br><span class="line">  <span class="attribute">text-transform</span>: none;       <span class="comment">/* Default */</span></span><br><span class="line">  <span class="attribute">text-transform</span>: uppercase;  <span class="comment">/* UPPERCASE */</span></span><br><span class="line">  <span class="attribute">text-transform</span>: lowercase;  <span class="comment">/* lowercase */</span></span><br><span class="line">  <span class="attribute">text-transform</span>: capitalize; <span class="comment">/* Capitalize Each Word */</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="Text-Overflow"><a href="#Text-Overflow" class="headerlink" title="Text Overflow"></a>Text Overflow<a name="text-o"></a></h3><p>Usually we write it in <code>common.css</code> and then consume it like <code>class=&quot;single-line&quot;</code></p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* Single line text overflow */</span></span><br><span class="line"><span class="selector-class">.single-line</span> &#123;</span><br><span class="line">  <span class="attribute">white-space</span>: nowrap;      <span class="comment">/* Prevent wrapping */</span></span><br><span class="line">  <span class="attribute">overflow</span>: hidden;         <span class="comment">/* Hide overflow */</span></span><br><span class="line">  <span class="attribute">text-overflow</span>: ellipsis;  <span class="comment">/* Show ... */</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* Multi-line text overflow (WebKit only) */</span></span><br><span class="line"><span class="selector-class">.multi-line</span> &#123;</span><br><span class="line">  <span class="attribute">display</span>: -webkit-box;</span><br><span class="line">  -webkit-<span class="attribute">box-orient</span>: vertical;</span><br><span class="line">  -webkit-<span class="selector-tag">line</span>-clamp: <span class="number">3</span>;    <span class="comment">/* Number of lines */</span></span><br><span class="line">  <span class="attribute">overflow</span>: hidden;</span><br><span class="line">  <span class="attribute">text-overflow</span>: ellipsis;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="CSS-Sprites"><a href="#CSS-Sprites" class="headerlink" title="CSS Sprites"></a>CSS Sprites<a name="css-sp"></a></h2><p>CSS Sprites combine multiple small images into one large image to reduce HTTP requests.</p>
+<p>Implementation</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.icon</span> &#123;</span><br><span class="line">  <span class="attribute">background-image</span>: <span class="built_in">url</span>(<span class="string">&#x27;sprite.png&#x27;</span>);</span><br><span class="line">  <span class="attribute">background-repeat</span>: no-repeat;</span><br><span class="line">  <span class="attribute">display</span>: inline-block;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-class">.icon-home</span> &#123;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">32px</span>;</span><br><span class="line">  <span class="attribute">height</span>: <span class="number">32px</span>;</span><br><span class="line">  <span class="attribute">background-position</span>: <span class="number">0</span> <span class="number">0</span>;  <span class="comment">/* First icon */</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-class">.icon-search</span> &#123;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">32px</span>;</span><br><span class="line">  <span class="attribute">height</span>: <span class="number">32px</span>;</span><br><span class="line">  <span class="attribute">background-position</span>: -<span class="number">32px</span> <span class="number">0</span>; <span class="comment">/* Second icon (move left 32px) */</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-class">.icon-user</span> &#123;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">32px</span>;</span><br><span class="line">  <span class="attribute">height</span>: <span class="number">32px</span>;</span><br><span class="line">  <span class="attribute">background-position</span>: -<span class="number">64px</span> <span class="number">0</span>; <span class="comment">/* Third icon (move left 64px) */</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="Font-Icons"><a href="#Font-Icons" class="headerlink" title="Font Icons"></a>Font Icons<a name="font-i"></a></h2><p>Font icons use icon fonts instead of images for scalable, styleable icons.</p>
+<h3 id="Using-Icon-Fonts"><a href="#Using-Icon-Fonts" class="headerlink" title="Using Icon Fonts"></a>Using Icon Fonts<a name="u-i-f"></a></h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- Link font file --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span>=<span class="string">&quot;stylesheet&quot;</span> <span class="attr">href</span>=<span class="string">&quot;font-awesome.css&quot;</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- Use icons --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">i</span> <span class="attr">class</span>=<span class="string">&quot;fa fa-home&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">i</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">i</span> <span class="attr">class</span>=<span class="string">&quot;fa fa-search&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">i</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">i</span> <span class="attr">class</span>=<span class="string">&quot;fa fa-user&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">i</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- Style with CSS --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">i</span> <span class="attr">class</span>=<span class="string">&quot;fa fa-star&quot;</span> <span class="attr">style</span>=<span class="string">&quot;color: gold; font-size: 24px;&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">i</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="Popular-Icon-Libraries"><a href="#Popular-Icon-Libraries" class="headerlink" title="Popular Icon Libraries"></a>Popular Icon Libraries<a name="p-i-l"></a></h3><ul>
+<li><strong>Font Awesome</strong>: Comprehensive icon set</li>
+<li><strong>Bootstrap Icons</strong>: Simple and clean</li>
+<li><strong>Ionicons</strong>: Modern icons</li>
+<li><strong>Material Icons</strong>: Google’s design system</li>
+<li><strong>IconFont (Alibaba)</strong>: Chinese market favorite</li>
+</ul>
+<h2 id="CSS-Best-Practices"><a href="#CSS-Best-Practices" class="headerlink" title="CSS Best Practices"></a>CSS Best Practices<a name="css-b-p"></a></h2><h3 id="Reset-Normalize-CSS"><a href="#Reset-Normalize-CSS" class="headerlink" title="Reset&#x2F;Normalize CSS"></a>Reset&#x2F;Normalize CSS<a name="rn-c"></a></h3><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* Simple Reset */</span></span><br><span class="line">* &#123;</span><br><span class="line">  <span class="attribute">margin</span>: <span class="number">0</span>;</span><br><span class="line">  <span class="attribute">padding</span>: <span class="number">0</span>;</span><br><span class="line">  <span class="attribute">box-sizing</span>: border-box;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-tag">ul</span>, <span class="selector-tag">ol</span> &#123;</span><br><span class="line">  <span class="attribute">list-style</span>: none;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-tag">a</span> &#123;</span><br><span class="line">  <span class="attribute">text-decoration</span>: none;</span><br><span class="line">  <span class="attribute">color</span>: inherit;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* Or use Normalize.css (recommended for production) */</span></span><br><span class="line">&lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdn.jsdelivr.net/npm/normalize.css<span class="string">&quot;&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="CSS-Organization"><a href="#CSS-Organization" class="headerlink" title="CSS Organization"></a>CSS Organization<a name="css-o"></a></h3><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* Group related properties */</span></span><br><span class="line"><span class="comment">/* 1. Layout Properties */</span></span><br><span class="line"><span class="attribute">position</span>: absolute;</span><br><span class="line"><span class="attribute">top</span>: <span class="number">0</span>;</span><br><span class="line"><span class="attribute">right</span>: <span class="number">0</span>;</span><br><span class="line"><span class="attribute">z-index</span>: <span class="number">10</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 2. Box Model */</span></span><br><span class="line"><span class="attribute">display</span>: block;</span><br><span class="line"><span class="attribute">width</span>: <span class="number">100%</span>;</span><br><span class="line"><span class="attribute">padding</span>: <span class="number">20px</span>;</span><br><span class="line"><span class="attribute">margin</span>: <span class="number">0</span> auto;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 3. Typography */</span></span><br><span class="line"><span class="attribute">font-family</span>: sans-serif;</span><br><span class="line"><span class="attribute">font-size</span>: <span class="number">16px</span>;</span><br><span class="line"><span class="attribute">line-height</span>: <span class="number">1.5</span>;</span><br><span class="line"><span class="attribute">color</span>: <span class="number">#333</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 4. Visual */</span></span><br><span class="line"><span class="attribute">background-color</span>: <span class="number">#fff</span>;</span><br><span class="line"><span class="attribute">border</span>: <span class="number">1px</span> solid <span class="number">#ddd</span>;</span><br><span class="line"><span class="attribute">border-radius</span>: <span class="number">4px</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 5. Animation */</span></span><br><span class="line"><span class="attribute">transition</span>: all <span class="number">0.3s</span> ease;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Responsive-Considerations"><a href="#Responsive-Considerations" class="headerlink" title="Responsive Considerations"></a>Responsive Considerations<a name="res-c"></a></h3><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* Use relative units */</span></span><br><span class="line"><span class="selector-class">.container</span> &#123;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">90%</span>;          <span class="comment">/* Percentage for fluid layouts */</span></span><br><span class="line">  <span class="attribute">max-width</span>: <span class="number">1200px</span>;   <span class="comment">/* Maximum width */</span></span><br><span class="line">  <span class="attribute">margin</span>: <span class="number">0</span> auto;      <span class="comment">/* Center align */</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* Responsive typography */</span></span><br><span class="line"><span class="selector-tag">body</span> &#123;</span><br><span class="line">  <span class="attribute">font-size</span>: <span class="number">16px</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@media</span> (<span class="attribute">min-width</span>: <span class="number">768px</span>) &#123;</span><br><span class="line">  <span class="selector-tag">body</span> &#123;</span><br><span class="line">    <span class="attribute">font-size</span>: <span class="number">18px</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* Flexible images */</span></span><br><span class="line"><span class="selector-tag">img</span> &#123;</span><br><span class="line">  <span class="attribute">max-width</span>: <span class="number">100%</span>;</span><br><span class="line">  <span class="attribute">height</span>: auto;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Example-1-Product-Card-Xiaomi-Style"><a href="#Example-1-Product-Card-Xiaomi-Style" class="headerlink" title="Example 1: Product Card (Xiaomi Style)"></a>Example 1: Product Card (Xiaomi Style)<a name="p-c"></a></h3><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.product-card</span> &#123;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">300px</span>;</span><br><span class="line">  <span class="attribute">padding</span>: <span class="number">16px</span>;</span><br><span class="line">  <span class="attribute">border-radius</span>: <span class="number">8px</span>;</span><br><span class="line">  <span class="attribute">box-shadow</span>: <span class="number">0</span> <span class="number">2px</span> <span class="number">8px</span> <span class="built_in">rgba</span>(<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0.08</span>);</span><br><span class="line">  <span class="attribute">transition</span>: all <span class="number">0.3s</span> ease;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.product-card</span><span class="selector-pseudo">:hover</span> &#123;</span><br><span class="line">  <span class="attribute">box-shadow</span>: <span class="number">0</span> <span class="number">8px</span> <span class="number">24px</span> <span class="built_in">rgba</span>(<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0.12</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.product-card</span> <span class="selector-tag">img</span> &#123;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">100%</span>;</span><br><span class="line">  <span class="attribute">height</span>: <span class="number">200px</span>;</span><br><span class="line">  <span class="attribute">object-fit</span>: cover;</span><br><span class="line">  <span class="attribute">border-radius</span>: <span class="number">4px</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.product-title</span> &#123;</span><br><span class="line">  <span class="attribute">font-size</span>: <span class="number">16px</span>;</span><br><span class="line">  <span class="attribute">margin</span>: <span class="number">8px</span> <span class="number">0</span>;</span><br><span class="line">  <span class="attribute">white-space</span>: nowrap;</span><br><span class="line">  <span class="attribute">overflow</span>: hidden;</span><br><span class="line">  <span class="attribute">text-overflow</span>: ellipsis; <span class="comment">/* Truncate long text */</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.price</span> &#123;</span><br><span class="line">  <span class="attribute">color</span>: <span class="number">#ff6700</span>;</span><br><span class="line">  <span class="attribute">font-weight</span>: bold;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="CSS-Performance-Tips"><a href="#CSS-Performance-Tips" class="headerlink" title="CSS Performance Tips"></a>CSS Performance Tips<a name="p-t"></a></h2><ul>
+<li><strong>Reset Default Styles</strong>: Use * { margin: 0; padding: 0; box-sizing: border-box; } or Normalize.css for cross-browser consistency.</li>
+<li><strong>Reuse Classes</strong>: Prefer class selectors over IDs for reusability.</li>
+<li><strong>Mobile-First</strong>: Design for mobile first, then use media queries for larger screens.</li>
+<li><strong>Avoid <code>!important</code></strong>: Overuse breaks specificity—use only for emergencies.</li>
+<li><strong>Optimize Performance</strong>: Use icon fonts&#x2F;sprites instead of multiple images; minimize selectors complexity.</li>
+</ul>
+<link rel="stylesheet" href="/css/folder.css" type="text/css"><script src="/js/folder.js" type="text/javascript" async></script>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Web-Development/" rel="tag"># Web Development</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/10/19/CS229-Notes-Part-1-Mathematical-Basics-of-Linear-Regression-%E2%80%94-From-Model-Formulation-to-Gradient-Descent/" rel="prev" title="CS229 Notes (Part 1): Mathematical Basics of Linear Regression — From Model Formulation to Gradient Descent">
+      <i class="fa fa-chevron-left"></i> CS229 Notes (Part 1): Mathematical Basics of Linear Regression — From Model Formulation to Gradient Descent
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2025/11/03/The-Complete-Guide-to-Modern-CSS-Layouts-From-Flexbox-to-Grid-and-Beyond/" rel="next" title="The Complete Guide to Modern CSS Layouts: From Flexbox to Grid and Beyond">
+      The Complete Guide to Modern CSS Layouts: From Flexbox to Grid and Beyond <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="gitalk-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Introduction-to-CSS3"><span class="nav-number">1.</span> <span class="nav-text">Introduction to CSS3:</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#What-is-CSS3"><span class="nav-number">1.1.</span> <span class="nav-text">What is CSS3?  </span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Core-Roles-of-CSS3"><span class="nav-number">1.2.</span> <span class="nav-text">Core Roles of CSS3  </span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CSS-Classification-by-Location"><span class="nav-number">1.3.</span> <span class="nav-text">CSS Classification by Location </span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CSS3-Selectors-Target-Elements-Precisely"><span class="nav-number">2.</span> <span class="nav-text">CSS3 Selectors: Target Elements Precisely</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Basic-Selectors"><span class="nav-number">2.1.</span> <span class="nav-text">Basic Selectors</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Relationship-Selectors"><span class="nav-number">2.2.</span> <span class="nav-text">Relationship Selectors</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Attribute-Selectors"><span class="nav-number">2.3.</span> <span class="nav-text">Attribute Selectors</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Text-Styling-Layout"><span class="nav-number">3.</span> <span class="nav-text">Text Styling &amp; Layout</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Font-Styles"><span class="nav-number">3.1.</span> <span class="nav-text">Font Styles</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Text-Layout"><span class="nav-number">3.2.</span> <span class="nav-text">Text Layout</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Font-Shorthand"><span class="nav-number">3.3.</span> <span class="nav-text">Font Shorthand</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CSS-Specificity-Priority"><span class="nav-number">4.</span> <span class="nav-text">CSS Specificity (Priority)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Box-Model"><span class="nav-number">5.</span> <span class="nav-text">Box Model </span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Box-Model-Components"><span class="nav-number">5.1.</span> <span class="nav-text">Box Model Components</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Key-Properties"><span class="nav-number">5.2.</span> <span class="nav-text">Key Properties</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Box-Sizing"><span class="nav-number">5.3.</span> <span class="nav-text">Box Sizing </span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Margin-Collapse-Collapse-Fix"><span class="nav-number">5.4.</span> <span class="nav-text">Margin Collapse &amp; Collapse Fix</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CSS-Backgrounds"><span class="nav-number">6.</span> <span class="nav-text">CSS Backgrounds</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Background-Properties"><span class="nav-number">6.1.</span> <span class="nav-text">Background Properties</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Background-Gradients"><span class="nav-number">6.2.</span> <span class="nav-text">Background Gradients</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Box-Shadows-and-Transitions"><span class="nav-number">7.</span> <span class="nav-text">Box Shadows and Transitions</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Box-Shadows"><span class="nav-number">7.1.</span> <span class="nav-text">Box Shadows</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Transitions"><span class="nav-number">7.2.</span> <span class="nav-text">Transitions</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Text-Styling"><span class="nav-number">8.</span> <span class="nav-text">Text Styling</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Font-Properties"><span class="nav-number">8.1.</span> <span class="nav-text">Font Properties</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Text-Layout-1"><span class="nav-number">8.2.</span> <span class="nav-text">Text Layout</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Text-Overflow"><span class="nav-number">8.3.</span> <span class="nav-text">Text Overflow</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CSS-Sprites"><span class="nav-number">9.</span> <span class="nav-text">CSS Sprites</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Font-Icons"><span class="nav-number">10.</span> <span class="nav-text">Font Icons</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Using-Icon-Fonts"><span class="nav-number">10.1.</span> <span class="nav-text">Using Icon Fonts</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Popular-Icon-Libraries"><span class="nav-number">10.2.</span> <span class="nav-text">Popular Icon Libraries</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CSS-Best-Practices"><span class="nav-number">11.</span> <span class="nav-text">CSS Best Practices</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Reset-Normalize-CSS"><span class="nav-number">11.1.</span> <span class="nav-text">Reset&#x2F;Normalize CSS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CSS-Organization"><span class="nav-number">11.2.</span> <span class="nav-text">CSS Organization</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Responsive-Considerations"><span class="nav-number">11.3.</span> <span class="nav-text">Responsive Considerations</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Example-1-Product-Card-Xiaomi-Style"><span class="nav-number">11.4.</span> <span class="nav-text">Example 1: Product Card (Xiaomi Style)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CSS-Performance-Tips"><span class="nav-number">12.</span> <span class="nav-text">CSS Performance Tips</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Tech with Alex"
+      src="/uploads/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Tech with Alex</p>
+  <div class="site-description" itemprop="description">Per aspera ad astra.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">14</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">17</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://stackoverflow.com/users/9644964/alexandar-may-msft?tab=answers&sort=votes" title="StackOverflow → https:&#x2F;&#x2F;stackoverflow.com&#x2F;users&#x2F;9644964&#x2F;alexandar-may-msft?tab&#x3D;answers&amp;sort&#x3D;votes" rel="noopener" target="_blank"><i class="fab fa-stack-overflow fa-fw"></i>StackOverflow</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Tech with Alex</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">Symbols count total: </span>
+    <span title="Symbols count total">149k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">Reading time total &asymp;</span>
+    <span title="Reading time total">2:16</span>
+    
+    <!--
+    
+    -->
+</div>
+
+<!--
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a>
+   </div>
+--><script color="0,0,255" opacity="0.5" zIndex="-1" count="99" src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1/dist/canvas-nest.js"></script>
+
+
+
+
+
+
+        
+
+ <script defer src="https://vercount.one/js"></script>
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv"  >
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv"  >
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : 'Ov23liVJTzqy1rzaDXXM',
+      clientSecret: '5e785a7d46e69f7509e6c2f7730855a55944df33',
+      repo        : 'blog-comment',
+      owner       : 'BODYsuperman',
+      admin       : ['BODYsuperman'],
+      id          : '9786d8f42786bdd2f967bd11a5cf0a45',
+        language: '',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+
+</body>
+</html>

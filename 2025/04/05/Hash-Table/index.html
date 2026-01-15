@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/logo-180.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/logo-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/logo-16.png">
+  <link rel="mask-icon" href="/images/logo-512.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|monospace:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"bodysuperman.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null,"use":"Gitalk","text":true},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="What is Hash Table  Core Concepts Common operations of hash table   Hash Collision Separate Chaining Open Addressing   Hash Alogrithm Goals of hash algorithms Common hash algorithms   Practical Examp">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hash Table">
+<meta property="og:url" content="https://bodysuperman.github.io/2025/04/05/Hash-Table/index.html">
+<meta property="og:site_name" content="Tech with Alex&#39;s Blog">
+<meta property="og:description" content="What is Hash Table  Core Concepts Common operations of hash table   Hash Collision Separate Chaining Open Addressing   Hash Alogrithm Goals of hash algorithms Common hash algorithms   Practical Examp">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://bodysuperman.github.io/2025/04/05/Hash-Table/hs01.png">
+<meta property="og:image" content="https://bodysuperman.github.io/2025/04/05/Hash-Table/hs02.png">
+<meta property="og:image" content="https://bodysuperman.github.io/2025/04/05/Hash-Table/hs03.png">
+<meta property="og:image" content="https://bodysuperman.github.io/2025/04/05/Hash-Table/hs04.png">
+<meta property="article:published_time" content="2025-04-05T08:15:59.000Z">
+<meta property="article:modified_time" content="2025-04-05T10:04:19.000Z">
+<meta property="article:author" content="Tech with Alex">
+<meta property="article:tag" content="Data Structure and Alogrithm">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://bodysuperman.github.io/2025/04/05/Hash-Table/hs01.png">
+
+<link rel="canonical" href="https://bodysuperman.github.io/2025/04/05/Hash-Table/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>Hash Table | Tech with Alex's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+
+
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Tech with Alex's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+   
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://bodysuperman.github.io/2025/04/05/Hash-Table/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+      <meta itemprop="name" content="Tech with Alex">
+      <meta itemprop="description" content="Per aspera ad astra.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Tech with Alex's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Hash Table
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-04-05 16:15:59 / Modified: 18:04:19" itemprop="dateCreated datePublished" datetime="2025-04-05T16:15:59+08:00">2025-04-05</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Data-Structure-and-Alogrithm/" itemprop="url" rel="index"><span itemprop="name">Data Structure and Alogrithm</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>11k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>10 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <ol>
+<li><a href="#introduction">What is Hash Table</a> <ul>
+<li><a href="#core">Core Concepts</a></li>
+<li><a href="#common">Common operations of hash table</a></li>
+</ul>
+</li>
+<li><a href="#hc">Hash Collision</a><ul>
+<li><a href="#sc">Separate Chaining</a></li>
+<li><a href="#oa">Open Addressing</a></li>
+</ul>
+</li>
+<li><a href="#ha">Hash Alogrithm</a><ul>
+<li><a href="#goal">Goals of hash algorithms</a></li>
+<li><a href="#cha">Common hash algorithms</a></li>
+</ul>
+</li>
+<li><a href="#pa">Practical Examples</a><ul>
+<li><a href="#fs">four sum</a><span id="more"></span></li>
+</ul>
+</li>
+</ol>
+<h2 id="What-is-Hash-Table"><a href="#What-is-Hash-Table" class="headerlink" title="What is Hash Table?"></a>What is Hash Table?<a name="introduction"></a></h2><p>A <strong><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Hash_table">Hash Table</a></strong> is a high-efficiency data structure that stores key-value pairs.It uses a hash function to map keys to storage locations, achieving average <strong>O(1)</strong> time complexity for <strong>fast insertions, lookups, and deletions</strong>.The index functions as a storage location for the matching value. In simple words, it maps the keys with the value.Widely used in caching systems, database indexing, and compiler symbol tables.<br><img src="/2025/04/05/Hash-Table/hs01.png" alt="pic"></p>
+<h3 id="Core-Concepts"><a href="#Core-Concepts" class="headerlink" title="Core Concepts"></a>Core Concepts<a name="core"></a></h3><ul>
+<li><strong>Key</strong>: A unique identifier for the data.</li>
+<li><strong>Value</strong>: The data associated with the key (simplified to just storing keys in this example).</li>
+<li><strong>Bucket</strong>: A storage unit in the hash table (typically an array).</li>
+<li><strong>Hash Functions:</strong><br>A hash function converts a key into an index for the underlying array:<ul>
+<li>Deterministic: Same key always produces the same index.</li>
+<li>Efficient: Computed quickly to avoid performance bottlenecks.</li>
+<li>Uniform: Distributes keys evenly to minimize collisions.</li>
+</ul>
+</li>
+<li><strong>Handling Hash Collisions:</strong><br>When two different keys produce the same index, a collision occurs. Common solutions include:<ul>
+<li><strong>Seperate Chaining</strong>: Store conflicting elements in a linked list at the same index.</li>
+<li><strong>Open Addressing</strong>: Find the next available slot in the array.</li>
+</ul>
+</li>
+</ul>
+<p>In addition to hash tables, arrays and linked lists can also be used to implement query functionality, but the time complexity is different. </p>
+<table>
+<thead>
+<tr>
+<th align="center"></th>
+<th align="center"><strong>Array</strong></th>
+<th align="center"><strong>Linked List</strong></th>
+<th align="center"><strong>Hash Table</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">Search</td>
+<td align="center">O(n)</td>
+<td align="center">O(n)</td>
+<td align="center">O(1)</td>
+</tr>
+<tr>
+<td align="center">Insert</td>
+<td align="center">O(1)</td>
+<td align="center">O(1)</td>
+<td align="center">O(1)</td>
+</tr>
+<tr>
+<td align="center">Delete</td>
+<td align="center">O(n)</td>
+<td align="center">O(n)</td>
+<td align="center">O(1)</td>
+</tr>
+</tbody></table>
+<p>Per aboved comparison, <strong>the time complexity for operations (insertion, deletion, searching, and modification) in a hash table is O(1)</strong>, which is highly efficient.</p>
+<h3 id="Common-operations-of-hash-table"><a href="#Common-operations-of-hash-table" class="headerlink" title="Common operations of hash table"></a>Common operations of hash table<a name="common"></a></h3><p>Common operations of a hash table include: initialization, querying, adding key-value pairs, and deleting key-value pairs. Here is an example code:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">/* Initialize hash table */</span><br><span class="line">Dictionary&lt;int, string&gt; map = new() &#123;</span><br><span class="line">    /* Add operation */</span><br><span class="line">    // Add key-value pair (key, value) to hash table</span><br><span class="line">    &#123; 13835, &quot;Tom&quot; &#125;,</span><br><span class="line">    &#123; 16937, &quot;Jerry&quot; &#125;,</span><br><span class="line">    &#123; 16852, &quot;Steve&quot; &#125;,</span><br><span class="line">    &#123; 13200, &quot;James&quot; &#125;,</span><br><span class="line">    &#123; 14583, &quot;Lisa&quot; &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">/* Query operation */</span><br><span class="line">// Input key into hash table, get value</span><br><span class="line">string name = map[16937];</span><br><span class="line"></span><br><span class="line">/* Delete operation */</span><br><span class="line">// Delete key-value pair (key, value) from hash table</span><br><span class="line">map.Remove(14583);</span><br></pre></td></tr></table></figure>
+<p>There are three common ways to traverse a hash table: traversing key-value pairs, traversing keys, and traversing values. Here is an example code:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">/* Traverse hash table */</span><br><span class="line">// Traverse key-value pairs Key-&gt;Value</span><br><span class="line">foreach (var kv in map) &#123;</span><br><span class="line">    Console.WriteLine(kv.Key + &quot; -&gt; &quot; + kv.Value);</span><br><span class="line">&#125;</span><br><span class="line">// Traverse keys only</span><br><span class="line">foreach (int key in map.Keys) &#123;</span><br><span class="line">    Console.WriteLine(key);</span><br><span class="line">&#125;</span><br><span class="line">// Traverse values only</span><br><span class="line">foreach (string val in map.Values) &#123;</span><br><span class="line">    Console.WriteLine(val);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="Hash-Collision"><a href="#Hash-Collision" class="headerlink" title="Hash Collision"></a>Hash Collision<a name="hc"></a></h2><p>The hashing process generates a small number for a big key, so there is a possibility that two keys could produce the same value. The situation where the newly inserted key maps to an already occupied, and it must be handled using some collision handling technology.<br><img src="/2025/04/05/Hash-Table/hs02.png" alt="pic"></p>
+<p>There are mainly two methods to handle collision:</p>
+<ul>
+<li>Separate Chaining</li>
+<li>Open Addressing</li>
+</ul>
+<h3 id="Separate-Chaining"><a href="#Separate-Chaining" class="headerlink" title="Separate Chaining "></a>Separate Chaining <a name="sc"></a></h3><p>Separate chaining converts a single element into a linked list, treating key-value pairs as list nodes, storing all colliding key-value pairs in the same linked list.<br>The operations of a hash table implemented with separate chaining have changed as follows:</p>
+<ul>
+<li>Searching Elements: Input key, obtain the bucket index through the hash function, then access the head node of the linked list. Traverse the linked list and compare key to find the target key-value pair.</li>
+<li>Inserting Elements: Access the head node of the linked list via the hash function, then append the node (key-value pair) to the list.</li>
+<li>Deleting Elements: Access the head of the linked list based on the result of the hash function, then traverse the linked list to find the target node and delete it.<br><img src="/2025/04/05/Hash-Table/hs03.png" alt="pic"></li>
+</ul>
+<p>The code below provides a simple implementation of a separate chaining hash table, with two things to note:</p>
+<ul>
+<li>Lists (dynamic arrays) are used instead of linked lists for simplicity. In this setup, the hash table (array) contains multiple buckets, each of which is a list.</li>
+<li>This implementation includes a hash table resizing method. When the load factor exceeds <strong>0.7</strong>, we expand the hash table to twice its original size.<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title">Hash</span></span><br><span class="line">&#123;</span><br><span class="line">      <span class="built_in">int</span> BUCKET;</span><br><span class="line">      List&lt;<span class="built_in">int</span>&gt;[] table;</span><br><span class="line">      <span class="built_in">int</span> elementCount;</span><br><span class="line">      <span class="keyword">const</span> <span class="built_in">double</span> LOAD_FACTOR_THRESHOLD = <span class="number">0.7</span>;</span><br><span class="line">      <span class="function"><span class="keyword">public</span> <span class="title">Hash</span>(<span class="params"><span class="built_in">int</span> V</span>)</span></span><br><span class="line">      &#123;</span><br><span class="line">          <span class="keyword">this</span>.BUCKET = V;</span><br><span class="line">          table = <span class="keyword">new</span> List&lt;<span class="built_in">int</span>&gt;[BUCKET];</span><br><span class="line">          elementCount = <span class="number">0</span>;</span><br><span class="line">          <span class="keyword">for</span> (<span class="built_in">int</span> i = <span class="number">0</span>; i &lt; BUCKET; i++)</span><br><span class="line">              table[i] = <span class="keyword">new</span> List&lt;<span class="built_in">int</span>&gt;();</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="comment">// Hash function to map values to key</span></span><br><span class="line">      <span class="function"><span class="keyword">private</span> <span class="built_in">int</span> <span class="title">hashFunction</span>(<span class="params"><span class="built_in">int</span> x</span>)</span></span><br><span class="line">      &#123;</span><br><span class="line">          <span class="built_in">int</span> hash = x.GetHashCode();</span><br><span class="line">          <span class="keyword">return</span> (hash % BUCKET + BUCKET) % BUCKET;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="function"><span class="built_in">double</span> <span class="title">GetLoadFactor</span>()</span></span><br><span class="line">      &#123;</span><br><span class="line">          <span class="keyword">return</span> (<span class="built_in">double</span>)elementCount / BUCKET;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="function"><span class="keyword">void</span> <span class="title">Rehash</span>()</span></span><br><span class="line">      &#123;</span><br><span class="line">          <span class="built_in">int</span> oldBucket = BUCKET; <span class="comment">// old bucket</span></span><br><span class="line">          <span class="built_in">int</span> newBucket = oldBucket * <span class="number">2</span>; <span class="comment">// new bucket</span></span><br><span class="line">          List&lt;<span class="built_in">int</span>&gt;[] newTable = <span class="keyword">new</span> List&lt;<span class="built_in">int</span>&gt;[newBucket];</span><br><span class="line">          <span class="keyword">for</span>(<span class="built_in">int</span> i = <span class="number">0</span>; i &lt; newBucket; i++)</span><br><span class="line">          &#123;</span><br><span class="line">              newTable[i] = <span class="keyword">new</span> List&lt;<span class="built_in">int</span>&gt;();</span><br><span class="line">          &#125;</span><br><span class="line"></span><br><span class="line">          <span class="keyword">for</span>(<span class="built_in">int</span> i = <span class="number">0</span>;i&lt; oldBucket; i++)</span><br><span class="line">          &#123;</span><br><span class="line">              <span class="keyword">foreach</span>(<span class="built_in">int</span> key <span class="keyword">in</span> table[i])</span><br><span class="line">              &#123;</span><br><span class="line">                  <span class="built_in">int</span> newIndex = key%newBucket;</span><br><span class="line"></span><br><span class="line">                  <span class="keyword">if</span> (!newTable[newIndex].Contains(key))</span><br><span class="line">                  &#123;</span><br><span class="line">                      newTable[newIndex].Add(key);</span><br><span class="line">                  &#125;</span><br><span class="line">                  </span><br><span class="line">              &#125;</span><br><span class="line">          &#125;</span><br><span class="line">          table = newTable;</span><br><span class="line">          BUCKET = newBucket;</span><br><span class="line">          Console.WriteLine(<span class="string">$&quot;Rehashed to <span class="subst">&#123;newBucket&#125;</span> buckets&quot;</span>);</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="function"><span class="keyword">public</span> <span class="built_in">bool</span> <span class="title">Contains</span>(<span class="params"><span class="built_in">int</span> key</span>)</span></span><br><span class="line">      &#123;</span><br><span class="line">          <span class="built_in">int</span> index = hashFunction(key);</span><br><span class="line">          <span class="keyword">return</span> table[index].Contains(key);</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">insertItem</span>(<span class="params"><span class="built_in">int</span> key</span>)</span></span><br><span class="line">      &#123;</span><br><span class="line">          <span class="keyword">if</span> (Contains(key))</span><br><span class="line">          &#123;</span><br><span class="line">              Console.WriteLine(<span class="string">$&quot;Key <span class="subst">&#123;key&#125;</span> already exists&quot;</span>);</span><br><span class="line">              <span class="keyword">return</span>;</span><br><span class="line">          &#125;</span><br><span class="line">          <span class="built_in">int</span> index = hashFunction(key);</span><br><span class="line">          table[index].Add(key);</span><br><span class="line"></span><br><span class="line">          elementCount++;</span><br><span class="line">          <span class="keyword">if</span>(GetLoadFactor()&gt; LOAD_FACTOR_THRESHOLD)</span><br><span class="line">          &#123;</span><br><span class="line">              Rehash();</span><br><span class="line">          &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="comment">// Deletes a key from the hash table</span></span><br><span class="line">      <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">deleteItem</span>(<span class="params"><span class="built_in">int</span> key</span>)</span></span><br><span class="line">      &#123;</span><br><span class="line">          <span class="built_in">int</span> index = hashFunction(key);</span><br><span class="line">          table[index].Remove(key);</span><br><span class="line">          elementCount--;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">displayHash</span>()</span></span><br><span class="line">      &#123;</span><br><span class="line">          <span class="keyword">for</span> (<span class="built_in">int</span> i = <span class="number">0</span>; i &lt; BUCKET; i++)</span><br><span class="line">          &#123;</span><br><span class="line">              Console.Write(i + <span class="string">&quot; --&gt; &quot;</span>);</span><br><span class="line">              <span class="keyword">foreach</span> (<span class="built_in">int</span> x <span class="keyword">in</span> table[i])</span><br><span class="line">                  Console.Write(x + <span class="string">&quot; &quot;</span>);</span><br><span class="line">              Console.WriteLine();</span><br><span class="line">          &#125;</span><br><span class="line">      &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<img src="/2025/04/05/Hash-Table/hs04.png" alt="pic"></li>
+</ul>
+<p>It is worth noting that when the linked list is very long, the query efficiency<br>is poor. In this case, the list can be converted to an <strong>“AVL tree”</strong> or <strong>“Red-Black tree”</strong> to optimize the time complexity of the query operation to <strong>O(log n)</strong>.</p>
+<h3 id="Open-Addressing"><a href="#Open-Addressing" class="headerlink" title="Open Addressing "></a>Open Addressing <a name="oa"></a></h3><p>In open addressing, all elements are stored in the hash table itself. Each table entry contains either a record or NIL. When searching for an element, we examine the table slots one by one until the desired element is found or it is clear that the element is not in the table.</p>
+<p>Probe Strategies:</p>
+<ul>
+<li><strong>Linear Probing:</strong><br>In linear probing, the hash table is searched sequentially that starts from the original location of the hash. If in case the location that we get is already occupied, then we check for the next location.</li>
+<li><strong>Quadratic Probing</strong>: Search with step size i^2.</li>
+<li><strong>Double Hashing</strong>: Use a second hash function to calculate the step size.</li>
+</ul>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title">OpenAddressingHash</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="built_in">int</span> BUCKET;             <span class="comment">// Number of buckets</span></span><br><span class="line">    <span class="keyword">private</span> <span class="built_in">int</span>?[] table;           <span class="comment">// Storage for keys, null indicates empty</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">OpenAddressingHash</span>(<span class="params"><span class="built_in">int</span> V</span>)</span> &#123;</span><br><span class="line">        <span class="keyword">this</span>.BUCKET = V;</span><br><span class="line">        table = <span class="keyword">new</span> <span class="built_in">int</span>?[BUCKET]; <span class="comment">// Initialize as empty</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Hash function: Modulo operation</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="built_in">int</span> <span class="title">hashFunction</span>(<span class="params"><span class="built_in">int</span> x</span>)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> (x % BUCKET);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Insert item</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="built_in">bool</span> <span class="title">insertItem</span>(<span class="params"><span class="built_in">int</span> key</span>)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (isFull()) <span class="keyword">return</span> <span class="literal">false</span>; <span class="comment">// Hash table is full</span></span><br><span class="line"></span><br><span class="line">        <span class="built_in">int</span> index = hashFunction(key);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Linear probing</span></span><br><span class="line">        <span class="built_in">int</span> i = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span> (table[(index + i) % BUCKET] != <span class="literal">null</span>) &#123;</span><br><span class="line">            i++;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        table[(index + i) % BUCKET] = key;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Search item</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="built_in">bool</span> <span class="title">searchItem</span>(<span class="params"><span class="built_in">int</span> key</span>)</span> &#123;</span><br><span class="line">        <span class="built_in">int</span> index = hashFunction(key);</span><br><span class="line"></span><br><span class="line">        <span class="built_in">int</span> i = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span> (table[(index + i) % BUCKET] != <span class="literal">null</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span> (table[(index + i) % BUCKET] == key)</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">            i++;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Delete item</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="built_in">bool</span> <span class="title">deleteItem</span>(<span class="params"><span class="built_in">int</span> key</span>)</span> &#123;</span><br><span class="line">        <span class="built_in">int</span> index = hashFunction(key);</span><br><span class="line"></span><br><span class="line">        <span class="built_in">int</span> i = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span> (table[(index + i) % BUCKET] != <span class="literal">null</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span> (table[(index + i) % BUCKET] == key) &#123;</span><br><span class="line">                table[(index + i) % BUCKET] = <span class="literal">null</span>; <span class="comment">// Mark as empty</span></span><br><span class="line">                <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            i++;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Check if hash table is full</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="built_in">bool</span> <span class="title">isFull</span>()</span> &#123;</span><br><span class="line">        <span class="keyword">foreach</span> (<span class="keyword">var</span> item <span class="keyword">in</span> table) &#123;</span><br><span class="line">            <span class="keyword">if</span> (item == <span class="literal">null</span>)</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Display hash table</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">displayHash</span>()</span> &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="built_in">int</span> i = <span class="number">0</span>; i &lt; BUCKET; i++) &#123;</span><br><span class="line">            Console.WriteLine(<span class="string">$&quot;<span class="subst">&#123;i&#125;</span> --&gt; <span class="subst">&#123;table[i]&#125;</span>&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="Hash-Alogrithm"><a href="#Hash-Alogrithm" class="headerlink" title="Hash Alogrithm"></a>Hash Alogrithm<a name="ha"></a></h2><h3 id="Goals-of-hash-algorithms"><a href="#Goals-of-hash-algorithms" class="headerlink" title="Goals of hash algorithms"></a>Goals of hash algorithms<a name="goal"></a></h3><p>To achieve a fast and stable hash table data structure, hash algorithms should have the following characteristics:</p>
+<ul>
+<li><strong>Determinism</strong>: For the same input, the hash algorithm should always produce the same output. Only then can the hash table be reliable.</li>
+<li><strong>High efficiency</strong>: The process of computing the hash value should be fast enough. The smaller the computational overhead, the more practical the hash table.</li>
+<li><strong>Uniform distribution</strong>: The hash algorithm should ensure that key-value pairs are evenly distributed in the hash table. The more uniform the distribution, the lower the probability of hash collisions.</li>
+</ul>
+<p>Your company might use a hashing algorithm for:</p>
+<ul>
+<li><strong>Password storage</strong>. You must keep records of all of the username&#x2F;password combinations people use to access your resources. But if a hacker gains entry, stealing unprotected data is easy. Hashing ensures that the data is stored in a scrambled state, so it is harder to steal.</li>
+<li><strong>Digital signatures</strong>. A tiny bit of data proves that a note wasn’t modified from the time it leaves a user’s outbox and reaches your inbox.</li>
+<li><strong>Document management</strong>. Hashing algorithms can be used to authenticate data. The writer uses a hash to secure the document when it’s complete. The hash works a bit like a seal of approval.<br>A recipient can generate a hash and compare it to the original. If the two are equal, the data is considered genuine. If they don’t match, the document has been changed.</li>
+</ul>
+<h3 id="Common-hash-algorithms"><a href="#Common-hash-algorithms" class="headerlink" title="Common hash algorithms"></a>Common hash algorithms<a name="cha"></a></h3><p>Over the past century, hash algorithms have been in a continuous process of upgrading and optimization. Some researchers strive to improve the performance of hash algorithms, while others, including hackers, are dedicated to finding security issues in hash algorithms.</p>
+<ul>
+<li><strong>MD5</strong> and <strong>SHA-1</strong> have been successfully attacked multiple times and are thus abandoned in various security applications.</li>
+<li><strong>SHA-2</strong> series, especially SHA-256, is one of the most secure hash algorithms to date, with no successful attacks reported, hence commonly used in various security applications and protocols.</li>
+<li><strong>SHA-3</strong> has lower implementation costs and higher computational efficiency compared to SHA-2, but its current usage coverage is not as extensive as the SHA-2 series.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="center"></th>
+<th align="center"><strong>MD5</strong></th>
+<th align="center"><strong>SHA-1</strong></th>
+<th align="center"><strong>SHA-2</strong></th>
+<th align="center"><strong>SHA-3</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">Release Year</td>
+<td align="center">1992</td>
+<td align="center">1995</td>
+<td align="center">2002</td>
+<td align="center">2008</td>
+</tr>
+<tr>
+<td align="center">Output Length</td>
+<td align="center">O(1)</td>
+<td align="center">O(1)</td>
+<td align="center">O(1)</td>
+<td align="center">224&#x2F;256&#x2F;384&#x2F;512 bit</td>
+</tr>
+<tr>
+<td align="center">Hash Collisions</td>
+<td align="center">Frequent</td>
+<td align="center">Frequent</td>
+<td align="center">Rare</td>
+<td align="center">Rare</td>
+</tr>
+<tr>
+<td align="center">Security Level</td>
+<td align="center">Low, has been successfully attacked</td>
+<td align="center">Low, has been successfully attacked</td>
+<td align="center">High</td>
+<td align="center">High</td>
+</tr>
+<tr>
+<td align="center">Applications</td>
+<td align="center">Abandoned, still used for data integrity checks</td>
+<td align="center">Abandoned</td>
+<td align="center">Cryptocurrency transaction verification, digital signatures, etc.</td>
+<td align="center">Can be used to replace SHA-2</td>
+</tr>
+</tbody></table>
+<h3 id="Four-Sum"><a href="#Four-Sum" class="headerlink" title="Four Sum "></a>Four Sum <a name="fs"></a></h3><p>Given an array nums of n integers, return an array of all the unique quadruplets [nums[a], nums[b], nums[c], nums[d]] such that:</p>
+<ul>
+<li>0 &lt;&#x3D; i, j, k, l &lt; n</li>
+<li>nums1[i] + nums2[j] + nums3[k] + nums4[l] &#x3D;&#x3D; 0<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="built_in">int</span> <span class="title">FourSumCount</span>(<span class="params"><span class="built_in">int</span>[] nums1, <span class="built_in">int</span>[] nums2, <span class="built_in">int</span>[] nums3, <span class="built_in">int</span>[] nums4</span>)</span> &#123;</span><br><span class="line">       Dictionary&lt;<span class="built_in">int</span>, <span class="built_in">int</span>&gt; dic = <span class="keyword">new</span> Dictionary&lt;<span class="built_in">int</span>, <span class="built_in">int</span>&gt;();</span><br><span class="line">        <span class="keyword">foreach</span>(<span class="keyword">var</span> i <span class="keyword">in</span> nums1)&#123;</span><br><span class="line">            <span class="keyword">foreach</span>(<span class="keyword">var</span> j <span class="keyword">in</span> nums2)&#123;</span><br><span class="line">                <span class="built_in">int</span> sum = i + j;</span><br><span class="line">                <span class="keyword">if</span>(dic.ContainsKey(sum))&#123;</span><br><span class="line">                    dic[sum]++;</span><br><span class="line">                &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                    dic.Add(sum, <span class="number">1</span>);</span><br><span class="line">                &#125;</span><br><span class="line">                </span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">int</span> res = <span class="number">0</span>;</span><br><span class="line">         <span class="keyword">foreach</span>(<span class="keyword">var</span> a <span class="keyword">in</span> nums3)&#123;</span><br><span class="line">            <span class="keyword">foreach</span>(<span class="keyword">var</span> b <span class="keyword">in</span> nums4)&#123;</span><br><span class="line">                <span class="built_in">int</span> sum = a+b;</span><br><span class="line">                <span class="keyword">if</span>(dic.TryGetValue(-sum, <span class="keyword">out</span> <span class="keyword">var</span> result))&#123;</span><br><span class="line">                    res += result;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<link rel="stylesheet" href="/css/folder.css" type="text/css"><script src="/js/folder.js" type="text/javascript" async></script>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Data-Structure-and-Alogrithm/" rel="tag"># Data Structure and Alogrithm</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/03/29/RabbitMQ-One-broker-to-queue-them-all/" rel="prev" title="RabbitMQ:One broker to queue them all">
+      <i class="fa fa-chevron-left"></i> RabbitMQ:One broker to queue them all
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2025/04/12/Stack-Queue/" rel="next" title="Stack & Queue">
+      Stack & Queue <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="gitalk-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#What-is-Hash-Table"><span class="nav-number">1.</span> <span class="nav-text">What is Hash Table?</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Core-Concepts"><span class="nav-number">1.1.</span> <span class="nav-text">Core Concepts</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Common-operations-of-hash-table"><span class="nav-number">1.2.</span> <span class="nav-text">Common operations of hash table</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Hash-Collision"><span class="nav-number">2.</span> <span class="nav-text">Hash Collision</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Separate-Chaining"><span class="nav-number">2.1.</span> <span class="nav-text">Separate Chaining </span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Open-Addressing"><span class="nav-number">2.2.</span> <span class="nav-text">Open Addressing </span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Hash-Alogrithm"><span class="nav-number">3.</span> <span class="nav-text">Hash Alogrithm</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Goals-of-hash-algorithms"><span class="nav-number">3.1.</span> <span class="nav-text">Goals of hash algorithms</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Common-hash-algorithms"><span class="nav-number">3.2.</span> <span class="nav-text">Common hash algorithms</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Four-Sum"><span class="nav-number">3.3.</span> <span class="nav-text">Four Sum </span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Tech with Alex"
+      src="/uploads/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Tech with Alex</p>
+  <div class="site-description" itemprop="description">Per aspera ad astra.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">14</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">17</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://stackoverflow.com/users/9644964/alexandar-may-msft?tab=answers&sort=votes" title="StackOverflow → https:&#x2F;&#x2F;stackoverflow.com&#x2F;users&#x2F;9644964&#x2F;alexandar-may-msft?tab&#x3D;answers&amp;sort&#x3D;votes" rel="noopener" target="_blank"><i class="fab fa-stack-overflow fa-fw"></i>StackOverflow</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Tech with Alex</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">Symbols count total: </span>
+    <span title="Symbols count total">149k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">Reading time total &asymp;</span>
+    <span title="Reading time total">2:16</span>
+    
+    <!--
+    
+    -->
+</div>
+
+<!--
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a>
+   </div>
+--><script color="0,0,255" opacity="0.5" zIndex="-1" count="99" src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1/dist/canvas-nest.js"></script>
+
+
+
+
+
+
+        
+
+ <script defer src="https://vercount.one/js"></script>
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv"  >
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv"  >
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : 'Ov23liVJTzqy1rzaDXXM',
+      clientSecret: '5e785a7d46e69f7509e6c2f7730855a55944df33',
+      repo        : 'blog-comment',
+      owner       : 'BODYsuperman',
+      admin       : ['BODYsuperman'],
+      id          : '545b5c68fbf0a435be8faa799d33f921',
+        language: '',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+
+</body>
+</html>

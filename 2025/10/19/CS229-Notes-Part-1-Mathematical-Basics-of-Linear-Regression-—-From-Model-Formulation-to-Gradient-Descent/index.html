@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/logo-180.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/logo-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/logo-16.png">
+  <link rel="mask-icon" href="/images/logo-512.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|monospace:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"bodysuperman.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null,"use":"Gitalk","text":true},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="1. Introduction: 1.1 Welcome to the world of Machine Learning 1.2 What Is Machine Learning? 1.3 Supervised Learning 1.4 Unsupervised Learning   2. Linear Regression with One Variable 2.1 Model Repres">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CS229 Notes (Part 1): Mathematical Basics of Linear Regression — From Model Formulation to Gradient Descent">
+<meta property="og:url" content="https://bodysuperman.github.io/2025/10/19/CS229-Notes-Part-1-Mathematical-Basics-of-Linear-Regression-%E2%80%94-From-Model-Formulation-to-Gradient-Descent/index.html">
+<meta property="og:site_name" content="Tech with Alex&#39;s Blog">
+<meta property="og:description" content="1. Introduction: 1.1 Welcome to the world of Machine Learning 1.2 What Is Machine Learning? 1.3 Supervised Learning 1.4 Unsupervised Learning   2. Linear Regression with One Variable 2.1 Model Repres">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://bodysuperman.github.io/2025/10/19/CS229-Notes-Part-1-Mathematical-Basics-of-Linear-Regression-%E2%80%94-From-Model-Formulation-to-Gradient-Descent/ml1.1.png">
+<meta property="og:image" content="https://bodysuperman.github.io/2025/10/19/CS229-Notes-Part-1-Mathematical-Basics-of-Linear-Regression-%E2%80%94-From-Model-Formulation-to-Gradient-Descent/ml1.2.png">
+<meta property="og:image" content="https://bodysuperman.github.io/2025/10/19/CS229-Notes-Part-1-Mathematical-Basics-of-Linear-Regression-%E2%80%94-From-Model-Formulation-to-Gradient-Descent/ml1.3.png">
+<meta property="og:image" content="https://bodysuperman.github.io/2025/10/19/CS229-Notes-Part-1-Mathematical-Basics-of-Linear-Regression-%E2%80%94-From-Model-Formulation-to-Gradient-Descent/ml1.4.png">
+<meta property="og:image" content="https://bodysuperman.github.io/2025/10/19/CS229-Notes-Part-1-Mathematical-Basics-of-Linear-Regression-%E2%80%94-From-Model-Formulation-to-Gradient-Descent/ml1.5.png">
+<meta property="og:image" content="https://bodysuperman.github.io/2025/10/19/CS229-Notes-Part-1-Mathematical-Basics-of-Linear-Regression-%E2%80%94-From-Model-Formulation-to-Gradient-Descent/ml2.1.png">
+<meta property="og:image" content="https://bodysuperman.github.io/2025/10/19/CS229-Notes-Part-1-Mathematical-Basics-of-Linear-Regression-%E2%80%94-From-Model-Formulation-to-Gradient-Descent/ml2.2.png">
+<meta property="og:image" content="https://bodysuperman.github.io/2025/10/19/CS229-Notes-Part-1-Mathematical-Basics-of-Linear-Regression-%E2%80%94-From-Model-Formulation-to-Gradient-Descent/ml2.3.png">
+<meta property="og:image" content="https://bodysuperman.github.io/2025/10/19/CS229-Notes-Part-1-Mathematical-Basics-of-Linear-Regression-%E2%80%94-From-Model-Formulation-to-Gradient-Descent/ml2.5.png">
+<meta property="og:image" content="https://bodysuperman.github.io/2025/10/19/CS229-Notes-Part-1-Mathematical-Basics-of-Linear-Regression-%E2%80%94-From-Model-Formulation-to-Gradient-Descent/ml2.6.png">
+<meta property="og:image" content="https://bodysuperman.github.io/2025/10/19/CS229-Notes-Part-1-Mathematical-Basics-of-Linear-Regression-%E2%80%94-From-Model-Formulation-to-Gradient-Descent/ml2.7.png">
+<meta property="og:image" content="https://bodysuperman.github.io/2025/10/19/CS229-Notes-Part-1-Mathematical-Basics-of-Linear-Regression-%E2%80%94-From-Model-Formulation-to-Gradient-Descent/ml2.8.png">
+<meta property="og:image" content="https://bodysuperman.github.io/2025/10/19/CS229-Notes-Part-1-Mathematical-Basics-of-Linear-Regression-%E2%80%94-From-Model-Formulation-to-Gradient-Descent/ml2.9.png">
+<meta property="article:published_time" content="2025-10-19T05:53:06.000Z">
+<meta property="article:modified_time" content="2025-10-19T11:04:19.000Z">
+<meta property="article:author" content="Tech with Alex">
+<meta property="article:tag" content="Linear Regression">
+<meta property="article:tag" content="Gradient Descent">
+<meta property="article:tag" content="Cost Function">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://bodysuperman.github.io/2025/10/19/CS229-Notes-Part-1-Mathematical-Basics-of-Linear-Regression-%E2%80%94-From-Model-Formulation-to-Gradient-Descent/ml1.1.png">
+
+<link rel="canonical" href="https://bodysuperman.github.io/2025/10/19/CS229-Notes-Part-1-Mathematical-Basics-of-Linear-Regression-%E2%80%94-From-Model-Formulation-to-Gradient-Descent/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>CS229 Notes (Part 1): Mathematical Basics of Linear Regression — From Model Formulation to Gradient Descent | Tech with Alex's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+
+
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Tech with Alex's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+   
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://bodysuperman.github.io/2025/10/19/CS229-Notes-Part-1-Mathematical-Basics-of-Linear-Regression-%E2%80%94-From-Model-Formulation-to-Gradient-Descent/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+      <meta itemprop="name" content="Tech with Alex">
+      <meta itemprop="description" content="Per aspera ad astra.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Tech with Alex's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          CS229 Notes (Part 1): Mathematical Basics of Linear Regression — From Model Formulation to Gradient Descent
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-10-19 13:53:06 / Modified: 19:04:19" itemprop="dateCreated datePublished" datetime="2025-10-19T13:53:06+08:00">2025-10-19</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Machine-Learning/" itemprop="url" rel="index"><span itemprop="name">Machine Learning</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Machine-Learning/Stanford-CS229-Notes/" itemprop="url" rel="index"><span itemprop="name">Stanford CS229 Notes</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>11k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>10 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <ul>
+<li><a href="#introduction">1. Introduction:</a><ul>
+<li><a href="#welcome">1.1 Welcome to the world of Machine Learning</a></li>
+<li><a href="#what-is-ml">1.2 What Is Machine Learning?</a></li>
+<li><a href="#sl">1.3 Supervised Learning</a></li>
+<li><a href="#ul">1.4 Unsupervised Learning</a></li>
+</ul>
+</li>
+<li><a href="#lr">2. Linear Regression with One Variable</a><ul>
+<li><a href="#mp">2.1 Model Representation</a></li>
+<li><a href="#cf">2.2 Cost Function</a><ul>
+<li><a href="#dcf">2.2.1 Definition of the Cost Function</a></li>
+</ul>
+</li>
+<li><a href="#intuition">2.3 Intuition for the Cost Function (I)</a></li>
+<li><a href="#plot">2.4 Intuition for the Cost Function (II): Contour Plots</a></li>
+<li><a href="#gd">2.5 Gradient Descent</a></li>
+<li><a href="#gdi">2.6 Gradient Descent Intuition</a></li>
+<li><a href="#gdlr">2.7 Gradient Descent for Linear Regression</a></li>
+</ul>
+</li>
+</ul>
+<span id="more"></span>
+<h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction:"></a>Introduction:<a name="introduction"></a></h2><h3 id="Welcome-to-the-world-of-Machine-Learning"><a href="#Welcome-to-the-world-of-Machine-Learning" class="headerlink" title="Welcome to the world of Machine Learning"></a>Welcome to the world of Machine Learning<a name="welcome"></a></h3><p><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Machine_learning">Machine learning (ML)</a> is one of the most exciting fields in modern computer science.<br>From natural language processing and spam filters to image recognition,computer vision, recommendation systems, self-driving cars, agriculture and medicine, machine learning is everywhere.</p>
+<p>This course will not only cover cutting-edge theories of machine learning but also emphasize hands-on practice. By implementing algorithms yourself, you will gain a deep understanding of their internal mechanisms. This is crucial because merely mastering algorithms and mathematical knowledge is not sufficient to solve practical problems.</p>
+<p>The popularity of machine learning stems from its ability to break the limitations of traditional programming. For complex tasks such as web search and photo tagging, we cannot directly write fixed programs to achieve the desired outcomes. Instead, machine learning <code>enables computers to independently learn solutions from data</code>. Today, machine learning is widely used in numerous fields including database mining, medical record analysis, computational biology, and unmanned helicopter control, with market demand far exceeding the supply of professionals.</p>
+<p>Learning ML is not just about formulas and algorithms, but also about:</p>
+<ul>
+<li>Understanding which problems are suitable for ML</li>
+<li>Knowing how to choose models and methods</li>
+<li>Being able to implement and tune algorithms in practice</li>
+</ul>
+<h3 id="What-Is-Machine-Learning"><a href="#What-Is-Machine-Learning" class="headerlink" title="What Is Machine Learning?"></a>What Is Machine Learning?<a name="what-is-ml"></a></h3><p>Two Classic Definitions:</p>
+<p><strong>1.Arthur Samuel (1950s)</strong>:</p>
+<blockquote>
+<p>The field of study that gives computers the ability to learn without being explicitly programmed.<br>He wrote a chess program that played against itself; through thousands of self-played games, the program surpassed its own creator.</p>
+</blockquote>
+<p><strong>2.Tom Mitchell (Modern)</strong>:</p>
+<blockquote>
+<p>A computer program is said to learn from experience E with respect to some class of tasks T and performance measure P, if its performance at tasks in T, as measured by P, improves with experience E.</p>
+</blockquote>
+<p><strong>Memory formula</strong>: <code>T(E)ₚ</code> - Improving task T’s performance on metric P through experience E</p>
+<p><strong>Example: Spam Filter</strong></p>
+<ul>
+<li>T (Task): Classify emails as spam or not spam</li>
+<li>E (Experience): Samples marked as spam by users</li>
+<li>P (Performance): Probability of correctly identifying spam emails</li>
+</ul>
+<p>In simple terms:<br>👉 <strong>Instead of hard-coding rules, we let machines learn patterns from data.</strong></p>
+<p>Why machine learning?<br>Because for many complex problems:</p>
+<ul>
+<li>❌ It is hard to write explicit rules</li>
+<li>✅ But we often have plenty of data to learn from</li>
+</ul>
+<h3 id="Supervised-Learning"><a href="#Supervised-Learning" class="headerlink" title="Supervised Learning"></a>Supervised Learning<a name="sl"></a></h3><p>Supervised learning means that <strong>each sample in the training dataset is accompanied by a “correct answer” (label)</strong>. The algorithm learns the mapping relationship between sample features and labels to achieve prediction for new samples. </p>
+<p><strong>Characteristics</strong>:</p>
+<ul>
+<li>Training data include inputs <code>x</code> and correct outputs <code>y</code></li>
+<li>The goal is to learn a mapping from <code>x → y</code></li>
+</ul>
+<p>Form:<br><code>(x, y)</code></p>
+<p>Two main types:</p>
+<ol>
+<li><strong>✅ Regression Problems</strong> - Predicting continuous values<br>such as:</li>
+</ol>
+<ul>
+<li>House prices</li>
+<li>Temperature</li>
+<li>Sales<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Example: House price prediction</span><br><span class="line">Input: House area (750 square feet)</span><br><span class="line">Output: Predicted price ($150,000)</span><br><span class="line">Feature: Output is continuous numerical values that can take any real number</span><br></pre></td></tr></table></figure>
+<img src="/2025/10/19/CS229-Notes-Part-1-Mathematical-Basics-of-Linear-Regression-%E2%80%94-From-Model-Formulation-to-Gradient-Descent/ml1.1.png" alt="pic"></li>
+</ul>
+<ol start="2">
+<li><strong>✅ Classification Problems</strong> - Predicting discrete categories</li>
+</ol>
+<p>such as:</p>
+<ul>
+<li>Spam &#x2F; not spam</li>
+<li>Disease &#x2F; healthy</li>
+<li>Image categories<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Example: Tumor diagnosis</span><br><span class="line">Input: Tumor features (size, density, etc.)</span><br><span class="line">Output: Benign(0) / Malignant(1)</span><br><span class="line">Feature: Output is a finite set of discrete values</span><br></pre></td></tr></table></figure>
+<img src="/2025/10/19/CS229-Notes-Part-1-Mathematical-Basics-of-Linear-Regression-%E2%80%94-From-Model-Formulation-to-Gradient-Descent/ml1.2.png" alt="pic"></li>
+</ul>
+<p><img src="/2025/10/19/CS229-Notes-Part-1-Mathematical-Basics-of-Linear-Regression-%E2%80%94-From-Model-Formulation-to-Gradient-Descent/ml1.3.png" alt="pic"></p>
+<p><strong>Essence of supervised learning</strong>:</p>
+<blockquote>
+<p>Learn from labeled data so the model can make predictions on new examples.</p>
+</blockquote>
+<h3 id="Unsupervised-Learning"><a href="#Unsupervised-Learning" class="headerlink" title="Unsupervised Learning"></a>Unsupervised Learning<a name="ul"></a></h3><p>The core difference between unsupervised learning and supervised learning is that <strong>training data has no labels</strong>. The algorithm needs to independently discover potential structures from the data. A typical representative of unsupervised learning is <strong>clustering algorithms</strong>.</p>
+<p><img src="/2025/10/19/CS229-Notes-Part-1-Mathematical-Basics-of-Linear-Regression-%E2%80%94-From-Model-Formulation-to-Gradient-Descent/ml1.4.png" alt="pic"><br><strong>Characteristics</strong>:</p>
+<ul>
+<li>Only input data x</li>
+<li>No labels y</li>
+<li>The goal is to <strong>discover structure</strong> in the data</li>
+</ul>
+<p><strong>Common task: Clustering</strong></p>
+<ol>
+<li>Applications:</li>
+</ol>
+<ul>
+<li>Automatically grouping news (e.g., Google News)</li>
+<li>Customer segmentation</li>
+<li>Gene analysis</li>
+<li>Community detection in social networks</li>
+</ul>
+<ol start="2">
+<li>Cocktail Party Problem:</li>
+</ol>
+<p>matlab:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">% Audio separation achieved with just one line of code</span><br><span class="line">[W,s,v] = svd((repmat(sum(x.*x,1),size(x,1),1).*x)*x&#x27;);</span><br></pre></td></tr></table></figure>
+<ul>
+<li>Separating different speakers’ audio from mixed sounds</li>
+<li>Demonstrates the importance of using the right tools<br><img src="/2025/10/19/CS229-Notes-Part-1-Mathematical-Basics-of-Linear-Regression-%E2%80%94-From-Model-Formulation-to-Gradient-Descent/ml1.5.png" alt="pic"><br><strong>Intuition</strong>:<blockquote>
+<p>We do not know the categories in advance, but want the algorithm to find similar groups by itself.</p>
+</blockquote>
+</li>
+</ul>
+<p>Comparison:</p>
+<table>
+<thead>
+<tr>
+<th align="center"><strong>Size in feet</strong></th>
+<th align="center"><strong>Labeled?</strong></th>
+<th align="center"><strong>Goal</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">Supervised Learning</td>
+<td align="center">Yes</td>
+<td align="center">Prediction</td>
+</tr>
+<tr>
+<td align="center">Unsupervised Learning</td>
+<td align="center">No</td>
+<td align="center">Discover structure</td>
+</tr>
+</tbody></table>
+<h2 id="Linear-Regression-with-One-Variable"><a href="#Linear-Regression-with-One-Variable" class="headerlink" title="Linear Regression with One Variable "></a>Linear Regression with One Variable <a name="lr"></a></h2><h3 id="Model-Representation"><a href="#Model-Representation" class="headerlink" title="Model Representation"></a>Model Representation<a name="mp"></a></h3><p>Linear regression with one variable is an introductory machine learning algorithm used to solve single-feature regression problems (e.g., predicting house prices using house size).<br>Let’s start with an example: This example is about predicting house prices, and we’ll use a dataset containing housing prices in Portland, Oregon. Here, I’ll plot our dataset based on the prices of houses sold for different house sizes.<br>For instance, if your friend’s house is 1,250 square feet in size, you want to tell them how much it could sell for. One thing you can do is build a model—perhaps a straight line—and from this model, you might tell your friend they could sell the house for about $220,000.<br>This is an example of a supervised learning algorithm.<br><img src="/2025/10/19/CS229-Notes-Part-1-Mathematical-Basics-of-Linear-Regression-%E2%80%94-From-Model-Formulation-to-Gradient-Descent/ml2.1.png" alt="pic"></p>
+<p>Training Set:<br><img src="/2025/10/19/CS229-Notes-Part-1-Mathematical-Basics-of-Linear-Regression-%E2%80%94-From-Model-Formulation-to-Gradient-Descent/ml2.2.png" alt="pic"></p>
+<p>Notation:</p>
+<ul>
+<li>m: number of training examples</li>
+<li>x: feature</li>
+<li>y: target</li>
+<li>(x⁽ⁱ⁾, y⁽ⁱ⁾): The i-th training example</li>
+<li>h(x): hypothesis (model),used to predict the value of y<br>Univariate linear regression model:<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hθ(x) = θ₀ + θ₁ x</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p>This is a straight line, where:</p>
+<ul>
+<li><code>θ₀</code> is the intercept,the point where the hypothesis function intersects the y-axis</li>
+<li><code>θ₁</code> is the slope,the degree of influence of feature x on target y</li>
+</ul>
+<p>Goal:<br>Find <code>θ₀</code> and <code>θ₁</code> so that the line fits the data as well as possible.</p>
+<p><img src="/2025/10/19/CS229-Notes-Part-1-Mathematical-Basics-of-Linear-Regression-%E2%80%94-From-Model-Formulation-to-Gradient-Descent/ml2.3.png" alt="pic"></p>
+<h3 id="Cost-Function"><a href="#Cost-Function" class="headerlink" title="Cost Function"></a>Cost Function<a name="cf"></a></h3><p>To measure the prediction error of the hypothesis function, we need to define a Cost Function, which primarily calculates the sum of squared errors between predicted values and actual values.</p>
+<h4 id="Definition-of-the-Cost-Function"><a href="#Definition-of-the-Cost-Function" class="headerlink" title="Definition of the Cost Function"></a>Definition of the Cost Function<a name="dcf"></a></h4><p>Linear regression with one variable uses the Mean Squared Error (MSE) as its cost function, defined by the formula:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">J(θ₀, θ₁) = (1 / 2m) * Σ (hθ(x⁽ⁱ⁾) - y⁽ⁱ⁾)²</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>1&#x2F;2: Included to cancel out the coefficient from the square term during differentiation, simplifying calculations</li>
+<li>Σ (hθ(x⁽ⁱ⁾) - y⁽ⁱ⁾)²:Sum of squared prediction errors for all samples</li>
+<li>J(θ₀, θ₁)： A smaller value of the cost function indicates higher prediction accuracy of the model</li>
+</ul>
+<p><img src="/2025/10/19/CS229-Notes-Part-1-Mathematical-Basics-of-Linear-Regression-%E2%80%94-From-Model-Formulation-to-Gradient-Descent/ml2.5.png" alt="pic"><br>Meaning:<br>Square the errors<br>Average over all training examples<br>The smaller, the better</p>
+<p>👉 Our objective:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">minimize J(θ₀, θ₁)</span><br></pre></td></tr></table></figure>
+
+<p>Why Choose Squared Error?</p>
+<ol>
+<li>Mathematically: Facilitates differentiation and enables smoother optimization<br>This is the primary reason.</li>
+</ol>
+<p>The squared function <code>(y-ŷ)²</code> is a smooth convex function everywhere, and its derivative is <code>2(y-ŷ)</code>, which is very simple.<br>The absolute function <code>|y-ŷ|</code> is not differentiable at <code>y=ŷ</code> (it has a “sharp point”). This can cause gradient‑based optimization algorithms like gradient descent to get “stuck” at that point and require special handling.</p>
+<p>An intuitive analogy:<br>Squared error is like a smooth, bowl‑shaped curve—a ball (the optimization process) can roll smoothly down to the bottom of the bowl (the minimum).<br>Absolute error is like a folded V‑shaped piece of paper with a sharp crease—when the ball reaches the tip, it gets stuck and doesn’t know which way to roll.</p>
+<ol start="2">
+<li><p>Statistically: Aligns with the assumption of maximum likelihood estimation<br>When we assume that data errors follow a normal (Gaussian) distribution, maximizing the likelihood function is equivalent to minimizing the mean‑squared error. This is the statistical foundation of many linear models. Since the normal distribution is common in nature, this assumption is often reasonable.</p>
+</li>
+<li><p>In terms of effect: Penalizes large errors more heavily, making it more sensitive to outliers<br>Error² amplifies the impact of large errors.</p>
+</li>
+</ol>
+<ul>
+<li>Advantage: The model will try hard to avoid large prediction mistakes, because the cost grows quadratically with the error. This is usually what we want.</li>
+<li>Disadvantage: If there are outliers in the data, squaring magnifies their influence, which can “pull” the model off course. (In such cases, absolute error or Huber loss can be used to mitigate the issue.)</li>
+</ul>
+<p>Example:<br>Error &#x3D; 1 → squared cost &#x3D; 1<br>Error &#x3D; 2 → squared cost &#x3D; 4 (4 times the cost for 2 times the error)<br>Error &#x3D; 10 → squared cost &#x3D; 100 (100 times the cost for 10 times the error)</p>
+<ul>
+<li>Good mathematical properties (convex function, has unique minimum)</li>
+<li>Heavily penalizes large errors</li>
+<li>Performs well in practical applications</li>
+</ul>
+<h3 id="Intuition-for-the-Cost-Function-I"><a href="#Intuition-for-the-Cost-Function-I" class="headerlink" title="Intuition for the Cost Function (I)"></a>Intuition for the Cost Function (I)<a name="intuition"></a></h3><p>Imagine different lines:</p>
+<ul>
+<li><p>Some are far from the data → large error → large J</p>
+</li>
+<li><p>Some fit the data well → small error → small J</p>
+</li>
+</ul>
+<p>So J tells us:<br>👉 <strong>On average, how badly this line fits the data</strong>.<br><img src="/2025/10/19/CS229-Notes-Part-1-Mathematical-Basics-of-Linear-Regression-%E2%80%94-From-Model-Formulation-to-Gradient-Descent/ml2.6.png" alt="pic"></p>
+<h3 id="Intuition-for-the-Cost-Function-II-Contour-Plots"><a href="#Intuition-for-the-Cost-Function-II-Contour-Plots" class="headerlink" title="Intuition for the Cost Function (II): Contour Plots"></a>Intuition for the Cost Function (II): Contour Plots<a name="plot"></a></h3><p>If we treat <code>θ₀</code> and <code>θ₁</code> as axes, and <code>J(θ₀, θ₁)</code> as height:</p>
+<ul>
+<li>We get a bowl-shaped surface</li>
+<li>The lowest point corresponds to the best parameters<br><img src="/2025/10/19/CS229-Notes-Part-1-Mathematical-Basics-of-Linear-Regression-%E2%80%94-From-Model-Formulation-to-Gradient-Descent/ml2.7.png" alt="pic"></li>
+</ul>
+<p>A contour plot shows: </p>
+<ul>
+<li>Each closed curve has the same J value</li>
+<li>Inner curves mean smaller J</li>
+</ul>
+<p>👉 Learning is like:<br><strong>Going downhill on an error landscape until we reach the bottom.</strong></p>
+<p><img src="/2025/10/19/CS229-Notes-Part-1-Mathematical-Basics-of-Linear-Regression-%E2%80%94-From-Model-Formulation-to-Gradient-Descent/ml2.8.png" alt="pic"></p>
+<h3 id="Gradient-Descent"><a href="#Gradient-Descent" class="headerlink" title="Gradient Descent"></a>Gradient Descent<a name="gd"></a></h3><p>Gradient descent is a general algorithm for minimizing functions.</p>
+<p>Core Idea:</p>
+<blockquote>
+<p>Starting from a random point, take small steps along the steepest downhill direction until reaching the valley bottom</p>
+</blockquote>
+<p>Step:</p>
+<ol>
+<li>Start from some initial point (θ₀, θ₁)</li>
+<li>Take a small step in the direction of steepest decrease of J</li>
+<li>Repeat until convergence<br>Update rule:<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">θⱼ := θⱼ - α * ∂J(θ) / ∂θⱼ</span><br></pre></td></tr></table></figure></li>
+</ol>
+<p><strong>Where</strong>:</p>
+<ul>
+<li>α is the learning rate (step size)</li>
+<li>:&#x3D; Denotes assignment, meaning the value on the right-hand side is computed first to update the parameter on the left-hand side</li>
+</ul>
+<p>👉 Analogy:<br>Walking downhill while blindfolded, always stepping in the steepest direction.<br><img src="/2025/10/19/CS229-Notes-Part-1-Mathematical-Basics-of-Linear-Regression-%E2%80%94-From-Model-Formulation-to-Gradient-Descent/ml2.9.png" alt="pic"></p>
+<h3 id="Gradient-Descent-Intuition"><a href="#Gradient-Descent-Intuition" class="headerlink" title="Gradient Descent Intuition"></a>Gradient Descent Intuition<a name="gdi"></a></h3><p>The core of gradient descent lies in the coordination between the <strong>learning rate</strong> α and the <strong>gradient direction</strong>, which can be intuitively understood using a single-parameter example:</p>
+<ol>
+<li><strong>Role of the Gradient</strong></li>
+</ol>
+<ul>
+<li>When the gradient is <strong>positive</strong>: θⱼ decreases (θⱼ :&#x3D; θⱼ − α × positive number),causing the cost function to decrease</li>
+<li>When the gradient is <strong>negative</strong>: θⱼ increases (θⱼ :&#x3D; θⱼ − α × negative number)causing the cost function to decrease</li>
+<li>When the gradient is <strong>zero</strong>: θⱼ stops updating, indicating that the minimum point has been reached</li>
+</ul>
+<ol start="2">
+<li><strong>Impact of Learning Rate α</strong></li>
+</ol>
+<ul>
+<li>α too small: Small parameter update steps result in slow convergence, requiring numerous iterations to reach the minimum point</li>
+<li>α too large: May overshoot the minimum point, causing the cost function to diverge and fail to converge</li>
+<li><strong>Adaptive Convergence</strong>: As parameters approach the minimum point, the gradient gradually decreases. Even with a fixed α<br>, the magnitude of parameter updates automatically becomes smaller, leading to eventual convergence.</li>
+</ul>
+<h3 id="Gradient-Descent-for-Linear-Regression"><a href="#Gradient-Descent-for-Linear-Regression" class="headerlink" title="Gradient Descent for Linear Regression"></a>Gradient Descent for Linear Regression<a name="gdlr"></a></h3><p>Combining the gradient descent algorithm with the linear regression cost function yields the gradient descent solution for linear regression.</p>
+<h4 id="Calculating-Partial-Derivatives"><a href="#Calculating-Partial-Derivatives" class="headerlink" title="Calculating Partial Derivatives"></a>Calculating Partial Derivatives</h4><p>Compute the partial derivatives of the linear regression cost function $J(\theta_0, \theta_1)$:</p>
+<p>Partial derivative with respect to $\theta_0$:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">∂/∂θ₀ J(θ₀, θ₁) = (1/m) * Σⁱ₌₁ᵐ (h_θ(x⁽ⁱ⁾) - y⁽ⁱ⁾)</span><br></pre></td></tr></table></figure>
+<p>Partial derivative with respect to $\theta_1$:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">∂/∂θ₁ J(θ₀, θ₁) = (1/m) * Σⁱ₌₁ᵐ (h_θ(x⁽ⁱ⁾) - y⁽ⁱ⁾) · x⁽ⁱ⁾</span><br></pre></td></tr></table></figure>
+
+<h4 id="Gradient-Descent-Update-Rule-for-Linear-Regression"><a href="#Gradient-Descent-Update-Rule-for-Linear-Regression" class="headerlink" title="Gradient Descent Update Rule for Linear Regression"></a>Gradient Descent Update Rule for Linear Regression</h4><p>Substitute the partial derivatives into the gradient descent formula to obtain:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">θ₀ := θ₀ - α · (1/m) * Σⁱ₌₁ᵐ (h_θ(x⁽ⁱ⁾) - y⁽ⁱ⁾)</span><br><span class="line"></span><br><span class="line">θ₁ := θ₁ - α · (1/m) * Σⁱ₌₁ᵐ (h_θ(x⁽ⁱ⁾) - y⁽ⁱ⁾) · x⁽ⁱ⁾</span><br></pre></td></tr></table></figure>
+
+<h4 id="Summary-of-the-Algorithm-Process"><a href="#Summary-of-the-Algorithm-Process" class="headerlink" title="Summary of the Algorithm Process"></a>Summary of the Algorithm Process</h4><ol>
+<li>Initialize parameters θ₀ and θ₁ (e.g., set both to 0)</li>
+<li>Compute the prediction errors h_θ(x⁽ⁱ⁾) - y⁽ⁱ⁾ for all training samples</li>
+<li>Substitute into the update rule to simultaneously update θ₀ and θ₁ </li>
+<li>Repeat steps 2-3 until the change in the cost function J(θ₀, θ₁) is smaller than a threshold value (convergence)</li>
+<li>Output the optimal parameters  θ₀ and θ₁ to obtain the final hypothesis function</li>
+</ol>
+<h4 id="Supplement-Batch-Gradient-Descent-vs-Normal-Equation"><a href="#Supplement-Batch-Gradient-Descent-vs-Normal-Equation" class="headerlink" title="Supplement: Batch Gradient Descent vs. Normal Equation"></a>Supplement: Batch Gradient Descent vs. Normal Equation</h4><ul>
+<li><strong>Batch Gradient Descent</strong>: Suitable for large datasets, solves the problem iteratively and requires selecting a learning rate<br>α</li>
+<li><strong>Normal Equation</strong>: Solves for the optimal parameters directly through matrix operations without iteration or learning rate selection. However, it has high computational complexity and is suitable for small datasets</li>
+</ul>
+<link rel="stylesheet" href="/css/folder.css" type="text/css"><script src="/js/folder.js" type="text/javascript" async></script>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Linear-Regression/" rel="tag"># Linear Regression</a>
+              <a href="/tags/Gradient-Descent/" rel="tag"># Gradient Descent</a>
+              <a href="/tags/Cost-Function/" rel="tag"># Cost Function</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/05/03/Hexo-Blog-Multi-Device-Synchronization-and-Management-Guide-Based-on-Git-Branch-Strategy/" rel="prev" title="Hexo Blog Multi-Device Synchronization and Management Guide Based on Git Branch Strategy">
+      <i class="fa fa-chevron-left"></i> Hexo Blog Multi-Device Synchronization and Management Guide Based on Git Branch Strategy
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2025/10/26/CSS3-Core-Technologies-study-note/" rel="next" title="CSS3 Core Technologies study note">
+      CSS3 Core Technologies study note <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="gitalk-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Introduction"><span class="nav-number">1.</span> <span class="nav-text">Introduction:</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Welcome-to-the-world-of-Machine-Learning"><span class="nav-number">1.1.</span> <span class="nav-text">Welcome to the world of Machine Learning</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#What-Is-Machine-Learning"><span class="nav-number">1.2.</span> <span class="nav-text">What Is Machine Learning?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Supervised-Learning"><span class="nav-number">1.3.</span> <span class="nav-text">Supervised Learning</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Unsupervised-Learning"><span class="nav-number">1.4.</span> <span class="nav-text">Unsupervised Learning</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Linear-Regression-with-One-Variable"><span class="nav-number">2.</span> <span class="nav-text">Linear Regression with One Variable </span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Model-Representation"><span class="nav-number">2.1.</span> <span class="nav-text">Model Representation</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Cost-Function"><span class="nav-number">2.2.</span> <span class="nav-text">Cost Function</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Definition-of-the-Cost-Function"><span class="nav-number">2.2.1.</span> <span class="nav-text">Definition of the Cost Function</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Intuition-for-the-Cost-Function-I"><span class="nav-number">2.3.</span> <span class="nav-text">Intuition for the Cost Function (I)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Intuition-for-the-Cost-Function-II-Contour-Plots"><span class="nav-number">2.4.</span> <span class="nav-text">Intuition for the Cost Function (II): Contour Plots</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Gradient-Descent"><span class="nav-number">2.5.</span> <span class="nav-text">Gradient Descent</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Gradient-Descent-Intuition"><span class="nav-number">2.6.</span> <span class="nav-text">Gradient Descent Intuition</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Gradient-Descent-for-Linear-Regression"><span class="nav-number">2.7.</span> <span class="nav-text">Gradient Descent for Linear Regression</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Calculating-Partial-Derivatives"><span class="nav-number">2.7.1.</span> <span class="nav-text">Calculating Partial Derivatives</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Gradient-Descent-Update-Rule-for-Linear-Regression"><span class="nav-number">2.7.2.</span> <span class="nav-text">Gradient Descent Update Rule for Linear Regression</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Summary-of-the-Algorithm-Process"><span class="nav-number">2.7.3.</span> <span class="nav-text">Summary of the Algorithm Process</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Supplement-Batch-Gradient-Descent-vs-Normal-Equation"><span class="nav-number">2.7.4.</span> <span class="nav-text">Supplement: Batch Gradient Descent vs. Normal Equation</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Tech with Alex"
+      src="/uploads/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Tech with Alex</p>
+  <div class="site-description" itemprop="description">Per aspera ad astra.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">14</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">17</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://stackoverflow.com/users/9644964/alexandar-may-msft?tab=answers&sort=votes" title="StackOverflow → https:&#x2F;&#x2F;stackoverflow.com&#x2F;users&#x2F;9644964&#x2F;alexandar-may-msft?tab&#x3D;answers&amp;sort&#x3D;votes" rel="noopener" target="_blank"><i class="fab fa-stack-overflow fa-fw"></i>StackOverflow</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Tech with Alex</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">Symbols count total: </span>
+    <span title="Symbols count total">149k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">Reading time total &asymp;</span>
+    <span title="Reading time total">2:16</span>
+    
+    <!--
+    
+    -->
+</div>
+
+<!--
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a>
+   </div>
+--><script color="0,0,255" opacity="0.5" zIndex="-1" count="99" src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1/dist/canvas-nest.js"></script>
+
+
+
+
+
+
+        
+
+ <script defer src="https://vercount.one/js"></script>
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv"  >
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv"  >
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : 'Ov23liVJTzqy1rzaDXXM',
+      clientSecret: '5e785a7d46e69f7509e6c2f7730855a55944df33',
+      repo        : 'blog-comment',
+      owner       : 'BODYsuperman',
+      admin       : ['BODYsuperman'],
+      id          : '78df5daf36a6720d07f486ffff1f492d',
+        language: '',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+
+</body>
+</html>
