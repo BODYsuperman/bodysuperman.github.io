@@ -933,185 +933,6 @@ or <figure class="highlight css"><table><tr><td class="code"><pre><span class="l
       </tags>
   </entry>
   <entry>
-    <title>Hash Table</title>
-    <url>/2025/04/05/Hash-Table/</url>
-    <content><![CDATA[<ol>
-<li><a href="#introduction">What is Hash Table</a> <ul>
-<li><a href="#core">Core Concepts</a></li>
-<li><a href="#common">Common operations of hash table</a></li>
-</ul>
-</li>
-<li><a href="#hc">Hash Collision</a><ul>
-<li><a href="#sc">Separate Chaining</a></li>
-<li><a href="#oa">Open Addressing</a></li>
-</ul>
-</li>
-<li><a href="#ha">Hash Alogrithm</a><ul>
-<li><a href="#goal">Goals of hash algorithms</a></li>
-<li><a href="#cha">Common hash algorithms</a></li>
-</ul>
-</li>
-<li><a href="#pa">Practical Examples</a><ul>
-<li><a href="#fs">four sum</a><span id="more"></span></li>
-</ul>
-</li>
-</ol>
-<h2 id="What-is-Hash-Table"><a href="#What-is-Hash-Table" class="headerlink" title="What is Hash Table?"></a>What is Hash Table?<a name="introduction"></a></h2><p>A <strong><a href="https://en.wikipedia.org/wiki/Hash_table">Hash Table</a></strong> is a high-efficiency data structure that stores key-value pairs.It uses a hash function to map keys to storage locations, achieving average <strong>O(1)</strong> time complexity for <strong>fast insertions, lookups, and deletions</strong>.The index functions as a storage location for the matching value. In simple words, it maps the keys with the value.Widely used in caching systems, database indexing, and compiler symbol tables.<br><img src="/2025/04/05/Hash-Table/hs01.png" alt="pic"></p>
-<h3 id="Core-Concepts"><a href="#Core-Concepts" class="headerlink" title="Core Concepts"></a>Core Concepts<a name="core"></a></h3><ul>
-<li><strong>Key</strong>: A unique identifier for the data.</li>
-<li><strong>Value</strong>: The data associated with the key (simplified to just storing keys in this example).</li>
-<li><strong>Bucket</strong>: A storage unit in the hash table (typically an array).</li>
-<li><strong>Hash Functions:</strong><br>A hash function converts a key into an index for the underlying array:<ul>
-<li>Deterministic: Same key always produces the same index.</li>
-<li>Efficient: Computed quickly to avoid performance bottlenecks.</li>
-<li>Uniform: Distributes keys evenly to minimize collisions.</li>
-</ul>
-</li>
-<li><strong>Handling Hash Collisions:</strong><br>When two different keys produce the same index, a collision occurs. Common solutions include:<ul>
-<li><strong>Seperate Chaining</strong>: Store conflicting elements in a linked list at the same index.</li>
-<li><strong>Open Addressing</strong>: Find the next available slot in the array.</li>
-</ul>
-</li>
-</ul>
-<p>In addition to hash tables, arrays and linked lists can also be used to implement query functionality, but the time complexity is different. </p>
-<table>
-<thead>
-<tr>
-<th align="center"></th>
-<th align="center"><strong>Array</strong></th>
-<th align="center"><strong>Linked List</strong></th>
-<th align="center"><strong>Hash Table</strong></th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">Search</td>
-<td align="center">O(n)</td>
-<td align="center">O(n)</td>
-<td align="center">O(1)</td>
-</tr>
-<tr>
-<td align="center">Insert</td>
-<td align="center">O(1)</td>
-<td align="center">O(1)</td>
-<td align="center">O(1)</td>
-</tr>
-<tr>
-<td align="center">Delete</td>
-<td align="center">O(n)</td>
-<td align="center">O(n)</td>
-<td align="center">O(1)</td>
-</tr>
-</tbody></table>
-<p>Per aboved comparison, <strong>the time complexity for operations (insertion, deletion, searching, and modification) in a hash table is O(1)</strong>, which is highly efficient.</p>
-<h3 id="Common-operations-of-hash-table"><a href="#Common-operations-of-hash-table" class="headerlink" title="Common operations of hash table"></a>Common operations of hash table<a name="common"></a></h3><p>Common operations of a hash table include: initialization, querying, adding key-value pairs, and deleting key-value pairs. Here is an example code:</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">/* Initialize hash table */</span><br><span class="line">Dictionary&lt;int, string&gt; map = new() &#123;</span><br><span class="line">    /* Add operation */</span><br><span class="line">    // Add key-value pair (key, value) to hash table</span><br><span class="line">    &#123; 13835, &quot;Tom&quot; &#125;,</span><br><span class="line">    &#123; 16937, &quot;Jerry&quot; &#125;,</span><br><span class="line">    &#123; 16852, &quot;Steve&quot; &#125;,</span><br><span class="line">    &#123; 13200, &quot;James&quot; &#125;,</span><br><span class="line">    &#123; 14583, &quot;Lisa&quot; &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">/* Query operation */</span><br><span class="line">// Input key into hash table, get value</span><br><span class="line">string name = map[16937];</span><br><span class="line"></span><br><span class="line">/* Delete operation */</span><br><span class="line">// Delete key-value pair (key, value) from hash table</span><br><span class="line">map.Remove(14583);</span><br></pre></td></tr></table></figure>
-<p>There are three common ways to traverse a hash table: traversing key-value pairs, traversing keys, and traversing values. Here is an example code:</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">/* Traverse hash table */</span><br><span class="line">// Traverse key-value pairs Key-&gt;Value</span><br><span class="line">foreach (var kv in map) &#123;</span><br><span class="line">    Console.WriteLine(kv.Key + &quot; -&gt; &quot; + kv.Value);</span><br><span class="line">&#125;</span><br><span class="line">// Traverse keys only</span><br><span class="line">foreach (int key in map.Keys) &#123;</span><br><span class="line">    Console.WriteLine(key);</span><br><span class="line">&#125;</span><br><span class="line">// Traverse values only</span><br><span class="line">foreach (string val in map.Values) &#123;</span><br><span class="line">    Console.WriteLine(val);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="Hash-Collision"><a href="#Hash-Collision" class="headerlink" title="Hash Collision"></a>Hash Collision<a name="hc"></a></h2><p>The hashing process generates a small number for a big key, so there is a possibility that two keys could produce the same value. The situation where the newly inserted key maps to an already occupied, and it must be handled using some collision handling technology.<br><img src="/2025/04/05/Hash-Table/hs02.png" alt="pic"></p>
-<p>There are mainly two methods to handle collision:</p>
-<ul>
-<li>Separate Chaining</li>
-<li>Open Addressing</li>
-</ul>
-<h3 id="Separate-Chaining"><a href="#Separate-Chaining" class="headerlink" title="Separate Chaining "></a>Separate Chaining <a name="sc"></a></h3><p>Separate chaining converts a single element into a linked list, treating key-value pairs as list nodes, storing all colliding key-value pairs in the same linked list.<br>The operations of a hash table implemented with separate chaining have changed as follows:</p>
-<ul>
-<li>Searching Elements: Input key, obtain the bucket index through the hash function, then access the head node of the linked list. Traverse the linked list and compare key to find the target key-value pair.</li>
-<li>Inserting Elements: Access the head node of the linked list via the hash function, then append the node (key-value pair) to the list.</li>
-<li>Deleting Elements: Access the head of the linked list based on the result of the hash function, then traverse the linked list to find the target node and delete it.<br><img src="/2025/04/05/Hash-Table/hs03.png" alt="pic"></li>
-</ul>
-<p>The code below provides a simple implementation of a separate chaining hash table, with two things to note:</p>
-<ul>
-<li>Lists (dynamic arrays) are used instead of linked lists for simplicity. In this setup, the hash table (array) contains multiple buckets, each of which is a list.</li>
-<li>This implementation includes a hash table resizing method. When the load factor exceeds <strong>0.7</strong>, we expand the hash table to twice its original size.<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title">Hash</span></span><br><span class="line">&#123;</span><br><span class="line">      <span class="built_in">int</span> BUCKET;</span><br><span class="line">      List&lt;<span class="built_in">int</span>&gt;[] table;</span><br><span class="line">      <span class="built_in">int</span> elementCount;</span><br><span class="line">      <span class="keyword">const</span> <span class="built_in">double</span> LOAD_FACTOR_THRESHOLD = <span class="number">0.7</span>;</span><br><span class="line">      <span class="function"><span class="keyword">public</span> <span class="title">Hash</span>(<span class="params"><span class="built_in">int</span> V</span>)</span></span><br><span class="line">      &#123;</span><br><span class="line">          <span class="keyword">this</span>.BUCKET = V;</span><br><span class="line">          table = <span class="keyword">new</span> List&lt;<span class="built_in">int</span>&gt;[BUCKET];</span><br><span class="line">          elementCount = <span class="number">0</span>;</span><br><span class="line">          <span class="keyword">for</span> (<span class="built_in">int</span> i = <span class="number">0</span>; i &lt; BUCKET; i++)</span><br><span class="line">              table[i] = <span class="keyword">new</span> List&lt;<span class="built_in">int</span>&gt;();</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="comment">// Hash function to map values to key</span></span><br><span class="line">      <span class="function"><span class="keyword">private</span> <span class="built_in">int</span> <span class="title">hashFunction</span>(<span class="params"><span class="built_in">int</span> x</span>)</span></span><br><span class="line">      &#123;</span><br><span class="line">          <span class="built_in">int</span> hash = x.GetHashCode();</span><br><span class="line">          <span class="keyword">return</span> (hash % BUCKET + BUCKET) % BUCKET;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="function"><span class="built_in">double</span> <span class="title">GetLoadFactor</span>()</span></span><br><span class="line">      &#123;</span><br><span class="line">          <span class="keyword">return</span> (<span class="built_in">double</span>)elementCount / BUCKET;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="function"><span class="keyword">void</span> <span class="title">Rehash</span>()</span></span><br><span class="line">      &#123;</span><br><span class="line">          <span class="built_in">int</span> oldBucket = BUCKET; <span class="comment">// old bucket</span></span><br><span class="line">          <span class="built_in">int</span> newBucket = oldBucket * <span class="number">2</span>; <span class="comment">// new bucket</span></span><br><span class="line">          List&lt;<span class="built_in">int</span>&gt;[] newTable = <span class="keyword">new</span> List&lt;<span class="built_in">int</span>&gt;[newBucket];</span><br><span class="line">          <span class="keyword">for</span>(<span class="built_in">int</span> i = <span class="number">0</span>; i &lt; newBucket; i++)</span><br><span class="line">          &#123;</span><br><span class="line">              newTable[i] = <span class="keyword">new</span> List&lt;<span class="built_in">int</span>&gt;();</span><br><span class="line">          &#125;</span><br><span class="line"></span><br><span class="line">          <span class="keyword">for</span>(<span class="built_in">int</span> i = <span class="number">0</span>;i&lt; oldBucket; i++)</span><br><span class="line">          &#123;</span><br><span class="line">              <span class="keyword">foreach</span>(<span class="built_in">int</span> key <span class="keyword">in</span> table[i])</span><br><span class="line">              &#123;</span><br><span class="line">                  <span class="built_in">int</span> newIndex = key%newBucket;</span><br><span class="line"></span><br><span class="line">                  <span class="keyword">if</span> (!newTable[newIndex].Contains(key))</span><br><span class="line">                  &#123;</span><br><span class="line">                      newTable[newIndex].Add(key);</span><br><span class="line">                  &#125;</span><br><span class="line">                  </span><br><span class="line">              &#125;</span><br><span class="line">          &#125;</span><br><span class="line">          table = newTable;</span><br><span class="line">          BUCKET = newBucket;</span><br><span class="line">          Console.WriteLine(<span class="string">$&quot;Rehashed to <span class="subst">&#123;newBucket&#125;</span> buckets&quot;</span>);</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="function"><span class="keyword">public</span> <span class="built_in">bool</span> <span class="title">Contains</span>(<span class="params"><span class="built_in">int</span> key</span>)</span></span><br><span class="line">      &#123;</span><br><span class="line">          <span class="built_in">int</span> index = hashFunction(key);</span><br><span class="line">          <span class="keyword">return</span> table[index].Contains(key);</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">insertItem</span>(<span class="params"><span class="built_in">int</span> key</span>)</span></span><br><span class="line">      &#123;</span><br><span class="line">          <span class="keyword">if</span> (Contains(key))</span><br><span class="line">          &#123;</span><br><span class="line">              Console.WriteLine(<span class="string">$&quot;Key <span class="subst">&#123;key&#125;</span> already exists&quot;</span>);</span><br><span class="line">              <span class="keyword">return</span>;</span><br><span class="line">          &#125;</span><br><span class="line">          <span class="built_in">int</span> index = hashFunction(key);</span><br><span class="line">          table[index].Add(key);</span><br><span class="line"></span><br><span class="line">          elementCount++;</span><br><span class="line">          <span class="keyword">if</span>(GetLoadFactor()&gt; LOAD_FACTOR_THRESHOLD)</span><br><span class="line">          &#123;</span><br><span class="line">              Rehash();</span><br><span class="line">          &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="comment">// Deletes a key from the hash table</span></span><br><span class="line">      <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">deleteItem</span>(<span class="params"><span class="built_in">int</span> key</span>)</span></span><br><span class="line">      &#123;</span><br><span class="line">          <span class="built_in">int</span> index = hashFunction(key);</span><br><span class="line">          table[index].Remove(key);</span><br><span class="line">          elementCount--;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">displayHash</span>()</span></span><br><span class="line">      &#123;</span><br><span class="line">          <span class="keyword">for</span> (<span class="built_in">int</span> i = <span class="number">0</span>; i &lt; BUCKET; i++)</span><br><span class="line">          &#123;</span><br><span class="line">              Console.Write(i + <span class="string">&quot; --&gt; &quot;</span>);</span><br><span class="line">              <span class="keyword">foreach</span> (<span class="built_in">int</span> x <span class="keyword">in</span> table[i])</span><br><span class="line">                  Console.Write(x + <span class="string">&quot; &quot;</span>);</span><br><span class="line">              Console.WriteLine();</span><br><span class="line">          &#125;</span><br><span class="line">      &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<img src="/2025/04/05/Hash-Table/hs04.png" alt="pic"></li>
-</ul>
-<p>It is worth noting that when the linked list is very long, the query efficiency<br>is poor. In this case, the list can be converted to an <strong>“AVL tree”</strong> or <strong>“Red-Black tree”</strong> to optimize the time complexity of the query operation to <strong>O(log n)</strong>.</p>
-<h3 id="Open-Addressing"><a href="#Open-Addressing" class="headerlink" title="Open Addressing "></a>Open Addressing <a name="oa"></a></h3><p>In open addressing, all elements are stored in the hash table itself. Each table entry contains either a record or NIL. When searching for an element, we examine the table slots one by one until the desired element is found or it is clear that the element is not in the table.</p>
-<p>Probe Strategies:</p>
-<ul>
-<li><strong>Linear Probing:</strong><br>In linear probing, the hash table is searched sequentially that starts from the original location of the hash. If in case the location that we get is already occupied, then we check for the next location.</li>
-<li><strong>Quadratic Probing</strong>: Search with step size i^2.</li>
-<li><strong>Double Hashing</strong>: Use a second hash function to calculate the step size.</li>
-</ul>
-<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title">OpenAddressingHash</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="built_in">int</span> BUCKET;             <span class="comment">// Number of buckets</span></span><br><span class="line">    <span class="keyword">private</span> <span class="built_in">int</span>?[] table;           <span class="comment">// Storage for keys, null indicates empty</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">OpenAddressingHash</span>(<span class="params"><span class="built_in">int</span> V</span>)</span> &#123;</span><br><span class="line">        <span class="keyword">this</span>.BUCKET = V;</span><br><span class="line">        table = <span class="keyword">new</span> <span class="built_in">int</span>?[BUCKET]; <span class="comment">// Initialize as empty</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Hash function: Modulo operation</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="built_in">int</span> <span class="title">hashFunction</span>(<span class="params"><span class="built_in">int</span> x</span>)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> (x % BUCKET);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Insert item</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="built_in">bool</span> <span class="title">insertItem</span>(<span class="params"><span class="built_in">int</span> key</span>)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (isFull()) <span class="keyword">return</span> <span class="literal">false</span>; <span class="comment">// Hash table is full</span></span><br><span class="line"></span><br><span class="line">        <span class="built_in">int</span> index = hashFunction(key);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Linear probing</span></span><br><span class="line">        <span class="built_in">int</span> i = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span> (table[(index + i) % BUCKET] != <span class="literal">null</span>) &#123;</span><br><span class="line">            i++;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        table[(index + i) % BUCKET] = key;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Search item</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="built_in">bool</span> <span class="title">searchItem</span>(<span class="params"><span class="built_in">int</span> key</span>)</span> &#123;</span><br><span class="line">        <span class="built_in">int</span> index = hashFunction(key);</span><br><span class="line"></span><br><span class="line">        <span class="built_in">int</span> i = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span> (table[(index + i) % BUCKET] != <span class="literal">null</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span> (table[(index + i) % BUCKET] == key)</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">            i++;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Delete item</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="built_in">bool</span> <span class="title">deleteItem</span>(<span class="params"><span class="built_in">int</span> key</span>)</span> &#123;</span><br><span class="line">        <span class="built_in">int</span> index = hashFunction(key);</span><br><span class="line"></span><br><span class="line">        <span class="built_in">int</span> i = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span> (table[(index + i) % BUCKET] != <span class="literal">null</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span> (table[(index + i) % BUCKET] == key) &#123;</span><br><span class="line">                table[(index + i) % BUCKET] = <span class="literal">null</span>; <span class="comment">// Mark as empty</span></span><br><span class="line">                <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            i++;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Check if hash table is full</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="built_in">bool</span> <span class="title">isFull</span>()</span> &#123;</span><br><span class="line">        <span class="keyword">foreach</span> (<span class="keyword">var</span> item <span class="keyword">in</span> table) &#123;</span><br><span class="line">            <span class="keyword">if</span> (item == <span class="literal">null</span>)</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Display hash table</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">displayHash</span>()</span> &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="built_in">int</span> i = <span class="number">0</span>; i &lt; BUCKET; i++) &#123;</span><br><span class="line">            Console.WriteLine(<span class="string">$&quot;<span class="subst">&#123;i&#125;</span> --&gt; <span class="subst">&#123;table[i]&#125;</span>&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="Hash-Alogrithm"><a href="#Hash-Alogrithm" class="headerlink" title="Hash Alogrithm"></a>Hash Alogrithm<a name="ha"></a></h2><h3 id="Goals-of-hash-algorithms"><a href="#Goals-of-hash-algorithms" class="headerlink" title="Goals of hash algorithms"></a>Goals of hash algorithms<a name="goal"></a></h3><p>To achieve a fast and stable hash table data structure, hash algorithms should have the following characteristics:</p>
-<ul>
-<li><strong>Determinism</strong>: For the same input, the hash algorithm should always produce the same output. Only then can the hash table be reliable.</li>
-<li><strong>High efficiency</strong>: The process of computing the hash value should be fast enough. The smaller the computational overhead, the more practical the hash table.</li>
-<li><strong>Uniform distribution</strong>: The hash algorithm should ensure that key-value pairs are evenly distributed in the hash table. The more uniform the distribution, the lower the probability of hash collisions.</li>
-</ul>
-<p>Your company might use a hashing algorithm for:</p>
-<ul>
-<li><strong>Password storage</strong>. You must keep records of all of the username&#x2F;password combinations people use to access your resources. But if a hacker gains entry, stealing unprotected data is easy. Hashing ensures that the data is stored in a scrambled state, so it is harder to steal.</li>
-<li><strong>Digital signatures</strong>. A tiny bit of data proves that a note wasn’t modified from the time it leaves a user’s outbox and reaches your inbox.</li>
-<li><strong>Document management</strong>. Hashing algorithms can be used to authenticate data. The writer uses a hash to secure the document when it’s complete. The hash works a bit like a seal of approval.<br>A recipient can generate a hash and compare it to the original. If the two are equal, the data is considered genuine. If they don’t match, the document has been changed.</li>
-</ul>
-<h3 id="Common-hash-algorithms"><a href="#Common-hash-algorithms" class="headerlink" title="Common hash algorithms"></a>Common hash algorithms<a name="cha"></a></h3><p>Over the past century, hash algorithms have been in a continuous process of upgrading and optimization. Some researchers strive to improve the performance of hash algorithms, while others, including hackers, are dedicated to finding security issues in hash algorithms.</p>
-<ul>
-<li><strong>MD5</strong> and <strong>SHA-1</strong> have been successfully attacked multiple times and are thus abandoned in various security applications.</li>
-<li><strong>SHA-2</strong> series, especially SHA-256, is one of the most secure hash algorithms to date, with no successful attacks reported, hence commonly used in various security applications and protocols.</li>
-<li><strong>SHA-3</strong> has lower implementation costs and higher computational efficiency compared to SHA-2, but its current usage coverage is not as extensive as the SHA-2 series.</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th align="center"></th>
-<th align="center"><strong>MD5</strong></th>
-<th align="center"><strong>SHA-1</strong></th>
-<th align="center"><strong>SHA-2</strong></th>
-<th align="center"><strong>SHA-3</strong></th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">Release Year</td>
-<td align="center">1992</td>
-<td align="center">1995</td>
-<td align="center">2002</td>
-<td align="center">2008</td>
-</tr>
-<tr>
-<td align="center">Output Length</td>
-<td align="center">O(1)</td>
-<td align="center">O(1)</td>
-<td align="center">O(1)</td>
-<td align="center">224&#x2F;256&#x2F;384&#x2F;512 bit</td>
-</tr>
-<tr>
-<td align="center">Hash Collisions</td>
-<td align="center">Frequent</td>
-<td align="center">Frequent</td>
-<td align="center">Rare</td>
-<td align="center">Rare</td>
-</tr>
-<tr>
-<td align="center">Security Level</td>
-<td align="center">Low, has been successfully attacked</td>
-<td align="center">Low, has been successfully attacked</td>
-<td align="center">High</td>
-<td align="center">High</td>
-</tr>
-<tr>
-<td align="center">Applications</td>
-<td align="center">Abandoned, still used for data integrity checks</td>
-<td align="center">Abandoned</td>
-<td align="center">Cryptocurrency transaction verification, digital signatures, etc.</td>
-<td align="center">Can be used to replace SHA-2</td>
-</tr>
-</tbody></table>
-<h3 id="Four-Sum"><a href="#Four-Sum" class="headerlink" title="Four Sum "></a>Four Sum <a name="fs"></a></h3><p>Given an array nums of n integers, return an array of all the unique quadruplets [nums[a], nums[b], nums[c], nums[d]] such that:</p>
-<ul>
-<li>0 &lt;&#x3D; i, j, k, l &lt; n</li>
-<li>nums1[i] + nums2[j] + nums3[k] + nums4[l] &#x3D;&#x3D; 0<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="built_in">int</span> <span class="title">FourSumCount</span>(<span class="params"><span class="built_in">int</span>[] nums1, <span class="built_in">int</span>[] nums2, <span class="built_in">int</span>[] nums3, <span class="built_in">int</span>[] nums4</span>)</span> &#123;</span><br><span class="line">       Dictionary&lt;<span class="built_in">int</span>, <span class="built_in">int</span>&gt; dic = <span class="keyword">new</span> Dictionary&lt;<span class="built_in">int</span>, <span class="built_in">int</span>&gt;();</span><br><span class="line">        <span class="keyword">foreach</span>(<span class="keyword">var</span> i <span class="keyword">in</span> nums1)&#123;</span><br><span class="line">            <span class="keyword">foreach</span>(<span class="keyword">var</span> j <span class="keyword">in</span> nums2)&#123;</span><br><span class="line">                <span class="built_in">int</span> sum = i + j;</span><br><span class="line">                <span class="keyword">if</span>(dic.ContainsKey(sum))&#123;</span><br><span class="line">                    dic[sum]++;</span><br><span class="line">                &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                    dic.Add(sum, <span class="number">1</span>);</span><br><span class="line">                &#125;</span><br><span class="line">                </span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">int</span> res = <span class="number">0</span>;</span><br><span class="line">         <span class="keyword">foreach</span>(<span class="keyword">var</span> a <span class="keyword">in</span> nums3)&#123;</span><br><span class="line">            <span class="keyword">foreach</span>(<span class="keyword">var</span> b <span class="keyword">in</span> nums4)&#123;</span><br><span class="line">                <span class="built_in">int</span> sum = a+b;</span><br><span class="line">                <span class="keyword">if</span>(dic.TryGetValue(-sum, <span class="keyword">out</span> <span class="keyword">var</span> result))&#123;</span><br><span class="line">                    res += result;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
-</ul>
-<link rel="stylesheet" href="/css/folder.css" type="text/css"><script src="/js/folder.js" type="text/javascript" async></script>]]></content>
-      <categories>
-        <category>Data Structure and Alogrithm</category>
-      </categories>
-      <tags>
-        <tag>Data Structure and Alogrithm</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Design Patterns</title>
     <url>/2025/04/19/Design-Patterns/</url>
     <content><![CDATA[<ol>
@@ -1430,6 +1251,185 @@ Use Cases:</li>
         <tag>Creational Patterns</tag>
         <tag>Structural Patterns</tag>
         <tag>Behavioral Patterns</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Hash Table</title>
+    <url>/2025/04/05/Hash-Table/</url>
+    <content><![CDATA[<ol>
+<li><a href="#introduction">What is Hash Table</a> <ul>
+<li><a href="#core">Core Concepts</a></li>
+<li><a href="#common">Common operations of hash table</a></li>
+</ul>
+</li>
+<li><a href="#hc">Hash Collision</a><ul>
+<li><a href="#sc">Separate Chaining</a></li>
+<li><a href="#oa">Open Addressing</a></li>
+</ul>
+</li>
+<li><a href="#ha">Hash Alogrithm</a><ul>
+<li><a href="#goal">Goals of hash algorithms</a></li>
+<li><a href="#cha">Common hash algorithms</a></li>
+</ul>
+</li>
+<li><a href="#pa">Practical Examples</a><ul>
+<li><a href="#fs">four sum</a><span id="more"></span></li>
+</ul>
+</li>
+</ol>
+<h2 id="What-is-Hash-Table"><a href="#What-is-Hash-Table" class="headerlink" title="What is Hash Table?"></a>What is Hash Table?<a name="introduction"></a></h2><p>A <strong><a href="https://en.wikipedia.org/wiki/Hash_table">Hash Table</a></strong> is a high-efficiency data structure that stores key-value pairs.It uses a hash function to map keys to storage locations, achieving average <strong>O(1)</strong> time complexity for <strong>fast insertions, lookups, and deletions</strong>.The index functions as a storage location for the matching value. In simple words, it maps the keys with the value.Widely used in caching systems, database indexing, and compiler symbol tables.<br><img src="/2025/04/05/Hash-Table/hs01.png" alt="pic"></p>
+<h3 id="Core-Concepts"><a href="#Core-Concepts" class="headerlink" title="Core Concepts"></a>Core Concepts<a name="core"></a></h3><ul>
+<li><strong>Key</strong>: A unique identifier for the data.</li>
+<li><strong>Value</strong>: The data associated with the key (simplified to just storing keys in this example).</li>
+<li><strong>Bucket</strong>: A storage unit in the hash table (typically an array).</li>
+<li><strong>Hash Functions:</strong><br>A hash function converts a key into an index for the underlying array:<ul>
+<li>Deterministic: Same key always produces the same index.</li>
+<li>Efficient: Computed quickly to avoid performance bottlenecks.</li>
+<li>Uniform: Distributes keys evenly to minimize collisions.</li>
+</ul>
+</li>
+<li><strong>Handling Hash Collisions:</strong><br>When two different keys produce the same index, a collision occurs. Common solutions include:<ul>
+<li><strong>Seperate Chaining</strong>: Store conflicting elements in a linked list at the same index.</li>
+<li><strong>Open Addressing</strong>: Find the next available slot in the array.</li>
+</ul>
+</li>
+</ul>
+<p>In addition to hash tables, arrays and linked lists can also be used to implement query functionality, but the time complexity is different. </p>
+<table>
+<thead>
+<tr>
+<th align="center"></th>
+<th align="center"><strong>Array</strong></th>
+<th align="center"><strong>Linked List</strong></th>
+<th align="center"><strong>Hash Table</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">Search</td>
+<td align="center">O(n)</td>
+<td align="center">O(n)</td>
+<td align="center">O(1)</td>
+</tr>
+<tr>
+<td align="center">Insert</td>
+<td align="center">O(1)</td>
+<td align="center">O(1)</td>
+<td align="center">O(1)</td>
+</tr>
+<tr>
+<td align="center">Delete</td>
+<td align="center">O(n)</td>
+<td align="center">O(n)</td>
+<td align="center">O(1)</td>
+</tr>
+</tbody></table>
+<p>Per aboved comparison, <strong>the time complexity for operations (insertion, deletion, searching, and modification) in a hash table is O(1)</strong>, which is highly efficient.</p>
+<h3 id="Common-operations-of-hash-table"><a href="#Common-operations-of-hash-table" class="headerlink" title="Common operations of hash table"></a>Common operations of hash table<a name="common"></a></h3><p>Common operations of a hash table include: initialization, querying, adding key-value pairs, and deleting key-value pairs. Here is an example code:</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">/* Initialize hash table */</span><br><span class="line">Dictionary&lt;int, string&gt; map = new() &#123;</span><br><span class="line">    /* Add operation */</span><br><span class="line">    // Add key-value pair (key, value) to hash table</span><br><span class="line">    &#123; 13835, &quot;Tom&quot; &#125;,</span><br><span class="line">    &#123; 16937, &quot;Jerry&quot; &#125;,</span><br><span class="line">    &#123; 16852, &quot;Steve&quot; &#125;,</span><br><span class="line">    &#123; 13200, &quot;James&quot; &#125;,</span><br><span class="line">    &#123; 14583, &quot;Lisa&quot; &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">/* Query operation */</span><br><span class="line">// Input key into hash table, get value</span><br><span class="line">string name = map[16937];</span><br><span class="line"></span><br><span class="line">/* Delete operation */</span><br><span class="line">// Delete key-value pair (key, value) from hash table</span><br><span class="line">map.Remove(14583);</span><br></pre></td></tr></table></figure>
+<p>There are three common ways to traverse a hash table: traversing key-value pairs, traversing keys, and traversing values. Here is an example code:</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">/* Traverse hash table */</span><br><span class="line">// Traverse key-value pairs Key-&gt;Value</span><br><span class="line">foreach (var kv in map) &#123;</span><br><span class="line">    Console.WriteLine(kv.Key + &quot; -&gt; &quot; + kv.Value);</span><br><span class="line">&#125;</span><br><span class="line">// Traverse keys only</span><br><span class="line">foreach (int key in map.Keys) &#123;</span><br><span class="line">    Console.WriteLine(key);</span><br><span class="line">&#125;</span><br><span class="line">// Traverse values only</span><br><span class="line">foreach (string val in map.Values) &#123;</span><br><span class="line">    Console.WriteLine(val);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="Hash-Collision"><a href="#Hash-Collision" class="headerlink" title="Hash Collision"></a>Hash Collision<a name="hc"></a></h2><p>The hashing process generates a small number for a big key, so there is a possibility that two keys could produce the same value. The situation where the newly inserted key maps to an already occupied, and it must be handled using some collision handling technology.<br><img src="/2025/04/05/Hash-Table/hs02.png" alt="pic"></p>
+<p>There are mainly two methods to handle collision:</p>
+<ul>
+<li>Separate Chaining</li>
+<li>Open Addressing</li>
+</ul>
+<h3 id="Separate-Chaining"><a href="#Separate-Chaining" class="headerlink" title="Separate Chaining "></a>Separate Chaining <a name="sc"></a></h3><p>Separate chaining converts a single element into a linked list, treating key-value pairs as list nodes, storing all colliding key-value pairs in the same linked list.<br>The operations of a hash table implemented with separate chaining have changed as follows:</p>
+<ul>
+<li>Searching Elements: Input key, obtain the bucket index through the hash function, then access the head node of the linked list. Traverse the linked list and compare key to find the target key-value pair.</li>
+<li>Inserting Elements: Access the head node of the linked list via the hash function, then append the node (key-value pair) to the list.</li>
+<li>Deleting Elements: Access the head of the linked list based on the result of the hash function, then traverse the linked list to find the target node and delete it.<br><img src="/2025/04/05/Hash-Table/hs03.png" alt="pic"></li>
+</ul>
+<p>The code below provides a simple implementation of a separate chaining hash table, with two things to note:</p>
+<ul>
+<li>Lists (dynamic arrays) are used instead of linked lists for simplicity. In this setup, the hash table (array) contains multiple buckets, each of which is a list.</li>
+<li>This implementation includes a hash table resizing method. When the load factor exceeds <strong>0.7</strong>, we expand the hash table to twice its original size.<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title">Hash</span></span><br><span class="line">&#123;</span><br><span class="line">      <span class="built_in">int</span> BUCKET;</span><br><span class="line">      List&lt;<span class="built_in">int</span>&gt;[] table;</span><br><span class="line">      <span class="built_in">int</span> elementCount;</span><br><span class="line">      <span class="keyword">const</span> <span class="built_in">double</span> LOAD_FACTOR_THRESHOLD = <span class="number">0.7</span>;</span><br><span class="line">      <span class="function"><span class="keyword">public</span> <span class="title">Hash</span>(<span class="params"><span class="built_in">int</span> V</span>)</span></span><br><span class="line">      &#123;</span><br><span class="line">          <span class="keyword">this</span>.BUCKET = V;</span><br><span class="line">          table = <span class="keyword">new</span> List&lt;<span class="built_in">int</span>&gt;[BUCKET];</span><br><span class="line">          elementCount = <span class="number">0</span>;</span><br><span class="line">          <span class="keyword">for</span> (<span class="built_in">int</span> i = <span class="number">0</span>; i &lt; BUCKET; i++)</span><br><span class="line">              table[i] = <span class="keyword">new</span> List&lt;<span class="built_in">int</span>&gt;();</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="comment">// Hash function to map values to key</span></span><br><span class="line">      <span class="function"><span class="keyword">private</span> <span class="built_in">int</span> <span class="title">hashFunction</span>(<span class="params"><span class="built_in">int</span> x</span>)</span></span><br><span class="line">      &#123;</span><br><span class="line">          <span class="built_in">int</span> hash = x.GetHashCode();</span><br><span class="line">          <span class="keyword">return</span> (hash % BUCKET + BUCKET) % BUCKET;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="function"><span class="built_in">double</span> <span class="title">GetLoadFactor</span>()</span></span><br><span class="line">      &#123;</span><br><span class="line">          <span class="keyword">return</span> (<span class="built_in">double</span>)elementCount / BUCKET;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="function"><span class="keyword">void</span> <span class="title">Rehash</span>()</span></span><br><span class="line">      &#123;</span><br><span class="line">          <span class="built_in">int</span> oldBucket = BUCKET; <span class="comment">// old bucket</span></span><br><span class="line">          <span class="built_in">int</span> newBucket = oldBucket * <span class="number">2</span>; <span class="comment">// new bucket</span></span><br><span class="line">          List&lt;<span class="built_in">int</span>&gt;[] newTable = <span class="keyword">new</span> List&lt;<span class="built_in">int</span>&gt;[newBucket];</span><br><span class="line">          <span class="keyword">for</span>(<span class="built_in">int</span> i = <span class="number">0</span>; i &lt; newBucket; i++)</span><br><span class="line">          &#123;</span><br><span class="line">              newTable[i] = <span class="keyword">new</span> List&lt;<span class="built_in">int</span>&gt;();</span><br><span class="line">          &#125;</span><br><span class="line"></span><br><span class="line">          <span class="keyword">for</span>(<span class="built_in">int</span> i = <span class="number">0</span>;i&lt; oldBucket; i++)</span><br><span class="line">          &#123;</span><br><span class="line">              <span class="keyword">foreach</span>(<span class="built_in">int</span> key <span class="keyword">in</span> table[i])</span><br><span class="line">              &#123;</span><br><span class="line">                  <span class="built_in">int</span> newIndex = key%newBucket;</span><br><span class="line"></span><br><span class="line">                  <span class="keyword">if</span> (!newTable[newIndex].Contains(key))</span><br><span class="line">                  &#123;</span><br><span class="line">                      newTable[newIndex].Add(key);</span><br><span class="line">                  &#125;</span><br><span class="line">                  </span><br><span class="line">              &#125;</span><br><span class="line">          &#125;</span><br><span class="line">          table = newTable;</span><br><span class="line">          BUCKET = newBucket;</span><br><span class="line">          Console.WriteLine(<span class="string">$&quot;Rehashed to <span class="subst">&#123;newBucket&#125;</span> buckets&quot;</span>);</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="function"><span class="keyword">public</span> <span class="built_in">bool</span> <span class="title">Contains</span>(<span class="params"><span class="built_in">int</span> key</span>)</span></span><br><span class="line">      &#123;</span><br><span class="line">          <span class="built_in">int</span> index = hashFunction(key);</span><br><span class="line">          <span class="keyword">return</span> table[index].Contains(key);</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">insertItem</span>(<span class="params"><span class="built_in">int</span> key</span>)</span></span><br><span class="line">      &#123;</span><br><span class="line">          <span class="keyword">if</span> (Contains(key))</span><br><span class="line">          &#123;</span><br><span class="line">              Console.WriteLine(<span class="string">$&quot;Key <span class="subst">&#123;key&#125;</span> already exists&quot;</span>);</span><br><span class="line">              <span class="keyword">return</span>;</span><br><span class="line">          &#125;</span><br><span class="line">          <span class="built_in">int</span> index = hashFunction(key);</span><br><span class="line">          table[index].Add(key);</span><br><span class="line"></span><br><span class="line">          elementCount++;</span><br><span class="line">          <span class="keyword">if</span>(GetLoadFactor()&gt; LOAD_FACTOR_THRESHOLD)</span><br><span class="line">          &#123;</span><br><span class="line">              Rehash();</span><br><span class="line">          &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="comment">// Deletes a key from the hash table</span></span><br><span class="line">      <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">deleteItem</span>(<span class="params"><span class="built_in">int</span> key</span>)</span></span><br><span class="line">      &#123;</span><br><span class="line">          <span class="built_in">int</span> index = hashFunction(key);</span><br><span class="line">          table[index].Remove(key);</span><br><span class="line">          elementCount--;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">displayHash</span>()</span></span><br><span class="line">      &#123;</span><br><span class="line">          <span class="keyword">for</span> (<span class="built_in">int</span> i = <span class="number">0</span>; i &lt; BUCKET; i++)</span><br><span class="line">          &#123;</span><br><span class="line">              Console.Write(i + <span class="string">&quot; --&gt; &quot;</span>);</span><br><span class="line">              <span class="keyword">foreach</span> (<span class="built_in">int</span> x <span class="keyword">in</span> table[i])</span><br><span class="line">                  Console.Write(x + <span class="string">&quot; &quot;</span>);</span><br><span class="line">              Console.WriteLine();</span><br><span class="line">          &#125;</span><br><span class="line">      &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<img src="/2025/04/05/Hash-Table/hs04.png" alt="pic"></li>
+</ul>
+<p>It is worth noting that when the linked list is very long, the query efficiency<br>is poor. In this case, the list can be converted to an <strong>“AVL tree”</strong> or <strong>“Red-Black tree”</strong> to optimize the time complexity of the query operation to <strong>O(log n)</strong>.</p>
+<h3 id="Open-Addressing"><a href="#Open-Addressing" class="headerlink" title="Open Addressing "></a>Open Addressing <a name="oa"></a></h3><p>In open addressing, all elements are stored in the hash table itself. Each table entry contains either a record or NIL. When searching for an element, we examine the table slots one by one until the desired element is found or it is clear that the element is not in the table.</p>
+<p>Probe Strategies:</p>
+<ul>
+<li><strong>Linear Probing:</strong><br>In linear probing, the hash table is searched sequentially that starts from the original location of the hash. If in case the location that we get is already occupied, then we check for the next location.</li>
+<li><strong>Quadratic Probing</strong>: Search with step size i^2.</li>
+<li><strong>Double Hashing</strong>: Use a second hash function to calculate the step size.</li>
+</ul>
+<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title">OpenAddressingHash</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="built_in">int</span> BUCKET;             <span class="comment">// Number of buckets</span></span><br><span class="line">    <span class="keyword">private</span> <span class="built_in">int</span>?[] table;           <span class="comment">// Storage for keys, null indicates empty</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">OpenAddressingHash</span>(<span class="params"><span class="built_in">int</span> V</span>)</span> &#123;</span><br><span class="line">        <span class="keyword">this</span>.BUCKET = V;</span><br><span class="line">        table = <span class="keyword">new</span> <span class="built_in">int</span>?[BUCKET]; <span class="comment">// Initialize as empty</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Hash function: Modulo operation</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="built_in">int</span> <span class="title">hashFunction</span>(<span class="params"><span class="built_in">int</span> x</span>)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> (x % BUCKET);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Insert item</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="built_in">bool</span> <span class="title">insertItem</span>(<span class="params"><span class="built_in">int</span> key</span>)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (isFull()) <span class="keyword">return</span> <span class="literal">false</span>; <span class="comment">// Hash table is full</span></span><br><span class="line"></span><br><span class="line">        <span class="built_in">int</span> index = hashFunction(key);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Linear probing</span></span><br><span class="line">        <span class="built_in">int</span> i = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span> (table[(index + i) % BUCKET] != <span class="literal">null</span>) &#123;</span><br><span class="line">            i++;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        table[(index + i) % BUCKET] = key;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Search item</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="built_in">bool</span> <span class="title">searchItem</span>(<span class="params"><span class="built_in">int</span> key</span>)</span> &#123;</span><br><span class="line">        <span class="built_in">int</span> index = hashFunction(key);</span><br><span class="line"></span><br><span class="line">        <span class="built_in">int</span> i = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span> (table[(index + i) % BUCKET] != <span class="literal">null</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span> (table[(index + i) % BUCKET] == key)</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">            i++;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Delete item</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="built_in">bool</span> <span class="title">deleteItem</span>(<span class="params"><span class="built_in">int</span> key</span>)</span> &#123;</span><br><span class="line">        <span class="built_in">int</span> index = hashFunction(key);</span><br><span class="line"></span><br><span class="line">        <span class="built_in">int</span> i = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span> (table[(index + i) % BUCKET] != <span class="literal">null</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span> (table[(index + i) % BUCKET] == key) &#123;</span><br><span class="line">                table[(index + i) % BUCKET] = <span class="literal">null</span>; <span class="comment">// Mark as empty</span></span><br><span class="line">                <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            i++;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Check if hash table is full</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="built_in">bool</span> <span class="title">isFull</span>()</span> &#123;</span><br><span class="line">        <span class="keyword">foreach</span> (<span class="keyword">var</span> item <span class="keyword">in</span> table) &#123;</span><br><span class="line">            <span class="keyword">if</span> (item == <span class="literal">null</span>)</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Display hash table</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">displayHash</span>()</span> &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="built_in">int</span> i = <span class="number">0</span>; i &lt; BUCKET; i++) &#123;</span><br><span class="line">            Console.WriteLine(<span class="string">$&quot;<span class="subst">&#123;i&#125;</span> --&gt; <span class="subst">&#123;table[i]&#125;</span>&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="Hash-Alogrithm"><a href="#Hash-Alogrithm" class="headerlink" title="Hash Alogrithm"></a>Hash Alogrithm<a name="ha"></a></h2><h3 id="Goals-of-hash-algorithms"><a href="#Goals-of-hash-algorithms" class="headerlink" title="Goals of hash algorithms"></a>Goals of hash algorithms<a name="goal"></a></h3><p>To achieve a fast and stable hash table data structure, hash algorithms should have the following characteristics:</p>
+<ul>
+<li><strong>Determinism</strong>: For the same input, the hash algorithm should always produce the same output. Only then can the hash table be reliable.</li>
+<li><strong>High efficiency</strong>: The process of computing the hash value should be fast enough. The smaller the computational overhead, the more practical the hash table.</li>
+<li><strong>Uniform distribution</strong>: The hash algorithm should ensure that key-value pairs are evenly distributed in the hash table. The more uniform the distribution, the lower the probability of hash collisions.</li>
+</ul>
+<p>Your company might use a hashing algorithm for:</p>
+<ul>
+<li><strong>Password storage</strong>. You must keep records of all of the username&#x2F;password combinations people use to access your resources. But if a hacker gains entry, stealing unprotected data is easy. Hashing ensures that the data is stored in a scrambled state, so it is harder to steal.</li>
+<li><strong>Digital signatures</strong>. A tiny bit of data proves that a note wasn’t modified from the time it leaves a user’s outbox and reaches your inbox.</li>
+<li><strong>Document management</strong>. Hashing algorithms can be used to authenticate data. The writer uses a hash to secure the document when it’s complete. The hash works a bit like a seal of approval.<br>A recipient can generate a hash and compare it to the original. If the two are equal, the data is considered genuine. If they don’t match, the document has been changed.</li>
+</ul>
+<h3 id="Common-hash-algorithms"><a href="#Common-hash-algorithms" class="headerlink" title="Common hash algorithms"></a>Common hash algorithms<a name="cha"></a></h3><p>Over the past century, hash algorithms have been in a continuous process of upgrading and optimization. Some researchers strive to improve the performance of hash algorithms, while others, including hackers, are dedicated to finding security issues in hash algorithms.</p>
+<ul>
+<li><strong>MD5</strong> and <strong>SHA-1</strong> have been successfully attacked multiple times and are thus abandoned in various security applications.</li>
+<li><strong>SHA-2</strong> series, especially SHA-256, is one of the most secure hash algorithms to date, with no successful attacks reported, hence commonly used in various security applications and protocols.</li>
+<li><strong>SHA-3</strong> has lower implementation costs and higher computational efficiency compared to SHA-2, but its current usage coverage is not as extensive as the SHA-2 series.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="center"></th>
+<th align="center"><strong>MD5</strong></th>
+<th align="center"><strong>SHA-1</strong></th>
+<th align="center"><strong>SHA-2</strong></th>
+<th align="center"><strong>SHA-3</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">Release Year</td>
+<td align="center">1992</td>
+<td align="center">1995</td>
+<td align="center">2002</td>
+<td align="center">2008</td>
+</tr>
+<tr>
+<td align="center">Output Length</td>
+<td align="center">O(1)</td>
+<td align="center">O(1)</td>
+<td align="center">O(1)</td>
+<td align="center">224&#x2F;256&#x2F;384&#x2F;512 bit</td>
+</tr>
+<tr>
+<td align="center">Hash Collisions</td>
+<td align="center">Frequent</td>
+<td align="center">Frequent</td>
+<td align="center">Rare</td>
+<td align="center">Rare</td>
+</tr>
+<tr>
+<td align="center">Security Level</td>
+<td align="center">Low, has been successfully attacked</td>
+<td align="center">Low, has been successfully attacked</td>
+<td align="center">High</td>
+<td align="center">High</td>
+</tr>
+<tr>
+<td align="center">Applications</td>
+<td align="center">Abandoned, still used for data integrity checks</td>
+<td align="center">Abandoned</td>
+<td align="center">Cryptocurrency transaction verification, digital signatures, etc.</td>
+<td align="center">Can be used to replace SHA-2</td>
+</tr>
+</tbody></table>
+<h3 id="Four-Sum"><a href="#Four-Sum" class="headerlink" title="Four Sum "></a>Four Sum <a name="fs"></a></h3><p>Given an array nums of n integers, return an array of all the unique quadruplets [nums[a], nums[b], nums[c], nums[d]] such that:</p>
+<ul>
+<li>0 &lt;&#x3D; i, j, k, l &lt; n</li>
+<li>nums1[i] + nums2[j] + nums3[k] + nums4[l] &#x3D;&#x3D; 0<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="built_in">int</span> <span class="title">FourSumCount</span>(<span class="params"><span class="built_in">int</span>[] nums1, <span class="built_in">int</span>[] nums2, <span class="built_in">int</span>[] nums3, <span class="built_in">int</span>[] nums4</span>)</span> &#123;</span><br><span class="line">       Dictionary&lt;<span class="built_in">int</span>, <span class="built_in">int</span>&gt; dic = <span class="keyword">new</span> Dictionary&lt;<span class="built_in">int</span>, <span class="built_in">int</span>&gt;();</span><br><span class="line">        <span class="keyword">foreach</span>(<span class="keyword">var</span> i <span class="keyword">in</span> nums1)&#123;</span><br><span class="line">            <span class="keyword">foreach</span>(<span class="keyword">var</span> j <span class="keyword">in</span> nums2)&#123;</span><br><span class="line">                <span class="built_in">int</span> sum = i + j;</span><br><span class="line">                <span class="keyword">if</span>(dic.ContainsKey(sum))&#123;</span><br><span class="line">                    dic[sum]++;</span><br><span class="line">                &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                    dic.Add(sum, <span class="number">1</span>);</span><br><span class="line">                &#125;</span><br><span class="line">                </span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">int</span> res = <span class="number">0</span>;</span><br><span class="line">         <span class="keyword">foreach</span>(<span class="keyword">var</span> a <span class="keyword">in</span> nums3)&#123;</span><br><span class="line">            <span class="keyword">foreach</span>(<span class="keyword">var</span> b <span class="keyword">in</span> nums4)&#123;</span><br><span class="line">                <span class="built_in">int</span> sum = a+b;</span><br><span class="line">                <span class="keyword">if</span>(dic.TryGetValue(-sum, <span class="keyword">out</span> <span class="keyword">var</span> result))&#123;</span><br><span class="line">                    res += result;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<link rel="stylesheet" href="/css/folder.css" type="text/css"><script src="/js/folder.js" type="text/javascript" async></script>]]></content>
+      <categories>
+        <category>Data Structure and Alogrithm</category>
+      </categories>
+      <tags>
+        <tag>Data Structure and Alogrithm</tag>
       </tags>
   </entry>
   <entry>
