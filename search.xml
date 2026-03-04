@@ -933,6 +933,127 @@ or <figure class="highlight css"><table><tr><td class="code"><pre><span class="l
       </tags>
   </entry>
   <entry>
+    <title>Git guideline</title>
+    <url>/2025/11/10/Git-guideline/</url>
+    <content><![CDATA[<ul>
+<li><a href="#understanding-git-basics">Understanding Git Basics</a><ul>
+<li><a href="#1-working-directory">1. Working Directory</a></li>
+<li><a href="#2-staging-area-index">2. Staging Area (Index)</a></li>
+<li><a href="#3-repository">3. Repository</a></li>
+</ul>
+</li>
+<li><a href="#essential-git-commands">Essential Git Commands</a><ul>
+<li><a href="#initial-setup">Initial Setup</a></li>
+<li><a href="#cloning-a-repository">Cloning a Repository</a></li>
+<li><a href="#tracking-and-committing-changes">Tracking and Committing Changes</a></li>
+<li><a href="#view-history">View history</a></li>
+<li><a href="#recommended-commit-prefixes">Recommended commit prefixes</a><span id="more"></span></li>
+</ul>
+</li>
+<li><a href="#working-with-remote-repositories">Working with Remote Repositories</a></li>
+<li><a href="#branching-and-merging">Branching and Merging</a><ul>
+<li><a href="#recommended-branch-naming">Recommended branch naming</a></li>
+</ul>
+</li>
+<li><a href="#undoing-changes-and-recovery">Undoing Changes and Recovery</a></li>
+<li><a href="#tags-and-version-releases">Tags and Version Releases</a></li>
+<li><a href="#common-development-scenarios">Common Development Scenarios</a><ul>
+<li><a href="#new-project-push">New Project Push</a></li>
+<li><a href="#team-feature-development">Team Feature Development</a></li>
+<li><a href="#hotfix-production-bug">Hotfix Production Bug</a></li>
+</ul>
+</li>
+<li><a href="#common-pitfalls-and-how-to-avoid-them">Common Pitfalls and How to Avoid Them</a></li>
+<li><a href="#using-ssh-with-github-recommended">Using SSH with GitHub (Recommended)</a></li>
+<li><a href="#git-best-practices">Git Best Practices</a></li>
+<li><a href="#conclusion">Conclusion</a></li>
+</ul>
+<hr>
+<h2 id="Understanding-Git-Basics"><a href="#Understanding-Git-Basics" class="headerlink" title="Understanding Git Basics "></a>Understanding Git Basics <a name="understanding-git-basics"></a></h2><h3 id="Working-Directory"><a href="#Working-Directory" class="headerlink" title="Working Directory "></a>Working Directory <a name="1-working-directory"></a></h3><p>This is where you actually edit files on your local machine.</p>
+<h3 id="Staging-Area-Index"><a href="#Staging-Area-Index" class="headerlink" title="Staging Area (Index) "></a>Staging Area (Index) <a name="2-staging-area-index"></a></h3><p>A buffer between your working directory and the repository.<br>You decide <strong>what exactly goes into the next commit</strong>.</p>
+<h3 id="Repository"><a href="#Repository" class="headerlink" title="Repository "></a>Repository <a name="3-repository"></a></h3><p>The database that stores all commit history.</p>
+<p><strong>Typical workflow:</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Working Directory → Staging Area → Local Repository → Remote Repository</span><br></pre></td></tr></table></figure>
+
+<p>Once this flow makes sense, Git becomes much easier.</p>
+<h2 id="Essential-Git-Commands"><a href="#Essential-Git-Commands" class="headerlink" title="Essential Git Commands "></a>Essential Git Commands <a name="essential-git-commands"></a></h2><h3 id="Initial-Setup"><a href="#Initial-Setup" class="headerlink" title="Initial Setup "></a>Initial Setup <a name="initial-setup"></a></h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git config --global user.name <span class="string">&quot;Your Name&quot;</span></span><br><span class="line">git config --global user.email <span class="string">&quot;you@example.com&quot;</span></span><br><span class="line">git config --global --list</span><br></pre></td></tr></table></figure>
+
+<p>Initialize a repository:</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git init</span><br></pre></td></tr></table></figure>
+
+<h3 id="Cloning-a-Repository"><a href="#Cloning-a-Repository" class="headerlink" title="Cloning a Repository "></a>Cloning a Repository <a name="cloning-a-repository"></a></h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># HTTPS</span></span><br><span class="line">git <span class="built_in">clone</span> https://github.com/username/repo.git</span><br></pre></td></tr></table></figure>
+
+<h1 id="SSH-recommended"><a href="#SSH-recommended" class="headerlink" title="SSH (recommended)"></a>SSH (recommended)</h1><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">git clone git@github.com:username/repo.git</span><br></pre></td></tr></table></figure>
+
+<h3 id="Tracking-and-Committing-Changes"><a href="#Tracking-and-Committing-Changes" class="headerlink" title="Tracking and Committing Changes "></a>Tracking and Committing Changes <a name="tracking-and-committing-changes"></a></h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git status</span><br><span class="line">git add .</span><br><span class="line">git commit -m <span class="string">&quot;feat: add login feature&quot;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="View-history"><a href="#View-history" class="headerlink" title="View history "></a>View history <a name="view-history"></a></h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git <span class="built_in">log</span> --oneline</span><br></pre></td></tr></table></figure>
+
+<h3 id="Recommended-commit-prefixes"><a href="#Recommended-commit-prefixes" class="headerlink" title="Recommended commit prefixes "></a>Recommended commit prefixes <a name="recommended-commit-prefixes"></a></h3><ul>
+<li><code>feat</code>: new feature</li>
+<li><code>fix</code>: bug fix</li>
+<li><code>docs</code>: documentation</li>
+<li><code>refactor</code>: refactoring</li>
+</ul>
+<h2 id="Working-with-Remote-Repositories"><a href="#Working-with-Remote-Repositories" class="headerlink" title="Working with Remote Repositories "></a>Working with Remote Repositories <a name="working-with-remote-repositories"></a></h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git remote add origin &lt;repo-url&gt;</span><br><span class="line">git remote -v</span><br><span class="line">git push origin main</span><br><span class="line">git pull origin main</span><br></pre></td></tr></table></figure>
+
+<p>Avoid force push unless you know exactly what you’re doing:</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git push --force-with-lease</span><br></pre></td></tr></table></figure>
+
+<h2 id="Branching-and-Merging"><a href="#Branching-and-Merging" class="headerlink" title="Branching and Merging "></a>Branching and Merging <a name="branching-and-merging"></a></h2><p>Branches allow safe experimentation.</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git branch</span><br><span class="line">git checkout -b feature/login</span><br><span class="line">git checkout main</span><br><span class="line">git merge feature/login</span><br><span class="line">git branch -d feature/login</span><br></pre></td></tr></table></figure>
+
+<h3 id="Recommended-branch-naming"><a href="#Recommended-branch-naming" class="headerlink" title="Recommended branch naming "></a>Recommended branch naming <a name="recommended-branch-naming"></a></h3><ul>
+<li>main – stable production</li>
+<li>feature&#x2F;* – new features</li>
+<li>hotfix&#x2F;* – urgent fixes</li>
+</ul>
+<h2 id="Undoing-Changes-and-Recovery"><a href="#Undoing-Changes-and-Recovery" class="headerlink" title="Undoing Changes and Recovery "></a>Undoing Changes and Recovery <a name="undoing-changes-and-recovery"></a></h2><p>Git is powerful because almost nothing is truly lost.</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git reset --soft &lt;commit&gt;</span><br><span class="line">git reset --mixed &lt;commit&gt;</span><br><span class="line">git reset --hard &lt;commit&gt;</span><br><span class="line">git reflog</span><br><span class="line">git reflog is your emergency <span class="built_in">exit</span>.</span><br></pre></td></tr></table></figure>
+<h2 id="Tags-and-Version-Releases"><a href="#Tags-and-Version-Releases" class="headerlink" title="Tags and Version Releases "></a>Tags and Version Releases <a name="tags-and-version-releases"></a></h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git tag -a v1.0 -m <span class="string">&quot;First release&quot;</span></span><br><span class="line">git push origin --tags</span><br></pre></td></tr></table></figure>
+
+<p>Tags are ideal for marking stable releases.</p>
+<h2 id="Common-Development-Scenarios"><a href="#Common-Development-Scenarios" class="headerlink" title="Common Development Scenarios "></a>Common Development Scenarios <a name="common-development-scenarios"></a></h2><h3 id="New-Project-Push"><a href="#New-Project-Push" class="headerlink" title="New Project Push "></a>New Project Push <a name="new-project-push"></a></h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git init</span><br><span class="line">git add .</span><br><span class="line">git commit -m <span class="string">&quot;init: initial commit&quot;</span></span><br><span class="line">git remote add origin &lt;repo&gt;</span><br><span class="line">git push -u origin main</span><br></pre></td></tr></table></figure>
+
+<h3 id="Team-Feature-Development"><a href="#Team-Feature-Development" class="headerlink" title="Team Feature Development "></a>Team Feature Development <a name="team-feature-development"></a></h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git checkout -b feature/payment</span><br><span class="line">git commit -m <span class="string">&quot;feat: payment integration&quot;</span></span><br><span class="line">git push origin feature/payment</span><br></pre></td></tr></table></figure>
+
+<h3 id="Hotfix-Production-Bug"><a href="#Hotfix-Production-Bug" class="headerlink" title="Hotfix Production Bug "></a>Hotfix Production Bug <a name="hotfix-production-bug"></a></h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git checkout main</span><br><span class="line">git pull</span><br><span class="line">git checkout -b hotfix/critical-bug</span><br><span class="line">git commit -m <span class="string">&quot;fix: critical production issue&quot;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="Common-Pitfalls-and-How-to-Avoid-Them"><a href="#Common-Pitfalls-and-How-to-Avoid-Them" class="headerlink" title="Common Pitfalls and How to Avoid Them "></a>Common Pitfalls and How to Avoid Them <a name="common-pitfalls-and-how-to-avoid-them"></a></h2><ul>
+<li>Forgot git add</li>
+<li>Merge conflicts ignored</li>
+<li>Panic after git reset –hard</li>
+<li>Using password instead of token&#x2F;SSH</li>
+</ul>
+<p>Tip: If something goes wrong, stop and check git reflog.</p>
+<h2 id="Using-SSH-with-GitHub-Recommended"><a href="#Using-SSH-with-GitHub-Recommended" class="headerlink" title="Using SSH with GitHub (Recommended) "></a>Using SSH with GitHub (Recommended) <a name="using-ssh-with-github-recommended"></a></h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ssh-keygen -t ed25519 -C <span class="string">&quot;you@example.com&quot;</span></span><br><span class="line"><span class="built_in">cat</span> ~/.ssh/id_ed25519.pub</span><br><span class="line">ssh -T git@github.com</span><br></pre></td></tr></table></figure>
+
+<p>Successful output:</p>
+<figure class="highlight rust"><table><tr><td class="code"><pre><span class="line">Hi username! You<span class="symbol">&#x27;ve</span> successfully authenticated.</span><br></pre></td></tr></table></figure>
+
+<h2 id="Git-Best-Practices"><a href="#Git-Best-Practices" class="headerlink" title="Git Best Practices "></a>Git Best Practices <a name="git-best-practices"></a></h2><p>Commit small, meaningful changes</p>
+<p>Write clear commit messages</p>
+<p>Use branches aggressively</p>
+<p>Clean unused branches regularly</p>
+<p>Prefer SSH over HTTPS</p>
+<p>Use fine-grained tokens for automation</p>
+<h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion "></a>Conclusion <a name="conclusion"></a></h2><p>You don’t need to memorize every Git command.</p>
+<p>Git is not about commands—it’s about understanding history and collaboration.</p>
+<p>Once you understand the workflow, Git becomes a powerful safety net rather than a source of anxiety.</p>
+<link rel="stylesheet" href="/css/folder.css" type="text/css"><script src="/js/folder.js" type="text/javascript" async></script>]]></content>
+      <categories>
+        <category>Development</category>
+        <category>Git</category>
+      </categories>
+      <tags>
+        <tag>Git</tag>
+        <tag>Version Control</tag>
+        <tag>GitHub</tag>
+        <tag>CLI</tag>
+        <tag>Software Engineering</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Design Patterns</title>
     <url>/2025/04/19/Design-Patterns/</url>
     <content><![CDATA[<ol>
@@ -1593,8 +1714,8 @@ Use Cases:</li>
         <category>Hexo</category>
       </categories>
       <tags>
-        <tag>Hexo</tag>
         <tag>Git</tag>
+        <tag>Hexo</tag>
         <tag>Multi-Device Synchronization</tag>
       </tags>
   </entry>
@@ -1985,10 +2106,557 @@ When a mismatch occurs, the text pointer backtracks to i&#x3D;2, and the pattern
       </tags>
   </entry>
   <entry>
+    <title>TLias Spring Boot Practice Guide</title>
+    <url>/2026/02/18/TLias-Spring-Boot-Practice-Guide/</url>
+    <content><![CDATA[<ul>
+<li><a href="#1-project-overview-what-is-tlias">1. Project Overview: What is Tlias?</a><ul>
+<li><a href="#core-technology-stack">1.1 Core Technology Stack</a></li>
+<li><a href="#project-architecture">1.2 Project Architecture</a></li>
+<li><a href="#project-structure-overview">1.3 Project Structure Overview</a></li>
+<li><a href="#database-design">1.4 Database Design</a></li>
+</ul>
+</li>
+<li><a href="#2-environment-setup-the-hardest-part">2. Environment Setup: The Hardest Part</a><ul>
+<li><a href="#key-insight">2.1 Key Insight</a></li>
+<li><a href="#unified-response-class">2.2 Unified Response Class</a></li>
+</ul>
+</li>
+<li><a href="#3-department-management-first-crud-experience">3. Department Management</a></li>
+<li><a href="#4-employee-management-pagination--dynamic-sql">4. Employee Management: Pagination &amp; Dynamic SQL</a><ul>
+<li><a href="#pagination-query-basic-version">4.1 Pagination Query (Basic Version)</a></li>
+<li><a href="#using-pagehelper-plugin-recommended--deep-dive">4.2 Using PageHelper Plugin (Recommended) – Deep Dive</a></li>
+<li><a href="#conditional-pagination-query-dynamic-sql--advanced-details">4.3 Conditional Pagination Query (Dynamic SQL) – Advanced Details</a></li>
+<li><a href="#batch-delete-employees--foreach-in-xml">4.4 Batch Delete Employees – ForEach in XML</a></li>
+<li><a href="#add-employee">4.5 Add Employee</a><span id="more"></span></li>
+</ul>
+</li>
+<li><a href="#5-file-upload-from-local-to-cloud">5. File Upload: From Local to Cloud</a></li>
+<li><a href="#6-login-authentication-jwt-tokens--interceptors">6. Login Authentication: JWT Tokens &amp; Interceptors</a></li>
+<li><a href="#7-unified-exception-handling-graceful-error-management">7. Unified Exception Handling: Graceful Error Management</a></li>
+<li><a href="#8-transaction-management-ensuring-data-consistency">8. Transaction Management: Ensuring Data Consistency</a></li>
+<li><a href="#9-aop-in-action-operation-logging">9. AOP in Action: Operation Logging</a></li>
+<li><a href="#10-pitfall-diary-bugs-i-encountered">10. Pitfall Diary: Bugs I Encountered</a></li>
+<li><a href="#11-advanced-statistics--complex-queries">11. Advanced: Statistics &amp; Complex Queries</a><ul>
+<li><a href="#understanding-listmapstring-object-in-mybatis">11.1 Understanding List&lt;Map&lt;String, Object&gt;&gt; in MyBatis</a></li>
+<li><a href="#using-case-when-in-sql-for-conditional-aggregation">11.2 Using CASE WHEN in SQL for Conditional Aggregation</a></li>
+<li><a href="#handling-date-formats-in-query-results">11.3 Handling Date Formats in Query Results</a></li>
+<li><a href="#mybatis-alias-strictness">11.4 MyBatis Alias Strictness</a></li>
+<li><a href="#using-foreach-for-dynamic-in-clauses-in-statistics">11.5 Using foreach for Dynamic IN Clauses in Statistics</a></li>
+<li><a href="#localdate-comparison-in-java-if-needed">11.6 LocalDate Comparison in Java (if needed)</a></li>
+<li><a href="#complete-example-employee-trend-by-month">11.7 Complete Example: Employee Trend by Month</a></li>
+</ul>
+</li>
+<li><a href="#thoughts">12. Some Thoughts</a></li>
+<li><a href="#git">13. Git Repo link:Tlias-Web-Management</a></li>
+</ul>
+<h2 id="Project-Overview-What-is-Tlias"><a href="#Project-Overview-What-is-Tlias" class="headerlink" title="Project Overview: What is Tlias? "></a>Project Overview: What is Tlias? <a name="1-project-overview-what-is-tlias"></a></h2><p>TLias is a <strong>Teaching Management System</strong> that manages:</p>
+<ul>
+<li>Departments</li>
+<li>Employees</li>
+<li>Authentication</li>
+<li>File Upload</li>
+<li>Statistics &amp; Reports</li>
+</ul>
+<h3 id="Core-Technology-Stack"><a href="#Core-Technology-Stack" class="headerlink" title="Core Technology Stack "></a>Core Technology Stack <a name="core-technology-stack"></a></h3><table>
+<thead>
+<tr>
+<th>Technology</th>
+<th>Purpose</th>
+<th>Why It Matters</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Spring Boot</td>
+<td>Web framework</td>
+<td>Rapid development &amp; convention over configuration</td>
+</tr>
+<tr>
+<td>MyBatis</td>
+<td>ORM framework</td>
+<td>Precise SQL control</td>
+</tr>
+<tr>
+<td>MySQL</td>
+<td>Database</td>
+<td>Industry-standard relational DB</td>
+</tr>
+<tr>
+<td>JWT</td>
+<td>Authentication</td>
+<td>Stateless login</td>
+</tr>
+<tr>
+<td>PageHelper</td>
+<td>Pagination</td>
+<td>Clean &amp; efficient paging</td>
+</tr>
+<tr>
+<td>Lombok</td>
+<td>Boilerplate reduction</td>
+<td>Cleaner code</td>
+</tr>
+<tr>
+<td>AOP</td>
+<td>Cross-cutting concerns</td>
+<td>Logging &amp; monitoring</td>
+</tr>
+</tbody></table>
+<h3 id="Project-Architecture"><a href="#Project-Architecture" class="headerlink" title="Project Architecture "></a>Project Architecture <a name="project-architecture"></a></h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Frontend (Vue + Element Plus)</span><br><span class="line">↓</span><br><span class="line">Nginx Proxy</span><br><span class="line">↓</span><br><span class="line">Spring Boot Backend</span><br><span class="line">↓</span><br><span class="line">MySQL</span><br></pre></td></tr></table></figure>
+
+<h3 id="Project-Structure-Overview"><a href="#Project-Structure-Overview" class="headerlink" title="Project Structure Overview "></a>Project Structure Overview <a name="project-structure-overview"></a></h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">tlias/</span><br><span class="line">├── src/main/java/com/alex/</span><br><span class="line">│ ├── controller/ # Controller layer, handles requests</span><br><span class="line">│ ├── service/ # Service layer, business logic</span><br><span class="line">│ │ ├── impl/ # Service implementations</span><br><span class="line">│ ├── mapper/ # Data access layer</span><br><span class="line">│ ├── pojo/ # Entity classes</span><br><span class="line">│ ├── utils/ # Utility classes</span><br><span class="line">│ ├── filter/ # Filters</span><br><span class="line">│ ├── interceptor/ # Interceptors</span><br><span class="line">│ ├── aop/ # Aspect classes</span><br><span class="line">│ └── exception/ # Exception handling</span><br><span class="line">└── src/main/resources/</span><br><span class="line">├── application.yml # Configuration file</span><br><span class="line">└── mapper/ # MyBatis XML files</span><br></pre></td></tr></table></figure>
+
+<h3 id="Database-Design"><a href="#Database-Design" class="headerlink" title="Database Design "></a>Database Design <a name="database-design"></a></h3><p>Two core tables: <code>dept</code> (department table) and <code>emp</code> (employee table)</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- Department table</span></span><br><span class="line"><span class="keyword">CREATE TABLE</span> dept (</span><br><span class="line">    id <span class="type">INT</span> <span class="keyword">PRIMARY KEY</span> AUTO_INCREMENT COMMENT <span class="string">&#x27;Department ID&#x27;</span>,</span><br><span class="line">    name <span class="type">VARCHAR</span>(<span class="number">50</span>) <span class="keyword">NOT NULL</span> COMMENT <span class="string">&#x27;Department name&#x27;</span>,</span><br><span class="line">    create_time DATETIME COMMENT <span class="string">&#x27;Creation time&#x27;</span>,</span><br><span class="line">    update_time DATETIME COMMENT <span class="string">&#x27;Update time&#x27;</span></span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="comment">-- Employee table</span></span><br><span class="line"><span class="keyword">CREATE TABLE</span> emp (</span><br><span class="line">    id <span class="type">INT</span> <span class="keyword">PRIMARY KEY</span> AUTO_INCREMENT COMMENT <span class="string">&#x27;Employee ID&#x27;</span>,</span><br><span class="line">    username <span class="type">VARCHAR</span>(<span class="number">50</span>) <span class="keyword">NOT NULL</span> COMMENT <span class="string">&#x27;Username&#x27;</span>,</span><br><span class="line">    password <span class="type">VARCHAR</span>(<span class="number">100</span>) COMMENT <span class="string">&#x27;Password&#x27;</span>,</span><br><span class="line">    name <span class="type">VARCHAR</span>(<span class="number">50</span>) COMMENT <span class="string">&#x27;Full name&#x27;</span>,</span><br><span class="line">    gender TINYINT COMMENT <span class="string">&#x27;Gender: 1 Male, 2 Female&#x27;</span>,</span><br><span class="line">    image <span class="type">VARCHAR</span>(<span class="number">300</span>) COMMENT <span class="string">&#x27;Avatar URL&#x27;</span>,</span><br><span class="line">    job TINYINT COMMENT <span class="string">&#x27;Job: 1 Head Teacher, 2 Instructor, 3 Student Supervisor, 4 Teaching Research Supervisor&#x27;</span>,</span><br><span class="line">    entrydate <span class="type">DATE</span> COMMENT <span class="string">&#x27;Entry date&#x27;</span>,</span><br><span class="line">    dept_id <span class="type">INT</span> COMMENT <span class="string">&#x27;Department ID&#x27;</span>,</span><br><span class="line">    create_time DATETIME COMMENT <span class="string">&#x27;Creation time&#x27;</span>,</span><br><span class="line">    update_time DATETIME COMMENT <span class="string">&#x27;Update time&#x27;</span></span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<p>Tip: Always include create_time and update_time fields when designing tables. They’re invaluable for troubleshooting issues later.</p>
+<h2 id="Environment-Setup-The-Hardest-Part"><a href="#Environment-Setup-The-Hardest-Part" class="headerlink" title="Environment Setup: The Hardest Part "></a>Environment Setup: The Hardest Part <a name="2-environment-setup-the-hardest-part"></a></h2><p>Creating a Spring Boot Project<br>Using IntelliJ IDEA, select the following dependencies when creating the project:</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">- Spring Web</span><br><span class="line">- MyBatis Framework</span><br><span class="line">- MySQL Driver</span><br><span class="line">- Lombok</span><br></pre></td></tr></table></figure>
+
+<p>Configuration File (application.yml)</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">datasource:</span></span><br><span class="line">    <span class="attr">driver-class-name:</span> <span class="string">com.mysql.cj.jdbc.Driver</span></span><br><span class="line">    <span class="attr">url:</span> <span class="string">jdbc:mysql://localhost:3306/tlias</span></span><br><span class="line">    <span class="attr">username:</span> <span class="string">yourname</span></span><br><span class="line">    <span class="attr">password:</span> <span class="string">yourpassword</span></span><br><span class="line"></span><br><span class="line"><span class="attr">mybatis:</span></span><br><span class="line">  <span class="attr">configuration:</span></span><br><span class="line">    <span class="attr">log-impl:</span> <span class="string">org.apache.ibatis.logging.stdout.StdOutImpl</span>  <span class="comment"># Print SQL logs</span></span><br><span class="line">    <span class="attr">map-underscore-to-camel-case:</span> <span class="literal">true</span>  <span class="comment"># Enable camel case mapping</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># File upload configuration</span></span><br><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">servlet:</span></span><br><span class="line">    <span class="attr">multipart:</span></span><br><span class="line">      <span class="attr">max-file-size:</span> <span class="string">10MB</span>  <span class="comment"># Maximum file size</span></span><br><span class="line">      <span class="attr">max-request-size:</span> <span class="string">100MB</span>  <span class="comment"># Maximum request size</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="Key-Insight"><a href="#Key-Insight" class="headerlink" title="Key Insight "></a>Key Insight <a name="key-insight"></a></h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">map-underscore-to-camel-<span class="keyword">case</span>: <span class="literal">true</span></span><br></pre></td></tr></table></figure>
+
+<p>Automatically maps:</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">create_time → createTime</span><br></pre></td></tr></table></figure>
+
+<p>This small configuration saves massive boilerplate mapping code.</p>
+<h3 id="Unified-Response-Class"><a href="#Unified-Response-Class" class="headerlink" title="Unified Response Class "></a>Unified Response Class <a name="unified-response-class"></a></h3><p>For standardized frontend-backend communication, define a unified return format:</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Data</span></span><br><span class="line"><span class="meta">@NoArgsConstructor</span></span><br><span class="line"><span class="meta">@AllArgsConstructor</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Result</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> Integer code;  <span class="comment">// 1:success 0:failure</span></span><br><span class="line">    <span class="keyword">private</span> String msg;</span><br><span class="line">    <span class="keyword">private</span> Object data;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> Result <span class="title function_">success</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Result</span>(<span class="number">1</span>, <span class="string">&quot;success&quot;</span>, <span class="literal">null</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> Result <span class="title function_">success</span><span class="params">(Object data)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Result</span>(<span class="number">1</span>, <span class="string">&quot;success&quot;</span>, data);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> Result <span class="title function_">error</span><span class="params">(String msg)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Result</span>(<span class="number">0</span>, msg, <span class="literal">null</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Department-Management"><a href="#Department-Management" class="headerlink" title="Department Management "></a>Department Management <a name="3-department-management-first-crud-experience"></a></h2><p>This module helps you fully understand:</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Controller → Service → Mapper → Database</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>Layer</th>
+<th>Responsibility</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Controller</td>
+<td>Handle HTTP</td>
+</tr>
+<tr>
+<td>Service</td>
+<td>Business logic</td>
+</tr>
+<tr>
+<td>Mapper</td>
+<td>SQL execution</td>
+</tr>
+</tbody></table>
+<p>Never put SQL inside Controller.<br>Never put HTTP logic inside Service.</p>
+<p>That’s professional separation.</p>
+<p>Key REST Design Principles</p>
+<ul>
+<li><p>GET → Query</p>
+</li>
+<li><p>POST → Create</p>
+</li>
+<li><p>PUT → Update</p>
+</li>
+<li><p>DELETE → Remove</p>
+</li>
+</ul>
+<p>Query All Departments<br>Requirement: Query all department information, sorted by update time in descending order.</p>
+<p>Controller Layer:</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="meta">@RequestMapping(&quot;/depts&quot;)</span></span><br><span class="line"><span class="meta">@Slf4j</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">DeptController</span> &#123;</span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> DeptService deptService;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@GetMapping</span></span><br><span class="line">    <span class="keyword">public</span> Result <span class="title function_">list</span><span class="params">()</span> &#123;</span><br><span class="line">        log.info(<span class="string">&quot;Querying all departments&quot;</span>);</span><br><span class="line">        List&lt;Dept&gt; deptList = deptService.list();</span><br><span class="line">        <span class="keyword">return</span> Result.success(deptList);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Service Layer:</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">DeptService</span> &#123;</span><br><span class="line">    List&lt;Dept&gt; <span class="title function_">list</span><span class="params">()</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Service</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">DeptServiceImpl</span> <span class="keyword">implements</span> <span class="title class_">DeptService</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> DeptMapper deptMapper;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> List&lt;Dept&gt; <span class="title function_">list</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> deptMapper.list();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Mapper Layer:</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Mapper</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">DeptMapper</span> &#123;</span><br><span class="line">    <span class="meta">@Select(&quot;select id, name, create_time, update_time from dept order by update_time desc&quot;)</span></span><br><span class="line">    List&lt;Dept&gt; <span class="title function_">list</span><span class="params">()</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Key Points:</p>
+<p>@RestController &#x3D; @Controller + @ResponseBody, returns JSON data</p>
+<p>@RequestMapping(“&#x2F;depts”) extracts the common path to avoid repetition</p>
+<p>@Slf4j is Lombok’s logging annotation, more standard than System.out.println()</p>
+<p>Delete Department<br>Requirement: Delete a department by ID.</p>
+<p>Controller Layer:</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@DeleteMapping(&quot;/&#123;id&#125;&quot;)</span></span><br><span class="line"><span class="keyword">public</span> Result <span class="title function_">delete</span><span class="params">(<span class="meta">@PathVariable</span> Integer id)</span> &#123;</span><br><span class="line">    log.info(<span class="string">&quot;Deleting department with ID: &#123;&#125;&quot;</span>, id);</span><br><span class="line">    deptService.delete(id);</span><br><span class="line">    <span class="keyword">return</span> Result.success();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Service Layer:</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">delete</span><span class="params">(Integer id)</span> &#123;</span><br><span class="line">    deptMapper.deleteById(id);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Mapper Layer:</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Delete(&quot;delete from dept where id = #&#123;id&#125;&quot;)</span></span><br><span class="line"><span class="keyword">void</span> <span class="title function_">deleteById</span><span class="params">(Integer id)</span>;</span><br></pre></td></tr></table></figure>
+
+<p>Important: The @PathVariable annotation retrieves parameters from the URL path. Make sure the variable name matches the path variable name, or specify it explicitly like @PathVariable(“id”) Integer deptId. (See Path Variable Binding)</p>
+<p>Add Department<br>Requirement: Add a new department, setting creation and update times.</p>
+<p>Controller Layer:</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@PostMapping</span></span><br><span class="line"><span class="keyword">public</span> Result <span class="title function_">add</span><span class="params">(<span class="meta">@RequestBody</span> Dept dept)</span> &#123;</span><br><span class="line">    log.info(<span class="string">&quot;Adding department: &#123;&#125;&quot;</span>, dept);</span><br><span class="line">    deptService.add(dept);</span><br><span class="line">    <span class="keyword">return</span> Result.success();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Service Layer:</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">add</span><span class="params">(Dept dept)</span> &#123;</span><br><span class="line">    <span class="comment">// Fill in basic attributes</span></span><br><span class="line">    dept.setCreateTime(LocalDateTime.now());</span><br><span class="line">    dept.setUpdateTime(LocalDateTime.now());</span><br><span class="line">    deptMapper.insert(dept);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Mapper Layer:</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Insert(&quot;insert into dept(name, create_time, update_time) &quot; +</span></span><br><span class="line"><span class="meta">        &quot;values(#&#123;name&#125;, #&#123;createTime&#125;, #&#123;updateTime&#125;)&quot;)</span></span><br><span class="line"><span class="keyword">void</span> <span class="title function_">insert</span><span class="params">(Dept dept)</span>;</span><br></pre></td></tr></table></figure>
+
+<p>Key Points:</p>
+<p>@RequestBody receives JSON data from the frontend</p>
+<p>The frontend only sends the name; we set createTime and updateTime in Service</p>
+<p>Update Department<br>Query for Display:</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@GetMapping(&quot;/&#123;id&#125;&quot;)</span></span><br><span class="line"><span class="keyword">public</span> Result <span class="title function_">getInfo</span><span class="params">(<span class="meta">@PathVariable</span> Integer id)</span> &#123;</span><br><span class="line">    log.info(<span class="string">&quot;Querying department by ID: &#123;&#125;&quot;</span>, id);</span><br><span class="line">    <span class="type">Dept</span> <span class="variable">dept</span> <span class="operator">=</span> deptService.getById(id);</span><br><span class="line">    <span class="keyword">return</span> Result.success(dept);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&#x2F;&#x2F; Service</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">public</span> Dept <span class="title function_">getById</span><span class="params">(Integer id)</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> deptMapper.getById(id);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&#x2F;&#x2F; Mapper</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Select(&quot;select id, name, create_time, update_time from dept where id = #&#123;id&#125;&quot;)</span></span><br><span class="line">Dept <span class="title function_">getById</span><span class="params">(Integer id)</span>;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>Update Data:</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@PutMapping</span></span><br><span class="line"><span class="keyword">public</span> Result <span class="title function_">update</span><span class="params">(<span class="meta">@RequestBody</span> Dept dept)</span> &#123;</span><br><span class="line">    log.info(<span class="string">&quot;Updating department: &#123;&#125;&quot;</span>, dept);</span><br><span class="line">    deptService.update(dept);</span><br><span class="line">    <span class="keyword">return</span> Result.success();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// Service</span></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">update</span><span class="params">(Dept dept)</span> &#123;</span><br><span class="line">    dept.setUpdateTime(LocalDateTime.now());</span><br><span class="line">    deptMapper.update(dept);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Mapper</span></span><br><span class="line"><span class="meta">@Update(&quot;update dept set name = #&#123;name&#125;, update_time = #&#123;updateTime&#125; where id = #&#123;id&#125;&quot;)</span></span><br><span class="line"><span class="keyword">void</span> <span class="title function_">update</span><span class="params">(Dept dept)</span>;</span><br></pre></td></tr></table></figure>
+
+<p>Note: Only update name and update_time; create_time remains unchanged.</p>
+<h2 id="Employee-Management-Pagination-Dynamic-SQL"><a href="#Employee-Management-Pagination-Dynamic-SQL" class="headerlink" title="Employee Management: Pagination &amp; Dynamic SQL "></a>Employee Management: Pagination &amp; Dynamic SQL <a name="4-employee-management-pagination--dynamic-sql"></a></h2><p>Employee management is more complex due to larger data volumes requiring pagination and conditional filtering.</p>
+<h3 id="Pagination-Query-Basic-Version"><a href="#Pagination-Query-Basic-Version" class="headerlink" title="Pagination Query (Basic Version) "></a>Pagination Query (Basic Version) <a name="pagination-query-basic-version"></a></h3><p>Define a PageBean class:</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Data</span></span><br><span class="line"><span class="meta">@NoArgsConstructor</span></span><br><span class="line"><span class="meta">@AllArgsConstructor</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">PageBean</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> Long total;      <span class="comment">// Total record count</span></span><br><span class="line">    <span class="keyword">private</span> List&lt;Emp&gt; rows;  <span class="comment">// Current page data</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Controller Layer:</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@GetMapping</span></span><br><span class="line"><span class="keyword">public</span> Result <span class="title function_">page</span><span class="params">(<span class="meta">@RequestParam(defaultValue = &quot;1&quot;)</span> Integer page,</span></span><br><span class="line"><span class="params">                   <span class="meta">@RequestParam(defaultValue = &quot;10&quot;)</span> Integer pageSize)</span> &#123;</span><br><span class="line">    log.info(<span class="string">&quot;Pagination query: page=&#123;&#125;, pageSize=&#123;&#125;&quot;</span>, page, pageSize);</span><br><span class="line">    <span class="type">PageBean</span> <span class="variable">pageBean</span> <span class="operator">=</span> empService.page(page, pageSize);</span><br><span class="line">    <span class="keyword">return</span> Result.success(pageBean);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Service Layer (Manual Pagination):</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">public</span> PageBean <span class="title function_">page</span><span class="params">(Integer page, Integer pageSize)</span> &#123;</span><br><span class="line">    <span class="type">Integer</span> <span class="variable">start</span> <span class="operator">=</span> (page - <span class="number">1</span>) * pageSize;</span><br><span class="line">    <span class="type">Long</span> <span class="variable">total</span> <span class="operator">=</span> empMapper.count();</span><br><span class="line">    List&lt;Emp&gt; rows = empMapper.page(start, pageSize);</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">PageBean</span>(total, rows);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Mapper Layer:</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Select(&quot;select count(*) from emp&quot;)</span></span><br><span class="line">Long <span class="title function_">count</span><span class="params">()</span>;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Select(&quot;select * from emp order by update_time desc limit #&#123;start&#125;, #&#123;pageSize&#125;&quot;)</span></span><br><span class="line">List&lt;Emp&gt; <span class="title function_">page</span><span class="params">(Integer start, Integer pageSize)</span>;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Using-PageHelper-Plugin-Recommended-–-Deep-Dive"><a href="#Using-PageHelper-Plugin-Recommended-–-Deep-Dive" class="headerlink" title="Using PageHelper Plugin (Recommended) – Deep Dive "></a>Using PageHelper Plugin (Recommended) – Deep Dive <a name="using-pagehelper-plugin-recommended--deep-dive"></a></h3><p>Add Dependency in pom.xml:</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.github.pagehelper<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>pagehelper-spring-boot-starter<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.4.7<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>Service Layer (Plugin Version):</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">public</span> PageBean <span class="title function_">page</span><span class="params">(Integer page, Integer pageSize)</span> &#123;</span><br><span class="line">    PageHelper.startPage(page, pageSize);</span><br><span class="line">    List&lt;Emp&gt; empList = empMapper.list();</span><br><span class="line">    Page&lt;Emp&gt; p = (Page&lt;Emp&gt;) empList;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">PageBean</span>(p.getTotal(), p.getResult());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Mapper Layer:</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Select(&quot;select * from emp order by update_time desc&quot;)</span></span><br><span class="line">List&lt;Emp&gt; <span class="title function_">list</span><span class="params">()</span>;</span><br></pre></td></tr></table></figure>
+
+<p>Key Points (PageHelper Understanding):</p>
+<p>PageHelper.startPage(page, pageSize) uses a ThreadLocal to store pagination parameters. The next MyBatis query (the first one after this call) will automatically have LIMIT clauses appended.</p>
+<p>It only affects the first SQL statement after the call. If you execute multiple queries, only the first one gets paginated.</p>
+<p>The returned List is actually a Page object (a subclass of ArrayList) that contains pagination info like total count, page number, etc. You can cast it or directly use it as a list.</p>
+<p>Important: Ensure that PageHelper.startPage() is called just before the mapper method that performs the actual data query. Do not put any other database operations in between.</p>
+<p>For conditional queries, you still call PageHelper.startPage() first, then the dynamic SQL method; the plugin will automatically add LIMIT to that query.</p>
+<h3 id="Conditional-Pagination-Query-Dynamic-SQL-–-Advanced-Details"><a href="#Conditional-Pagination-Query-Dynamic-SQL-–-Advanced-Details" class="headerlink" title="Conditional Pagination Query (Dynamic SQL) – Advanced Details "></a>Conditional Pagination Query (Dynamic SQL) – Advanced Details <a name="conditional-pagination-query-dynamic-sql--advanced-details"></a></h3><p>Controller Layer:</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@GetMapping</span></span><br><span class="line"><span class="keyword">public</span> Result <span class="title function_">page</span><span class="params">(<span class="meta">@RequestParam(defaultValue = &quot;1&quot;)</span> Integer page,</span></span><br><span class="line"><span class="params">                   <span class="meta">@RequestParam(defaultValue = &quot;10&quot;)</span> Integer pageSize,</span></span><br><span class="line"><span class="params">                   String name, Short gender,</span></span><br><span class="line"><span class="params">                   <span class="meta">@DateTimeFormat(pattern = &quot;yyyy-MM-dd&quot;)</span> LocalDate begin,</span></span><br><span class="line"><span class="params">                   <span class="meta">@DateTimeFormat(pattern = &quot;yyyy-MM-dd&quot;)</span> LocalDate end)</span> &#123;</span><br><span class="line">    log.info(<span class="string">&quot;Conditional pagination query...&quot;</span>);</span><br><span class="line">    <span class="type">PageBean</span> <span class="variable">pageBean</span> <span class="operator">=</span> empService.page(page, pageSize, name, gender, begin, end);</span><br><span class="line">    <span class="keyword">return</span> Result.success(pageBean);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Service Layer:</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">public</span> PageBean <span class="title function_">page</span><span class="params">(Integer page, Integer pageSize, String name,</span></span><br><span class="line"><span class="params">                     Short gender, LocalDate begin, LocalDate end)</span> &#123;</span><br><span class="line">    PageHelper.startPage(page, pageSize);</span><br><span class="line">    List&lt;Emp&gt; empList = empMapper.list(name, gender, begin, end);</span><br><span class="line">    Page&lt;Emp&gt; p = (Page&lt;Emp&gt;) empList;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">PageBean</span>(p.getTotal(), p.getResult());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Mapper XML (EmpMapper.xml):</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=<span class="string">&quot;1.0&quot;</span> encoding=<span class="string">&quot;UTF-8&quot;</span> ?&gt;</span></span><br><span class="line"><span class="meta">&lt;!DOCTYPE <span class="keyword">mapper</span> <span class="keyword">PUBLIC</span> <span class="string">&quot;-//mybatis.org//DTD Mapper 3.0//EN&quot;</span></span></span><br><span class="line"><span class="meta">    <span class="string">&quot;http://mybatis.org/dtd/mybatis-3-mapper.dtd&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">mapper</span> <span class="attr">namespace</span>=<span class="string">&quot;com.*.mapper.EmpMapper&quot;</span>&gt;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">       <span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">&quot;list&quot;</span> <span class="attr">resultType</span>=<span class="string">&quot;com.alex.pojo.Emp&quot;</span>&gt;</span></span><br><span class="line">        select e.*, d.name deptName from emp as e left join dept as d on e.dept_id = d.id</span><br><span class="line">        <span class="tag">&lt;<span class="name">where</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">if</span> <span class="attr">test</span>=<span class="string">&quot;name != null and name != &#x27;&#x27;&quot;</span>&gt;</span></span><br><span class="line">                e.name like concat(&#x27;%&#x27;,#&#123;name&#125;,&#x27;%&#x27;) -- use concat for safe string concatenation, prevent sql injecting!!!</span><br><span class="line">            <span class="tag">&lt;/<span class="name">if</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">if</span> <span class="attr">test</span>=<span class="string">&quot;gender != null&quot;</span>&gt;</span></span><br><span class="line">                and e.gender = #&#123;gender&#125;</span><br><span class="line">            <span class="tag">&lt;/<span class="name">if</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">if</span> <span class="attr">test</span>=<span class="string">&quot;begin != null and end != null&quot;</span>&gt;</span></span><br><span class="line">                and e.entry_date between #&#123;begin&#125; and #&#123;end&#125;</span><br><span class="line">            <span class="tag">&lt;/<span class="name">if</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">where</span>&gt;</span></span><br><span class="line">        order by update_time desc</span><br><span class="line">    <span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">mapper</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>Important – Dynamic SQL Details:</p>
+<p><where> tag: Automatically handles the removal of the first AND or OR if the condition is true. It ensures the SQL syntax is correct.</p>
+<p><if> tag: The test attribute is an OGNL expression. Pay attention to:</p>
+<p>String comparison: name !&#x3D; null and name !&#x3D; ‘’</p>
+<p>Numeric comparison: gender !&#x3D; null</p>
+<p>Date comparison: both begin and end must be non-null for range query.</p>
+<p>#{} vs ${}: Always use #{} for parameter placeholders. It generates a prepared statement and prevents SQL injection. ${} is for literal substitution (e.g., table names) and should be avoided for user input.</p>
+<p>Fuzzy matching: Use concat(‘%’, #{name}, ‘%’) instead of ‘%${name}%’ to avoid SQL injection. This is the safest way.</p>
+<p>LocalDate comparison: In the SQL, between #{begin} and #{end} works because MyBatis automatically converts LocalDate to java.sql.Date when binding parameters. No special handling needed.</p>
+<p>Handling empty strings: If name is an empty string, the condition name !&#x3D; ‘’ will be false, so it won’t be included. This is usually desired.</p>
+<h3 id="Batch-Delete-Employees-–-ForEach-in-XML"><a href="#Batch-Delete-Employees-–-ForEach-in-XML" class="headerlink" title="Batch Delete Employees – ForEach in XML "></a>Batch Delete Employees – ForEach in XML <a name="batch-delete-employees--foreach-in-xml"></a></h3><p>Controller:</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@DeleteMapping(&quot;/&#123;ids&#125;&quot;)</span></span><br><span class="line"><span class="keyword">public</span> Result <span class="title function_">delete</span><span class="params">(<span class="meta">@PathVariable</span> List&lt;Integer&gt; ids)</span> &#123;</span><br><span class="line">    log.info(<span class="string">&quot;Batch deleting employees: &#123;&#125;&quot;</span>, ids);</span><br><span class="line">    empService.delete(ids);</span><br><span class="line">    <span class="keyword">return</span> Result.success();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Mapper XML:</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">delete</span> <span class="attr">id</span>=<span class="string">&quot;delete&quot;</span>&gt;</span></span><br><span class="line">    delete from emp where id in</span><br><span class="line">    <span class="tag">&lt;<span class="name">foreach</span> <span class="attr">collection</span>=<span class="string">&quot;ids&quot;</span> <span class="attr">item</span>=<span class="string">&quot;id&quot;</span> <span class="attr">open</span>=<span class="string">&quot;(&quot;</span> <span class="attr">separator</span>=<span class="string">&quot;,&quot;</span> <span class="attr">close</span>=<span class="string">&quot;)&quot;</span>&gt;</span></span><br><span class="line">        #&#123;id&#125;</span><br><span class="line">    <span class="tag">&lt;/<span class="name">foreach</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">delete</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>ForEach Details:</p>
+<p>collection: name of the list&#x2F;array parameter. Can be list, array, or a custom name if annotated with @Param.<br>item: alias for each element during iteration.<br>open, close: strings added before and after the whole collection.<br>separator: string between each iteration.<br>You can also use <foreach> for batch inserts:</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">insert</span> <span class="attr">id</span>=<span class="string">&quot;batchInsert&quot;</span>&gt;</span></span><br><span class="line">    insert into emp (name, gender) values</span><br><span class="line">    <span class="tag">&lt;<span class="name">foreach</span> <span class="attr">collection</span>=<span class="string">&quot;list&quot;</span> <span class="attr">item</span>=<span class="string">&quot;emp&quot;</span> <span class="attr">separator</span>=<span class="string">&quot;,&quot;</span>&gt;</span></span><br><span class="line">        (#&#123;emp.name&#125;, #&#123;emp.gender&#125;)</span><br><span class="line">    <span class="tag">&lt;/<span class="name">foreach</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">insert</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="Add-Employee"><a href="#Add-Employee" class="headerlink" title="Add Employee "></a>Add Employee <a name="add-employee"></a></h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">save</span><span class="params">(Emp emp)</span> &#123;</span><br><span class="line">    emp.setCreateTime(LocalDateTime.now());</span><br><span class="line">    emp.setUpdateTime(LocalDateTime.now());</span><br><span class="line">    <span class="keyword">if</span> (emp.getPassword() == <span class="literal">null</span>) &#123;</span><br><span class="line">        emp.setPassword(<span class="string">&quot;123456&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    empMapper.insert(emp);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="File-Upload-From-Local-to-Cloud"><a href="#File-Upload-From-Local-to-Cloud" class="headerlink" title="File Upload: From Local to Cloud "></a>File Upload: From Local to Cloud <a name="5-file-upload-from-local-to-cloud"></a></h2><p>Local Storage Solution<br>Controller:</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@PostMapping(&quot;/upload&quot;)</span></span><br><span class="line"><span class="keyword">public</span> Result <span class="title function_">upload</span><span class="params">(String username, Integer age,</span></span><br><span class="line"><span class="params">                     <span class="meta">@RequestParam(&quot;image&quot;)</span> MultipartFile image)</span> <span class="keyword">throws</span> IOException &#123;</span><br><span class="line">    log.info(<span class="string">&quot;File upload: &#123;&#125;, &#123;&#125;, &#123;&#125;&quot;</span>, username, age, image.getOriginalFilename());</span><br><span class="line"></span><br><span class="line">    <span class="type">String</span> <span class="variable">originalFilename</span> <span class="operator">=</span> image.getOriginalFilename();</span><br><span class="line">    <span class="type">String</span> <span class="variable">ext</span> <span class="operator">=</span> originalFilename.substring(originalFilename.lastIndexOf(<span class="string">&quot;.&quot;</span>));</span><br><span class="line">    <span class="type">String</span> <span class="variable">newFileName</span> <span class="operator">=</span> UUID.randomUUID().toString() + ext;</span><br><span class="line"></span><br><span class="line">    image.transferTo(<span class="keyword">new</span> <span class="title class_">File</span>(<span class="string">&quot;D:/upload/&quot;</span> + newFileName));</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> Result.success(<span class="string">&quot;http://localhost:8080/uploads/&quot;</span> + newFileName);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Configuration:</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">servlet:</span></span><br><span class="line">    <span class="attr">multipart:</span></span><br><span class="line">      <span class="attr">max-file-size:</span> <span class="string">10MB</span></span><br><span class="line">      <span class="attr">max-request-size:</span> <span class="string">100MB</span></span><br></pre></td></tr></table></figure>
+
+<p>Note: Local storage not recommended for production, use cloud solution like:</p>
+<ul>
+<li>AWS S3</li>
+<li>GCP Cloud Storage</li>
+<li>Alibaba OSS</li>
+</ul>
+<p>Why?</p>
+<ul>
+<li>Scalability</li>
+<li>Redundancy</li>
+<li>Disaster recovery</li>
+</ul>
+<p>Alibaba Cloud OSS (Recommended)<br>Dependency:</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.aliyun.oss<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>aliyun-sdk-oss<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.15.1<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>Configuration (application.yml):</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">aliyun:</span></span><br><span class="line">  <span class="attr">oss:</span></span><br><span class="line">    <span class="attr">endpoint:</span> <span class="string">https://oss-cn-beijing.aliyuncs.com</span></span><br><span class="line">    <span class="attr">access-key-id:</span> <span class="string">your-access-key-id</span></span><br><span class="line">    <span class="attr">access-key-secret:</span> <span class="string">your-access-key-secret</span></span><br><span class="line">    <span class="attr">bucket-name:</span> <span class="string">your-bucket-name</span></span><br></pre></td></tr></table></figure>
+
+<p>Utility Class:</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="meta">@ConfigurationProperties(prefix = &quot;aliyun.oss&quot;)</span></span><br><span class="line"><span class="meta">@Data</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">AliOSSUtils</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> String endpoint;</span><br><span class="line">    <span class="keyword">private</span> String accessKeyId;</span><br><span class="line">    <span class="keyword">private</span> String accessKeySecret;</span><br><span class="line">    <span class="keyword">private</span> String bucketName;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">upload</span><span class="params">(MultipartFile file)</span> <span class="keyword">throws</span> IOException &#123;</span><br><span class="line">        <span class="type">String</span> <span class="variable">originalFilename</span> <span class="operator">=</span> file.getOriginalFilename();</span><br><span class="line">        <span class="type">String</span> <span class="variable">fileName</span> <span class="operator">=</span> UUID.randomUUID().toString() +</span><br><span class="line">            originalFilename.substring(originalFilename.lastIndexOf(<span class="string">&quot;.&quot;</span>));</span><br><span class="line"></span><br><span class="line">        <span class="type">OSS</span> <span class="variable">ossClient</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">OSSClientBuilder</span>().build(</span><br><span class="line">            endpoint, accessKeyId, accessKeySecret);</span><br><span class="line"></span><br><span class="line">        ossClient.putObject(bucketName, fileName, file.getInputStream());</span><br><span class="line">        ossClient.shutdown();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;https://&quot;</span> + bucketName + <span class="string">&quot;.&quot;</span> + endpoint + <span class="string">&quot;/&quot;</span> + fileName;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Controller:</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Autowired</span></span><br><span class="line"><span class="keyword">private</span> AliOSSUtils aliOSSUtils;</span><br><span class="line"></span><br><span class="line"><span class="meta">@PostMapping(&quot;/upload&quot;)</span></span><br><span class="line"><span class="keyword">public</span> Result <span class="title function_">upload</span><span class="params">(MultipartFile image)</span> <span class="keyword">throws</span> IOException &#123;</span><br><span class="line">    <span class="type">String</span> <span class="variable">url</span> <span class="operator">=</span> aliOSSUtils.upload(image);</span><br><span class="line">    <span class="keyword">return</span> Result.success(url);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Login-Authentication-JWT-Tokens-Interceptors"><a href="#Login-Authentication-JWT-Tokens-Interceptors" class="headerlink" title="Login Authentication: JWT Tokens &amp; Interceptors "></a>Login Authentication: JWT Tokens &amp; Interceptors <a name="6-login-authentication-jwt-tokens--interceptors"></a></h2><p>JWT Flow</p>
+<ul>
+<li>1.User logs in</li>
+<li>2.Server generates JWT</li>
+<li>3.Client stores token</li>
+<li>4.Every request carries token</li>
+<li>5.Backend verifies token</li>
+</ul>
+<p>Why Interceptor &gt; Filter?</p>
+<table>
+<thead>
+<tr>
+<th>Filter</th>
+<th>Interceptor</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Servlet level</td>
+<td>Spring level</td>
+</tr>
+<tr>
+<td>Less flexible</td>
+<td>More control</td>
+</tr>
+<tr>
+<td>Harder to manage</td>
+<td>Recommended</td>
+</tr>
+</tbody></table>
+<p>Interceptor integrates better with Spring MVC!</p>
+<p>JWT Utility Class</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">JwtUtils</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">SIGN_KEY</span> <span class="operator">=</span> <span class="string">&quot;itheima&quot;</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">Long</span> <span class="variable">EXPIRE_TIME</span> <span class="operator">=</span> <span class="number">12</span> * <span class="number">60</span> * <span class="number">60</span> * <span class="number">1000L</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> String <span class="title function_">generateJwt</span><span class="params">(Map&lt;String, Object&gt; claims)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> Jwts.builder()</span><br><span class="line">                .setClaims(claims)</span><br><span class="line">                .signWith(SignatureAlgorithm.HS256, SIGN_KEY)</span><br><span class="line">                .setExpiration(<span class="keyword">new</span> <span class="title class_">Date</span>(System.currentTimeMillis() + EXPIRE_TIME))</span><br><span class="line">                .compact();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> Claims <span class="title function_">parseJWT</span><span class="params">(String jwt)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> Jwts.parser()</span><br><span class="line">                .setSigningKey(SIGN_KEY)</span><br><span class="line">                .parseClaimsJws(jwt)</span><br><span class="line">                .getBody();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Login Functionality<br>Controller:</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@PostMapping(&quot;/login&quot;)</span></span><br><span class="line"><span class="keyword">public</span> Result <span class="title function_">login</span><span class="params">(<span class="meta">@RequestBody</span> Emp emp)</span> &#123;</span><br><span class="line">    log.info(<span class="string">&quot;Employee login: &#123;&#125;&quot;</span>, emp.getUsername());</span><br><span class="line"></span><br><span class="line">    <span class="type">Emp</span> <span class="variable">loginEmp</span> <span class="operator">=</span> empService.login(emp);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (loginEmp != <span class="literal">null</span>) &#123;</span><br><span class="line">        Map&lt;String, Object&gt; claims = <span class="keyword">new</span> <span class="title class_">HashMap</span>&lt;&gt;();</span><br><span class="line">        claims.put(<span class="string">&quot;id&quot;</span>, loginEmp.getId());</span><br><span class="line">        claims.put(<span class="string">&quot;username&quot;</span>, loginEmp.getUsername());</span><br><span class="line">        claims.put(<span class="string">&quot;name&quot;</span>, loginEmp.getName());</span><br><span class="line"></span><br><span class="line">        <span class="type">String</span> <span class="variable">jwt</span> <span class="operator">=</span> JwtUtils.generateJwt(claims);</span><br><span class="line">        <span class="keyword">return</span> Result.success(jwt);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> Result.error(<span class="string">&quot;Invalid username or password&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Service &amp; Mapper:</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// Service</span></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">public</span> Emp <span class="title function_">login</span><span class="params">(Emp emp)</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> empMapper.getByUsernameAndPassword(emp.getUsername(), emp.getPassword());</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Mapper</span></span><br><span class="line"><span class="meta">@Select(&quot;select id, username, name, password from emp &quot; +</span></span><br><span class="line"><span class="meta">        &quot;where username = #&#123;username&#125; and password = #&#123;password&#125;&quot;)</span></span><br><span class="line">Emp <span class="title function_">getByUsernameAndPassword</span><span class="params">(String username, String password)</span>;</span><br></pre></td></tr></table></figure>
+
+<p>Login Validation - Filter Approach</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Slf4j</span></span><br><span class="line"><span class="meta">@WebFilter(urlPatterns = &quot;/\*&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">LoginCheckFilter</span> <span class="keyword">implements</span> <span class="title class_">Filter</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">doFilter</span><span class="params">(ServletRequest request, ServletResponse response,</span></span><br><span class="line"><span class="params">                         FilterChain chain)</span> <span class="keyword">throws</span> IOException, ServletException &#123;</span><br><span class="line"></span><br><span class="line">        <span class="type">HttpServletRequest</span> <span class="variable">req</span> <span class="operator">=</span> (HttpServletRequest) request;</span><br><span class="line">        <span class="type">HttpServletResponse</span> <span class="variable">resp</span> <span class="operator">=</span> (HttpServletResponse) response;</span><br><span class="line"></span><br><span class="line">        <span class="type">String</span> <span class="variable">url</span> <span class="operator">=</span> req.getRequestURL().toString();</span><br><span class="line">        <span class="keyword">if</span> (url.contains(<span class="string">&quot;login&quot;</span>)) &#123;</span><br><span class="line">            chain.doFilter(request, response);</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="type">String</span> <span class="variable">jwt</span> <span class="operator">=</span> req.getHeader(<span class="string">&quot;token&quot;</span>);</span><br><span class="line">        <span class="keyword">if</span> (!StringUtils.hasLength(jwt)) &#123;</span><br><span class="line">            <span class="type">Result</span> <span class="variable">error</span> <span class="operator">=</span> Result.error(<span class="string">&quot;NOT_LOGIN&quot;</span>);</span><br><span class="line">            resp.getWriter().write(JSONObject.toJSONString(error));</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            JwtUtils.parseJWT(jwt);</span><br><span class="line">            chain.doFilter(request, response);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            <span class="type">Result</span> <span class="variable">error</span> <span class="operator">=</span> Result.error(<span class="string">&quot;NOT_LOGIN&quot;</span>);</span><br><span class="line">            resp.getWriter().write(JSONObject.toJSONString(error));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Enable filter scanning on main class:</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@ServletComponentScan</span></span><br><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">TliasApplication</span> &#123; ... &#125;</span><br></pre></td></tr></table></figure>
+
+<p>Login Validation - Interceptor Approach<br>Interceptor:</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Slf4j</span></span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">LoginCheckInterceptor</span> <span class="keyword">implements</span> <span class="title class_">HandlerInterceptor</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">preHandle</span><span class="params">(HttpServletRequest request,</span></span><br><span class="line"><span class="params">                             HttpServletResponse response,</span></span><br><span class="line"><span class="params">                             Object handler)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line"></span><br><span class="line">        <span class="type">String</span> <span class="variable">url</span> <span class="operator">=</span> request.getRequestURL().toString();</span><br><span class="line">        <span class="keyword">if</span> (url.contains(<span class="string">&quot;login&quot;</span>)) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="type">String</span> <span class="variable">jwt</span> <span class="operator">=</span> request.getHeader(<span class="string">&quot;token&quot;</span>);</span><br><span class="line">        <span class="keyword">if</span> (!StringUtils.hasLength(jwt)) &#123;</span><br><span class="line">            <span class="type">Result</span> <span class="variable">error</span> <span class="operator">=</span> Result.error(<span class="string">&quot;NOT_LOGIN&quot;</span>);</span><br><span class="line">            response.getWriter().write(JSONObject.toJSONString(error));</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            JwtUtils.parseJWT(jwt);</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            <span class="type">Result</span> <span class="variable">error</span> <span class="operator">=</span> Result.error(<span class="string">&quot;NOT_LOGIN&quot;</span>);</span><br><span class="line">            response.getWriter().write(JSONObject.toJSONString(error));</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Register Interceptor:</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">WebConfig</span> <span class="keyword">implements</span> <span class="title class_">WebMvcConfigurer</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> LoginCheckInterceptor loginCheckInterceptor;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">addInterceptors</span><span class="params">(InterceptorRegistry registry)</span> &#123;</span><br><span class="line">        registry.addInterceptor(loginCheckInterceptor)</span><br><span class="line">                .addPathPatterns(<span class="string">&quot;/**&quot;</span>)</span><br><span class="line">                .excludePathPatterns(<span class="string">&quot;/login&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Unified-Exception-Handling-Graceful-Error-Management"><a href="#Unified-Exception-Handling-Graceful-Error-Management" class="headerlink" title="Unified Exception Handling: Graceful Error Management "></a>Unified Exception Handling: Graceful Error Management <a name="7-unified-exception-handling-graceful-error-management"></a></h2><p>Without global handling:</p>
+<ul>
+<li>Controllers full of try&#x2F;catch</li>
+<li>Inconsistent error responses</li>
+</ul>
+<p>With:</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">@RestControllerAdvice</span><br></pre></td></tr></table></figure>
+
+<p>You centralize error control.<br>Cleaner. Safer. Professional.</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Slf4j</span></span><br><span class="line"><span class="meta">@RestControllerAdvice</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">GlobalExceptionHandler</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@ExceptionHandler(Exception.class)</span></span><br><span class="line">    <span class="keyword">public</span> Result <span class="title function_">handleException</span><span class="params">(Exception e)</span> &#123;</span><br><span class="line">        log.error(<span class="string">&quot;System exception: &#123;&#125;&quot;</span>, e.getMessage(), e);</span><br><span class="line">        <span class="keyword">return</span> Result.error(<span class="string">&quot;Operation failed. Please contact administrator.&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@ExceptionHandler(SQLException.class)</span></span><br><span class="line">    <span class="keyword">public</span> Result <span class="title function_">handleSQLException</span><span class="params">(SQLException e)</span> &#123;</span><br><span class="line">        log.error(<span class="string">&quot;Database exception: &#123;&#125;&quot;</span>, e.getMessage(), e);</span><br><span class="line">        <span class="keyword">return</span> Result.error(<span class="string">&quot;Database operation failed&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@ExceptionHandler(MethodArgumentNotValidException.class)</span></span><br><span class="line">    <span class="keyword">public</span> Result <span class="title function_">handleValidationException</span><span class="params">(MethodArgumentNotValidException e)</span> &#123;</span><br><span class="line">        <span class="type">BindingResult</span> <span class="variable">bindingResult</span> <span class="operator">=</span> e.getBindingResult();</span><br><span class="line">        <span class="type">String</span> <span class="variable">message</span> <span class="operator">=</span> bindingResult.getAllErrors().stream()</span><br><span class="line">                .map(ObjectError::getDefaultMessage)</span><br><span class="line">                .collect(Collectors.joining(<span class="string">&quot;; &quot;</span>));</span><br><span class="line">        <span class="keyword">return</span> Result.error(message);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Global &amp; Local Exception Linkage:</p>
+<p>In your service layer, you can throw RuntimeException (or custom exceptions) to trigger the global handler.</p>
+<p>Example:</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span> (deptMapper.findByName(name) != <span class="literal">null</span>) &#123;</span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RuntimeException</span>(<span class="string">&quot;Department name already exists&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>The global handler will catch this exception and return a friendly error message to the client.</p>
+<p>You can also define custom exceptions (e.g., BusinessException) and handle them specifically.</p>
+<p>Important: If you throw an exception in a transactional method, the transaction will roll back automatically (if configured with rollbackFor).</p>
+<h2 id="Transaction-Management-Ensuring-Data-Consistency"><a href="#Transaction-Management-Ensuring-Data-Consistency" class="headerlink" title="Transaction Management: Ensuring Data Consistency "></a>Transaction Management: Ensuring Data Consistency <a name="8-transaction-management-ensuring-data-consistency"></a></h2><p>Scenario:</p>
+<p>Deleting department must also delete employees(involved in multiple sql operations).<br>If second SQL fails?<br>Database becomes inconsistent.<br>Solution:</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">@Transactional(rollbackFor = Exception.class)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Service</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">DeptServiceImpl</span> <span class="keyword">implements</span> <span class="title class_">DeptService</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> DeptMapper deptMapper;</span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> EmpMapper empMapper;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="meta">@Transactional</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">delete</span><span class="params">(Integer id)</span> &#123;</span><br><span class="line">        deptMapper.deleteById(id);</span><br><span class="line">        empMapper.deleteByDeptId(id);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Transaction Attributes</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Transactional(</span></span><br><span class="line"><span class="meta">    rollbackFor = Exception.class,</span></span><br><span class="line"><span class="meta">    timeout = 30,</span></span><br><span class="line"><span class="meta">    propagation = Propagation.REQUIRED</span></span><br><span class="line"><span class="meta">)</span></span><br></pre></td></tr></table></figure>
+
+<p>Propagation Behaviors:</p>
+<ul>
+<li><p>REQUIRED (default): join existing or create new</p>
+</li>
+<li><p>REQUIRES_NEW: always create new transaction</p>
+</li>
+<li><p>SUPPORTS: join if exists, else non-transactional</p>
+</li>
+</ul>
+<p>Note: By default, only RuntimeException and Error trigger rollback. Use rollbackFor &#x3D; Exception.class for all exceptions.</p>
+<h2 id="AOP-in-Action-Operation-Logging"><a href="#AOP-in-Action-Operation-Logging" class="headerlink" title="AOP in Action: Operation Logging "></a>AOP in Action: Operation Logging <a name="9-aop-in-action-operation-logging"></a></h2><p>AOP handles cross-cutting concerns:</p>
+<ul>
+<li>Logging</li>
+<li>Performance monitoring</li>
+<li>Security checks</li>
+</ul>
+<p>Log method execution time:</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Slf4j</span></span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="meta">@Aspect</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">TimeAspect</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Pointcut(&quot;execution(* com.itheima.service.impl.*.*(..))&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">pt</span><span class="params">()</span> &#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Around(&quot;pt()&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> Object <span class="title function_">recordTime</span><span class="params">(ProceedingJoinPoint joinPoint)</span> <span class="keyword">throws</span> Throwable &#123;</span><br><span class="line">        <span class="type">long</span> <span class="variable">begin</span> <span class="operator">=</span> System.currentTimeMillis();</span><br><span class="line">        <span class="type">Object</span> <span class="variable">result</span> <span class="operator">=</span> joinPoint.proceed();</span><br><span class="line">        <span class="type">long</span> <span class="variable">end</span> <span class="operator">=</span> System.currentTimeMillis();</span><br><span class="line">        log.info(<span class="string">&quot;Method &#123;&#125; execution time: &#123;&#125;ms&quot;</span>,</span><br><span class="line">                 joinPoint.getSignature().getName(), (end - begin));</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Custom Annotation for Operation Logging<br>Annotation:</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Target(ElementType.METHOD)</span></span><br><span class="line"><span class="meta">@Retention(RetentionPolicy.RUNTIME)</span></span><br><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> Log &#123;</span><br><span class="line">    String <span class="title function_">value</span><span class="params">()</span> <span class="keyword">default</span> <span class="string">&quot;&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Log Entity:</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Data</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">OperateLog</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> Integer id;</span><br><span class="line">    <span class="keyword">private</span> Integer operateUser;</span><br><span class="line">    <span class="keyword">private</span> LocalDateTime operateTime;</span><br><span class="line">    <span class="keyword">private</span> String className;</span><br><span class="line">    <span class="keyword">private</span> String methodName;</span><br><span class="line">    <span class="keyword">private</span> String methodParams;</span><br><span class="line">    <span class="keyword">private</span> String returnValue;</span><br><span class="line">    <span class="keyword">private</span> Long costTime;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Aspect:</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Slf4j</span></span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="meta">@Aspect</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">LogAspect</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> OperateLogMapper operateLogMapper;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Pointcut(&quot;@annotation(com.itheima.anno.Log)&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">pt</span><span class="params">()</span> &#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Around(&quot;pt()&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> Object <span class="title function_">recordLog</span><span class="params">(ProceedingJoinPoint joinPoint)</span> <span class="keyword">throws</span> Throwable &#123;</span><br><span class="line">        <span class="type">Integer</span> <span class="variable">operateUser</span> <span class="operator">=</span> CurrentHolder.getCurrentId();</span><br><span class="line"></span><br><span class="line">        <span class="type">long</span> <span class="variable">begin</span> <span class="operator">=</span> System.currentTimeMillis();</span><br><span class="line">        <span class="type">Object</span> <span class="variable">result</span> <span class="operator">=</span> joinPoint.proceed();</span><br><span class="line">        <span class="type">long</span> <span class="variable">end</span> <span class="operator">=</span> System.currentTimeMillis();</span><br><span class="line"></span><br><span class="line">        <span class="type">OperateLog</span> <span class="variable">operateLog</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">OperateLog</span>();</span><br><span class="line">        operateLog.setOperateUser(operateUser);</span><br><span class="line">        operateLog.setOperateTime(LocalDateTime.now());</span><br><span class="line">        operateLog.setClassName(joinPoint.getTarget().getClass().getName());</span><br><span class="line">        operateLog.setMethodName(joinPoint.getSignature().getName());</span><br><span class="line">        operateLog.setMethodParams(Arrays.toString(joinPoint.getArgs()));</span><br><span class="line">        operateLog.setReturnValue(result.toString());</span><br><span class="line">        operateLog.setCostTime(end - begin);</span><br><span class="line"></span><br><span class="line">        operateLogMapper.insert(operateLog);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Usage:</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@DeleteMapping(&quot;/&#123;id&#125;&quot;)</span></span><br><span class="line"><span class="meta">@Log(&quot;Delete department operation&quot;)</span></span><br><span class="line"><span class="keyword">public</span> Result <span class="title function_">delete</span><span class="params">(<span class="meta">@PathVariable</span> Integer id)</span> &#123; ... &#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Pitfall-Diary-Bugs-I-Encountered"><a href="#Pitfall-Diary-Bugs-I-Encountered" class="headerlink" title="Pitfall Diary: Bugs I Encountered "></a>Pitfall Diary: Bugs I Encountered <a name="10-pitfall-diary-bugs-i-encountered"></a></h2><p>Pitfall 1: @RequestBody Misuse<br>Problem: Using @RequestBody with GET requests.<br>Reason: GET has no body.<br>Solution: Remove @RequestBody; use @RequestParam or path variables.</p>
+<p>Pitfall 2: SQL Injection Vulnerability<br>Problem (unsafe):</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Select(&quot;select * from emp where name like &#x27;%&quot; + name + &quot;%&#x27;&quot;)</span></span><br></pre></td></tr></table></figure>
+
+<p>Solution (safe) prevent sql injection:</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Select(&quot;select * from emp where name like concat(&#x27;%&#x27;, #&#123;name&#125;, &#x27;%&#x27;)&quot;)</span></span><br></pre></td></tr></table></figure>
+
+<p>Pitfall 3: Transaction Not Rolling Back<br>Problem: Checked exceptions don’t trigger rollback.<br>Solution: Add @Transactional(rollbackFor &#x3D; Exception.class).</p>
+<p>Pitfall 4: File Upload Path Issues<br>Problem: Using relative paths leads to “File not found”.<br>Solution: Use absolute paths or configure in application properties.</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">file:</span></span><br><span class="line">  <span class="attr">upload-path:</span> <span class="string">/Users/username/uploads/</span></span><br></pre></td></tr></table></figure>
+
+<p>Then in code:</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Value(&quot;$&#123;file.upload-path&#125;&quot;)</span></span><br><span class="line"><span class="keyword">private</span> String uploadPath;</span><br></pre></td></tr></table></figure>
+
+<p>Pitfall 5: Forgetting @RequestParam Default Values<br>Problem: When page or pageSize are not provided, you get null and cause errors.<br>Solution: Use @RequestParam(defaultValue &#x3D; “1”) to set defaults.</p>
+<p>Pitfall 6: Mismatch Between XML Alias and Interface Return Type<br>Problem: In MyBatis XML, if you use AS aliases but the result type doesn’t match the property names, you’ll get null values.<br>Solution: Ensure aliases match the Java property names exactly, or use resultMap for explicit mapping. (See Advanced MyBatis Mapping)</p>
+<h2 id="Advanced-Statistics-Complex-Queries"><a href="#Advanced-Statistics-Complex-Queries" class="headerlink" title="Advanced: Statistics &amp; Complex Queries "></a>Advanced: Statistics &amp; Complex Queries <a name="11-advanced-statistics--complex-queries"></a></h2><p>In real projects, you often need to generate statistical reports. This section covers how to design and implement statistics modules using <code>MyBatis</code>, including handling dynamic columns, using CASE WHEN, and returning <code>List&lt;Map&lt;String, Object&gt;&gt;</code>.</p>
+<h3 id="Understanding-List-in-MyBatis"><a href="#Understanding-List-in-MyBatis" class="headerlink" title="Understanding List&lt;Map&lt;String, Object&gt;&gt; in MyBatis "></a>Understanding <code>List&lt;Map&lt;String, Object&gt;&gt;</code> in MyBatis <a name="understanding-listmapstring-object-in-mybatis"></a></h3><p>When the structure of the result is not fixed (e.g., dynamic columns), you cannot use a predefined POJO. MyBatis allows you to return a <code>List&lt;Map&lt;String, Object&gt;&gt;</code>, where each map represents a row with column names as keys and column values as objects.</p>
+<p>Mapper method:</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">List&lt;Map&lt;String, Object&gt;&gt; <span class="title function_">getEmployeeStatistics</span><span class="params">(<span class="meta">@Param(&quot;deptId&quot;)</span> Integer deptId)</span>;</span><br></pre></td></tr></table></figure>
+
+<p>XML:</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">&quot;getEmployeeStatistics&quot;</span> <span class="attr">resultType</span>=<span class="string">&quot;java.util.Map&quot;</span>&gt;</span></span><br><span class="line">    select</span><br><span class="line">        dept.name as departmentName,</span><br><span class="line">        count(*) as employeeCount,</span><br><span class="line">        avg(age) as averageAge</span><br><span class="line">    from emp</span><br><span class="line">    join dept on emp.dept_id = dept.id</span><br><span class="line">    <span class="tag">&lt;<span class="name">where</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">if</span> <span class="attr">test</span>=<span class="string">&quot;deptId != null&quot;</span>&gt;</span></span><br><span class="line">            dept.id = #&#123;deptId&#125;</span><br><span class="line">        <span class="tag">&lt;/<span class="name">if</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">where</span>&gt;</span></span><br><span class="line">    group by dept.id</span><br><span class="line"><span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>Important:</p>
+<p>Use resultType&#x3D;”java.util.Map” (or the fully qualified name).</p>
+<p>MyBatis will automatically create a Map for each row, with column names (or aliases) as keys.</p>
+<p>This is extremely flexible for reports and charts where the number and names of columns vary.</p>
+<h3 id="Using-CASE-WHEN-in-SQL-for-Conditional-Aggregation"><a href="#Using-CASE-WHEN-in-SQL-for-Conditional-Aggregation" class="headerlink" title="Using CASE WHEN in SQL for Conditional Aggregation "></a>Using CASE WHEN in SQL for Conditional Aggregation <a name="using-case-when-in-sql-for-conditional-aggregation"></a></h3><p>You can use CASE WHEN inside SQL to create conditional counts or sums.</p>
+<p>Example: Count employees by gender per department.</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">&quot;countByGenderPerDept&quot;</span> <span class="attr">resultType</span>=<span class="string">&quot;java.util.Map&quot;</span>&gt;</span></span><br><span class="line">    select</span><br><span class="line">        dept.name as deptName,</span><br><span class="line">        sum(case when emp.gender = 1 then 1 else 0 end) as maleCount,</span><br><span class="line">        sum(case when emp.gender = 2 then 1 else 0 end) as femaleCount</span><br><span class="line">    from emp</span><br><span class="line">    join dept on emp.dept_id = dept.id</span><br><span class="line">    group by dept.id</span><br><span class="line"><span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="Handling-Date-Formats-in-Query-Results"><a href="#Handling-Date-Formats-in-Query-Results" class="headerlink" title="Handling Date Formats in Query Results "></a>Handling Date Formats in Query Results <a name="handling-date-formats-in-query-results"></a></h3><p>When returning dates, ensure they are formatted properly for the frontend. You can either:</p>
+<p>Format in SQL using DATE_FORMAT(create_time, ‘%Y-%m-%d’) as createDate</p>
+<p>Or let MyBatis map to LocalDate and then format in the service&#x2F;controller.</p>
+<p>Strict Date Format Matching: If your frontend expects a specific format (e.g., “yyyy-MM-dd”), make sure to either format in SQL or use Jackson annotations (@JsonFormat) on your POJO.</p>
+<h3 id="MyBatis-Alias-Strictness"><a href="#MyBatis-Alias-Strictness" class="headerlink" title="MyBatis Alias Strictness "></a>MyBatis Alias Strictness <a name="mybatis-alias-strictness"></a></h3><p>In XML, when you use AS aliases, they must exactly match the property names of the target Java type (if using resultType) or the column names defined in resultMap. For Map results, aliases become the map keys, so they should be consistent with what the frontend expects.</p>
+<p>Example:</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">&quot;getSummary&quot;</span> <span class="attr">resultType</span>=<span class="string">&quot;map&quot;</span>&gt;</span></span><br><span class="line">    select</span><br><span class="line">        count(*) as totalEmployees,</span><br><span class="line">        avg(age) as avgAge</span><br><span class="line">    from emp</span><br><span class="line"><span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>The resulting map will have keys “totalEmployees” and “avgAge”.</p>
+<h3 id="Using-for-Dynamic-IN-Clauses-in-Statistics"><a href="#Using-for-Dynamic-IN-Clauses-in-Statistics" class="headerlink" title="Using  for Dynamic IN Clauses in Statistics "></a>Using <foreach> for Dynamic IN Clauses in Statistics <a name="using-foreach-for-dynamic-in-clauses-in-statistics"></a></h3><p>You might need to filter by multiple department IDs:</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">&quot;getStatsForDepts&quot;</span> <span class="attr">resultType</span>=<span class="string">&quot;map&quot;</span>&gt;</span></span><br><span class="line">    select dept_id, count(*) as cnt</span><br><span class="line">    from emp</span><br><span class="line">    where dept_id in</span><br><span class="line">    <span class="tag">&lt;<span class="name">foreach</span> <span class="attr">collection</span>=<span class="string">&quot;deptIds&quot;</span> <span class="attr">item</span>=<span class="string">&quot;id&quot;</span> <span class="attr">open</span>=<span class="string">&quot;(&quot;</span> <span class="attr">separator</span>=<span class="string">&quot;,&quot;</span> <span class="attr">close</span>=<span class="string">&quot;)&quot;</span>&gt;</span></span><br><span class="line">        #&#123;id&#125;</span><br><span class="line">    <span class="tag">&lt;/<span class="name">foreach</span>&gt;</span></span><br><span class="line">    group by dept_id</span><br><span class="line"><span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="LocalDate-Comparison-in-Java-if-needed"><a href="#LocalDate-Comparison-in-Java-if-needed" class="headerlink" title="LocalDate Comparison in Java (if needed) "></a>LocalDate Comparison in Java (if needed) <a name="localdate-comparison-in-java-if-needed"></a></h3><p>Although we usually let SQL handle date comparisons, sometimes you need to compare LocalDate in Java:</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span> (entryDate.isAfter(LocalDate.now())) &#123;</span><br><span class="line">    <span class="comment">// future date logic</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Or compare two LocalDate objects:</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span> (date1.isEqual(date2)) &#123; ... &#125;</span><br><span class="line"><span class="keyword">if</span> (date1.isBefore(date2)) &#123; ... &#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Complete-Example-Employee-Trend-by-Month"><a href="#Complete-Example-Employee-Trend-by-Month" class="headerlink" title="Complete Example: Employee Trend by Month "></a>Complete Example: Employee Trend by Month <a name="complete-example-employee-trend-by-month"></a></h3><p>Mapper:</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">List&lt;Map&lt;String, Object&gt;&gt; <span class="title function_">getEmployeeTrend</span><span class="params">(<span class="meta">@Param(&quot;year&quot;)</span> Integer year)</span>;</span><br></pre></td></tr></table></figure>
+
+<p>XML:</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">&quot;getEmployeeTrend&quot;</span> <span class="attr">resultType</span>=<span class="string">&quot;map&quot;</span>&gt;</span></span><br><span class="line">    select</span><br><span class="line">        month(entrydate) as month,</span><br><span class="line">        count(*) as newHires</span><br><span class="line">    from emp</span><br><span class="line">    where year(entrydate) = #&#123;year&#125;</span><br><span class="line">    group by month(entrydate)</span><br><span class="line">    order by month</span><br><span class="line"><span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>Service:</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> List&lt;Map&lt;String, Object&gt;&gt; <span class="title function_">getEmployeeTrend</span><span class="params">(Integer year)</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> statsMapper.getEmployeeTrend(year);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Controller:</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@GetMapping(&quot;/stats/trend&quot;)</span></span><br><span class="line"><span class="keyword">public</span> Result <span class="title function_">trend</span><span class="params">(<span class="meta">@RequestParam(required = false)</span> Integer year)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (year == <span class="literal">null</span>) year = LocalDate.now().getYear();</span><br><span class="line">    <span class="keyword">return</span> Result.success(statsService.getEmployeeTrend(year));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>This returns data that can be directly used by chart libraries.</p>
+<h2 id="Some-Thoughts"><a href="#Some-Thoughts" class="headerlink" title="Some Thoughts"></a>Some Thoughts<a name="thoughts"></a></h2><ul>
+<li>Layered architecture</li>
+<li>Clean REST design</li>
+<li>Safe SQL practices</li>
+<li>Authentication patterns</li>
+<li>Transaction control</li>
+<li>AOP logging</li>
+<li>Enterprise-level thinking</li>
+</ul>
+<h2 id="Git-Repo-link"><a href="#Git-Repo-link" class="headerlink" title="Git Repo link"></a>Git Repo link<a name="git"></a></h2><p><a href="https://github.com/BODYsuperman/Tlias-Web-Management">Tlias-Web-Management</a></p>
+<link rel="stylesheet" href="/css/folder.css" type="text/css"><script src="/js/folder.js" type="text/javascript" async></script>]]></content>
+      <categories>
+        <category>Java</category>
+        <category>Spring Boot</category>
+      </categories>
+      <tags>
+        <tag>MyBatis</tag>
+        <tag>Pagination</tag>
+        <tag>JWT</tag>
+        <tag>AOP</tag>
+        <tag>RESTful API</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>The Complete Guide to Modern CSS Layouts: From Flexbox to Grid and Beyond</title>
     <url>/2025/11/03/The-Complete-Guide-to-Modern-CSS-Layouts-From-Flexbox-to-Grid-and-Beyond/</url>
     <content><![CDATA[<p><a href="/HTML/p2/index.html" target="_blank">project demo1</a><br><a href="/HTML/p3/index.html" target="_blank">project demo2</a></p>
 <link rel="stylesheet" href="/css/folder.css" type="text/css"><script src="/js/folder.js" type="text/javascript" async></script>]]></content>
+  </entry>
+  <entry>
+    <title>Workflow Orchestration</title>
+    <url>/2026/02/19/Workflow-Orchestration/</url>
+    <content><![CDATA[<h2 id="Workflow-Orchestration"><a href="#Workflow-Orchestration" class="headerlink" title="Workflow Orchestration"></a>Workflow Orchestration</h2><h3 id="1-Plan-Node-Default"><a href="#1-Plan-Node-Default" class="headerlink" title="1. Plan Node Default"></a>1. Plan Node Default</h3><ul>
+<li>Enter plan mode for ANY non-trivial task (3+ steps or architectural decisions)</li>
+<li>If something goes sideways, STOP and re-plan immediately – don’t keep pushing</li>
+<li>Write detailed specs upfront to reduce ambiguity</li>
+</ul>
+<h3 id="2-Subagent-Strategy"><a href="#2-Subagent-Strategy" class="headerlink" title="2. Subagent Strategy"></a>2. Subagent Strategy</h3><ul>
+<li>Use subagents liberally to keep main context window clean</li>
+<li>Offload research, exploration, and parallel analysis to subagents</li>
+<li>One tack per subagent for focused execution</li>
+</ul>
+<h3 id="3-Self-Improvement-Loop"><a href="#3-Self-Improvement-Loop" class="headerlink" title="3. Self-Improvement Loop"></a>3. Self-Improvement Loop</h3><ul>
+<li>After ANY correction from the user: update <code>tasks/lessons.md</code> with the pattern</li>
+<li>Write rules for yourself that prevent the same mistake</li>
+<li>Review lessons at session start for relevant project</li>
+</ul>
+<h3 id="4-Verification-Before-Done"><a href="#4-Verification-Before-Done" class="headerlink" title="4. Verification Before Done"></a>4. Verification Before Done</h3><ul>
+<li>Never mark a task complete without proving it works</li>
+<li>Run tests, check logs, demonstrate correctness</li>
+</ul>
+<h3 id="5-Demand-Elegance-Balanced"><a href="#5-Demand-Elegance-Balanced" class="headerlink" title="5. Demand Elegance (Balanced)"></a>5. Demand Elegance (Balanced)</h3><ul>
+<li>For non-trivial changes: pause and ask “is there a more elegant way?”</li>
+<li>If a fix feels hacky: “Knowing everything I know now, implement the elegant solution”</li>
+<li>Skip this for simple, obvious fixes – don’t over-engineer</li>
+</ul>
+<h3 id="6-Autonomous-Bug-Fixing"><a href="#6-Autonomous-Bug-Fixing" class="headerlink" title="6. Autonomous Bug Fixing"></a>6. Autonomous Bug Fixing</h3><ul>
+<li>When given a bug report: just fix it. Don’t ask for hand-holding</li>
+<li>Point at logs, errors, failing tests – then resolve them</li>
+<li>Zero context switching required from the user</li>
+</ul>
+<h3 id="Task-Management"><a href="#Task-Management" class="headerlink" title="Task Management"></a>Task Management</h3><ol>
+<li><strong>Plan First</strong>: Write plan to <code>tasks/todo.md</code> with checkable items</li>
+<li><strong>Verify Plan</strong>: Check in before starting implementation</li>
+<li><strong>Track Progress</strong>: Mark items complete as you go</li>
+<li><strong>Document Results</strong>: Add review section to <code>tasks/todo.md</code></li>
+<li><strong>Capture Lessons</strong>: Update <code>tasks/lessons.md</code> after corrections</li>
+</ol>
+<h3 id="Core-Principles"><a href="#Core-Principles" class="headerlink" title="Core Principles"></a>Core Principles</h3><ul>
+<li><strong>Simplicity First</strong>: Make every change as simple as possible. Impact minimal code.</li>
+<li><strong>No Laziness</strong>: Find root causes. No temporary fixes. Senior developer standards.</li>
+<li><strong>Minimal Impact</strong>: Changes should only touch what’s necessary. Avoid introducing bugs.</li>
+</ul>
+<link rel="stylesheet" href="/css/folder.css" type="text/css"><script src="/js/folder.js" type="text/javascript" async></script>]]></content>
+      <categories>
+        <category>AI</category>
+        <category>Vibe Coding</category>
+      </categories>
+      <tags>
+        <tag>AI Programming</tag>
+        <tag>Claude</tag>
+        <tag>Productivity</tag>
+        <tag>Workflow</tag>
+        <tag>Automation</tag>
+      </tags>
   </entry>
   <entry>
     <title>Doubly Linked List</title>

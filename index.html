@@ -194,6 +194,349 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://bodysuperman.github.io/2026/02/19/Workflow-Orchestration/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+      <meta itemprop="name" content="Tech with Alex">
+      <meta itemprop="description" content="Per aspera ad astra.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Tech with Alex's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2026/02/19/Workflow-Orchestration/" class="post-title-link" itemprop="url">Workflow Orchestration</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2026-02-19 13:53:06 / Modified: 19:04:19" itemprop="dateCreated datePublished" datetime="2026-02-19T13:53:06+08:00">2026-02-19</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/AI/" itemprop="url" rel="index"><span itemprop="name">AI</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/AI/Vibe-Coding/" itemprop="url" rel="index"><span itemprop="name">Vibe Coding</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>1.5k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>1 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="Workflow-Orchestration"><a href="#Workflow-Orchestration" class="headerlink" title="Workflow Orchestration"></a>Workflow Orchestration</h2><h3 id="1-Plan-Node-Default"><a href="#1-Plan-Node-Default" class="headerlink" title="1. Plan Node Default"></a>1. Plan Node Default</h3><ul>
+<li>Enter plan mode for ANY non-trivial task (3+ steps or architectural decisions)</li>
+<li>If something goes sideways, STOP and re-plan immediately – don’t keep pushing</li>
+<li>Write detailed specs upfront to reduce ambiguity</li>
+</ul>
+<h3 id="2-Subagent-Strategy"><a href="#2-Subagent-Strategy" class="headerlink" title="2. Subagent Strategy"></a>2. Subagent Strategy</h3><ul>
+<li>Use subagents liberally to keep main context window clean</li>
+<li>Offload research, exploration, and parallel analysis to subagents</li>
+<li>One tack per subagent for focused execution</li>
+</ul>
+<h3 id="3-Self-Improvement-Loop"><a href="#3-Self-Improvement-Loop" class="headerlink" title="3. Self-Improvement Loop"></a>3. Self-Improvement Loop</h3><ul>
+<li>After ANY correction from the user: update <code>tasks/lessons.md</code> with the pattern</li>
+<li>Write rules for yourself that prevent the same mistake</li>
+<li>Review lessons at session start for relevant project</li>
+</ul>
+<h3 id="4-Verification-Before-Done"><a href="#4-Verification-Before-Done" class="headerlink" title="4. Verification Before Done"></a>4. Verification Before Done</h3><ul>
+<li>Never mark a task complete without proving it works</li>
+<li>Run tests, check logs, demonstrate correctness</li>
+</ul>
+<h3 id="5-Demand-Elegance-Balanced"><a href="#5-Demand-Elegance-Balanced" class="headerlink" title="5. Demand Elegance (Balanced)"></a>5. Demand Elegance (Balanced)</h3><ul>
+<li>For non-trivial changes: pause and ask “is there a more elegant way?”</li>
+<li>If a fix feels hacky: “Knowing everything I know now, implement the elegant solution”</li>
+<li>Skip this for simple, obvious fixes – don’t over-engineer</li>
+</ul>
+<h3 id="6-Autonomous-Bug-Fixing"><a href="#6-Autonomous-Bug-Fixing" class="headerlink" title="6. Autonomous Bug Fixing"></a>6. Autonomous Bug Fixing</h3><ul>
+<li>When given a bug report: just fix it. Don’t ask for hand-holding</li>
+<li>Point at logs, errors, failing tests – then resolve them</li>
+<li>Zero context switching required from the user</li>
+</ul>
+<h3 id="Task-Management"><a href="#Task-Management" class="headerlink" title="Task Management"></a>Task Management</h3><ol>
+<li><strong>Plan First</strong>: Write plan to <code>tasks/todo.md</code> with checkable items</li>
+<li><strong>Verify Plan</strong>: Check in before starting implementation</li>
+<li><strong>Track Progress</strong>: Mark items complete as you go</li>
+<li><strong>Document Results</strong>: Add review section to <code>tasks/todo.md</code></li>
+<li><strong>Capture Lessons</strong>: Update <code>tasks/lessons.md</code> after corrections</li>
+</ol>
+<h3 id="Core-Principles"><a href="#Core-Principles" class="headerlink" title="Core Principles"></a>Core Principles</h3><ul>
+<li><strong>Simplicity First</strong>: Make every change as simple as possible. Impact minimal code.</li>
+<li><strong>No Laziness</strong>: Find root causes. No temporary fixes. Senior developer standards.</li>
+<li><strong>Minimal Impact</strong>: Changes should only touch what’s necessary. Avoid introducing bugs.</li>
+</ul>
+<link rel="stylesheet" href="/css/folder.css" type="text/css"><script src="/js/folder.js" type="text/javascript" async></script>
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://bodysuperman.github.io/2026/02/18/TLias-Spring-Boot-Practice-Guide/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+      <meta itemprop="name" content="Tech with Alex">
+      <meta itemprop="description" content="Per aspera ad astra.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Tech with Alex's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2026/02/18/TLias-Spring-Boot-Practice-Guide/" class="post-title-link" itemprop="url">TLias Spring Boot Practice Guide</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2026-02-18 13:53:06 / Modified: 19:04:19" itemprop="dateCreated datePublished" datetime="2026-02-18T13:53:06+08:00">2026-02-18</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java/Spring-Boot/" itemprop="url" rel="index"><span itemprop="name">Spring Boot</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>31k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>28 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <ul>
+<li><a href="#1-project-overview-what-is-tlias">1. Project Overview: What is Tlias?</a><ul>
+<li><a href="#core-technology-stack">1.1 Core Technology Stack</a></li>
+<li><a href="#project-architecture">1.2 Project Architecture</a></li>
+<li><a href="#project-structure-overview">1.3 Project Structure Overview</a></li>
+<li><a href="#database-design">1.4 Database Design</a></li>
+</ul>
+</li>
+<li><a href="#2-environment-setup-the-hardest-part">2. Environment Setup: The Hardest Part</a><ul>
+<li><a href="#key-insight">2.1 Key Insight</a></li>
+<li><a href="#unified-response-class">2.2 Unified Response Class</a></li>
+</ul>
+</li>
+<li><a href="#3-department-management-first-crud-experience">3. Department Management</a></li>
+<li><a href="#4-employee-management-pagination--dynamic-sql">4. Employee Management: Pagination &amp; Dynamic SQL</a><ul>
+<li><a href="#pagination-query-basic-version">4.1 Pagination Query (Basic Version)</a></li>
+<li><a href="#using-pagehelper-plugin-recommended--deep-dive">4.2 Using PageHelper Plugin (Recommended) – Deep Dive</a></li>
+<li><a href="#conditional-pagination-query-dynamic-sql--advanced-details">4.3 Conditional Pagination Query (Dynamic SQL) – Advanced Details</a></li>
+<li><a href="#batch-delete-employees--foreach-in-xml">4.4 Batch Delete Employees – ForEach in XML</a></li>
+<li><a href="#add-employee">4.5 Add Employee</a>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2026/02/18/TLias-Spring-Boot-Practice-Guide/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://bodysuperman.github.io/2025/11/10/Git-guideline/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+      <meta itemprop="name" content="Tech with Alex">
+      <meta itemprop="description" content="Per aspera ad astra.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Tech with Alex's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/11/10/Git-guideline/" class="post-title-link" itemprop="url">Git guideline</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-11-10 16:15:59 / Modified: 18:04:19" itemprop="dateCreated datePublished" datetime="2025-11-10T16:15:59+08:00">2025-11-10</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Development/" itemprop="url" rel="index"><span itemprop="name">Development</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Development/Git/" itemprop="url" rel="index"><span itemprop="name">Git</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>3.2k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>3 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <ul>
+<li><a href="#understanding-git-basics">Understanding Git Basics</a><ul>
+<li><a href="#1-working-directory">1. Working Directory</a></li>
+<li><a href="#2-staging-area-index">2. Staging Area (Index)</a></li>
+<li><a href="#3-repository">3. Repository</a></li>
+</ul>
+</li>
+<li><a href="#essential-git-commands">Essential Git Commands</a><ul>
+<li><a href="#initial-setup">Initial Setup</a></li>
+<li><a href="#cloning-a-repository">Cloning a Repository</a></li>
+<li><a href="#tracking-and-committing-changes">Tracking and Committing Changes</a></li>
+<li><a href="#view-history">View history</a></li>
+<li><a href="#recommended-commit-prefixes">Recommended commit prefixes</a>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2025/11/10/Git-guideline/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="https://bodysuperman.github.io/2025/11/03/The-Complete-Guide-to-Modern-CSS-Layouts-From-Flexbox-to-Grid-and-Beyond/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -519,363 +862,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://bodysuperman.github.io/2025/05/03/Hexo-Blog-Multi-Device-Synchronization-and-Management-Guide-Based-on-Git-Branch-Strategy/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/uploads/avatar.jpg">
-      <meta itemprop="name" content="Tech with Alex">
-      <meta itemprop="description" content="Per aspera ad astra.">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Tech with Alex's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2025/05/03/Hexo-Blog-Multi-Device-Synchronization-and-Management-Guide-Based-on-Git-Branch-Strategy/" class="post-title-link" itemprop="url">Hexo Blog Multi-Device Synchronization and Management Guide Based on Git Branch Strategy</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2025-05-03 09:52:39 / Modified: 19:04:19" itemprop="dateCreated datePublished" datetime="2025-05-03T09:52:39+08:00">2025-05-03</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Blog/" itemprop="url" rel="index"><span itemprop="name">Blog</span></a>
-                </span>
-                  , 
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Blog/Hexo/" itemprop="url" rel="index"><span itemprop="name">Hexo</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="Symbols count in article">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>11k</span>
-            </span>
-            <span class="post-meta-item" title="Reading time">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>10 mins.</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <ul>
-<li><a href="#introduction-the-necessity">Introduction: The Necessity of Multi-Device Collaboration</a></li>
-<li><a href="#core-principles-of-hexo">Core Principles of Hexo Multi-Device Synchronization</a><ul>
-<li><a href="#hexo-directory">Hexo Directory Structure and Version Control Strategy</a></li>
-<li><a href="#git-branch">Git Branch Division of Labor Model</a></li>
-</ul>
-</li>
-<li><a href="#old-computer-operation">Old Computer Operation Guide: Building Remote Synchronization Foundation</a><ul>
-<li><a href="#creating-and-configuring-remote-branches">Creating and Configuring Remote Branches</a></li>
-<li><a href="#local-environment">Local Environment and Remote Repository Synchronization</a></li>
-<li><a href="#gitignore-key-configuration">.gitignore Key Configuration</a></li>
-</ul>
-</li>
-<li><a href="#new-computer-environment">New Computer Environment Setup: Restoring Blog from Remote Repository</a><ul>
-<li><a href="#ssh-key-configuration">SSH Key Configuration and Environment Dependency Installation</a></li>
-<li><a href="#remote-repository">Remote Repository Cloning and Dependency Recovery</a></li>
-<li><a href="#first-run-verification">First Run Verification and Configuration Check</a></li>
-</ul>
-</li>
-<li><a href="#daily-update-workflow">Daily Update Workflow: Dual Branch Collaborative Operation</a><ul>
-<li><a href="#source-code">Source Code Update and Submission Process</a></li>
-<li><a href="#static-file">Static File Deployment and Branch Synchronization</a></li>
-<li><a href="#automation-script">Automation Script to Optimize Workflow</a></li>
-</ul>
-</li>
-<li><a href="#common-problems">Common Problems and Solutions</a><ul>
-<li><a href="#branch-switching">Branch Switching Conflict Handling</a></li>
-<li><a href="#environment-dependency">Environment Dependency Inconsistency Issue</a></li>
-<li><a href="#theme-and-pluginy">Theme and Plugin Synchronization Abnormality</a></li>
-</ul>
-</li>
-<li><a href="#advanced-tips-private">Advanced Tips: Private Repositories and Multi-Branch Strategies</a><ul>
-<li><a href="#private-repositories">Private Repositories to Protect Source Code Security</a></li>
-<li><a href="#multi-branch-collaborative-development-model">Multi-Branch Collaborative Development Model</a></li>
-</ul>
-</li>
-<li><a href="#conclusion-best-practices">Conclusion: Best Practices for Multi-Device Synchronization</a>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2025/05/03/Hexo-Blog-Multi-Device-Synchronization-and-Management-Guide-Based-on-Git-Branch-Strategy/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://bodysuperman.github.io/2025/04/26/Common-Binary-Tree-Problems/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/uploads/avatar.jpg">
-      <meta itemprop="name" content="Tech with Alex">
-      <meta itemprop="description" content="Per aspera ad astra.">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Tech with Alex's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2025/04/26/Common-Binary-Tree-Problems/" class="post-title-link" itemprop="url">Common Binary Tree Problems</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2025-04-26 16:03:41 / Modified: 19:04:19" itemprop="dateCreated datePublished" datetime="2025-04-26T16:03:41+08:00">2025-04-26</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Data-Structure-and-Alogrithm/" itemprop="url" rel="index"><span itemprop="name">Data Structure and Alogrithm</span></a>
-                </span>
-                  , 
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Data-Structure-and-Alogrithm/Binary-Tree/" itemprop="url" rel="index"><span itemprop="name">Binary Tree</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="Symbols count in article">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>12k</span>
-            </span>
-            <span class="post-meta-item" title="Reading time">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>11 mins.</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <ol>
-<li><a href="#introduction">Introduction</a>  </li>
-<li><a href="#cs">Case Study</a>  <ul>
-<li><a href="#case1">Invert Binary Tree</a>  </li>
-<li><a href="#case2">Symmetric Tree</a>  </li>
-<li><a href="#case3">Maximum Depth of Binary Tree</a>  </li>
-<li><a href="#case4">Minimum Depth of Binary Tree</a>  </li>
-<li><a href="#case5">Count Complete Tree Nodes</a>  </li>
-<li><a href="#case6">Balanced Binary Tree</a>  </li>
-<li><a href="#case7">Binary Tree Paths</a>  </li>
-<li><a href="#case8">Sum of Left Leaves</a>  </li>
-<li><a href="#case9">Find Bottom Left Tree Value</a></li>
-</ul>
-</li>
-</ol>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2025/04/26/Common-Binary-Tree-Problems/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://bodysuperman.github.io/2025/04/19/Design-Patterns/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/uploads/avatar.jpg">
-      <meta itemprop="name" content="Tech with Alex">
-      <meta itemprop="description" content="Per aspera ad astra.">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Tech with Alex's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2025/04/19/Design-Patterns/" class="post-title-link" itemprop="url">Design Patterns</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2025-04-19 16:05:17 / Modified: 19:04:19" itemprop="dateCreated datePublished" datetime="2025-04-19T16:05:17+08:00">2025-04-19</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Design-Patterns/" itemprop="url" rel="index"><span itemprop="name">Design Patterns</span></a>
-                </span>
-                  , 
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Design-Patterns/Software-Design/" itemprop="url" rel="index"><span itemprop="name">Software Design</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="Symbols count in article">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>49k</span>
-            </span>
-            <span class="post-meta-item" title="Reading time">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>45 mins.</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <ol>
-<li><a href="#introduction">Introduction</a>  <ul>
-<li><a href="#types-of-dp">Types of Design Patterns</a>  </li>
-<li><a href="#key-c-of-dp">Key Characteristics of Design Patterns</a></li>
-</ul>
-</li>
-<li><a href="#cp">Creational Patterns</a>  <ul>
-<li><a href="#factoryp">Factory Pattern</a>  </li>
-<li><a href="#afactory">Abstract Factory Pattern</a>  </li>
-<li><a href="#builder">Builder Pattern</a>  </li>
-<li><a href="#singleton-pattern">Singleton Pattern</a></li>
-</ul>
-</li>
-<li><a href="#sp">Structural Patterns</a>  <ul>
-<li><a href="#adapter-pattern">Adapter Pattern</a>  </li>
-<li><a href="#bridge-pattern">Bridge Pattern</a>  </li>
-<li><a href="#composite-pattern">Composite Pattern</a></li>
-<li><a href="#decorator-pattern">Decorator Pattern</a>  </li>
-<li><a href="#facade-pattern">Facade Pattern</a>  </li>
-<li><a href="#flyweight-pattern">Flyweight Pattern</a></li>
-<li><a href="#proxy-pattern">Proxy Pattern</a></li>
-</ul>
-</li>
-<li><a href="#behavior-pattern">Behavioral Patterns</a>  <ul>
-<li><a href="#observer-pattern">Observer Pattern</a>  </li>
-<li><a href="#iterator-pattern">Iterator Pattern</a>  </li>
-<li><a href="#command-pattern">Command Pattern</a></li>
-<li><a href="#strategy-pattern">Strategy Pattern</a>  </li>
-<li><a href="#state-pattern">State Pattern</a>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2025/04/19/Design-Patterns/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -947,25 +933,28 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">14</span>
+          <span class="site-state-item-count">17</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-count">20</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">17</span>
+        <span class="site-state-item-count">31</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
 </div>
   <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/BODYsuperman" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;BODYsuperman" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
       <span class="links-of-author-item">
         <a href="https://stackoverflow.com/users/9644964/alexandar-may-msft?tab=answers&sort=votes" title="StackOverflow → https:&#x2F;&#x2F;stackoverflow.com&#x2F;users&#x2F;9644964&#x2F;alexandar-may-msft?tab&#x3D;answers&amp;sort&#x3D;votes" rel="noopener" target="_blank"><i class="fab fa-stack-overflow fa-fw"></i>StackOverflow</a>
       </span>
@@ -1002,13 +991,13 @@
       <i class="fa fa-chart-area"></i>
     </span>
       <span class="post-meta-item-text">Symbols count total: </span>
-    <span title="Symbols count total">149k</span>
+    <span title="Symbols count total">185k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">Reading time total &asymp;</span>
-    <span title="Reading time total">2:16</span>
+    <span title="Reading time total">2:48</span>
     
     <!--
     
