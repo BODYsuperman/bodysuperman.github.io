@@ -9,7 +9,7 @@ date: 2025-02-18 11:29:25
 
 
 📫 Email: meijiaping6@gmail.com  
-🔗 [MyBlog](https://meijiaping.top)
+🔗 [MyGithub](https://github.com/BODYsuperman)
 
 ## 🚀 Technical Stack  
 ### 💻 Programming Languages 
@@ -24,8 +24,13 @@ date: 2025-02-18 11:29:25
 
 ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=black)  
 
+---
 
-### 🛠️ Frameworks & Tools  
+## 🛠️ Backend & Frameworks  
+
+![Spring Boot](https://img.shields.io/badge/Spring%20Boot-6DB33F?style=flat-square&logo=springboot&logoColor=white)
+
+![MyBatis](https://img.shields.io/badge/MyBatis-000000?style=flat-square)
 
 ![Vue.js](https://img.shields.io/badge/Vue.js-4FC08D?style=flat-square&logo=vue.js&logoColor=white)  
 
@@ -33,21 +38,26 @@ date: 2025-02-18 11:29:25
 
 ![React](https://img.shields.io/badge/React-61DAFB?style=flat-square&logo=react&logoColor=white)  
 
+---
 
-### 🗄️ Databases  
+## 🗄️ Databases  
+
+![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=flat-square&logo=mysql&logoColor=white)
 
 ![SQL Server](https://img.shields.io/badge/Microsoft%20SQL%20Server-CC2927?style=flat-square&logo=microsoft-sql-server&logoColor=white)  
 
-
+---
 
 ## 🔧 Development Tools 
 
-| Tool               | Purpose               |  
-|--------------------|-----------------------|  
-| Visual Studio      | C#/.NET Development   |  
-| VS Code            | Cross-platform IDE    |  
-| Git                | Version Control       |  
-| SSMS               | SQL Server Management |  
+| Tool               | Purpose                          |  
+|--------------------|----------------------------------|  
+| IntelliJ IDEA      | Java Backend Development         |  
+| Visual Studio      | C#/.NET Development              |  
+| VS Code            | Frontend & Cross-platform Dev    |  
+| Git                | Version Control                  |  
+| Postman            | API Testing                      |  
+| SSMS               | SQL Server Management            |  
 
 </div>
 
