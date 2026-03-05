@@ -860,200 +860,6 @@ or <figure class="highlight css"><table><tr><td class="code"><pre><span class="l
       </tags>
   </entry>
   <entry>
-    <title>Dynamic Programming</title>
-    <url>/2025/03/22/Dynamic-Programming/</url>
-    <content><![CDATA[<ol>
-<li><a href="#core-concepts">Core Concepts</a></li>
-<li><a href="#step-solve">Steps to Solve Problems with Dynamic Programming</a><ul>
-<li><a href="#define">Define the State</a></li>
-<li><a href="#formulate">Formulate the Transition</a></li>
-<li><a href="#boundary-conditions">Initialize the Boundary Conditions</a></li>
-<li><a href="#choose-order">Choose an Order</a></li>
-<li><a href="#final-result">Return the Final Result</a></li>
-</ul>
-</li>
-<li><a href="#classic-examples">Classic Examples</a><ul>
-<li><a href="#fibonacci-sequence">Fibonacci Sequence</a></li>
-<li><a href="#01-knapsack-problem">0&#x2F;1 Knapsack Problem</a></li>
-</ul>
-</li>
-<li><a href="#conclusion">Conclusion</a><span id="more"></span></li>
-</ol>
-<h2 id="Core-concepts"><a href="#Core-concepts" class="headerlink" title="Core concepts"></a>Core concepts</h2><p><strong>Dynamic programming</strong><a name="core-concepts"></a> is both a mathematical optimization method and an algorithmic paradigm. The method was developed by Richard Bellman in the 1950s and has found applications in numerous fields, from aerospace engineering to economics. It is a powerful technique used to solve complex problems by breaking them down into simpler subproblems. It’s widely used in computer science for optimization problems, and once you grasp its core idea, it becomes an invaluable tool in your programming toolkit.</p>
-<p>A DP solution hinges on two properties:</p>
-<ul>
-<li><strong>Overlapping Subproblems</strong>: Means that the problem can be broken down into smaller subproblems, where the solutions to the subproblems are overlapping. Having subproblems that are overlapping means that the solution to one subproblem is part of the solution to another subproblem. I will take <a href="https://en.wikipedia.org/wiki/Fibonacci_sequence">Fibonacci sequence</a> as an example in the coming section.</li>
-<li><strong>Optimal Substructure</strong>: Means that the complete solution to a problem can be constructed from the solutions of its smaller subproblems. So not only must the problem have overlapping subproblems, the substructure must also be optimal so that there is a way to piece the solutions to the subproblems together to form the complete solution. I will take the classical <a href="https://en.wikipedia.org/wiki/Knapsack_problem">The 0&#x2F;1 Knapsack Problem</a> as an example, the optimal solution when the knapsack capacity is <code>W</code> can be derived by considering whether to include an item and combining it with the optimal solution when the knapsack capacity is <code>W - weight[i]</code>.</li>
-</ul>
-<h2 id="Steps-to-Solve-Problems-with-Dynamic-Programming"><a href="#Steps-to-Solve-Problems-with-Dynamic-Programming" class="headerlink" title="Steps to Solve Problems with Dynamic Programming:"></a>Steps to Solve Problems with Dynamic Programming:<a name="step-solve"></a></h2><h3 id="Define-the-State"><a href="#Define-the-State" class="headerlink" title="Define the State:"></a><strong>Define the State</strong>:<a name="define"></a></h3><p>Identify parameters that uniquely describe a subproblem (e.g., indices, capacities). For example, in the 0&#x2F;1 knapsack problem, the state can be defined as <code>dp[i][j]</code>, which represents the maximum value that can be obtained when considering the first i items and a knapsack capacity of j.</p>
-<h3 id="Formulate-the-Transition"><a href="#Formulate-the-Transition" class="headerlink" title="Formulate the Transition:"></a><strong>Formulate the Transition</strong>:<a name="formulate"></a></h3><p>Derive a recurrence relation that expresses the state in terms of smaller states.</p>
-<h3 id="Initialize-the-Boundary-Conditions"><a href="#Initialize-the-Boundary-Conditions" class="headerlink" title="Initialize the Boundary Conditions:"></a><strong>Initialize the Boundary Conditions</strong>:<a name="boundary-conditions"></a></h3><p>Initialize the Boundary Conditions: Determine the initial values of the states, which are usually the base cases of the problem. For example, in the 0&#x2F;1 knapsack problem, <code>dp[0][j]=0</code> (when there are no items, the value is 0 regardless of the knapsack capacity), and <code>dp[i][0]=0</code> (when the knapsack capacity is 0, the value is 0 regardless of the number of items).</p>
-<h3 id="Choose-an-Order"><a href="#Choose-an-Order" class="headerlink" title="Choose an Order:"></a><strong>Choose an Order</strong>:<a name="choose-order"></a></h3><p>Decide whether to solve states top‑down (recursion + memo) or bottom‑up (iteration + table). If using the tabular method(the latter one), fill the state table step-by-step according to the state - transition equation and the initial conditions. This step is usually achieved through nested loops.</p>
-<h3 id="Return-the-Final-Result"><a href="#Return-the-Final-Result" class="headerlink" title="Return the Final Result:"></a><strong>Return the Final Result</strong>:<a name="final-result"></a></h3><p>According to the requirements of the problem, obtain the final solution from the state table. For example, in the 0&#x2F;1 knapsack problem, the final result is dp[n][W], that is, the maximum value when considering all n items and a knapsack capacity of <code>W</code>. </p>
-<h2 id="Classic-Examples"><a href="#Classic-Examples" class="headerlink" title="Classic Examples"></a>Classic Examples</h2><h3 id="Find-The-nth-Fibonacci-Number"><a href="#Find-The-nth-Fibonacci-Number" class="headerlink" title="Find The nth Fibonacci Number"></a>Find The nth Fibonacci Number<a name="fibonacci-sequence"></a></h3><p>Let us say we want an algorithm that finds the nth Fibonacci number. We don’t know how to find the nth Fibonacci number yet, except that we want to use Dynamic Programming to design the algorithm.</p>
-<blockquote>
-<p>The Fibonacci numbers is a sequence of numbers starting with 0 and 1 and the next numbers are created by adding the two previous numbers.<br>The 8 first Fibonacci numbers are: <strong>0, 1, 1, 2, 3, 5, 8, 13</strong><br>And counting from 0, the 4th Fibonacci number <code>F(4)</code> is <strong>3</strong>.<br>In general, this is how a Fibonacci number is created based on the two previous:<br>                    <code>F(n) = F(n-1) + F(n-2)</code></p>
-</blockquote>
-<h4 id="Naive-Recursive-Approach"><a href="#Naive-Recursive-Approach" class="headerlink" title="Naive Recursive Approach"></a>Naive Recursive Approach</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public int Fib2(int n)</span><br><span class="line">&#123;</span><br><span class="line">    if (n &lt; 2) return n;</span><br><span class="line">    return Fib(n - 1) + Fib(n - 2);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>Time  Complexity: <strong>O(2<sup>n</sup>)</strong></li>
-<li>Space Complexity: <strong>O(n)</strong><br>This works, but it is inefficient. For <code>n=40</code>, it takes noticeable time because it recalculates the same Fibonacci numbers repeatedly.</li>
-</ul>
-<h4 id="Bottom-Up-DP-Tabulation"><a href="#Bottom-Up-DP-Tabulation" class="headerlink" title="Bottom-Up DP (Tabulation)"></a>Bottom-Up DP (Tabulation)</h4><p>We can optimize it using memoization, where we store results in an array:</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public int Fib(int n)</span><br><span class="line">&#123;</span><br><span class="line">    if (n &lt; 2) return n;</span><br><span class="line">    int[] dp = new int[n + 1];</span><br><span class="line">    dp[0] = 0;</span><br><span class="line">    dp[1] = 1;</span><br><span class="line">    for(int i = 2; i &lt;= n; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        dp[i] = dp[i - 1] + dp[i - 2];</span><br><span class="line">    &#125;</span><br><span class="line">    return dp[n];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>Time  Complexity: <strong>O(n)</strong></li>
-<li>Space Complexity: <strong>O(n)</strong></li>
-</ul>
-<p>In this version, we fill the <code>dp</code> array from the base cases up to <code>n</code>. It’s still <strong>O(n)</strong> time complexity, but it avoids recursion overhead, making it slightly faster in practice.<br>More efficiently, We only need to maintain two values as we don’t need to record the whole sequence.</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public int Fib(int n)</span><br><span class="line">&#123;</span><br><span class="line">    if (n &lt; 2) return n;</span><br><span class="line">    int[] dp = new int[2] &#123;0,1&#125;;</span><br><span class="line">    for(int i = 2; i &lt;= n; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        int temp = dp[0] + dp[1];</span><br><span class="line">        dp[0] = dp[1];</span><br><span class="line">        dp[1] = temp;</span><br><span class="line">    &#125;</span><br><span class="line">    return dp[1];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>Time  Complexity: <strong>O(n)</strong></li>
-<li>Space Complexity: <strong>O(1)</strong></li>
-</ul>
-<h3 id="The-0-1-Knapsack-Problem"><a href="#The-0-1-Knapsack-Problem" class="headerlink" title="The 0&#x2F;1 Knapsack Problem"></a>The 0&#x2F;1 Knapsack Problem<a name="01-knapsack-problem"></a></h3><p>Given items with weight array weights and value array values, and a knapsack with capacity capacity, find the maximum value that can be carried.<br>Solving the 0&#x2F;1 Knapsack Problem helps businesses decide which projects to fund within a budget, maximizing profit without overspending. It is also used in logistics to optimize the loading of goods into trucks and planes, ensuring the most valuable, or highest prioritized, items are included without exceeding weight limits.</p>
-<p><u>Rules</u>:<br>    - Every item has a weight and value.<br>    - Your knapsack has a weight limit.<br>    - Choose which items you want to bring with you in the knapsack.<br>You can either take an item or not, you cannot take half of an item for example.<br><u>Goal</u>:<br>    - Maximize the total value of the items in the knapsack.</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public int Knapsack01(int[] w, int[] v, int cap)</span><br><span class="line">&#123;</span><br><span class="line">    int n = w.Length;</span><br><span class="line">    int[,] dp = new int[n + 1,cap + 1]; </span><br><span class="line">    for (int j = 0; j &lt;= cap; j++)</span><br><span class="line">    &#123;</span><br><span class="line">        dp[0, j] = 0;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    for (int i = 0; i &lt;= n; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        dp[i, 0] = 0;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    for(int i= 1; i &lt;= n; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        for(int j =1;j&lt;= cap; j++)</span><br><span class="line">        &#123;</span><br><span class="line">            if (j &lt; w[i-1])</span><br><span class="line">            &#123;</span><br><span class="line">                dp[i, j] = dp[i - 1, j];</span><br><span class="line">            &#125;</span><br><span class="line">            else</span><br><span class="line">            &#123;</span><br><span class="line">                dp[i, j] = Math.Max(dp[i - 1, j], v[i - 1] + dp[i - 1, j - w[i - 1]]);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return dp[n, cap];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>Below is the optimized version, we use a one-dimensional array dp. By updating the dp array in reverse order, we ensure that each item is considered only once, thus avoiding redundant calculations and overwriting problems.</p>
-<ul>
-<li>Reduces space complexity from O(n×capacity) to O(capacity)</li>
-<li>Reverse iteration prevents value overwrite issues</li>
-<li>More efficient memory usage</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public int Knapsack01(int[] w, int[] v, int cap)</span><br><span class="line">&#123;</span><br><span class="line">    int n = w.Length;</span><br><span class="line">    int[] dp = new int[cap + 1];</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    for (int i = 0; i &lt; n; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        //In order to select the item only once, we need to traverse from back to front </span><br><span class="line">        for (int j = cap; j &gt;= w[i]; j--)</span><br><span class="line">        &#123;</span><br><span class="line">            dp[j] = Math.Max(dp[j], v[i] + dp[j - w[i]]);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return dp[cap];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion "></a>Conclusion <a name="conclusion"></a></h2><p>Dynamic programming transforms inefficient recursive solutions into efficient ones by leveraging memory. Whether you choose memoization or tabulation, the key is to avoid redundant work. Arrays or dictionaries are perfect for storing intermediate results, making DP both practical and elegant.By reasonably defining the state, deriving the state-transition equation, and initializing the boundary conditions, we can efficiently solve complex problems using dynamic programming. In practical applications, pay attention to techniques such as space optimization to improve the efficiency and performance of the algorithm.</p>
-<link rel="stylesheet" href="/css/folder.css" type="text/css"><script src="/js/folder.js" type="text/javascript" async></script>]]></content>
-      <categories>
-        <category>Data Structure and Alogrithm</category>
-      </categories>
-      <tags>
-        <tag>Data Structure and Alogrithm</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Git guideline</title>
-    <url>/2025/11/10/Git-guideline/</url>
-    <content><![CDATA[<ul>
-<li><a href="#understanding-git-basics">Understanding Git Basics</a><ul>
-<li><a href="#1-working-directory">1. Working Directory</a></li>
-<li><a href="#2-staging-area-index">2. Staging Area (Index)</a></li>
-<li><a href="#3-repository">3. Repository</a></li>
-</ul>
-</li>
-<li><a href="#essential-git-commands">Essential Git Commands</a><ul>
-<li><a href="#initial-setup">Initial Setup</a></li>
-<li><a href="#cloning-a-repository">Cloning a Repository</a></li>
-<li><a href="#tracking-and-committing-changes">Tracking and Committing Changes</a></li>
-<li><a href="#view-history">View history</a></li>
-<li><a href="#recommended-commit-prefixes">Recommended commit prefixes</a><span id="more"></span></li>
-</ul>
-</li>
-<li><a href="#working-with-remote-repositories">Working with Remote Repositories</a></li>
-<li><a href="#branching-and-merging">Branching and Merging</a><ul>
-<li><a href="#recommended-branch-naming">Recommended branch naming</a></li>
-</ul>
-</li>
-<li><a href="#undoing-changes-and-recovery">Undoing Changes and Recovery</a></li>
-<li><a href="#tags-and-version-releases">Tags and Version Releases</a></li>
-<li><a href="#common-development-scenarios">Common Development Scenarios</a><ul>
-<li><a href="#new-project-push">New Project Push</a></li>
-<li><a href="#team-feature-development">Team Feature Development</a></li>
-<li><a href="#hotfix-production-bug">Hotfix Production Bug</a></li>
-</ul>
-</li>
-<li><a href="#common-pitfalls-and-how-to-avoid-them">Common Pitfalls and How to Avoid Them</a></li>
-<li><a href="#using-ssh-with-github-recommended">Using SSH with GitHub (Recommended)</a></li>
-<li><a href="#git-best-practices">Git Best Practices</a></li>
-<li><a href="#conclusion">Conclusion</a></li>
-</ul>
-<hr>
-<h2 id="Understanding-Git-Basics"><a href="#Understanding-Git-Basics" class="headerlink" title="Understanding Git Basics "></a>Understanding Git Basics <a name="understanding-git-basics"></a></h2><h3 id="Working-Directory"><a href="#Working-Directory" class="headerlink" title="Working Directory "></a>Working Directory <a name="1-working-directory"></a></h3><p>This is where you actually edit files on your local machine.</p>
-<h3 id="Staging-Area-Index"><a href="#Staging-Area-Index" class="headerlink" title="Staging Area (Index) "></a>Staging Area (Index) <a name="2-staging-area-index"></a></h3><p>A buffer between your working directory and the repository.<br>You decide <strong>what exactly goes into the next commit</strong>.</p>
-<h3 id="Repository"><a href="#Repository" class="headerlink" title="Repository "></a>Repository <a name="3-repository"></a></h3><p>The database that stores all commit history.</p>
-<p><strong>Typical workflow:</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Working Directory → Staging Area → Local Repository → Remote Repository</span><br></pre></td></tr></table></figure>
-
-<p>Once this flow makes sense, Git becomes much easier.</p>
-<h2 id="Essential-Git-Commands"><a href="#Essential-Git-Commands" class="headerlink" title="Essential Git Commands "></a>Essential Git Commands <a name="essential-git-commands"></a></h2><h3 id="Initial-Setup"><a href="#Initial-Setup" class="headerlink" title="Initial Setup "></a>Initial Setup <a name="initial-setup"></a></h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git config --global user.name <span class="string">&quot;Your Name&quot;</span></span><br><span class="line">git config --global user.email <span class="string">&quot;you@example.com&quot;</span></span><br><span class="line">git config --global --list</span><br></pre></td></tr></table></figure>
-
-<p>Initialize a repository:</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git init</span><br></pre></td></tr></table></figure>
-
-<h3 id="Cloning-a-Repository"><a href="#Cloning-a-Repository" class="headerlink" title="Cloning a Repository "></a>Cloning a Repository <a name="cloning-a-repository"></a></h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># HTTPS</span></span><br><span class="line">git <span class="built_in">clone</span> https://github.com/username/repo.git</span><br></pre></td></tr></table></figure>
-
-<h1 id="SSH-recommended"><a href="#SSH-recommended" class="headerlink" title="SSH (recommended)"></a>SSH (recommended)</h1><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">git clone git@github.com:username/repo.git</span><br></pre></td></tr></table></figure>
-
-<h3 id="Tracking-and-Committing-Changes"><a href="#Tracking-and-Committing-Changes" class="headerlink" title="Tracking and Committing Changes "></a>Tracking and Committing Changes <a name="tracking-and-committing-changes"></a></h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git status</span><br><span class="line">git add .</span><br><span class="line">git commit -m <span class="string">&quot;feat: add login feature&quot;</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="View-history"><a href="#View-history" class="headerlink" title="View history "></a>View history <a name="view-history"></a></h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git <span class="built_in">log</span> --oneline</span><br></pre></td></tr></table></figure>
-
-<h3 id="Recommended-commit-prefixes"><a href="#Recommended-commit-prefixes" class="headerlink" title="Recommended commit prefixes "></a>Recommended commit prefixes <a name="recommended-commit-prefixes"></a></h3><ul>
-<li><code>feat</code>: new feature</li>
-<li><code>fix</code>: bug fix</li>
-<li><code>docs</code>: documentation</li>
-<li><code>refactor</code>: refactoring</li>
-</ul>
-<h2 id="Working-with-Remote-Repositories"><a href="#Working-with-Remote-Repositories" class="headerlink" title="Working with Remote Repositories "></a>Working with Remote Repositories <a name="working-with-remote-repositories"></a></h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git remote add origin &lt;repo-url&gt;</span><br><span class="line">git remote -v</span><br><span class="line">git push origin main</span><br><span class="line">git pull origin main</span><br></pre></td></tr></table></figure>
-
-<p>Avoid force push unless you know exactly what you’re doing:</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git push --force-with-lease</span><br></pre></td></tr></table></figure>
-
-<h2 id="Branching-and-Merging"><a href="#Branching-and-Merging" class="headerlink" title="Branching and Merging "></a>Branching and Merging <a name="branching-and-merging"></a></h2><p>Branches allow safe experimentation.</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git branch</span><br><span class="line">git checkout -b feature/login</span><br><span class="line">git checkout main</span><br><span class="line">git merge feature/login</span><br><span class="line">git branch -d feature/login</span><br></pre></td></tr></table></figure>
-
-<h3 id="Recommended-branch-naming"><a href="#Recommended-branch-naming" class="headerlink" title="Recommended branch naming "></a>Recommended branch naming <a name="recommended-branch-naming"></a></h3><ul>
-<li>main – stable production</li>
-<li>feature&#x2F;* – new features</li>
-<li>hotfix&#x2F;* – urgent fixes</li>
-</ul>
-<h2 id="Undoing-Changes-and-Recovery"><a href="#Undoing-Changes-and-Recovery" class="headerlink" title="Undoing Changes and Recovery "></a>Undoing Changes and Recovery <a name="undoing-changes-and-recovery"></a></h2><p>Git is powerful because almost nothing is truly lost.</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git reset --soft &lt;commit&gt;</span><br><span class="line">git reset --mixed &lt;commit&gt;</span><br><span class="line">git reset --hard &lt;commit&gt;</span><br><span class="line">git reflog</span><br><span class="line">git reflog is your emergency <span class="built_in">exit</span>.</span><br></pre></td></tr></table></figure>
-<h2 id="Tags-and-Version-Releases"><a href="#Tags-and-Version-Releases" class="headerlink" title="Tags and Version Releases "></a>Tags and Version Releases <a name="tags-and-version-releases"></a></h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git tag -a v1.0 -m <span class="string">&quot;First release&quot;</span></span><br><span class="line">git push origin --tags</span><br></pre></td></tr></table></figure>
-
-<p>Tags are ideal for marking stable releases.</p>
-<h2 id="Common-Development-Scenarios"><a href="#Common-Development-Scenarios" class="headerlink" title="Common Development Scenarios "></a>Common Development Scenarios <a name="common-development-scenarios"></a></h2><h3 id="New-Project-Push"><a href="#New-Project-Push" class="headerlink" title="New Project Push "></a>New Project Push <a name="new-project-push"></a></h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git init</span><br><span class="line">git add .</span><br><span class="line">git commit -m <span class="string">&quot;init: initial commit&quot;</span></span><br><span class="line">git remote add origin &lt;repo&gt;</span><br><span class="line">git push -u origin main</span><br></pre></td></tr></table></figure>
-
-<h3 id="Team-Feature-Development"><a href="#Team-Feature-Development" class="headerlink" title="Team Feature Development "></a>Team Feature Development <a name="team-feature-development"></a></h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git checkout -b feature/payment</span><br><span class="line">git commit -m <span class="string">&quot;feat: payment integration&quot;</span></span><br><span class="line">git push origin feature/payment</span><br></pre></td></tr></table></figure>
-
-<h3 id="Hotfix-Production-Bug"><a href="#Hotfix-Production-Bug" class="headerlink" title="Hotfix Production Bug "></a>Hotfix Production Bug <a name="hotfix-production-bug"></a></h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git checkout main</span><br><span class="line">git pull</span><br><span class="line">git checkout -b hotfix/critical-bug</span><br><span class="line">git commit -m <span class="string">&quot;fix: critical production issue&quot;</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="Common-Pitfalls-and-How-to-Avoid-Them"><a href="#Common-Pitfalls-and-How-to-Avoid-Them" class="headerlink" title="Common Pitfalls and How to Avoid Them "></a>Common Pitfalls and How to Avoid Them <a name="common-pitfalls-and-how-to-avoid-them"></a></h2><ul>
-<li>Forgot git add</li>
-<li>Merge conflicts ignored</li>
-<li>Panic after git reset –hard</li>
-<li>Using password instead of token&#x2F;SSH</li>
-</ul>
-<p>Tip: If something goes wrong, stop and check git reflog.</p>
-<h2 id="Using-SSH-with-GitHub-Recommended"><a href="#Using-SSH-with-GitHub-Recommended" class="headerlink" title="Using SSH with GitHub (Recommended) "></a>Using SSH with GitHub (Recommended) <a name="using-ssh-with-github-recommended"></a></h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ssh-keygen -t ed25519 -C <span class="string">&quot;you@example.com&quot;</span></span><br><span class="line"><span class="built_in">cat</span> ~/.ssh/id_ed25519.pub</span><br><span class="line">ssh -T git@github.com</span><br></pre></td></tr></table></figure>
-
-<p>Successful output:</p>
-<figure class="highlight rust"><table><tr><td class="code"><pre><span class="line">Hi username! You<span class="symbol">&#x27;ve</span> successfully authenticated.</span><br></pre></td></tr></table></figure>
-
-<h2 id="Git-Best-Practices"><a href="#Git-Best-Practices" class="headerlink" title="Git Best Practices "></a>Git Best Practices <a name="git-best-practices"></a></h2><p>Commit small, meaningful changes</p>
-<p>Write clear commit messages</p>
-<p>Use branches aggressively</p>
-<p>Clean unused branches regularly</p>
-<p>Prefer SSH over HTTPS</p>
-<p>Use fine-grained tokens for automation</p>
-<h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion "></a>Conclusion <a name="conclusion"></a></h2><p>You don’t need to memorize every Git command.</p>
-<p>Git is not about commands—it’s about understanding history and collaboration.</p>
-<p>Once you understand the workflow, Git becomes a powerful safety net rather than a source of anxiety.</p>
-<link rel="stylesheet" href="/css/folder.css" type="text/css"><script src="/js/folder.js" type="text/javascript" async></script>]]></content>
-      <categories>
-        <category>Development</category>
-        <category>Git</category>
-      </categories>
-      <tags>
-        <tag>Git</tag>
-        <tag>Version Control</tag>
-        <tag>GitHub</tag>
-        <tag>CLI</tag>
-        <tag>Software Engineering</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Design Patterns</title>
     <url>/2025/04/19/Design-Patterns/</url>
     <content><![CDATA[<ol>
@@ -1372,6 +1178,200 @@ Use Cases:</li>
         <tag>Creational Patterns</tag>
         <tag>Structural Patterns</tag>
         <tag>Behavioral Patterns</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Dynamic Programming</title>
+    <url>/2025/03/22/Dynamic-Programming/</url>
+    <content><![CDATA[<ol>
+<li><a href="#core-concepts">Core Concepts</a></li>
+<li><a href="#step-solve">Steps to Solve Problems with Dynamic Programming</a><ul>
+<li><a href="#define">Define the State</a></li>
+<li><a href="#formulate">Formulate the Transition</a></li>
+<li><a href="#boundary-conditions">Initialize the Boundary Conditions</a></li>
+<li><a href="#choose-order">Choose an Order</a></li>
+<li><a href="#final-result">Return the Final Result</a></li>
+</ul>
+</li>
+<li><a href="#classic-examples">Classic Examples</a><ul>
+<li><a href="#fibonacci-sequence">Fibonacci Sequence</a></li>
+<li><a href="#01-knapsack-problem">0&#x2F;1 Knapsack Problem</a></li>
+</ul>
+</li>
+<li><a href="#conclusion">Conclusion</a><span id="more"></span></li>
+</ol>
+<h2 id="Core-concepts"><a href="#Core-concepts" class="headerlink" title="Core concepts"></a>Core concepts</h2><p><strong>Dynamic programming</strong><a name="core-concepts"></a> is both a mathematical optimization method and an algorithmic paradigm. The method was developed by Richard Bellman in the 1950s and has found applications in numerous fields, from aerospace engineering to economics. It is a powerful technique used to solve complex problems by breaking them down into simpler subproblems. It’s widely used in computer science for optimization problems, and once you grasp its core idea, it becomes an invaluable tool in your programming toolkit.</p>
+<p>A DP solution hinges on two properties:</p>
+<ul>
+<li><strong>Overlapping Subproblems</strong>: Means that the problem can be broken down into smaller subproblems, where the solutions to the subproblems are overlapping. Having subproblems that are overlapping means that the solution to one subproblem is part of the solution to another subproblem. I will take <a href="https://en.wikipedia.org/wiki/Fibonacci_sequence">Fibonacci sequence</a> as an example in the coming section.</li>
+<li><strong>Optimal Substructure</strong>: Means that the complete solution to a problem can be constructed from the solutions of its smaller subproblems. So not only must the problem have overlapping subproblems, the substructure must also be optimal so that there is a way to piece the solutions to the subproblems together to form the complete solution. I will take the classical <a href="https://en.wikipedia.org/wiki/Knapsack_problem">The 0&#x2F;1 Knapsack Problem</a> as an example, the optimal solution when the knapsack capacity is <code>W</code> can be derived by considering whether to include an item and combining it with the optimal solution when the knapsack capacity is <code>W - weight[i]</code>.</li>
+</ul>
+<h2 id="Steps-to-Solve-Problems-with-Dynamic-Programming"><a href="#Steps-to-Solve-Problems-with-Dynamic-Programming" class="headerlink" title="Steps to Solve Problems with Dynamic Programming:"></a>Steps to Solve Problems with Dynamic Programming:<a name="step-solve"></a></h2><h3 id="Define-the-State"><a href="#Define-the-State" class="headerlink" title="Define the State:"></a><strong>Define the State</strong>:<a name="define"></a></h3><p>Identify parameters that uniquely describe a subproblem (e.g., indices, capacities). For example, in the 0&#x2F;1 knapsack problem, the state can be defined as <code>dp[i][j]</code>, which represents the maximum value that can be obtained when considering the first i items and a knapsack capacity of j.</p>
+<h3 id="Formulate-the-Transition"><a href="#Formulate-the-Transition" class="headerlink" title="Formulate the Transition:"></a><strong>Formulate the Transition</strong>:<a name="formulate"></a></h3><p>Derive a recurrence relation that expresses the state in terms of smaller states.</p>
+<h3 id="Initialize-the-Boundary-Conditions"><a href="#Initialize-the-Boundary-Conditions" class="headerlink" title="Initialize the Boundary Conditions:"></a><strong>Initialize the Boundary Conditions</strong>:<a name="boundary-conditions"></a></h3><p>Initialize the Boundary Conditions: Determine the initial values of the states, which are usually the base cases of the problem. For example, in the 0&#x2F;1 knapsack problem, <code>dp[0][j]=0</code> (when there are no items, the value is 0 regardless of the knapsack capacity), and <code>dp[i][0]=0</code> (when the knapsack capacity is 0, the value is 0 regardless of the number of items).</p>
+<h3 id="Choose-an-Order"><a href="#Choose-an-Order" class="headerlink" title="Choose an Order:"></a><strong>Choose an Order</strong>:<a name="choose-order"></a></h3><p>Decide whether to solve states top‑down (recursion + memo) or bottom‑up (iteration + table). If using the tabular method(the latter one), fill the state table step-by-step according to the state - transition equation and the initial conditions. This step is usually achieved through nested loops.</p>
+<h3 id="Return-the-Final-Result"><a href="#Return-the-Final-Result" class="headerlink" title="Return the Final Result:"></a><strong>Return the Final Result</strong>:<a name="final-result"></a></h3><p>According to the requirements of the problem, obtain the final solution from the state table. For example, in the 0&#x2F;1 knapsack problem, the final result is dp[n][W], that is, the maximum value when considering all n items and a knapsack capacity of <code>W</code>. </p>
+<h2 id="Classic-Examples"><a href="#Classic-Examples" class="headerlink" title="Classic Examples"></a>Classic Examples</h2><h3 id="Find-The-nth-Fibonacci-Number"><a href="#Find-The-nth-Fibonacci-Number" class="headerlink" title="Find The nth Fibonacci Number"></a>Find The nth Fibonacci Number<a name="fibonacci-sequence"></a></h3><p>Let us say we want an algorithm that finds the nth Fibonacci number. We don’t know how to find the nth Fibonacci number yet, except that we want to use Dynamic Programming to design the algorithm.</p>
+<blockquote>
+<p>The Fibonacci numbers is a sequence of numbers starting with 0 and 1 and the next numbers are created by adding the two previous numbers.<br>The 8 first Fibonacci numbers are: <strong>0, 1, 1, 2, 3, 5, 8, 13</strong><br>And counting from 0, the 4th Fibonacci number <code>F(4)</code> is <strong>3</strong>.<br>In general, this is how a Fibonacci number is created based on the two previous:<br>                    <code>F(n) = F(n-1) + F(n-2)</code></p>
+</blockquote>
+<h4 id="Naive-Recursive-Approach"><a href="#Naive-Recursive-Approach" class="headerlink" title="Naive Recursive Approach"></a>Naive Recursive Approach</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public int Fib2(int n)</span><br><span class="line">&#123;</span><br><span class="line">    if (n &lt; 2) return n;</span><br><span class="line">    return Fib(n - 1) + Fib(n - 2);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>Time  Complexity: <strong>O(2<sup>n</sup>)</strong></li>
+<li>Space Complexity: <strong>O(n)</strong><br>This works, but it is inefficient. For <code>n=40</code>, it takes noticeable time because it recalculates the same Fibonacci numbers repeatedly.</li>
+</ul>
+<h4 id="Bottom-Up-DP-Tabulation"><a href="#Bottom-Up-DP-Tabulation" class="headerlink" title="Bottom-Up DP (Tabulation)"></a>Bottom-Up DP (Tabulation)</h4><p>We can optimize it using memoization, where we store results in an array:</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public int Fib(int n)</span><br><span class="line">&#123;</span><br><span class="line">    if (n &lt; 2) return n;</span><br><span class="line">    int[] dp = new int[n + 1];</span><br><span class="line">    dp[0] = 0;</span><br><span class="line">    dp[1] = 1;</span><br><span class="line">    for(int i = 2; i &lt;= n; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        dp[i] = dp[i - 1] + dp[i - 2];</span><br><span class="line">    &#125;</span><br><span class="line">    return dp[n];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>Time  Complexity: <strong>O(n)</strong></li>
+<li>Space Complexity: <strong>O(n)</strong></li>
+</ul>
+<p>In this version, we fill the <code>dp</code> array from the base cases up to <code>n</code>. It’s still <strong>O(n)</strong> time complexity, but it avoids recursion overhead, making it slightly faster in practice.<br>More efficiently, We only need to maintain two values as we don’t need to record the whole sequence.</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public int Fib(int n)</span><br><span class="line">&#123;</span><br><span class="line">    if (n &lt; 2) return n;</span><br><span class="line">    int[] dp = new int[2] &#123;0,1&#125;;</span><br><span class="line">    for(int i = 2; i &lt;= n; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        int temp = dp[0] + dp[1];</span><br><span class="line">        dp[0] = dp[1];</span><br><span class="line">        dp[1] = temp;</span><br><span class="line">    &#125;</span><br><span class="line">    return dp[1];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>Time  Complexity: <strong>O(n)</strong></li>
+<li>Space Complexity: <strong>O(1)</strong></li>
+</ul>
+<h3 id="The-0-1-Knapsack-Problem"><a href="#The-0-1-Knapsack-Problem" class="headerlink" title="The 0&#x2F;1 Knapsack Problem"></a>The 0&#x2F;1 Knapsack Problem<a name="01-knapsack-problem"></a></h3><p>Given items with weight array weights and value array values, and a knapsack with capacity capacity, find the maximum value that can be carried.<br>Solving the 0&#x2F;1 Knapsack Problem helps businesses decide which projects to fund within a budget, maximizing profit without overspending. It is also used in logistics to optimize the loading of goods into trucks and planes, ensuring the most valuable, or highest prioritized, items are included without exceeding weight limits.</p>
+<p><u>Rules</u>:<br>    - Every item has a weight and value.<br>    - Your knapsack has a weight limit.<br>    - Choose which items you want to bring with you in the knapsack.<br>You can either take an item or not, you cannot take half of an item for example.<br><u>Goal</u>:<br>    - Maximize the total value of the items in the knapsack.</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public int Knapsack01(int[] w, int[] v, int cap)</span><br><span class="line">&#123;</span><br><span class="line">    int n = w.Length;</span><br><span class="line">    int[,] dp = new int[n + 1,cap + 1]; </span><br><span class="line">    for (int j = 0; j &lt;= cap; j++)</span><br><span class="line">    &#123;</span><br><span class="line">        dp[0, j] = 0;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    for (int i = 0; i &lt;= n; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        dp[i, 0] = 0;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    for(int i= 1; i &lt;= n; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        for(int j =1;j&lt;= cap; j++)</span><br><span class="line">        &#123;</span><br><span class="line">            if (j &lt; w[i-1])</span><br><span class="line">            &#123;</span><br><span class="line">                dp[i, j] = dp[i - 1, j];</span><br><span class="line">            &#125;</span><br><span class="line">            else</span><br><span class="line">            &#123;</span><br><span class="line">                dp[i, j] = Math.Max(dp[i - 1, j], v[i - 1] + dp[i - 1, j - w[i - 1]]);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return dp[n, cap];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Below is the optimized version, we use a one-dimensional array dp. By updating the dp array in reverse order, we ensure that each item is considered only once, thus avoiding redundant calculations and overwriting problems.</p>
+<ul>
+<li>Reduces space complexity from O(n×capacity) to O(capacity)</li>
+<li>Reverse iteration prevents value overwrite issues</li>
+<li>More efficient memory usage</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public int Knapsack01(int[] w, int[] v, int cap)</span><br><span class="line">&#123;</span><br><span class="line">    int n = w.Length;</span><br><span class="line">    int[] dp = new int[cap + 1];</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    for (int i = 0; i &lt; n; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        //In order to select the item only once, we need to traverse from back to front </span><br><span class="line">        for (int j = cap; j &gt;= w[i]; j--)</span><br><span class="line">        &#123;</span><br><span class="line">            dp[j] = Math.Max(dp[j], v[i] + dp[j - w[i]]);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return dp[cap];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion "></a>Conclusion <a name="conclusion"></a></h2><p>Dynamic programming transforms inefficient recursive solutions into efficient ones by leveraging memory. Whether you choose memoization or tabulation, the key is to avoid redundant work. Arrays or dictionaries are perfect for storing intermediate results, making DP both practical and elegant.By reasonably defining the state, deriving the state-transition equation, and initializing the boundary conditions, we can efficiently solve complex problems using dynamic programming. In practical applications, pay attention to techniques such as space optimization to improve the efficiency and performance of the algorithm.</p>
+<link rel="stylesheet" href="/css/folder.css" type="text/css"><script src="/js/folder.js" type="text/javascript" async></script>]]></content>
+      <categories>
+        <category>Data Structure and Alogrithm</category>
+      </categories>
+      <tags>
+        <tag>Data Structure and Alogrithm</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Git guideline</title>
+    <url>/2025/11/10/Git-guideline/</url>
+    <content><![CDATA[<ul>
+<li><a href="#understanding-git-basics">Understanding Git Basics</a><ul>
+<li><a href="#1-working-directory">1. Working Directory</a></li>
+<li><a href="#2-staging-area-index">2. Staging Area (Index)</a></li>
+<li><a href="#3-repository">3. Repository</a></li>
+</ul>
+</li>
+<li><a href="#essential-git-commands">Essential Git Commands</a><ul>
+<li><a href="#initial-setup">Initial Setup</a></li>
+<li><a href="#cloning-a-repository">Cloning a Repository</a></li>
+<li><a href="#tracking-and-committing-changes">Tracking and Committing Changes</a></li>
+<li><a href="#view-history">View history</a></li>
+<li><a href="#recommended-commit-prefixes">Recommended commit prefixes</a><span id="more"></span></li>
+</ul>
+</li>
+<li><a href="#working-with-remote-repositories">Working with Remote Repositories</a></li>
+<li><a href="#branching-and-merging">Branching and Merging</a><ul>
+<li><a href="#recommended-branch-naming">Recommended branch naming</a></li>
+</ul>
+</li>
+<li><a href="#undoing-changes-and-recovery">Undoing Changes and Recovery</a></li>
+<li><a href="#tags-and-version-releases">Tags and Version Releases</a></li>
+<li><a href="#common-development-scenarios">Common Development Scenarios</a><ul>
+<li><a href="#new-project-push">New Project Push</a></li>
+<li><a href="#team-feature-development">Team Feature Development</a></li>
+<li><a href="#hotfix-production-bug">Hotfix Production Bug</a></li>
+</ul>
+</li>
+<li><a href="#common-pitfalls-and-how-to-avoid-them">Common Pitfalls and How to Avoid Them</a></li>
+<li><a href="#using-ssh-with-github-recommended">Using SSH with GitHub (Recommended)</a></li>
+<li><a href="#git-best-practices">Git Best Practices</a></li>
+<li><a href="#conclusion">Conclusion</a></li>
+</ul>
+<hr>
+<h2 id="Understanding-Git-Basics"><a href="#Understanding-Git-Basics" class="headerlink" title="Understanding Git Basics "></a>Understanding Git Basics <a name="understanding-git-basics"></a></h2><h3 id="Working-Directory"><a href="#Working-Directory" class="headerlink" title="Working Directory "></a>Working Directory <a name="1-working-directory"></a></h3><p>This is where you actually edit files on your local machine.</p>
+<h3 id="Staging-Area-Index"><a href="#Staging-Area-Index" class="headerlink" title="Staging Area (Index) "></a>Staging Area (Index) <a name="2-staging-area-index"></a></h3><p>A buffer between your working directory and the repository.<br>You decide <strong>what exactly goes into the next commit</strong>.</p>
+<h3 id="Repository"><a href="#Repository" class="headerlink" title="Repository "></a>Repository <a name="3-repository"></a></h3><p>The database that stores all commit history.</p>
+<p><strong>Typical workflow:</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Working Directory → Staging Area → Local Repository → Remote Repository</span><br></pre></td></tr></table></figure>
+
+<p>Once this flow makes sense, Git becomes much easier.</p>
+<h2 id="Essential-Git-Commands"><a href="#Essential-Git-Commands" class="headerlink" title="Essential Git Commands "></a>Essential Git Commands <a name="essential-git-commands"></a></h2><h3 id="Initial-Setup"><a href="#Initial-Setup" class="headerlink" title="Initial Setup "></a>Initial Setup <a name="initial-setup"></a></h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git config --global user.name <span class="string">&quot;Your Name&quot;</span></span><br><span class="line">git config --global user.email <span class="string">&quot;you@example.com&quot;</span></span><br><span class="line">git config --global --list</span><br></pre></td></tr></table></figure>
+
+<p>Initialize a repository:</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git init</span><br></pre></td></tr></table></figure>
+
+<h3 id="Cloning-a-Repository"><a href="#Cloning-a-Repository" class="headerlink" title="Cloning a Repository "></a>Cloning a Repository <a name="cloning-a-repository"></a></h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># HTTPS</span></span><br><span class="line">git <span class="built_in">clone</span> https://github.com/username/repo.git</span><br></pre></td></tr></table></figure>
+
+<h1 id="SSH-recommended"><a href="#SSH-recommended" class="headerlink" title="SSH (recommended)"></a>SSH (recommended)</h1><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">git clone git@github.com:username/repo.git</span><br></pre></td></tr></table></figure>
+
+<h3 id="Tracking-and-Committing-Changes"><a href="#Tracking-and-Committing-Changes" class="headerlink" title="Tracking and Committing Changes "></a>Tracking and Committing Changes <a name="tracking-and-committing-changes"></a></h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git status</span><br><span class="line">git add .</span><br><span class="line">git commit -m <span class="string">&quot;feat: add login feature&quot;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="View-history"><a href="#View-history" class="headerlink" title="View history "></a>View history <a name="view-history"></a></h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git <span class="built_in">log</span> --oneline</span><br></pre></td></tr></table></figure>
+
+<h3 id="Recommended-commit-prefixes"><a href="#Recommended-commit-prefixes" class="headerlink" title="Recommended commit prefixes "></a>Recommended commit prefixes <a name="recommended-commit-prefixes"></a></h3><ul>
+<li><code>feat</code>: new feature</li>
+<li><code>fix</code>: bug fix</li>
+<li><code>docs</code>: documentation</li>
+<li><code>refactor</code>: refactoring</li>
+</ul>
+<h2 id="Working-with-Remote-Repositories"><a href="#Working-with-Remote-Repositories" class="headerlink" title="Working with Remote Repositories "></a>Working with Remote Repositories <a name="working-with-remote-repositories"></a></h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git remote add origin &lt;repo-url&gt;</span><br><span class="line">git remote -v</span><br><span class="line">git push origin main</span><br><span class="line">git pull origin main</span><br></pre></td></tr></table></figure>
+
+<p>Avoid force push unless you know exactly what you’re doing:</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git push --force-with-lease</span><br></pre></td></tr></table></figure>
+
+<h2 id="Branching-and-Merging"><a href="#Branching-and-Merging" class="headerlink" title="Branching and Merging "></a>Branching and Merging <a name="branching-and-merging"></a></h2><p>Branches allow safe experimentation.</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git branch</span><br><span class="line">git checkout -b feature/login</span><br><span class="line">git checkout main</span><br><span class="line">git merge feature/login</span><br><span class="line">git branch -d feature/login</span><br></pre></td></tr></table></figure>
+
+<h3 id="Recommended-branch-naming"><a href="#Recommended-branch-naming" class="headerlink" title="Recommended branch naming "></a>Recommended branch naming <a name="recommended-branch-naming"></a></h3><ul>
+<li>main – stable production</li>
+<li>feature&#x2F;* – new features</li>
+<li>hotfix&#x2F;* – urgent fixes</li>
+</ul>
+<h2 id="Undoing-Changes-and-Recovery"><a href="#Undoing-Changes-and-Recovery" class="headerlink" title="Undoing Changes and Recovery "></a>Undoing Changes and Recovery <a name="undoing-changes-and-recovery"></a></h2><p>Git is powerful because almost nothing is truly lost.</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git reset --soft &lt;commit&gt;</span><br><span class="line">git reset --mixed &lt;commit&gt;</span><br><span class="line">git reset --hard &lt;commit&gt;</span><br><span class="line">git reflog</span><br><span class="line">git reflog is your emergency <span class="built_in">exit</span>.</span><br></pre></td></tr></table></figure>
+<h2 id="Tags-and-Version-Releases"><a href="#Tags-and-Version-Releases" class="headerlink" title="Tags and Version Releases "></a>Tags and Version Releases <a name="tags-and-version-releases"></a></h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git tag -a v1.0 -m <span class="string">&quot;First release&quot;</span></span><br><span class="line">git push origin --tags</span><br></pre></td></tr></table></figure>
+
+<p>Tags are ideal for marking stable releases.</p>
+<h2 id="Common-Development-Scenarios"><a href="#Common-Development-Scenarios" class="headerlink" title="Common Development Scenarios "></a>Common Development Scenarios <a name="common-development-scenarios"></a></h2><h3 id="New-Project-Push"><a href="#New-Project-Push" class="headerlink" title="New Project Push "></a>New Project Push <a name="new-project-push"></a></h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git init</span><br><span class="line">git add .</span><br><span class="line">git commit -m <span class="string">&quot;init: initial commit&quot;</span></span><br><span class="line">git remote add origin &lt;repo&gt;</span><br><span class="line">git push -u origin main</span><br></pre></td></tr></table></figure>
+
+<h3 id="Team-Feature-Development"><a href="#Team-Feature-Development" class="headerlink" title="Team Feature Development "></a>Team Feature Development <a name="team-feature-development"></a></h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git checkout -b feature/payment</span><br><span class="line">git commit -m <span class="string">&quot;feat: payment integration&quot;</span></span><br><span class="line">git push origin feature/payment</span><br></pre></td></tr></table></figure>
+
+<h3 id="Hotfix-Production-Bug"><a href="#Hotfix-Production-Bug" class="headerlink" title="Hotfix Production Bug "></a>Hotfix Production Bug <a name="hotfix-production-bug"></a></h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git checkout main</span><br><span class="line">git pull</span><br><span class="line">git checkout -b hotfix/critical-bug</span><br><span class="line">git commit -m <span class="string">&quot;fix: critical production issue&quot;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="Common-Pitfalls-and-How-to-Avoid-Them"><a href="#Common-Pitfalls-and-How-to-Avoid-Them" class="headerlink" title="Common Pitfalls and How to Avoid Them "></a>Common Pitfalls and How to Avoid Them <a name="common-pitfalls-and-how-to-avoid-them"></a></h2><ul>
+<li>Forgot git add</li>
+<li>Merge conflicts ignored</li>
+<li>Panic after git reset –hard</li>
+<li>Using password instead of token&#x2F;SSH</li>
+</ul>
+<p>Tip: If something goes wrong, stop and check git reflog.</p>
+<h2 id="Using-SSH-with-GitHub-Recommended"><a href="#Using-SSH-with-GitHub-Recommended" class="headerlink" title="Using SSH with GitHub (Recommended) "></a>Using SSH with GitHub (Recommended) <a name="using-ssh-with-github-recommended"></a></h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ssh-keygen -t ed25519 -C <span class="string">&quot;you@example.com&quot;</span></span><br><span class="line"><span class="built_in">cat</span> ~/.ssh/id_ed25519.pub</span><br><span class="line">ssh -T git@github.com</span><br></pre></td></tr></table></figure>
+
+<p>Successful output:</p>
+<figure class="highlight rust"><table><tr><td class="code"><pre><span class="line">Hi username! You<span class="symbol">&#x27;ve</span> successfully authenticated.</span><br></pre></td></tr></table></figure>
+
+<h2 id="Git-Best-Practices"><a href="#Git-Best-Practices" class="headerlink" title="Git Best Practices "></a>Git Best Practices <a name="git-best-practices"></a></h2><p>Commit small, meaningful changes</p>
+<p>Write clear commit messages</p>
+<p>Use branches aggressively</p>
+<p>Clean unused branches regularly</p>
+<p>Prefer SSH over HTTPS</p>
+<p>Use fine-grained tokens for automation</p>
+<h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion "></a>Conclusion <a name="conclusion"></a></h2><p>You don’t need to memorize every Git command.</p>
+<p>Git is not about commands—it’s about understanding history and collaboration.</p>
+<p>Once you understand the workflow, Git becomes a powerful safety net rather than a source of anxiety.</p>
+<link rel="stylesheet" href="/css/folder.css" type="text/css"><script src="/js/folder.js" type="text/javascript" async></script>]]></content>
+      <categories>
+        <category>Development</category>
+        <category>Git</category>
+      </categories>
+      <tags>
+        <tag>Git</tag>
+        <tag>Version Control</tag>
+        <tag>GitHub</tag>
+        <tag>CLI</tag>
+        <tag>Software Engineering</tag>
       </tags>
   </entry>
   <entry>
@@ -2612,7 +2612,7 @@ When a mismatch occurs, the text pointer backtracks to i&#x3D;2, and the pattern
 <h3 id="2-Subagent-Strategy"><a href="#2-Subagent-Strategy" class="headerlink" title="2. Subagent Strategy"></a>2. Subagent Strategy</h3><ul>
 <li>Use subagents liberally to keep main context window clean</li>
 <li>Offload research, exploration, and parallel analysis to subagents</li>
-<li>One tack per subagent for focused execution</li>
+<li>One tack per subagent for focused execution<span id="more"></span></li>
 </ul>
 <h3 id="3-Self-Improvement-Loop"><a href="#3-Self-Improvement-Loop" class="headerlink" title="3. Self-Improvement Loop"></a>3. Self-Improvement Loop</h3><ul>
 <li>After ANY correction from the user: update <code>tasks/lessons.md</code> with the pattern</li>
