@@ -1375,185 +1375,6 @@ Use Cases:</li>
       </tags>
   </entry>
   <entry>
-    <title>Hash Table</title>
-    <url>/2025/04/05/Hash-Table/</url>
-    <content><![CDATA[<ol>
-<li><a href="#introduction">What is Hash Table</a> <ul>
-<li><a href="#core">Core Concepts</a></li>
-<li><a href="#common">Common operations of hash table</a></li>
-</ul>
-</li>
-<li><a href="#hc">Hash Collision</a><ul>
-<li><a href="#sc">Separate Chaining</a></li>
-<li><a href="#oa">Open Addressing</a></li>
-</ul>
-</li>
-<li><a href="#ha">Hash Alogrithm</a><ul>
-<li><a href="#goal">Goals of hash algorithms</a></li>
-<li><a href="#cha">Common hash algorithms</a></li>
-</ul>
-</li>
-<li><a href="#pa">Practical Examples</a><ul>
-<li><a href="#fs">four sum</a><span id="more"></span></li>
-</ul>
-</li>
-</ol>
-<h2 id="What-is-Hash-Table"><a href="#What-is-Hash-Table" class="headerlink" title="What is Hash Table?"></a>What is Hash Table?<a name="introduction"></a></h2><p>A <strong><a href="https://en.wikipedia.org/wiki/Hash_table">Hash Table</a></strong> is a high-efficiency data structure that stores key-value pairs.It uses a hash function to map keys to storage locations, achieving average <strong>O(1)</strong> time complexity for <strong>fast insertions, lookups, and deletions</strong>.The index functions as a storage location for the matching value. In simple words, it maps the keys with the value.Widely used in caching systems, database indexing, and compiler symbol tables.<br><img src="/2025/04/05/Hash-Table/hs01.png" alt="pic"></p>
-<h3 id="Core-Concepts"><a href="#Core-Concepts" class="headerlink" title="Core Concepts"></a>Core Concepts<a name="core"></a></h3><ul>
-<li><strong>Key</strong>: A unique identifier for the data.</li>
-<li><strong>Value</strong>: The data associated with the key (simplified to just storing keys in this example).</li>
-<li><strong>Bucket</strong>: A storage unit in the hash table (typically an array).</li>
-<li><strong>Hash Functions:</strong><br>A hash function converts a key into an index for the underlying array:<ul>
-<li>Deterministic: Same key always produces the same index.</li>
-<li>Efficient: Computed quickly to avoid performance bottlenecks.</li>
-<li>Uniform: Distributes keys evenly to minimize collisions.</li>
-</ul>
-</li>
-<li><strong>Handling Hash Collisions:</strong><br>When two different keys produce the same index, a collision occurs. Common solutions include:<ul>
-<li><strong>Seperate Chaining</strong>: Store conflicting elements in a linked list at the same index.</li>
-<li><strong>Open Addressing</strong>: Find the next available slot in the array.</li>
-</ul>
-</li>
-</ul>
-<p>In addition to hash tables, arrays and linked lists can also be used to implement query functionality, but the time complexity is different. </p>
-<table>
-<thead>
-<tr>
-<th align="center"></th>
-<th align="center"><strong>Array</strong></th>
-<th align="center"><strong>Linked List</strong></th>
-<th align="center"><strong>Hash Table</strong></th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">Search</td>
-<td align="center">O(n)</td>
-<td align="center">O(n)</td>
-<td align="center">O(1)</td>
-</tr>
-<tr>
-<td align="center">Insert</td>
-<td align="center">O(1)</td>
-<td align="center">O(1)</td>
-<td align="center">O(1)</td>
-</tr>
-<tr>
-<td align="center">Delete</td>
-<td align="center">O(n)</td>
-<td align="center">O(n)</td>
-<td align="center">O(1)</td>
-</tr>
-</tbody></table>
-<p>Per aboved comparison, <strong>the time complexity for operations (insertion, deletion, searching, and modification) in a hash table is O(1)</strong>, which is highly efficient.</p>
-<h3 id="Common-operations-of-hash-table"><a href="#Common-operations-of-hash-table" class="headerlink" title="Common operations of hash table"></a>Common operations of hash table<a name="common"></a></h3><p>Common operations of a hash table include: initialization, querying, adding key-value pairs, and deleting key-value pairs. Here is an example code:</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">/* Initialize hash table */</span><br><span class="line">Dictionary&lt;int, string&gt; map = new() &#123;</span><br><span class="line">    /* Add operation */</span><br><span class="line">    // Add key-value pair (key, value) to hash table</span><br><span class="line">    &#123; 13835, &quot;Tom&quot; &#125;,</span><br><span class="line">    &#123; 16937, &quot;Jerry&quot; &#125;,</span><br><span class="line">    &#123; 16852, &quot;Steve&quot; &#125;,</span><br><span class="line">    &#123; 13200, &quot;James&quot; &#125;,</span><br><span class="line">    &#123; 14583, &quot;Lisa&quot; &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">/* Query operation */</span><br><span class="line">// Input key into hash table, get value</span><br><span class="line">string name = map[16937];</span><br><span class="line"></span><br><span class="line">/* Delete operation */</span><br><span class="line">// Delete key-value pair (key, value) from hash table</span><br><span class="line">map.Remove(14583);</span><br></pre></td></tr></table></figure>
-<p>There are three common ways to traverse a hash table: traversing key-value pairs, traversing keys, and traversing values. Here is an example code:</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">/* Traverse hash table */</span><br><span class="line">// Traverse key-value pairs Key-&gt;Value</span><br><span class="line">foreach (var kv in map) &#123;</span><br><span class="line">    Console.WriteLine(kv.Key + &quot; -&gt; &quot; + kv.Value);</span><br><span class="line">&#125;</span><br><span class="line">// Traverse keys only</span><br><span class="line">foreach (int key in map.Keys) &#123;</span><br><span class="line">    Console.WriteLine(key);</span><br><span class="line">&#125;</span><br><span class="line">// Traverse values only</span><br><span class="line">foreach (string val in map.Values) &#123;</span><br><span class="line">    Console.WriteLine(val);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="Hash-Collision"><a href="#Hash-Collision" class="headerlink" title="Hash Collision"></a>Hash Collision<a name="hc"></a></h2><p>The hashing process generates a small number for a big key, so there is a possibility that two keys could produce the same value. The situation where the newly inserted key maps to an already occupied, and it must be handled using some collision handling technology.<br><img src="/2025/04/05/Hash-Table/hs02.png" alt="pic"></p>
-<p>There are mainly two methods to handle collision:</p>
-<ul>
-<li>Separate Chaining</li>
-<li>Open Addressing</li>
-</ul>
-<h3 id="Separate-Chaining"><a href="#Separate-Chaining" class="headerlink" title="Separate Chaining "></a>Separate Chaining <a name="sc"></a></h3><p>Separate chaining converts a single element into a linked list, treating key-value pairs as list nodes, storing all colliding key-value pairs in the same linked list.<br>The operations of a hash table implemented with separate chaining have changed as follows:</p>
-<ul>
-<li>Searching Elements: Input key, obtain the bucket index through the hash function, then access the head node of the linked list. Traverse the linked list and compare key to find the target key-value pair.</li>
-<li>Inserting Elements: Access the head node of the linked list via the hash function, then append the node (key-value pair) to the list.</li>
-<li>Deleting Elements: Access the head of the linked list based on the result of the hash function, then traverse the linked list to find the target node and delete it.<br><img src="/2025/04/05/Hash-Table/hs03.png" alt="pic"></li>
-</ul>
-<p>The code below provides a simple implementation of a separate chaining hash table, with two things to note:</p>
-<ul>
-<li>Lists (dynamic arrays) are used instead of linked lists for simplicity. In this setup, the hash table (array) contains multiple buckets, each of which is a list.</li>
-<li>This implementation includes a hash table resizing method. When the load factor exceeds <strong>0.7</strong>, we expand the hash table to twice its original size.<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title">Hash</span></span><br><span class="line">&#123;</span><br><span class="line">      <span class="built_in">int</span> BUCKET;</span><br><span class="line">      List&lt;<span class="built_in">int</span>&gt;[] table;</span><br><span class="line">      <span class="built_in">int</span> elementCount;</span><br><span class="line">      <span class="keyword">const</span> <span class="built_in">double</span> LOAD_FACTOR_THRESHOLD = <span class="number">0.7</span>;</span><br><span class="line">      <span class="function"><span class="keyword">public</span> <span class="title">Hash</span>(<span class="params"><span class="built_in">int</span> V</span>)</span></span><br><span class="line">      &#123;</span><br><span class="line">          <span class="keyword">this</span>.BUCKET = V;</span><br><span class="line">          table = <span class="keyword">new</span> List&lt;<span class="built_in">int</span>&gt;[BUCKET];</span><br><span class="line">          elementCount = <span class="number">0</span>;</span><br><span class="line">          <span class="keyword">for</span> (<span class="built_in">int</span> i = <span class="number">0</span>; i &lt; BUCKET; i++)</span><br><span class="line">              table[i] = <span class="keyword">new</span> List&lt;<span class="built_in">int</span>&gt;();</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="comment">// Hash function to map values to key</span></span><br><span class="line">      <span class="function"><span class="keyword">private</span> <span class="built_in">int</span> <span class="title">hashFunction</span>(<span class="params"><span class="built_in">int</span> x</span>)</span></span><br><span class="line">      &#123;</span><br><span class="line">          <span class="built_in">int</span> hash = x.GetHashCode();</span><br><span class="line">          <span class="keyword">return</span> (hash % BUCKET + BUCKET) % BUCKET;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="function"><span class="built_in">double</span> <span class="title">GetLoadFactor</span>()</span></span><br><span class="line">      &#123;</span><br><span class="line">          <span class="keyword">return</span> (<span class="built_in">double</span>)elementCount / BUCKET;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="function"><span class="keyword">void</span> <span class="title">Rehash</span>()</span></span><br><span class="line">      &#123;</span><br><span class="line">          <span class="built_in">int</span> oldBucket = BUCKET; <span class="comment">// old bucket</span></span><br><span class="line">          <span class="built_in">int</span> newBucket = oldBucket * <span class="number">2</span>; <span class="comment">// new bucket</span></span><br><span class="line">          List&lt;<span class="built_in">int</span>&gt;[] newTable = <span class="keyword">new</span> List&lt;<span class="built_in">int</span>&gt;[newBucket];</span><br><span class="line">          <span class="keyword">for</span>(<span class="built_in">int</span> i = <span class="number">0</span>; i &lt; newBucket; i++)</span><br><span class="line">          &#123;</span><br><span class="line">              newTable[i] = <span class="keyword">new</span> List&lt;<span class="built_in">int</span>&gt;();</span><br><span class="line">          &#125;</span><br><span class="line"></span><br><span class="line">          <span class="keyword">for</span>(<span class="built_in">int</span> i = <span class="number">0</span>;i&lt; oldBucket; i++)</span><br><span class="line">          &#123;</span><br><span class="line">              <span class="keyword">foreach</span>(<span class="built_in">int</span> key <span class="keyword">in</span> table[i])</span><br><span class="line">              &#123;</span><br><span class="line">                  <span class="built_in">int</span> newIndex = key%newBucket;</span><br><span class="line"></span><br><span class="line">                  <span class="keyword">if</span> (!newTable[newIndex].Contains(key))</span><br><span class="line">                  &#123;</span><br><span class="line">                      newTable[newIndex].Add(key);</span><br><span class="line">                  &#125;</span><br><span class="line">                  </span><br><span class="line">              &#125;</span><br><span class="line">          &#125;</span><br><span class="line">          table = newTable;</span><br><span class="line">          BUCKET = newBucket;</span><br><span class="line">          Console.WriteLine(<span class="string">$&quot;Rehashed to <span class="subst">&#123;newBucket&#125;</span> buckets&quot;</span>);</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="function"><span class="keyword">public</span> <span class="built_in">bool</span> <span class="title">Contains</span>(<span class="params"><span class="built_in">int</span> key</span>)</span></span><br><span class="line">      &#123;</span><br><span class="line">          <span class="built_in">int</span> index = hashFunction(key);</span><br><span class="line">          <span class="keyword">return</span> table[index].Contains(key);</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">insertItem</span>(<span class="params"><span class="built_in">int</span> key</span>)</span></span><br><span class="line">      &#123;</span><br><span class="line">          <span class="keyword">if</span> (Contains(key))</span><br><span class="line">          &#123;</span><br><span class="line">              Console.WriteLine(<span class="string">$&quot;Key <span class="subst">&#123;key&#125;</span> already exists&quot;</span>);</span><br><span class="line">              <span class="keyword">return</span>;</span><br><span class="line">          &#125;</span><br><span class="line">          <span class="built_in">int</span> index = hashFunction(key);</span><br><span class="line">          table[index].Add(key);</span><br><span class="line"></span><br><span class="line">          elementCount++;</span><br><span class="line">          <span class="keyword">if</span>(GetLoadFactor()&gt; LOAD_FACTOR_THRESHOLD)</span><br><span class="line">          &#123;</span><br><span class="line">              Rehash();</span><br><span class="line">          &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="comment">// Deletes a key from the hash table</span></span><br><span class="line">      <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">deleteItem</span>(<span class="params"><span class="built_in">int</span> key</span>)</span></span><br><span class="line">      &#123;</span><br><span class="line">          <span class="built_in">int</span> index = hashFunction(key);</span><br><span class="line">          table[index].Remove(key);</span><br><span class="line">          elementCount--;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">displayHash</span>()</span></span><br><span class="line">      &#123;</span><br><span class="line">          <span class="keyword">for</span> (<span class="built_in">int</span> i = <span class="number">0</span>; i &lt; BUCKET; i++)</span><br><span class="line">          &#123;</span><br><span class="line">              Console.Write(i + <span class="string">&quot; --&gt; &quot;</span>);</span><br><span class="line">              <span class="keyword">foreach</span> (<span class="built_in">int</span> x <span class="keyword">in</span> table[i])</span><br><span class="line">                  Console.Write(x + <span class="string">&quot; &quot;</span>);</span><br><span class="line">              Console.WriteLine();</span><br><span class="line">          &#125;</span><br><span class="line">      &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<img src="/2025/04/05/Hash-Table/hs04.png" alt="pic"></li>
-</ul>
-<p>It is worth noting that when the linked list is very long, the query efficiency<br>is poor. In this case, the list can be converted to an <strong>“AVL tree”</strong> or <strong>“Red-Black tree”</strong> to optimize the time complexity of the query operation to <strong>O(log n)</strong>.</p>
-<h3 id="Open-Addressing"><a href="#Open-Addressing" class="headerlink" title="Open Addressing "></a>Open Addressing <a name="oa"></a></h3><p>In open addressing, all elements are stored in the hash table itself. Each table entry contains either a record or NIL. When searching for an element, we examine the table slots one by one until the desired element is found or it is clear that the element is not in the table.</p>
-<p>Probe Strategies:</p>
-<ul>
-<li><strong>Linear Probing:</strong><br>In linear probing, the hash table is searched sequentially that starts from the original location of the hash. If in case the location that we get is already occupied, then we check for the next location.</li>
-<li><strong>Quadratic Probing</strong>: Search with step size i^2.</li>
-<li><strong>Double Hashing</strong>: Use a second hash function to calculate the step size.</li>
-</ul>
-<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title">OpenAddressingHash</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="built_in">int</span> BUCKET;             <span class="comment">// Number of buckets</span></span><br><span class="line">    <span class="keyword">private</span> <span class="built_in">int</span>?[] table;           <span class="comment">// Storage for keys, null indicates empty</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">OpenAddressingHash</span>(<span class="params"><span class="built_in">int</span> V</span>)</span> &#123;</span><br><span class="line">        <span class="keyword">this</span>.BUCKET = V;</span><br><span class="line">        table = <span class="keyword">new</span> <span class="built_in">int</span>?[BUCKET]; <span class="comment">// Initialize as empty</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Hash function: Modulo operation</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="built_in">int</span> <span class="title">hashFunction</span>(<span class="params"><span class="built_in">int</span> x</span>)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> (x % BUCKET);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Insert item</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="built_in">bool</span> <span class="title">insertItem</span>(<span class="params"><span class="built_in">int</span> key</span>)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (isFull()) <span class="keyword">return</span> <span class="literal">false</span>; <span class="comment">// Hash table is full</span></span><br><span class="line"></span><br><span class="line">        <span class="built_in">int</span> index = hashFunction(key);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Linear probing</span></span><br><span class="line">        <span class="built_in">int</span> i = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span> (table[(index + i) % BUCKET] != <span class="literal">null</span>) &#123;</span><br><span class="line">            i++;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        table[(index + i) % BUCKET] = key;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Search item</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="built_in">bool</span> <span class="title">searchItem</span>(<span class="params"><span class="built_in">int</span> key</span>)</span> &#123;</span><br><span class="line">        <span class="built_in">int</span> index = hashFunction(key);</span><br><span class="line"></span><br><span class="line">        <span class="built_in">int</span> i = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span> (table[(index + i) % BUCKET] != <span class="literal">null</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span> (table[(index + i) % BUCKET] == key)</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">            i++;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Delete item</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="built_in">bool</span> <span class="title">deleteItem</span>(<span class="params"><span class="built_in">int</span> key</span>)</span> &#123;</span><br><span class="line">        <span class="built_in">int</span> index = hashFunction(key);</span><br><span class="line"></span><br><span class="line">        <span class="built_in">int</span> i = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span> (table[(index + i) % BUCKET] != <span class="literal">null</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span> (table[(index + i) % BUCKET] == key) &#123;</span><br><span class="line">                table[(index + i) % BUCKET] = <span class="literal">null</span>; <span class="comment">// Mark as empty</span></span><br><span class="line">                <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            i++;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Check if hash table is full</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="built_in">bool</span> <span class="title">isFull</span>()</span> &#123;</span><br><span class="line">        <span class="keyword">foreach</span> (<span class="keyword">var</span> item <span class="keyword">in</span> table) &#123;</span><br><span class="line">            <span class="keyword">if</span> (item == <span class="literal">null</span>)</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Display hash table</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">displayHash</span>()</span> &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="built_in">int</span> i = <span class="number">0</span>; i &lt; BUCKET; i++) &#123;</span><br><span class="line">            Console.WriteLine(<span class="string">$&quot;<span class="subst">&#123;i&#125;</span> --&gt; <span class="subst">&#123;table[i]&#125;</span>&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="Hash-Alogrithm"><a href="#Hash-Alogrithm" class="headerlink" title="Hash Alogrithm"></a>Hash Alogrithm<a name="ha"></a></h2><h3 id="Goals-of-hash-algorithms"><a href="#Goals-of-hash-algorithms" class="headerlink" title="Goals of hash algorithms"></a>Goals of hash algorithms<a name="goal"></a></h3><p>To achieve a fast and stable hash table data structure, hash algorithms should have the following characteristics:</p>
-<ul>
-<li><strong>Determinism</strong>: For the same input, the hash algorithm should always produce the same output. Only then can the hash table be reliable.</li>
-<li><strong>High efficiency</strong>: The process of computing the hash value should be fast enough. The smaller the computational overhead, the more practical the hash table.</li>
-<li><strong>Uniform distribution</strong>: The hash algorithm should ensure that key-value pairs are evenly distributed in the hash table. The more uniform the distribution, the lower the probability of hash collisions.</li>
-</ul>
-<p>Your company might use a hashing algorithm for:</p>
-<ul>
-<li><strong>Password storage</strong>. You must keep records of all of the username&#x2F;password combinations people use to access your resources. But if a hacker gains entry, stealing unprotected data is easy. Hashing ensures that the data is stored in a scrambled state, so it is harder to steal.</li>
-<li><strong>Digital signatures</strong>. A tiny bit of data proves that a note wasn’t modified from the time it leaves a user’s outbox and reaches your inbox.</li>
-<li><strong>Document management</strong>. Hashing algorithms can be used to authenticate data. The writer uses a hash to secure the document when it’s complete. The hash works a bit like a seal of approval.<br>A recipient can generate a hash and compare it to the original. If the two are equal, the data is considered genuine. If they don’t match, the document has been changed.</li>
-</ul>
-<h3 id="Common-hash-algorithms"><a href="#Common-hash-algorithms" class="headerlink" title="Common hash algorithms"></a>Common hash algorithms<a name="cha"></a></h3><p>Over the past century, hash algorithms have been in a continuous process of upgrading and optimization. Some researchers strive to improve the performance of hash algorithms, while others, including hackers, are dedicated to finding security issues in hash algorithms.</p>
-<ul>
-<li><strong>MD5</strong> and <strong>SHA-1</strong> have been successfully attacked multiple times and are thus abandoned in various security applications.</li>
-<li><strong>SHA-2</strong> series, especially SHA-256, is one of the most secure hash algorithms to date, with no successful attacks reported, hence commonly used in various security applications and protocols.</li>
-<li><strong>SHA-3</strong> has lower implementation costs and higher computational efficiency compared to SHA-2, but its current usage coverage is not as extensive as the SHA-2 series.</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th align="center"></th>
-<th align="center"><strong>MD5</strong></th>
-<th align="center"><strong>SHA-1</strong></th>
-<th align="center"><strong>SHA-2</strong></th>
-<th align="center"><strong>SHA-3</strong></th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">Release Year</td>
-<td align="center">1992</td>
-<td align="center">1995</td>
-<td align="center">2002</td>
-<td align="center">2008</td>
-</tr>
-<tr>
-<td align="center">Output Length</td>
-<td align="center">O(1)</td>
-<td align="center">O(1)</td>
-<td align="center">O(1)</td>
-<td align="center">224&#x2F;256&#x2F;384&#x2F;512 bit</td>
-</tr>
-<tr>
-<td align="center">Hash Collisions</td>
-<td align="center">Frequent</td>
-<td align="center">Frequent</td>
-<td align="center">Rare</td>
-<td align="center">Rare</td>
-</tr>
-<tr>
-<td align="center">Security Level</td>
-<td align="center">Low, has been successfully attacked</td>
-<td align="center">Low, has been successfully attacked</td>
-<td align="center">High</td>
-<td align="center">High</td>
-</tr>
-<tr>
-<td align="center">Applications</td>
-<td align="center">Abandoned, still used for data integrity checks</td>
-<td align="center">Abandoned</td>
-<td align="center">Cryptocurrency transaction verification, digital signatures, etc.</td>
-<td align="center">Can be used to replace SHA-2</td>
-</tr>
-</tbody></table>
-<h3 id="Four-Sum"><a href="#Four-Sum" class="headerlink" title="Four Sum "></a>Four Sum <a name="fs"></a></h3><p>Given an array nums of n integers, return an array of all the unique quadruplets [nums[a], nums[b], nums[c], nums[d]] such that:</p>
-<ul>
-<li>0 &lt;&#x3D; i, j, k, l &lt; n</li>
-<li>nums1[i] + nums2[j] + nums3[k] + nums4[l] &#x3D;&#x3D; 0<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="built_in">int</span> <span class="title">FourSumCount</span>(<span class="params"><span class="built_in">int</span>[] nums1, <span class="built_in">int</span>[] nums2, <span class="built_in">int</span>[] nums3, <span class="built_in">int</span>[] nums4</span>)</span> &#123;</span><br><span class="line">       Dictionary&lt;<span class="built_in">int</span>, <span class="built_in">int</span>&gt; dic = <span class="keyword">new</span> Dictionary&lt;<span class="built_in">int</span>, <span class="built_in">int</span>&gt;();</span><br><span class="line">        <span class="keyword">foreach</span>(<span class="keyword">var</span> i <span class="keyword">in</span> nums1)&#123;</span><br><span class="line">            <span class="keyword">foreach</span>(<span class="keyword">var</span> j <span class="keyword">in</span> nums2)&#123;</span><br><span class="line">                <span class="built_in">int</span> sum = i + j;</span><br><span class="line">                <span class="keyword">if</span>(dic.ContainsKey(sum))&#123;</span><br><span class="line">                    dic[sum]++;</span><br><span class="line">                &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                    dic.Add(sum, <span class="number">1</span>);</span><br><span class="line">                &#125;</span><br><span class="line">                </span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">int</span> res = <span class="number">0</span>;</span><br><span class="line">         <span class="keyword">foreach</span>(<span class="keyword">var</span> a <span class="keyword">in</span> nums3)&#123;</span><br><span class="line">            <span class="keyword">foreach</span>(<span class="keyword">var</span> b <span class="keyword">in</span> nums4)&#123;</span><br><span class="line">                <span class="built_in">int</span> sum = a+b;</span><br><span class="line">                <span class="keyword">if</span>(dic.TryGetValue(-sum, <span class="keyword">out</span> <span class="keyword">var</span> result))&#123;</span><br><span class="line">                    res += result;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
-</ul>
-<link rel="stylesheet" href="/css/folder.css" type="text/css"><script src="/js/folder.js" type="text/javascript" async></script>]]></content>
-      <categories>
-        <category>Data Structure and Alogrithm</category>
-      </categories>
-      <tags>
-        <tag>Data Structure and Alogrithm</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Hexo Blog Multi-Device Synchronization and Management Guide Based on Git Branch Strategy</title>
     <url>/2025/05/03/Hexo-Blog-Multi-Device-Synchronization-and-Management-Guide-Based-on-Git-Branch-Strategy/</url>
     <content><![CDATA[<ul>
@@ -1820,9 +1641,188 @@ When a mismatch occurs, the text pointer backtracks to i&#x3D;2, and the pattern
       </tags>
   </entry>
   <entry>
+    <title>Hash Table</title>
+    <url>/2025/04/05/Hash-Table/</url>
+    <content><![CDATA[<ol>
+<li><a href="#introduction">What is Hash Table</a> <ul>
+<li><a href="#core">Core Concepts</a></li>
+<li><a href="#common">Common operations of hash table</a></li>
+</ul>
+</li>
+<li><a href="#hc">Hash Collision</a><ul>
+<li><a href="#sc">Separate Chaining</a></li>
+<li><a href="#oa">Open Addressing</a></li>
+</ul>
+</li>
+<li><a href="#ha">Hash Alogrithm</a><ul>
+<li><a href="#goal">Goals of hash algorithms</a></li>
+<li><a href="#cha">Common hash algorithms</a></li>
+</ul>
+</li>
+<li><a href="#pa">Practical Examples</a><ul>
+<li><a href="#fs">four sum</a><span id="more"></span></li>
+</ul>
+</li>
+</ol>
+<h2 id="What-is-Hash-Table"><a href="#What-is-Hash-Table" class="headerlink" title="What is Hash Table?"></a>What is Hash Table?<a name="introduction"></a></h2><p>A <strong><a href="https://en.wikipedia.org/wiki/Hash_table">Hash Table</a></strong> is a high-efficiency data structure that stores key-value pairs.It uses a hash function to map keys to storage locations, achieving average <strong>O(1)</strong> time complexity for <strong>fast insertions, lookups, and deletions</strong>.The index functions as a storage location for the matching value. In simple words, it maps the keys with the value.Widely used in caching systems, database indexing, and compiler symbol tables.<br><img src="/2025/04/05/Hash-Table/hs01.png" alt="pic"></p>
+<h3 id="Core-Concepts"><a href="#Core-Concepts" class="headerlink" title="Core Concepts"></a>Core Concepts<a name="core"></a></h3><ul>
+<li><strong>Key</strong>: A unique identifier for the data.</li>
+<li><strong>Value</strong>: The data associated with the key (simplified to just storing keys in this example).</li>
+<li><strong>Bucket</strong>: A storage unit in the hash table (typically an array).</li>
+<li><strong>Hash Functions:</strong><br>A hash function converts a key into an index for the underlying array:<ul>
+<li>Deterministic: Same key always produces the same index.</li>
+<li>Efficient: Computed quickly to avoid performance bottlenecks.</li>
+<li>Uniform: Distributes keys evenly to minimize collisions.</li>
+</ul>
+</li>
+<li><strong>Handling Hash Collisions:</strong><br>When two different keys produce the same index, a collision occurs. Common solutions include:<ul>
+<li><strong>Seperate Chaining</strong>: Store conflicting elements in a linked list at the same index.</li>
+<li><strong>Open Addressing</strong>: Find the next available slot in the array.</li>
+</ul>
+</li>
+</ul>
+<p>In addition to hash tables, arrays and linked lists can also be used to implement query functionality, but the time complexity is different. </p>
+<table>
+<thead>
+<tr>
+<th align="center"></th>
+<th align="center"><strong>Array</strong></th>
+<th align="center"><strong>Linked List</strong></th>
+<th align="center"><strong>Hash Table</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">Search</td>
+<td align="center">O(n)</td>
+<td align="center">O(n)</td>
+<td align="center">O(1)</td>
+</tr>
+<tr>
+<td align="center">Insert</td>
+<td align="center">O(1)</td>
+<td align="center">O(1)</td>
+<td align="center">O(1)</td>
+</tr>
+<tr>
+<td align="center">Delete</td>
+<td align="center">O(n)</td>
+<td align="center">O(n)</td>
+<td align="center">O(1)</td>
+</tr>
+</tbody></table>
+<p>Per aboved comparison, <strong>the time complexity for operations (insertion, deletion, searching, and modification) in a hash table is O(1)</strong>, which is highly efficient.</p>
+<h3 id="Common-operations-of-hash-table"><a href="#Common-operations-of-hash-table" class="headerlink" title="Common operations of hash table"></a>Common operations of hash table<a name="common"></a></h3><p>Common operations of a hash table include: initialization, querying, adding key-value pairs, and deleting key-value pairs. Here is an example code:</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">/* Initialize hash table */</span><br><span class="line">Dictionary&lt;int, string&gt; map = new() &#123;</span><br><span class="line">    /* Add operation */</span><br><span class="line">    // Add key-value pair (key, value) to hash table</span><br><span class="line">    &#123; 13835, &quot;Tom&quot; &#125;,</span><br><span class="line">    &#123; 16937, &quot;Jerry&quot; &#125;,</span><br><span class="line">    &#123; 16852, &quot;Steve&quot; &#125;,</span><br><span class="line">    &#123; 13200, &quot;James&quot; &#125;,</span><br><span class="line">    &#123; 14583, &quot;Lisa&quot; &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">/* Query operation */</span><br><span class="line">// Input key into hash table, get value</span><br><span class="line">string name = map[16937];</span><br><span class="line"></span><br><span class="line">/* Delete operation */</span><br><span class="line">// Delete key-value pair (key, value) from hash table</span><br><span class="line">map.Remove(14583);</span><br></pre></td></tr></table></figure>
+<p>There are three common ways to traverse a hash table: traversing key-value pairs, traversing keys, and traversing values. Here is an example code:</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">/* Traverse hash table */</span><br><span class="line">// Traverse key-value pairs Key-&gt;Value</span><br><span class="line">foreach (var kv in map) &#123;</span><br><span class="line">    Console.WriteLine(kv.Key + &quot; -&gt; &quot; + kv.Value);</span><br><span class="line">&#125;</span><br><span class="line">// Traverse keys only</span><br><span class="line">foreach (int key in map.Keys) &#123;</span><br><span class="line">    Console.WriteLine(key);</span><br><span class="line">&#125;</span><br><span class="line">// Traverse values only</span><br><span class="line">foreach (string val in map.Values) &#123;</span><br><span class="line">    Console.WriteLine(val);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="Hash-Collision"><a href="#Hash-Collision" class="headerlink" title="Hash Collision"></a>Hash Collision<a name="hc"></a></h2><p>The hashing process generates a small number for a big key, so there is a possibility that two keys could produce the same value. The situation where the newly inserted key maps to an already occupied, and it must be handled using some collision handling technology.<br><img src="/2025/04/05/Hash-Table/hs02.png" alt="pic"></p>
+<p>There are mainly two methods to handle collision:</p>
+<ul>
+<li>Separate Chaining</li>
+<li>Open Addressing</li>
+</ul>
+<h3 id="Separate-Chaining"><a href="#Separate-Chaining" class="headerlink" title="Separate Chaining "></a>Separate Chaining <a name="sc"></a></h3><p>Separate chaining converts a single element into a linked list, treating key-value pairs as list nodes, storing all colliding key-value pairs in the same linked list.<br>The operations of a hash table implemented with separate chaining have changed as follows:</p>
+<ul>
+<li>Searching Elements: Input key, obtain the bucket index through the hash function, then access the head node of the linked list. Traverse the linked list and compare key to find the target key-value pair.</li>
+<li>Inserting Elements: Access the head node of the linked list via the hash function, then append the node (key-value pair) to the list.</li>
+<li>Deleting Elements: Access the head of the linked list based on the result of the hash function, then traverse the linked list to find the target node and delete it.<br><img src="/2025/04/05/Hash-Table/hs03.png" alt="pic"></li>
+</ul>
+<p>The code below provides a simple implementation of a separate chaining hash table, with two things to note:</p>
+<ul>
+<li>Lists (dynamic arrays) are used instead of linked lists for simplicity. In this setup, the hash table (array) contains multiple buckets, each of which is a list.</li>
+<li>This implementation includes a hash table resizing method. When the load factor exceeds <strong>0.7</strong>, we expand the hash table to twice its original size.<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title">Hash</span></span><br><span class="line">&#123;</span><br><span class="line">      <span class="built_in">int</span> BUCKET;</span><br><span class="line">      List&lt;<span class="built_in">int</span>&gt;[] table;</span><br><span class="line">      <span class="built_in">int</span> elementCount;</span><br><span class="line">      <span class="keyword">const</span> <span class="built_in">double</span> LOAD_FACTOR_THRESHOLD = <span class="number">0.7</span>;</span><br><span class="line">      <span class="function"><span class="keyword">public</span> <span class="title">Hash</span>(<span class="params"><span class="built_in">int</span> V</span>)</span></span><br><span class="line">      &#123;</span><br><span class="line">          <span class="keyword">this</span>.BUCKET = V;</span><br><span class="line">          table = <span class="keyword">new</span> List&lt;<span class="built_in">int</span>&gt;[BUCKET];</span><br><span class="line">          elementCount = <span class="number">0</span>;</span><br><span class="line">          <span class="keyword">for</span> (<span class="built_in">int</span> i = <span class="number">0</span>; i &lt; BUCKET; i++)</span><br><span class="line">              table[i] = <span class="keyword">new</span> List&lt;<span class="built_in">int</span>&gt;();</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="comment">// Hash function to map values to key</span></span><br><span class="line">      <span class="function"><span class="keyword">private</span> <span class="built_in">int</span> <span class="title">hashFunction</span>(<span class="params"><span class="built_in">int</span> x</span>)</span></span><br><span class="line">      &#123;</span><br><span class="line">          <span class="built_in">int</span> hash = x.GetHashCode();</span><br><span class="line">          <span class="keyword">return</span> (hash % BUCKET + BUCKET) % BUCKET;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="function"><span class="built_in">double</span> <span class="title">GetLoadFactor</span>()</span></span><br><span class="line">      &#123;</span><br><span class="line">          <span class="keyword">return</span> (<span class="built_in">double</span>)elementCount / BUCKET;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="function"><span class="keyword">void</span> <span class="title">Rehash</span>()</span></span><br><span class="line">      &#123;</span><br><span class="line">          <span class="built_in">int</span> oldBucket = BUCKET; <span class="comment">// old bucket</span></span><br><span class="line">          <span class="built_in">int</span> newBucket = oldBucket * <span class="number">2</span>; <span class="comment">// new bucket</span></span><br><span class="line">          List&lt;<span class="built_in">int</span>&gt;[] newTable = <span class="keyword">new</span> List&lt;<span class="built_in">int</span>&gt;[newBucket];</span><br><span class="line">          <span class="keyword">for</span>(<span class="built_in">int</span> i = <span class="number">0</span>; i &lt; newBucket; i++)</span><br><span class="line">          &#123;</span><br><span class="line">              newTable[i] = <span class="keyword">new</span> List&lt;<span class="built_in">int</span>&gt;();</span><br><span class="line">          &#125;</span><br><span class="line"></span><br><span class="line">          <span class="keyword">for</span>(<span class="built_in">int</span> i = <span class="number">0</span>;i&lt; oldBucket; i++)</span><br><span class="line">          &#123;</span><br><span class="line">              <span class="keyword">foreach</span>(<span class="built_in">int</span> key <span class="keyword">in</span> table[i])</span><br><span class="line">              &#123;</span><br><span class="line">                  <span class="built_in">int</span> newIndex = key%newBucket;</span><br><span class="line"></span><br><span class="line">                  <span class="keyword">if</span> (!newTable[newIndex].Contains(key))</span><br><span class="line">                  &#123;</span><br><span class="line">                      newTable[newIndex].Add(key);</span><br><span class="line">                  &#125;</span><br><span class="line">                  </span><br><span class="line">              &#125;</span><br><span class="line">          &#125;</span><br><span class="line">          table = newTable;</span><br><span class="line">          BUCKET = newBucket;</span><br><span class="line">          Console.WriteLine(<span class="string">$&quot;Rehashed to <span class="subst">&#123;newBucket&#125;</span> buckets&quot;</span>);</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="function"><span class="keyword">public</span> <span class="built_in">bool</span> <span class="title">Contains</span>(<span class="params"><span class="built_in">int</span> key</span>)</span></span><br><span class="line">      &#123;</span><br><span class="line">          <span class="built_in">int</span> index = hashFunction(key);</span><br><span class="line">          <span class="keyword">return</span> table[index].Contains(key);</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">insertItem</span>(<span class="params"><span class="built_in">int</span> key</span>)</span></span><br><span class="line">      &#123;</span><br><span class="line">          <span class="keyword">if</span> (Contains(key))</span><br><span class="line">          &#123;</span><br><span class="line">              Console.WriteLine(<span class="string">$&quot;Key <span class="subst">&#123;key&#125;</span> already exists&quot;</span>);</span><br><span class="line">              <span class="keyword">return</span>;</span><br><span class="line">          &#125;</span><br><span class="line">          <span class="built_in">int</span> index = hashFunction(key);</span><br><span class="line">          table[index].Add(key);</span><br><span class="line"></span><br><span class="line">          elementCount++;</span><br><span class="line">          <span class="keyword">if</span>(GetLoadFactor()&gt; LOAD_FACTOR_THRESHOLD)</span><br><span class="line">          &#123;</span><br><span class="line">              Rehash();</span><br><span class="line">          &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="comment">// Deletes a key from the hash table</span></span><br><span class="line">      <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">deleteItem</span>(<span class="params"><span class="built_in">int</span> key</span>)</span></span><br><span class="line">      &#123;</span><br><span class="line">          <span class="built_in">int</span> index = hashFunction(key);</span><br><span class="line">          table[index].Remove(key);</span><br><span class="line">          elementCount--;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">displayHash</span>()</span></span><br><span class="line">      &#123;</span><br><span class="line">          <span class="keyword">for</span> (<span class="built_in">int</span> i = <span class="number">0</span>; i &lt; BUCKET; i++)</span><br><span class="line">          &#123;</span><br><span class="line">              Console.Write(i + <span class="string">&quot; --&gt; &quot;</span>);</span><br><span class="line">              <span class="keyword">foreach</span> (<span class="built_in">int</span> x <span class="keyword">in</span> table[i])</span><br><span class="line">                  Console.Write(x + <span class="string">&quot; &quot;</span>);</span><br><span class="line">              Console.WriteLine();</span><br><span class="line">          &#125;</span><br><span class="line">      &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<img src="/2025/04/05/Hash-Table/hs04.png" alt="pic"></li>
+</ul>
+<p>It is worth noting that when the linked list is very long, the query efficiency<br>is poor. In this case, the list can be converted to an <strong>“AVL tree”</strong> or <strong>“Red-Black tree”</strong> to optimize the time complexity of the query operation to <strong>O(log n)</strong>.</p>
+<h3 id="Open-Addressing"><a href="#Open-Addressing" class="headerlink" title="Open Addressing "></a>Open Addressing <a name="oa"></a></h3><p>In open addressing, all elements are stored in the hash table itself. Each table entry contains either a record or NIL. When searching for an element, we examine the table slots one by one until the desired element is found or it is clear that the element is not in the table.</p>
+<p>Probe Strategies:</p>
+<ul>
+<li><strong>Linear Probing:</strong><br>In linear probing, the hash table is searched sequentially that starts from the original location of the hash. If in case the location that we get is already occupied, then we check for the next location.</li>
+<li><strong>Quadratic Probing</strong>: Search with step size i^2.</li>
+<li><strong>Double Hashing</strong>: Use a second hash function to calculate the step size.</li>
+</ul>
+<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title">OpenAddressingHash</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="built_in">int</span> BUCKET;             <span class="comment">// Number of buckets</span></span><br><span class="line">    <span class="keyword">private</span> <span class="built_in">int</span>?[] table;           <span class="comment">// Storage for keys, null indicates empty</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">OpenAddressingHash</span>(<span class="params"><span class="built_in">int</span> V</span>)</span> &#123;</span><br><span class="line">        <span class="keyword">this</span>.BUCKET = V;</span><br><span class="line">        table = <span class="keyword">new</span> <span class="built_in">int</span>?[BUCKET]; <span class="comment">// Initialize as empty</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Hash function: Modulo operation</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="built_in">int</span> <span class="title">hashFunction</span>(<span class="params"><span class="built_in">int</span> x</span>)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> (x % BUCKET);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Insert item</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="built_in">bool</span> <span class="title">insertItem</span>(<span class="params"><span class="built_in">int</span> key</span>)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (isFull()) <span class="keyword">return</span> <span class="literal">false</span>; <span class="comment">// Hash table is full</span></span><br><span class="line"></span><br><span class="line">        <span class="built_in">int</span> index = hashFunction(key);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Linear probing</span></span><br><span class="line">        <span class="built_in">int</span> i = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span> (table[(index + i) % BUCKET] != <span class="literal">null</span>) &#123;</span><br><span class="line">            i++;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        table[(index + i) % BUCKET] = key;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Search item</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="built_in">bool</span> <span class="title">searchItem</span>(<span class="params"><span class="built_in">int</span> key</span>)</span> &#123;</span><br><span class="line">        <span class="built_in">int</span> index = hashFunction(key);</span><br><span class="line"></span><br><span class="line">        <span class="built_in">int</span> i = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span> (table[(index + i) % BUCKET] != <span class="literal">null</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span> (table[(index + i) % BUCKET] == key)</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">            i++;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Delete item</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="built_in">bool</span> <span class="title">deleteItem</span>(<span class="params"><span class="built_in">int</span> key</span>)</span> &#123;</span><br><span class="line">        <span class="built_in">int</span> index = hashFunction(key);</span><br><span class="line"></span><br><span class="line">        <span class="built_in">int</span> i = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span> (table[(index + i) % BUCKET] != <span class="literal">null</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span> (table[(index + i) % BUCKET] == key) &#123;</span><br><span class="line">                table[(index + i) % BUCKET] = <span class="literal">null</span>; <span class="comment">// Mark as empty</span></span><br><span class="line">                <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            i++;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Check if hash table is full</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="built_in">bool</span> <span class="title">isFull</span>()</span> &#123;</span><br><span class="line">        <span class="keyword">foreach</span> (<span class="keyword">var</span> item <span class="keyword">in</span> table) &#123;</span><br><span class="line">            <span class="keyword">if</span> (item == <span class="literal">null</span>)</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Display hash table</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">displayHash</span>()</span> &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="built_in">int</span> i = <span class="number">0</span>; i &lt; BUCKET; i++) &#123;</span><br><span class="line">            Console.WriteLine(<span class="string">$&quot;<span class="subst">&#123;i&#125;</span> --&gt; <span class="subst">&#123;table[i]&#125;</span>&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="Hash-Alogrithm"><a href="#Hash-Alogrithm" class="headerlink" title="Hash Alogrithm"></a>Hash Alogrithm<a name="ha"></a></h2><h3 id="Goals-of-hash-algorithms"><a href="#Goals-of-hash-algorithms" class="headerlink" title="Goals of hash algorithms"></a>Goals of hash algorithms<a name="goal"></a></h3><p>To achieve a fast and stable hash table data structure, hash algorithms should have the following characteristics:</p>
+<ul>
+<li><strong>Determinism</strong>: For the same input, the hash algorithm should always produce the same output. Only then can the hash table be reliable.</li>
+<li><strong>High efficiency</strong>: The process of computing the hash value should be fast enough. The smaller the computational overhead, the more practical the hash table.</li>
+<li><strong>Uniform distribution</strong>: The hash algorithm should ensure that key-value pairs are evenly distributed in the hash table. The more uniform the distribution, the lower the probability of hash collisions.</li>
+</ul>
+<p>Your company might use a hashing algorithm for:</p>
+<ul>
+<li><strong>Password storage</strong>. You must keep records of all of the username&#x2F;password combinations people use to access your resources. But if a hacker gains entry, stealing unprotected data is easy. Hashing ensures that the data is stored in a scrambled state, so it is harder to steal.</li>
+<li><strong>Digital signatures</strong>. A tiny bit of data proves that a note wasn’t modified from the time it leaves a user’s outbox and reaches your inbox.</li>
+<li><strong>Document management</strong>. Hashing algorithms can be used to authenticate data. The writer uses a hash to secure the document when it’s complete. The hash works a bit like a seal of approval.<br>A recipient can generate a hash and compare it to the original. If the two are equal, the data is considered genuine. If they don’t match, the document has been changed.</li>
+</ul>
+<h3 id="Common-hash-algorithms"><a href="#Common-hash-algorithms" class="headerlink" title="Common hash algorithms"></a>Common hash algorithms<a name="cha"></a></h3><p>Over the past century, hash algorithms have been in a continuous process of upgrading and optimization. Some researchers strive to improve the performance of hash algorithms, while others, including hackers, are dedicated to finding security issues in hash algorithms.</p>
+<ul>
+<li><strong>MD5</strong> and <strong>SHA-1</strong> have been successfully attacked multiple times and are thus abandoned in various security applications.</li>
+<li><strong>SHA-2</strong> series, especially SHA-256, is one of the most secure hash algorithms to date, with no successful attacks reported, hence commonly used in various security applications and protocols.</li>
+<li><strong>SHA-3</strong> has lower implementation costs and higher computational efficiency compared to SHA-2, but its current usage coverage is not as extensive as the SHA-2 series.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="center"></th>
+<th align="center"><strong>MD5</strong></th>
+<th align="center"><strong>SHA-1</strong></th>
+<th align="center"><strong>SHA-2</strong></th>
+<th align="center"><strong>SHA-3</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">Release Year</td>
+<td align="center">1992</td>
+<td align="center">1995</td>
+<td align="center">2002</td>
+<td align="center">2008</td>
+</tr>
+<tr>
+<td align="center">Output Length</td>
+<td align="center">O(1)</td>
+<td align="center">O(1)</td>
+<td align="center">O(1)</td>
+<td align="center">224&#x2F;256&#x2F;384&#x2F;512 bit</td>
+</tr>
+<tr>
+<td align="center">Hash Collisions</td>
+<td align="center">Frequent</td>
+<td align="center">Frequent</td>
+<td align="center">Rare</td>
+<td align="center">Rare</td>
+</tr>
+<tr>
+<td align="center">Security Level</td>
+<td align="center">Low, has been successfully attacked</td>
+<td align="center">Low, has been successfully attacked</td>
+<td align="center">High</td>
+<td align="center">High</td>
+</tr>
+<tr>
+<td align="center">Applications</td>
+<td align="center">Abandoned, still used for data integrity checks</td>
+<td align="center">Abandoned</td>
+<td align="center">Cryptocurrency transaction verification, digital signatures, etc.</td>
+<td align="center">Can be used to replace SHA-2</td>
+</tr>
+</tbody></table>
+<h3 id="Four-Sum"><a href="#Four-Sum" class="headerlink" title="Four Sum "></a>Four Sum <a name="fs"></a></h3><p>Given an array nums of n integers, return an array of all the unique quadruplets [nums[a], nums[b], nums[c], nums[d]] such that:</p>
+<ul>
+<li>0 &lt;&#x3D; i, j, k, l &lt; n</li>
+<li>nums1[i] + nums2[j] + nums3[k] + nums4[l] &#x3D;&#x3D; 0<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="built_in">int</span> <span class="title">FourSumCount</span>(<span class="params"><span class="built_in">int</span>[] nums1, <span class="built_in">int</span>[] nums2, <span class="built_in">int</span>[] nums3, <span class="built_in">int</span>[] nums4</span>)</span> &#123;</span><br><span class="line">       Dictionary&lt;<span class="built_in">int</span>, <span class="built_in">int</span>&gt; dic = <span class="keyword">new</span> Dictionary&lt;<span class="built_in">int</span>, <span class="built_in">int</span>&gt;();</span><br><span class="line">        <span class="keyword">foreach</span>(<span class="keyword">var</span> i <span class="keyword">in</span> nums1)&#123;</span><br><span class="line">            <span class="keyword">foreach</span>(<span class="keyword">var</span> j <span class="keyword">in</span> nums2)&#123;</span><br><span class="line">                <span class="built_in">int</span> sum = i + j;</span><br><span class="line">                <span class="keyword">if</span>(dic.ContainsKey(sum))&#123;</span><br><span class="line">                    dic[sum]++;</span><br><span class="line">                &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                    dic.Add(sum, <span class="number">1</span>);</span><br><span class="line">                &#125;</span><br><span class="line">                </span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">int</span> res = <span class="number">0</span>;</span><br><span class="line">         <span class="keyword">foreach</span>(<span class="keyword">var</span> a <span class="keyword">in</span> nums3)&#123;</span><br><span class="line">            <span class="keyword">foreach</span>(<span class="keyword">var</span> b <span class="keyword">in</span> nums4)&#123;</span><br><span class="line">                <span class="built_in">int</span> sum = a+b;</span><br><span class="line">                <span class="keyword">if</span>(dic.TryGetValue(-sum, <span class="keyword">out</span> <span class="keyword">var</span> result))&#123;</span><br><span class="line">                    res += result;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<link rel="stylesheet" href="/css/folder.css" type="text/css"><script src="/js/folder.js" type="text/javascript" async></script>]]></content>
+      <categories>
+        <category>Data Structure and Alogrithm</category>
+      </categories>
+      <tags>
+        <tag>Data Structure and Alogrithm</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>OpenClaw User Guide - Complete Tutorial</title>
     <url>/2026/03/08/OpenClaw-CookBook/</url>
-    <content><![CDATA[<h2 id="📖-Table-of-Contents"><a href="#📖-Table-of-Contents" class="headerlink" title="📖 Table of Contents"></a>📖 Table of Contents</h2><ul>
+    <content><![CDATA[<ul>
 <li><a href="#1-understanding-openclaw">1. Understanding OpenClaw</a><ul>
 <li><a href="#11-what-is-openclaw">1.1 What is OpenClaw?</a></li>
 <li><a href="#12-core-capabilities">1.2 Core Capabilities</a></li>
@@ -1917,8 +1917,8 @@ When a mismatch occurs, the text pointer backtracks to i&#x3D;2, and the pattern
 </ul>
 <hr>
 <p><a name="1-understanding-openclaw"></a></p>
-<h2 id="1-Understanding-OpenClaw"><a href="#1-Understanding-OpenClaw" class="headerlink" title="1. Understanding OpenClaw"></a>1. Understanding OpenClaw</h2><p><a name="11-what-is-openclaw"></a></p>
-<h3 id="1-1-What-is-OpenClaw"><a href="#1-1-What-is-OpenClaw" class="headerlink" title="1.1 What is OpenClaw?"></a>1.1 What is OpenClaw?</h3><p>OpenClaw is an <strong>open-source, self-hosted AI Agent system</strong> that transforms AI from a “chat tool” into a “digital employee capable of autonomously executing tasks.”</p>
+<h2 id="Understanding-OpenClaw"><a href="#Understanding-OpenClaw" class="headerlink" title="Understanding OpenClaw"></a>Understanding OpenClaw</h2><p><a name="11-what-is-openclaw"></a></p>
+<h3 id="What-is-OpenClaw"><a href="#What-is-OpenClaw" class="headerlink" title="What is OpenClaw?"></a>What is OpenClaw?</h3><p>OpenClaw is an <strong>open-source, self-hosted AI Agent system</strong> that transforms AI from a “chat tool” into a “digital employee capable of autonomously executing tasks.”</p>
 <table>
 <thead>
 <tr>
@@ -1954,7 +1954,7 @@ When a mismatch occurs, the text pointer backtracks to i&#x3D;2, and the pattern
 </tr>
 </tbody></table>
 <p><a name="12-core-capabilities"></a></p>
-<h3 id="1-2-Core-Capabilities"><a href="#1-2-Core-Capabilities" class="headerlink" title="1.2 Core Capabilities"></a>1.2 Core Capabilities</h3><ul>
+<h3 id="Core-Capabilities"><a href="#Core-Capabilities" class="headerlink" title="Core Capabilities"></a>Core Capabilities</h3><ul>
 <li>✅ <strong>Multi-channel Connection</strong>: Telegram, WhatsApp, Feishu, DingTalk, Discord, etc.</li>
 <li>✅ <strong>Persistent Memory</strong>: Remembers your preferences, projects, contacts</li>
 <li>✅ <strong>Skill Extension</strong>: Infinitely expand capabilities through the Skills system</li>
@@ -1963,12 +1963,12 @@ When a mismatch occurs, the text pointer backtracks to i&#x3D;2, and the pattern
 <li>✅ <strong>Multi-Agent Collaboration</strong>: Dedicated agents for different tasks</li>
 </ul>
 <p><a name="13-architecture-overview"></a></p>
-<h3 id="1-3-Architecture-Overview"><a href="#1-3-Architecture-Overview" class="headerlink" title="1.3 Architecture Overview"></a>1.3 Architecture Overview</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">┌─────────────────────────────────────────────────────────┐</span><br><span class="line">│                    User Chat Channels                   │</span><br><span class="line">│   Telegram / WhatsApp / Feishu / DingTalk / Discord ... │</span><br><span class="line">└────────────────────┬────────────────────────────────────┘</span><br><span class="line">                     │</span><br><span class="line">                     ▼</span><br><span class="line">┌─────────────────────────────────────────────────────────┐</span><br><span class="line">│                   Gateway Core Service                  │</span><br><span class="line">│  - Message Routing  - Session Management  - Event Processing  - Task Scheduling │</span><br><span class="line">└────────────────────┬────────────────────────────────────┘</span><br><span class="line">                     │</span><br><span class="line">                     ▼</span><br><span class="line">┌─────────────────────────────────────────────────────────┐</span><br><span class="line">│                    Agent System                         │</span><br><span class="line">│  main / chat / coding / Custom Agents                   │</span><br><span class="line">└────────────────────┬────────────────────────────────────┘</span><br><span class="line">                     │</span><br><span class="line">                     ▼</span><br><span class="line">┌─────────────────────────────────────────────────────────┐</span><br><span class="line">│                   Tools &amp; Skills                        │</span><br><span class="line">│  Skills / Plugins / Tools / Memory / Cron               │</span><br><span class="line">└─────────────────────────────────────────────────────────┘</span><br></pre></td></tr></table></figure>
+<h3 id="Architecture-Overview"><a href="#Architecture-Overview" class="headerlink" title="Architecture Overview"></a>Architecture Overview</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">┌─────────────────────────────────────────────────────────┐</span><br><span class="line">│                    User Chat Channels                   │</span><br><span class="line">│   Telegram / WhatsApp / Feishu / DingTalk / Discord ... │</span><br><span class="line">└────────────────────┬────────────────────────────────────┘</span><br><span class="line">                     │</span><br><span class="line">                     ▼</span><br><span class="line">┌─────────────────────────────────────────────────────────┐</span><br><span class="line">│                   Gateway Core Service                  │</span><br><span class="line">│  - Message Routing  - Session Management  - Event Processing  - Task Scheduling │</span><br><span class="line">└────────────────────┬────────────────────────────────────┘</span><br><span class="line">                     │</span><br><span class="line">                     ▼</span><br><span class="line">┌─────────────────────────────────────────────────────────┐</span><br><span class="line">│                    Agent System                         │</span><br><span class="line">│  main / chat / coding / Custom Agents                   │</span><br><span class="line">└────────────────────┬────────────────────────────────────┘</span><br><span class="line">                     │</span><br><span class="line">                     ▼</span><br><span class="line">┌─────────────────────────────────────────────────────────┐</span><br><span class="line">│                   Tools &amp; Skills                        │</span><br><span class="line">│  Skills / Plugins / Tools / Memory / Cron               │</span><br><span class="line">└─────────────────────────────────────────────────────────┘</span><br></pre></td></tr></table></figure>
 
 <hr>
 <p><a name="2-quick-start"></a></p>
-<h2 id="2-Quick-Start"><a href="#2-Quick-Start" class="headerlink" title="2. Quick Start"></a>2. Quick Start</h2><p><a name="21-system-requirements"></a></p>
-<h3 id="2-1-System-Requirements"><a href="#2-1-System-Requirements" class="headerlink" title="2.1 System Requirements"></a>2.1 System Requirements</h3><table>
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><p><a name="21-system-requirements"></a></p>
+<h3 id="System-Requirements"><a href="#System-Requirements" class="headerlink" title="System Requirements"></a>System Requirements</h3><table>
 <thead>
 <tr>
 <th>Requirement</th>
@@ -1993,22 +1993,22 @@ When a mismatch occurs, the text pointer backtracks to i&#x3D;2, and the pattern
 </tr>
 </tbody></table>
 <p><a name="22-one-click-installation"></a></p>
-<h3 id="2-2-One-Click-Installation"><a href="#2-2-One-Click-Installation" class="headerlink" title="2.2 One-Click Installation"></a>2.2 One-Click Installation</h3><p><strong>macOS &#x2F; Linux:</strong></p>
+<h3 id="One-Click-Installation"><a href="#One-Click-Installation" class="headerlink" title="One-Click Installation"></a>One-Click Installation</h3><p><strong>macOS &#x2F; Linux:</strong></p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">curl -fsSL https://openclaw.bot/install.sh | bash</span><br></pre></td></tr></table></figure>
 
 <p><strong>Windows (PowerShell):</strong></p>
 <figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line"><span class="built_in">iwr</span> <span class="literal">-useb</span> https://openclaw.ai/install.ps1 | <span class="built_in">iex</span></span><br></pre></td></tr></table></figure>
 
 <p><a name="23-verify-installation"></a></p>
-<h3 id="2-3-Verify-Installation"><a href="#2-3-Verify-Installation" class="headerlink" title="2.3 Verify Installation"></a>2.3 Verify Installation</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Check version</span></span><br><span class="line">openclaw --version</span><br><span class="line"></span><br><span class="line"><span class="comment"># Run diagnostics</span></span><br><span class="line">openclaw doctor</span><br><span class="line"></span><br><span class="line"><span class="comment"># Check status</span></span><br><span class="line">openclaw status</span><br></pre></td></tr></table></figure>
+<h3 id="Verify-Installation"><a href="#Verify-Installation" class="headerlink" title="Verify Installation"></a>Verify Installation</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Check version</span></span><br><span class="line">openclaw --version</span><br><span class="line"></span><br><span class="line"><span class="comment"># Run diagnostics</span></span><br><span class="line">openclaw doctor</span><br><span class="line"></span><br><span class="line"><span class="comment"># Check status</span></span><br><span class="line">openclaw status</span><br></pre></td></tr></table></figure>
 
 <p><a name="24-5-minute-quick-experience"></a></p>
-<h3 id="2-4-5-Minute-Quick-Experience"><a href="#2-4-5-Minute-Quick-Experience" class="headerlink" title="2.4 5-Minute Quick Experience"></a>2.4 5-Minute Quick Experience</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 1. Install</span></span><br><span class="line">npm i -g openclaw</span><br><span class="line"></span><br><span class="line"><span class="comment"># 2. Run setup wizard</span></span><br><span class="line">openclaw onboard</span><br><span class="line"></span><br><span class="line"><span class="comment"># 3. Start Gateway</span></span><br><span class="line">openclaw gateway start</span><br><span class="line"></span><br><span class="line"><span class="comment"># 4. Open dashboard</span></span><br><span class="line">openclaw dashboard</span><br><span class="line"></span><br><span class="line"><span class="comment"># 5. Start chatting in your browser!</span></span><br></pre></td></tr></table></figure>
+<h3 id="5-Minute-Quick-Experience"><a href="#5-Minute-Quick-Experience" class="headerlink" title="5-Minute Quick Experience"></a>5-Minute Quick Experience</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 1. Install</span></span><br><span class="line">npm i -g openclaw</span><br><span class="line"></span><br><span class="line"><span class="comment"># 2. Run setup wizard</span></span><br><span class="line">openclaw onboard</span><br><span class="line"></span><br><span class="line"><span class="comment"># 3. Start Gateway</span></span><br><span class="line">openclaw gateway start</span><br><span class="line"></span><br><span class="line"><span class="comment"># 4. Open dashboard</span></span><br><span class="line">openclaw dashboard</span><br><span class="line"></span><br><span class="line"><span class="comment"># 5. Start chatting in your browser!</span></span><br></pre></td></tr></table></figure>
 
 <hr>
 <p><a name="3-installation--deployment"></a></p>
-<h2 id="3-Installation-Deployment"><a href="#3-Installation-Deployment" class="headerlink" title="3. Installation &amp; Deployment"></a>3. Installation &amp; Deployment</h2><p><a name="31-installation-methods-comparison"></a></p>
-<h3 id="3-1-Installation-Methods-Comparison"><a href="#3-1-Installation-Methods-Comparison" class="headerlink" title="3.1 Installation Methods Comparison"></a>3.1 Installation Methods Comparison</h3><table>
+<h2 id="Installation-Deployment"><a href="#Installation-Deployment" class="headerlink" title="Installation &amp; Deployment"></a>Installation &amp; Deployment</h2><p><a name="31-installation-methods-comparison"></a></p>
+<h3 id="Installation-Methods-Comparison"><a href="#Installation-Methods-Comparison" class="headerlink" title="Installation Methods Comparison"></a>Installation Methods Comparison</h3><table>
 <thead>
 <tr>
 <th>Method</th>
@@ -2038,22 +2038,22 @@ When a mismatch occurs, the text pointer backtracks to i&#x3D;2, and the pattern
 </tr>
 </tbody></table>
 <p><a name="32-manual-installation-npm"></a></p>
-<h3 id="3-2-Manual-Installation-npm"><a href="#3-2-Manual-Installation-npm" class="headerlink" title="3.2 Manual Installation (npm)"></a>3.2 Manual Installation (npm)</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Check Node.js version</span></span><br><span class="line">node -v  <span class="comment"># Requires &gt;= 22.0.0</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Global installation</span></span><br><span class="line">npm install -g openclaw@latest</span><br><span class="line"></span><br><span class="line"><span class="comment"># If encountering sharp module errors</span></span><br><span class="line">SHARP_IGNORE_GLOBAL_LIBVIPS=1 npm install -g openclaw@latest</span><br></pre></td></tr></table></figure>
+<h3 id="Manual-Installation-npm"><a href="#Manual-Installation-npm" class="headerlink" title="Manual Installation (npm)"></a>Manual Installation (npm)</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Check Node.js version</span></span><br><span class="line">node -v  <span class="comment"># Requires &gt;= 22.0.0</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Global installation</span></span><br><span class="line">npm install -g openclaw@latest</span><br><span class="line"></span><br><span class="line"><span class="comment"># If encountering sharp module errors</span></span><br><span class="line">SHARP_IGNORE_GLOBAL_LIBVIPS=1 npm install -g openclaw@latest</span><br></pre></td></tr></table></figure>
 
 <p><a name="33-configure-path-if-needed"></a></p>
-<h3 id="3-3-Configure-PATH-if-needed"><a href="#3-3-Configure-PATH-if-needed" class="headerlink" title="3.3 Configure PATH (if needed)"></a>3.3 Configure PATH (if needed)</h3><p>If you get <code>openclaw: command not found</code>:</p>
+<h3 id="Configure-PATH-if-needed"><a href="#Configure-PATH-if-needed" class="headerlink" title="Configure PATH (if needed)"></a>Configure PATH (if needed)</h3><p>If you get <code>openclaw: command not found</code>:</p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Find npm global path</span></span><br><span class="line">npm prefix -g</span><br><span class="line"></span><br><span class="line"><span class="comment"># Add to ~/.bashrc or ~/.zshrc</span></span><br><span class="line"><span class="built_in">export</span> PATH=<span class="string">&quot;<span class="subst">$(npm prefix -g)</span>/bin:<span class="variable">$PATH</span>&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Apply changes</span></span><br><span class="line"><span class="built_in">source</span> ~/.bashrc</span><br></pre></td></tr></table></figure>
 
 <p><a name="34-docker-deployment"></a></p>
-<h3 id="3-4-Docker-Deployment"><a href="#3-4-Docker-Deployment" class="headerlink" title="3.4 Docker Deployment"></a>3.4 Docker Deployment</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker run -d \</span><br><span class="line">  --name openclaw \</span><br><span class="line">  -v ~/openclaw-data:/root/.openclaw \</span><br><span class="line">  -p 18789:18789 \</span><br><span class="line">  openclaw/openclaw:latest</span><br></pre></td></tr></table></figure>
+<h3 id="Docker-Deployment"><a href="#Docker-Deployment" class="headerlink" title="Docker Deployment"></a>Docker Deployment</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker run -d \</span><br><span class="line">  --name openclaw \</span><br><span class="line">  -v ~/openclaw-data:/root/.openclaw \</span><br><span class="line">  -p 18789:18789 \</span><br><span class="line">  openclaw/openclaw:latest</span><br></pre></td></tr></table></figure>
 
 <p><a name="35-version-updates"></a></p>
-<h3 id="3-5-Version-Updates"><a href="#3-5-Version-Updates" class="headerlink" title="3.5 Version Updates"></a>3.5 Version Updates</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Update to stable version (recommended)</span></span><br><span class="line">openclaw update --channel stable</span><br><span class="line"></span><br><span class="line"><span class="comment"># Update to beta version</span></span><br><span class="line">openclaw update --channel beta</span><br><span class="line"></span><br><span class="line"><span class="comment"># Update to dev version</span></span><br><span class="line">openclaw update --channel dev</span><br></pre></td></tr></table></figure>
+<h3 id="Version-Updates"><a href="#Version-Updates" class="headerlink" title="Version Updates"></a>Version Updates</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Update to stable version (recommended)</span></span><br><span class="line">openclaw update --channel stable</span><br><span class="line"></span><br><span class="line"><span class="comment"># Update to beta version</span></span><br><span class="line">openclaw update --channel beta</span><br><span class="line"></span><br><span class="line"><span class="comment"># Update to dev version</span></span><br><span class="line">openclaw update --channel dev</span><br></pre></td></tr></table></figure>
 
 <hr>
 <p><a name="4-channel-integration"></a></p>
-<h2 id="4-Channel-Integration"><a href="#4-Channel-Integration" class="headerlink" title="4. Channel Integration"></a>4. Channel Integration</h2><p><a name="41-channel-difficulty-comparison"></a></p>
-<h3 id="4-1-Channel-Difficulty-Comparison"><a href="#4-1-Channel-Difficulty-Comparison" class="headerlink" title="4.1 Channel Difficulty Comparison"></a>4.1 Channel Difficulty Comparison</h3><table>
+<h2 id="Channel-Integration"><a href="#Channel-Integration" class="headerlink" title="Channel Integration"></a>Channel Integration</h2><p><a name="41-channel-difficulty-comparison"></a></p>
+<h3 id="Channel-Difficulty-Comparison"><a href="#Channel-Difficulty-Comparison" class="headerlink" title="Channel Difficulty Comparison"></a>Channel Difficulty Comparison</h3><table>
 <thead>
 <tr>
 <th>Tier</th>
@@ -2088,7 +2088,7 @@ When a mismatch occurs, the text pointer backtracks to i&#x3D;2, and the pattern
 </tr>
 </tbody></table>
 <p><a name="42-telegram-integration-recommended-for-beginners"></a></p>
-<h3 id="4-2-Telegram-Integration-Recommended-for-Beginners"><a href="#4-2-Telegram-Integration-Recommended-for-Beginners" class="headerlink" title="4.2 Telegram Integration (Recommended for Beginners)"></a>4.2 Telegram Integration (Recommended for Beginners)</h3><p><strong>Step 1: Create Bot</strong></p>
+<h3 id="Telegram-Integration-Recommended-for-Beginners"><a href="#Telegram-Integration-Recommended-for-Beginners" class="headerlink" title="Telegram Integration (Recommended for Beginners)"></a>Telegram Integration (Recommended for Beginners)</h3><p><strong>Step 1: Create Bot</strong></p>
 <ol>
 <li>Search for <code>@BotFather</code> in Telegram</li>
 <li>Send <code>/newbot</code> command</li>
@@ -2103,17 +2103,17 @@ When a mismatch occurs, the text pointer backtracks to i&#x3D;2, and the pattern
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Restart Gateway</span></span><br><span class="line">openclaw gateway restart</span><br><span class="line"></span><br><span class="line"><span class="comment"># Send a message to the bot in Telegram</span></span><br><span class="line"><span class="comment"># You&#x27;ll receive a pairing verification code</span></span><br></pre></td></tr></table></figure>
 
 <p><a name="43-feishu-integration"></a></p>
-<h3 id="4-3-Feishu-Integration"><a href="#4-3-Feishu-Integration" class="headerlink" title="4.3 Feishu Integration"></a>4.3 Feishu Integration</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Run configuration wizard</span></span><br><span class="line">openclaw configure --section feishu</span><br></pre></td></tr></table></figure>
+<h3 id="Feishu-Integration"><a href="#Feishu-Integration" class="headerlink" title="Feishu Integration"></a>Feishu Integration</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Run configuration wizard</span></span><br><span class="line">openclaw configure --section feishu</span><br></pre></td></tr></table></figure>
 
 <p>You need to create an enterprise self-built app in the Feishu Open Platform and obtain App ID and App Secret.</p>
 <p><a name="44-multi-channel-configuration"></a></p>
-<h3 id="4-4-Multi-Channel-Configuration"><a href="#4-4-Multi-Channel-Configuration" class="headerlink" title="4.4 Multi-Channel Configuration"></a>4.4 Multi-Channel Configuration</h3><p>You can configure multiple channels simultaneously:</p>
+<h3 id="Multi-Channel-Configuration"><a href="#Multi-Channel-Configuration" class="headerlink" title="Multi-Channel Configuration"></a>Multi-Channel Configuration</h3><p>You can configure multiple channels simultaneously:</p>
 <figure class="highlight json"><table><tr><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;channels&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;telegram&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span> <span class="attr">&quot;enabled&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span> <span class="attr">&quot;botToken&quot;</span><span class="punctuation">:</span> <span class="string">&quot;...&quot;</span> <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;feishu&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span> <span class="attr">&quot;enabled&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span> <span class="attr">&quot;appId&quot;</span><span class="punctuation">:</span> <span class="string">&quot;...&quot;</span><span class="punctuation">,</span> <span class="attr">&quot;appSecret&quot;</span><span class="punctuation">:</span> <span class="string">&quot;...&quot;</span> <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;discord&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span> <span class="attr">&quot;enabled&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span> <span class="attr">&quot;botToken&quot;</span><span class="punctuation">:</span> <span class="string">&quot;...&quot;</span> <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
 
 <hr>
 <p><a name="5-configuration-guide"></a></p>
-<h2 id="5-Configuration-Guide"><a href="#5-Configuration-Guide" class="headerlink" title="5. Configuration Guide"></a>5. Configuration Guide</h2><p><a name="51-configuration-file-locations"></a></p>
-<h3 id="5-1-Configuration-File-Locations"><a href="#5-1-Configuration-File-Locations" class="headerlink" title="5.1 Configuration File Locations"></a>5.1 Configuration File Locations</h3><table>
+<h2 id="Configuration-Guide"><a href="#Configuration-Guide" class="headerlink" title="Configuration Guide"></a>Configuration Guide</h2><p><a name="51-configuration-file-locations"></a></p>
+<h3 id="Configuration-File-Locations"><a href="#Configuration-File-Locations" class="headerlink" title="Configuration File Locations"></a>Configuration File Locations</h3><table>
 <thead>
 <tr>
 <th>File</th>
@@ -2138,11 +2138,11 @@ When a mismatch occurs, the text pointer backtracks to i&#x3D;2, and the pattern
 </tr>
 </tbody></table>
 <p><a name="52-model-configuration"></a></p>
-<h3 id="5-2-Model-Configuration"><a href="#5-2-Model-Configuration" class="headerlink" title="5.2 Model Configuration"></a>5.2 Model Configuration</h3><p>Edit <code>~/.openclaw/openclaw.json</code>:</p>
+<h3 id="Model-Configuration"><a href="#Model-Configuration" class="headerlink" title="Model Configuration"></a>Model Configuration</h3><p>Edit <code>~/.openclaw/openclaw.json</code>:</p>
 <figure class="highlight json"><table><tr><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;models&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;mode&quot;</span><span class="punctuation">:</span> <span class="string">&quot;merge&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;providers&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;bailian&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;baseUrl&quot;</span><span class="punctuation">:</span> <span class="string">&quot;https://dashscope.aliyuncs.com/compatible-mode/v1&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;apiKey&quot;</span><span class="punctuation">:</span> <span class="string">&quot;sk-YOUR_API_KEY&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;api&quot;</span><span class="punctuation">:</span> <span class="string">&quot;openai-completions&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;models&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">          <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;qwen3.5-plus&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;qwen3.5-plus&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;contextWindow&quot;</span><span class="punctuation">:</span> <span class="number">1000000</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;maxTokens&quot;</span><span class="punctuation">:</span> <span class="number">65536</span></span><br><span class="line">          <span class="punctuation">&#125;</span></span><br><span class="line">        <span class="punctuation">]</span></span><br><span class="line">      <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;agents&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;defaults&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;model&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;primary&quot;</span><span class="punctuation">:</span> <span class="string">&quot;bailian/qwen3.5-plus&quot;</span></span><br><span class="line">      <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
 
 <p><a name="53-recommended-models"></a></p>
-<h3 id="5-3-Recommended-Models"><a href="#5-3-Recommended-Models" class="headerlink" title="5.3 Recommended Models"></a>5.3 Recommended Models</h3><table>
+<h3 id="Recommended-Models"><a href="#Recommended-Models" class="headerlink" title="Recommended Models"></a>Recommended Models</h3><table>
 <thead>
 <tr>
 <th>Provider</th>
@@ -2175,7 +2175,7 @@ When a mismatch occurs, the text pointer backtracks to i&#x3D;2, and the pattern
 <h3 id="5-4-Gateway-Configuration"><a href="#5-4-Gateway-Configuration" class="headerlink" title="5.4 Gateway Configuration"></a>5.4 Gateway Configuration</h3><figure class="highlight json"><table><tr><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;gateway&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;port&quot;</span><span class="punctuation">:</span> <span class="number">18789</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;mode&quot;</span><span class="punctuation">:</span> <span class="string">&quot;local&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;bind&quot;</span><span class="punctuation">:</span> <span class="string">&quot;lan&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;auth&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;mode&quot;</span><span class="punctuation">:</span> <span class="string">&quot;token&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;token&quot;</span><span class="punctuation">:</span> <span class="string">&quot;your-secure-token&quot;</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;controlUi&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;allowedOrigins&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">&quot;http://192.168.1.100:18789&quot;</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;allowInsecureAuth&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
 
 <p><a name="55-authentication-modes"></a></p>
-<h3 id="5-5-Authentication-Modes"><a href="#5-5-Authentication-Modes" class="headerlink" title="5.5 Authentication Modes"></a>5.5 Authentication Modes</h3><p><strong>Token Authentication (Recommended for API Integration):</strong></p>
+<h3 id="Authentication-Modes"><a href="#Authentication-Modes" class="headerlink" title="Authentication Modes"></a>Authentication Modes</h3><p><strong>Token Authentication (Recommended for API Integration):</strong></p>
 <figure class="highlight json"><table><tr><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;gateway&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;auth&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;mode&quot;</span><span class="punctuation">:</span> <span class="string">&quot;token&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;token&quot;</span><span class="punctuation">:</span> <span class="string">&quot;your-token&quot;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
 
 <p><strong>Password Authentication (Recommended for Web UI):</strong></p>
@@ -2183,8 +2183,8 @@ When a mismatch occurs, the text pointer backtracks to i&#x3D;2, and the pattern
 
 <hr>
 <p><a name="6-multi-agent-configuration"></a></p>
-<h2 id="6-Multi-Agent-Configuration"><a href="#6-Multi-Agent-Configuration" class="headerlink" title="6. Multi-Agent Configuration"></a>6. Multi-Agent Configuration</h2><p><a name="61-what-is-multi-agent"></a></p>
-<h3 id="6-1-What-is-Multi-Agent"><a href="#6-1-What-is-Multi-Agent" class="headerlink" title="6.1 What is Multi-Agent?"></a>6.1 What is Multi-Agent?</h3><p>OpenClaw supports running multiple independent Agent instances, where each Agent can:</p>
+<h2 id="Multi-Agent-Configuration"><a href="#Multi-Agent-Configuration" class="headerlink" title="Multi-Agent Configuration"></a>Multi-Agent Configuration</h2><p><a name="61-what-is-multi-agent"></a></p>
+<h3 id="What-is-Multi-Agent"><a href="#What-is-Multi-Agent" class="headerlink" title="What is Multi-Agent?"></a>What is Multi-Agent?</h3><p>OpenClaw supports running multiple independent Agent instances, where each Agent can:</p>
 <ul>
 <li>Use different model configurations</li>
 <li>Have independent workspaces and memory</li>
@@ -2192,7 +2192,7 @@ When a mismatch occurs, the text pointer backtracks to i&#x3D;2, and the pattern
 <li>Configure Skills and tools independently</li>
 </ul>
 <p><a name="62-built-in-agent-types"></a></p>
-<h3 id="6-2-Built-in-Agent-Types"><a href="#6-2-Built-in-Agent-Types" class="headerlink" title="6.2 Built-in Agent Types"></a>6.2 Built-in Agent Types</h3><table>
+<h3 id="Built-in-Agent-Types"><a href="#Built-in-Agent-Types" class="headerlink" title="Built-in Agent Types"></a>Built-in Agent Types</h3><table>
 <thead>
 <tr>
 <th>Agent</th>
@@ -2222,10 +2222,10 @@ When a mismatch occurs, the text pointer backtracks to i&#x3D;2, and the pattern
 </tr>
 </tbody></table>
 <p><a name="63-creating-custom-agents"></a></p>
-<h3 id="6-3-Creating-Custom-Agents"><a href="#6-3-Creating-Custom-Agents" class="headerlink" title="6.3 Creating Custom Agents"></a>6.3 Creating Custom Agents</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Create new Agent</span></span><br><span class="line">openclaw agents create my-agent</span><br><span class="line"></span><br><span class="line"><span class="comment"># Set dedicated model</span></span><br><span class="line">openclaw agents config my-agent --model glm-5</span><br><span class="line"></span><br><span class="line"><span class="comment"># Configure workspace</span></span><br><span class="line">openclaw agents workspace my-agent --path ~/projects/my-agent</span><br><span class="line"></span><br><span class="line"><span class="comment"># Start Agent</span></span><br><span class="line">openclaw agents start my-agent</span><br></pre></td></tr></table></figure>
+<h3 id="Creating-Custom-Agents"><a href="#Creating-Custom-Agents" class="headerlink" title="Creating Custom Agents"></a>Creating Custom Agents</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Create new Agent</span></span><br><span class="line">openclaw agents create my-agent</span><br><span class="line"></span><br><span class="line"><span class="comment"># Set dedicated model</span></span><br><span class="line">openclaw agents config my-agent --model glm-5</span><br><span class="line"></span><br><span class="line"><span class="comment"># Configure workspace</span></span><br><span class="line">openclaw agents workspace my-agent --path ~/projects/my-agent</span><br><span class="line"></span><br><span class="line"><span class="comment"># Start Agent</span></span><br><span class="line">openclaw agents start my-agent</span><br></pre></td></tr></table></figure>
 
 <p><a name="64-assign-agents-to-different-tasks"></a></p>
-<h3 id="6-4-Assign-Agents-to-Different-Tasks"><a href="#6-4-Assign-Agents-to-Different-Tasks" class="headerlink" title="6.4 Assign Agents to Different Tasks"></a>6.4 Assign Agents to Different Tasks</h3><table>
+<h3 id="Assign-Agents-to-Different-Tasks"><a href="#Assign-Agents-to-Different-Tasks" class="headerlink" title="Assign Agents to Different Tasks"></a>Assign Agents to Different Tasks</h3><table>
 <thead>
 <tr>
 <th>Task Type</th>
@@ -2260,7 +2260,7 @@ When a mismatch occurs, the text pointer backtracks to i&#x3D;2, and the pattern
 </tr>
 </tbody></table>
 <p><a name="65-agent-routing-configuration"></a></p>
-<h3 id="6-5-Agent-Routing-Configuration"><a href="#6-5-Agent-Routing-Configuration" class="headerlink" title="6.5 Agent Routing Configuration"></a>6.5 Agent Routing Configuration</h3><p><strong>Method 1: Command Prefix</strong></p>
+<h3 id="Agent-Routing-Configuration"><a href="#Agent-Routing-Configuration" class="headerlink" title="Agent Routing Configuration"></a>Agent Routing Configuration</h3><p><strong>Method 1: Command Prefix</strong></p>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">/agent coding Help me write a Python script</span><br><span class="line">/agent analysis Analyze this data</span><br></pre></td></tr></table></figure>
 
 <p><strong>Method 2: Automatic Routing (Keyword-based)</strong></p>
@@ -2270,7 +2270,7 @@ When a mismatch occurs, the text pointer backtracks to i&#x3D;2, and the pattern
 <figure class="highlight json"><table><tr><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;channels&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;telegram&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;defaultAgent&quot;</span><span class="punctuation">:</span> <span class="string">&quot;main&quot;</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;discord&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;defaultAgent&quot;</span><span class="punctuation">:</span> <span class="string">&quot;chat&quot;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
 
 <p><a name="66-multi-agent-best-practices"></a></p>
-<h3 id="6-6-Multi-Agent-Best-Practices"><a href="#6-6-Multi-Agent-Best-Practices" class="headerlink" title="6.6 Multi-Agent Best Practices"></a>6.6 Multi-Agent Best Practices</h3><p><strong>✅ Recommended:</strong></p>
+<h3 id="Multi-Agent-Best-Practices"><a href="#Multi-Agent-Best-Practices" class="headerlink" title="Multi-Agent Best Practices"></a>Multi-Agent Best Practices</h3><p><strong>✅ Recommended:</strong></p>
 <ul>
 <li>Create dedicated Agents for high-frequency tasks</li>
 <li>Use separate Agents for programming (avoid context pollution)</li>
@@ -2284,23 +2284,25 @@ When a mismatch occurs, the text pointer backtracks to i&#x3D;2, and the pattern
 <li>Ignoring memory isolation between Agents</li>
 </ul>
 <p><a name="67-view-and-manage-agents"></a></p>
-<h3 id="6-7-View-and-Manage-Agents"><a href="#6-7-View-and-Manage-Agents" class="headerlink" title="6.7 View and Manage Agents"></a>6.7 View and Manage Agents</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># List all Agents</span></span><br><span class="line">openclaw agents list</span><br><span class="line"></span><br><span class="line"><span class="comment"># Check Agent status</span></span><br><span class="line">openclaw agents status my-agent</span><br><span class="line"></span><br><span class="line"><span class="comment"># View Agent configuration</span></span><br><span class="line">openclaw agents config my-agent --show</span><br><span class="line"></span><br><span class="line"><span class="comment"># Stop Agent</span></span><br><span class="line">openclaw agents stop my-agent</span><br><span class="line"></span><br><span class="line"><span class="comment"># Delete Agent</span></span><br><span class="line">openclaw agents delete my-agent</span><br></pre></td></tr></table></figure>
+<h3 id="View-and-Manage-Agents"><a href="#View-and-Manage-Agents" class="headerlink" title="View and Manage Agents"></a>View and Manage Agents</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># List all Agents</span></span><br><span class="line">openclaw agents list</span><br><span class="line"></span><br><span class="line"><span class="comment"># Check Agent status</span></span><br><span class="line">openclaw agents status my-agent</span><br><span class="line"></span><br><span class="line"><span class="comment"># View Agent configuration</span></span><br><span class="line">openclaw agents config my-agent --show</span><br><span class="line"></span><br><span class="line"><span class="comment"># Stop Agent</span></span><br><span class="line">openclaw agents stop my-agent</span><br><span class="line"></span><br><span class="line"><span class="comment"># Delete Agent</span></span><br><span class="line">openclaw agents delete my-agent</span><br></pre></td></tr></table></figure>
 
 <p><a name="68-multi-agent-architecture-example"></a></p>
-<h3 id="6-8-Multi-Agent-Architecture-Example"><a href="#6-8-Multi-Agent-Architecture-Example" class="headerlink" title="6.8 Multi-Agent Architecture Example"></a>6.8 Multi-Agent Architecture Example</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">┌─────────────────────────────────────────────────────────┐</span><br><span class="line">│                    User Message                          │</span><br><span class="line">└────────────────────┬────────────────────────────────────┘</span><br><span class="line">                     │</span><br><span class="line">                     ▼</span><br><span class="line">┌─────────────────────────────────────────────────────────┐</span><br><span class="line">│              Routing Layer (distributes by rules)        │</span><br><span class="line">│   Keyword Matching / Command Prefix / Channel Binding    │</span><br><span class="line">└──────────┬──────────────┬──────────────┬────────────────┘</span><br><span class="line">           │              │              │</span><br><span class="line">           ▼              ▼              ▼</span><br><span class="line">    ┌──────────┐   ┌──────────┐   ┌──────────┐</span><br><span class="line">    │   main   │   │  coding  │   │ analysis │</span><br><span class="line">    │  Agent   │   │  Agent   │   │  Agent   │</span><br><span class="line">    └────┬─────┘   └────┬─────┘   └────┬─────┘</span><br><span class="line">         │              │              │</span><br><span class="line">         ▼              ▼              ▼</span><br><span class="line">    ┌──────────┐   ┌──────────┐   ┌──────────┐</span><br><span class="line">    │ General  │   │  Code    │   │   Data   │</span><br><span class="line">    │  Memory  │   │  Skills  │   │  Tools   │</span><br><span class="line">    │ Qwen3.5  │   │  Claude  │   │  Pandas  │</span><br><span class="line">    └──────────┘   └──────────┘   └──────────┘</span><br></pre></td></tr></table></figure>
-<h2 id=""><a href="#" class="headerlink" title=""></a><img src="/2026/03/08/OpenClaw-CookBook/a1.png" alt="pic"></h2><p><a name="7-skills-system"></a></p>
-<h2 id="7-Skills-System"><a href="#7-Skills-System" class="headerlink" title="7. Skills System"></a>7. Skills System</h2><p><a name="71-what-are-skills"></a></p>
-<h3 id="7-1-What-are-Skills"><a href="#7-1-What-are-Skills" class="headerlink" title="7.1 What are Skills?"></a>7.1 What are Skills?</h3><p>Skills are OpenClaw’s plugin system, enabling AI to:</p>
+<h3 id="Multi-Agent-Architecture-Example"><a href="#Multi-Agent-Architecture-Example" class="headerlink" title="Multi-Agent Architecture Example"></a>Multi-Agent Architecture Example</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">┌─────────────────────────────────────────────────────────┐</span><br><span class="line">│                    User Message                         │</span><br><span class="line">└────────────────────┬────────────────────────────────────┘</span><br><span class="line">                     │</span><br><span class="line">                     ▼</span><br><span class="line">┌─────────────────────────────────────────────────────────┐</span><br><span class="line">│              Routing Layer (distributes by rules)       │</span><br><span class="line">│   Keyword Matching / Command Prefix / Channel Binding   │</span><br><span class="line">└──────────┬──────────────┬──────────────┬────────────────┘</span><br><span class="line">           │              │              │</span><br><span class="line">           ▼              ▼              ▼</span><br><span class="line">    ┌──────────┐   ┌──────────┐   ┌──────────┐</span><br><span class="line">    │   main   │   │  coding  │   │ analysis │</span><br><span class="line">    │  Agent   │   │  Agent   │   │  Agent   │</span><br><span class="line">    └────┬─────┘   └────┬─────┘   └────┬─────┘</span><br><span class="line">         │              │              │</span><br><span class="line">         ▼              ▼              ▼</span><br><span class="line">    ┌──────────┐   ┌──────────┐   ┌──────────┐</span><br><span class="line">    │ General  │   │  Code    │   │   Data   │</span><br><span class="line">    │  Memory  │   │  Skills  │   │  Tools   │</span><br><span class="line">    │ Qwen3.5  │   │  Claude  │   │  Pandas  │</span><br><span class="line">    └──────────┘   └──────────┘   └──────────┘</span><br></pre></td></tr></table></figure>
+<p>Here’re the Telegram Bot I’ve configured with diffent agent roles:</p>
+<p><img src="/2026/03/08/OpenClaw-CookBook/a1.png" alt="pic"></p>
+<p><a name="7-skills-system"></a></p>
+<h2 id="Skills-System"><a href="#Skills-System" class="headerlink" title="Skills System"></a>Skills System</h2><p><a name="71-what-are-skills"></a></p>
+<h3 id="What-are-Skills"><a href="#What-are-Skills" class="headerlink" title="What are Skills?"></a>What are Skills?</h3><p>Skills are OpenClaw’s plugin system, enabling AI to:</p>
 <ul>
 <li>Access external APIs (weather, news, stocks)</li>
 <li>Operate local resources (files, cameras)</li>
 <li>Execute specific tasks (GitHub, calendar, email)</li>
 </ul>
 <p><a name="72-installing-skills"></a></p>
-<h3 id="7-2-Installing-Skills"><a href="#7-2-Installing-Skills" class="headerlink" title="7.2 Installing Skills"></a>7.2 Installing Skills</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Install from ClawHub</span></span><br><span class="line">openclaw skill install &lt;skill-slug&gt;</span><br><span class="line"></span><br><span class="line"><span class="comment"># Search Skills</span></span><br><span class="line">openclaw skill search &lt;keyword&gt;</span><br><span class="line"></span><br><span class="line"><span class="comment"># List installed</span></span><br><span class="line">openclaw skill list</span><br><span class="line"></span><br><span class="line"><span class="comment"># Update Skills</span></span><br><span class="line">openclaw skill update</span><br></pre></td></tr></table></figure>
+<h3 id="Installing-Skills"><a href="#Installing-Skills" class="headerlink" title="Installing Skills"></a>Installing Skills</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Install from ClawHub</span></span><br><span class="line">openclaw skill install &lt;skill-slug&gt;</span><br><span class="line"></span><br><span class="line"><span class="comment"># Search Skills</span></span><br><span class="line">openclaw skill search &lt;keyword&gt;</span><br><span class="line"></span><br><span class="line"><span class="comment"># List installed</span></span><br><span class="line">openclaw skill list</span><br><span class="line"></span><br><span class="line"><span class="comment"># Update Skills</span></span><br><span class="line">openclaw skill update</span><br></pre></td></tr></table></figure>
 
 <p><a name="73-popular-skills"></a></p>
-<h3 id="7-3-Popular-Skills"><a href="#7-3-Popular-Skills" class="headerlink" title="7.3 Popular Skills"></a>7.3 Popular Skills</h3><table>
+<h3 id="Popular-Skills"><a href="#Popular-Skills" class="headerlink" title="Popular Skills"></a>Popular Skills</h3><table>
 <thead>
 <tr>
 <th>Skill</th>
@@ -2330,12 +2332,12 @@ When a mismatch occurs, the text pointer backtracks to i&#x3D;2, and the pattern
 </tr>
 </tbody></table>
 <p><a name="74-creating-custom-skills"></a></p>
-<h3 id="7-4-Creating-Custom-Skills"><a href="#7-4-Creating-Custom-Skills" class="headerlink" title="7.4 Creating Custom Skills"></a>7.4 Creating Custom Skills</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Create Skill directory</span></span><br><span class="line"><span class="built_in">mkdir</span> -p ~/.openclaw/workspace-main/skills/my-skill</span><br><span class="line"></span><br><span class="line"><span class="comment"># Create SKILL.md</span></span><br><span class="line"><span class="built_in">cat</span> &gt; ~/.openclaw/workspace-main/skills/my-skill/SKILL.md &lt;&lt; <span class="string">&#x27;EOF&#x27;</span></span><br><span class="line"><span class="comment"># my-skill</span></span><br><span class="line"></span><br><span class="line"><span class="comment">## Description</span></span><br><span class="line">My custom skill</span><br><span class="line"></span><br><span class="line"><span class="comment">## Usage</span></span><br><span class="line">/MyCommand [arguments]</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+<h3 id="Creating-Custom-Skills"><a href="#Creating-Custom-Skills" class="headerlink" title="Creating Custom Skills"></a>Creating Custom Skills</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Create Skill directory</span></span><br><span class="line"><span class="built_in">mkdir</span> -p ~/.openclaw/workspace-main/skills/my-skill</span><br><span class="line"></span><br><span class="line"><span class="comment"># Create SKILL.md</span></span><br><span class="line"><span class="built_in">cat</span> &gt; ~/.openclaw/workspace-main/skills/my-skill/SKILL.md &lt;&lt; <span class="string">&#x27;EOF&#x27;</span></span><br><span class="line"><span class="comment"># my-skill</span></span><br><span class="line"></span><br><span class="line"><span class="comment">## Description</span></span><br><span class="line">My custom skill</span><br><span class="line"></span><br><span class="line"><span class="comment">## Usage</span></span><br><span class="line">/MyCommand [arguments]</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
 
 <hr>
 <p><a name="8-memory-system"></a></p>
-<h2 id="8-Memory-System"><a href="#8-Memory-System" class="headerlink" title="8. Memory System"></a>8. Memory System</h2><p><a name="81-memory-types"></a></p>
-<h3 id="8-1-Memory-Types"><a href="#8-1-Memory-Types" class="headerlink" title="8.1 Memory Types"></a>8.1 Memory Types</h3><table>
+<h2 id="Memory-System"><a href="#Memory-System" class="headerlink" title="Memory System"></a>Memory System</h2><p><a name="81-memory-types"></a></p>
+<h3 id="Memory-Types"><a href="#Memory-Types" class="headerlink" title="Memory Types"></a>Memory Types</h3><table>
 <thead>
 <tr>
 <th>Type</th>
@@ -2370,13 +2372,13 @@ When a mismatch occurs, the text pointer backtracks to i&#x3D;2, and the pattern
 </tr>
 </tbody></table>
 <p><a name="82-memory-file-locations"></a></p>
-<h3 id="8-2-Memory-File-Locations"><a href="#8-2-Memory-File-Locations" class="headerlink" title="8.2 Memory File Locations"></a>8.2 Memory File Locations</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">~/.openclaw/workspace-main/</span><br><span class="line">├── MEMORY.md              # Long-term memory</span><br><span class="line">├── IDENTITY.md            # Identity settings</span><br><span class="line">├── USER.md                # User information</span><br><span class="line">├── SOUL.md                # Behavioral guidelines</span><br><span class="line">├── AGENTS.md              # Workspace description</span><br><span class="line">├── TOOLS.md               # Tool notes</span><br><span class="line">├── HEARTBEAT.md           # Heartbeat tasks</span><br><span class="line">└── memory/</span><br><span class="line">    ├── 2026-03-16.md      # Daily memory</span><br><span class="line">    └── 2026-03-15.md</span><br></pre></td></tr></table></figure>
+<h3 id="Memory-File-Locations"><a href="#Memory-File-Locations" class="headerlink" title="Memory File Locations"></a>Memory File Locations</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">~/.openclaw/workspace-main/</span><br><span class="line">├── MEMORY.md              # Long-term memory</span><br><span class="line">├── IDENTITY.md            # Identity settings</span><br><span class="line">├── USER.md                # User information</span><br><span class="line">├── SOUL.md                # Behavioral guidelines</span><br><span class="line">├── AGENTS.md              # Workspace description</span><br><span class="line">├── TOOLS.md               # Tool notes</span><br><span class="line">├── HEARTBEAT.md           # Heartbeat tasks</span><br><span class="line">└── memory/</span><br><span class="line">    ├── 2026-03-16.md      # Daily memory</span><br><span class="line">    └── 2026-03-15.md</span><br></pre></td></tr></table></figure>
 
 <p><a name="83-search-memory"></a></p>
-<h3 id="8-3-Search-Memory"><a href="#8-3-Search-Memory" class="headerlink" title="8.3 Search Memory"></a>8.3 Search Memory</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Semantic search</span></span><br><span class="line">openclaw memory search <span class="string">&quot;project mentioned last time&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Search by date</span></span><br><span class="line">openclaw memory search --<span class="built_in">date</span> 2026-03-15 <span class="string">&quot;meeting&quot;</span></span><br></pre></td></tr></table></figure>
+<h3 id="Search-Memory"><a href="#Search-Memory" class="headerlink" title="Search Memory"></a>Search Memory</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Semantic search</span></span><br><span class="line">openclaw memory search <span class="string">&quot;project mentioned last time&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Search by date</span></span><br><span class="line">openclaw memory search --<span class="built_in">date</span> 2026-03-15 <span class="string">&quot;meeting&quot;</span></span><br></pre></td></tr></table></figure>
 
 <p><a name="84-memory-maintenance"></a></p>
-<h3 id="8-4-Memory-Maintenance"><a href="#8-4-Memory-Maintenance" class="headerlink" title="8.4 Memory Maintenance"></a>8.4 Memory Maintenance</h3><p>Recommended to review MEMORY.md regularly (weekly):</p>
+<h3 id="Memory-Maintenance"><a href="#Memory-Maintenance" class="headerlink" title="Memory Maintenance"></a>Memory Maintenance</h3><p>Recommended to review MEMORY.md regularly (weekly):</p>
 <ul>
 <li>Remove outdated information</li>
 <li>Add new decisions and context</li>
@@ -2384,11 +2386,11 @@ When a mismatch occurs, the text pointer backtracks to i&#x3D;2, and the pattern
 </ul>
 <hr>
 <p><a name="9-scheduled-tasks"></a></p>
-<h2 id="9-Scheduled-Tasks"><a href="#9-Scheduled-Tasks" class="headerlink" title="9. Scheduled Tasks"></a>9. Scheduled Tasks</h2><p><a name="91-cron-basics"></a></p>
-<h3 id="9-1-Cron-Basics"><a href="#9-1-Cron-Basics" class="headerlink" title="9.1 Cron Basics"></a>9.1 Cron Basics</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Add scheduled task</span></span><br><span class="line">openclaw cron add --schedule <span class="string">&quot;0 9 * * *&quot;</span> --message <span class="string">&quot;Good morning! Today&#x27;s tasks:&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># List tasks</span></span><br><span class="line">openclaw cron list</span><br><span class="line"></span><br><span class="line"><span class="comment"># Run task</span></span><br><span class="line">openclaw cron run &lt;job-id&gt;</span><br><span class="line"></span><br><span class="line"><span class="comment"># Remove task</span></span><br><span class="line">openclaw cron remove &lt;job-id&gt;</span><br></pre></td></tr></table></figure>
+<h2 id="Scheduled-Tasks"><a href="#Scheduled-Tasks" class="headerlink" title="Scheduled Tasks"></a>Scheduled Tasks</h2><p><a name="91-cron-basics"></a></p>
+<h3 id="Cron-Basics"><a href="#Cron-Basics" class="headerlink" title="Cron Basics"></a>Cron Basics</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Add scheduled task</span></span><br><span class="line">openclaw cron add --schedule <span class="string">&quot;0 9 * * *&quot;</span> --message <span class="string">&quot;Good morning! Today&#x27;s tasks:&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># List tasks</span></span><br><span class="line">openclaw cron list</span><br><span class="line"></span><br><span class="line"><span class="comment"># Run task</span></span><br><span class="line">openclaw cron run &lt;job-id&gt;</span><br><span class="line"></span><br><span class="line"><span class="comment"># Remove task</span></span><br><span class="line">openclaw cron remove &lt;job-id&gt;</span><br></pre></td></tr></table></figure>
 
 <p><a name="92-cron-expressions"></a></p>
-<h3 id="9-2-Cron-Expressions"><a href="#9-2-Cron-Expressions" class="headerlink" title="9.2 Cron Expressions"></a>9.2 Cron Expressions</h3><table>
+<h3 id="Cron-Expressions"><a href="#Cron-Expressions" class="headerlink" title="Cron Expressions"></a>Cron Expressions</h3><table>
 <thead>
 <tr>
 <th>Expression</th>
@@ -2413,11 +2415,11 @@ When a mismatch occurs, the text pointer backtracks to i&#x3D;2, and the pattern
 </tr>
 </tbody></table>
 <p><a name="93-heartbeat-tasks"></a></p>
-<h3 id="9-3-Heartbeat-Tasks"><a href="#9-3-Heartbeat-Tasks" class="headerlink" title="9.3 Heartbeat Tasks"></a>9.3 Heartbeat Tasks</h3><p>Edit <code>HEARTBEAT.md</code>:</p>
+<h3 id="Heartbeat-Tasks"><a href="#Heartbeat-Tasks" class="headerlink" title="Heartbeat Tasks"></a>Heartbeat Tasks</h3><p>Edit <code>HEARTBEAT.md</code>:</p>
 <figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line"><span class="section"># HEARTBEAT.md</span></span><br><span class="line"></span><br><span class="line"><span class="bullet">-</span> [ ] Check unread emails</span><br><span class="line"><span class="bullet">-</span> [ ] View calendar (within 24 hours)</span><br><span class="line"><span class="bullet">-</span> [ ] Check weather (if going out)</span><br><span class="line"><span class="bullet">-</span> [ ] Review memory files (weekly)</span><br></pre></td></tr></table></figure>
 
 <p><a name="94-practical-cron-examples"></a></p>
-<h3 id="9-4-Practical-Cron-Examples"><a href="#9-4-Practical-Cron-Examples" class="headerlink" title="9.4 Practical Cron Examples"></a>9.4 Practical Cron Examples</h3><p><strong>Daily News Briefing:</strong></p>
+<h3 id="Practical-Cron-Examples"><a href="#Practical-Cron-Examples" class="headerlink" title="Practical Cron Examples"></a>Practical Cron Examples</h3><p><strong>Daily News Briefing:</strong></p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openclaw cron add \</span><br><span class="line">  --name <span class="string">&quot;daily-news&quot;</span> \</span><br><span class="line">  --schedule <span class="string">&quot;0 8 * * *&quot;</span> \</span><br><span class="line">  --message <span class="string">&quot;Execute news-aggregator skill, send daily news&quot;</span></span><br></pre></td></tr></table></figure>
 
 <p><strong>Weekly Backup:</strong></p>
@@ -2425,31 +2427,31 @@ When a mismatch occurs, the text pointer backtracks to i&#x3D;2, and the pattern
 
 <hr>
 <p><a name="10-common-commands"></a></p>
-<h2 id="10-Common-Commands"><a href="#10-Common-Commands" class="headerlink" title="10. Common Commands"></a>10. Common Commands</h2><p><a name="101-gateway-management"></a></p>
-<h3 id="10-1-Gateway-Management"><a href="#10-1-Gateway-Management" class="headerlink" title="10.1 Gateway Management"></a>10.1 Gateway Management</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openclaw gateway start      <span class="comment"># Start</span></span><br><span class="line">openclaw gateway stop       <span class="comment"># Stop</span></span><br><span class="line">openclaw gateway restart    <span class="comment"># Restart</span></span><br><span class="line">openclaw gateway status     <span class="comment"># Status</span></span><br><span class="line">openclaw gateway install    <span class="comment"># Install as system service</span></span><br><span class="line">openclaw gateway uninstall  <span class="comment"># Uninstall service</span></span><br></pre></td></tr></table></figure>
+<h2 id="Common-Commands"><a href="#Common-Commands" class="headerlink" title="Common Commands"></a>Common Commands</h2><p><a name="101-gateway-management"></a></p>
+<h3 id="Gateway-Management"><a href="#Gateway-Management" class="headerlink" title="Gateway Management"></a>Gateway Management</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openclaw gateway start      <span class="comment"># Start</span></span><br><span class="line">openclaw gateway stop       <span class="comment"># Stop</span></span><br><span class="line">openclaw gateway restart    <span class="comment"># Restart</span></span><br><span class="line">openclaw gateway status     <span class="comment"># Status</span></span><br><span class="line">openclaw gateway install    <span class="comment"># Install as system service</span></span><br><span class="line">openclaw gateway uninstall  <span class="comment"># Uninstall service</span></span><br></pre></td></tr></table></figure>
 
 <p><a name="102-configuration-management"></a></p>
-<h3 id="10-2-Configuration-Management"><a href="#10-2-Configuration-Management" class="headerlink" title="10.2 Configuration Management"></a>10.2 Configuration Management</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openclaw onboard            <span class="comment"># Initial setup wizard</span></span><br><span class="line">openclaw configure          <span class="comment"># Configure channels</span></span><br><span class="line">openclaw doctor             <span class="comment"># Health check</span></span><br><span class="line">openclaw status             <span class="comment"># Check status</span></span><br><span class="line">openclaw dashboard          <span class="comment"># Open web dashboard</span></span><br><span class="line">openclaw tui                <span class="comment"># Terminal interface</span></span><br></pre></td></tr></table></figure>
+<h3 id="Configuration-Management"><a href="#Configuration-Management" class="headerlink" title="Configuration Management"></a>Configuration Management</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openclaw onboard            <span class="comment"># Initial setup wizard</span></span><br><span class="line">openclaw configure          <span class="comment"># Configure channels</span></span><br><span class="line">openclaw doctor             <span class="comment"># Health check</span></span><br><span class="line">openclaw status             <span class="comment"># Check status</span></span><br><span class="line">openclaw dashboard          <span class="comment"># Open web dashboard</span></span><br><span class="line">openclaw tui                <span class="comment"># Terminal interface</span></span><br></pre></td></tr></table></figure>
 
 <p><a name="103-model-management"></a></p>
-<h3 id="10-3-Model-Management"><a href="#10-3-Model-Management" class="headerlink" title="10.3 Model Management"></a>10.3 Model Management</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openclaw models status      <span class="comment"># Model status</span></span><br><span class="line">openclaw models list        <span class="comment"># List models</span></span><br><span class="line">openclaw models add         <span class="comment"># Add model</span></span><br></pre></td></tr></table></figure>
+<h3 id="Model-Management"><a href="#Model-Management" class="headerlink" title="Model Management"></a>Model Management</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openclaw models status      <span class="comment"># Model status</span></span><br><span class="line">openclaw models list        <span class="comment"># List models</span></span><br><span class="line">openclaw models add         <span class="comment"># Add model</span></span><br></pre></td></tr></table></figure>
 
 <p><a name="104-channel-management"></a></p>
-<h3 id="10-4-Channel-Management"><a href="#10-4-Channel-Management" class="headerlink" title="10.4 Channel Management"></a>10.4 Channel Management</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openclaw channels list      <span class="comment"># List channels</span></span><br><span class="line">openclaw channels add       <span class="comment"># Add channel</span></span><br><span class="line">openclaw channels remove    <span class="comment"># Remove channel</span></span><br></pre></td></tr></table></figure>
+<h3 id="Channel-Management"><a href="#Channel-Management" class="headerlink" title="Channel Management"></a>Channel Management</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openclaw channels list      <span class="comment"># List channels</span></span><br><span class="line">openclaw channels add       <span class="comment"># Add channel</span></span><br><span class="line">openclaw channels remove    <span class="comment"># Remove channel</span></span><br></pre></td></tr></table></figure>
 
 <p><a name="105-agent-management"></a></p>
-<h3 id="10-5-Agent-Management"><a href="#10-5-Agent-Management" class="headerlink" title="10.5 Agent Management"></a>10.5 Agent Management</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openclaw agents list            <span class="comment"># List Agents</span></span><br><span class="line">openclaw agents create &lt;name&gt;   <span class="comment"># Create Agent</span></span><br><span class="line">openclaw agents config &lt;name&gt;   <span class="comment"># Configure Agent</span></span><br><span class="line">openclaw agents start &lt;name&gt;    <span class="comment"># Start Agent</span></span><br><span class="line">openclaw agents stop &lt;name&gt;     <span class="comment"># Stop Agent</span></span><br><span class="line">openclaw agents delete &lt;name&gt;   <span class="comment"># Delete Agent</span></span><br></pre></td></tr></table></figure>
+<h3 id="Agent-Management"><a href="#Agent-Management" class="headerlink" title="Agent Management"></a>Agent Management</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openclaw agents list            <span class="comment"># List Agents</span></span><br><span class="line">openclaw agents create &lt;name&gt;   <span class="comment"># Create Agent</span></span><br><span class="line">openclaw agents config &lt;name&gt;   <span class="comment"># Configure Agent</span></span><br><span class="line">openclaw agents start &lt;name&gt;    <span class="comment"># Start Agent</span></span><br><span class="line">openclaw agents stop &lt;name&gt;     <span class="comment"># Stop Agent</span></span><br><span class="line">openclaw agents delete &lt;name&gt;   <span class="comment"># Delete Agent</span></span><br></pre></td></tr></table></figure>
 
 <p><a name="106-memory-operations"></a></p>
-<h3 id="10-6-Memory-Operations"><a href="#10-6-Memory-Operations" class="headerlink" title="10.6 Memory Operations"></a>10.6 Memory Operations</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openclaw memory search &lt;query&gt;   <span class="comment"># Search memory</span></span><br><span class="line">openclaw memory list             <span class="comment"># List memory files</span></span><br><span class="line">openclaw memory edit             <span class="comment"># Edit memory</span></span><br></pre></td></tr></table></figure>
+<h3 id="Memory-Operations"><a href="#Memory-Operations" class="headerlink" title="Memory Operations"></a>Memory Operations</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openclaw memory search &lt;query&gt;   <span class="comment"># Search memory</span></span><br><span class="line">openclaw memory list             <span class="comment"># List memory files</span></span><br><span class="line">openclaw memory edit             <span class="comment"># Edit memory</span></span><br></pre></td></tr></table></figure>
 
 <p><a name="107-session-management"></a></p>
-<h3 id="10-7-Session-Management"><a href="#10-7-Session-Management" class="headerlink" title="10.7 Session Management"></a>10.7 Session Management</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openclaw sessions list           <span class="comment"># List sessions</span></span><br><span class="line">openclaw sessions <span class="built_in">history</span> &lt;key&gt;  <span class="comment"># View history</span></span><br><span class="line">openclaw sessions send           <span class="comment"># Send message to session</span></span><br></pre></td></tr></table></figure>
+<h3 id="Session-Management"><a href="#Session-Management" class="headerlink" title="Session Management"></a>Session Management</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openclaw sessions list           <span class="comment"># List sessions</span></span><br><span class="line">openclaw sessions <span class="built_in">history</span> &lt;key&gt;  <span class="comment"># View history</span></span><br><span class="line">openclaw sessions send           <span class="comment"># Send message to session</span></span><br></pre></td></tr></table></figure>
 
 <hr>
 <p><a name="11-troubleshooting"></a></p>
-<h2 id="11-Troubleshooting"><a href="#11-Troubleshooting" class="headerlink" title="11. Troubleshooting"></a>11. Troubleshooting</h2><p><a name="111-common-issues"></a></p>
-<h3 id="11-1-Common-Issues"><a href="#11-1-Common-Issues" class="headerlink" title="11.1 Common Issues"></a>11.1 Common Issues</h3><p><strong>Issue 1: <code>openclaw: command not found</code></strong></p>
+<h2 id="Troubleshooting"><a href="#Troubleshooting" class="headerlink" title="Troubleshooting"></a>Troubleshooting</h2><p><a name="111-common-issues"></a></p>
+<h3 id="Common-Issues"><a href="#Common-Issues" class="headerlink" title="Common Issues"></a>Common Issues</h3><p><strong>Issue 1: <code>openclaw: command not found</code></strong></p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Find npm global path</span></span><br><span class="line">npm prefix -g</span><br><span class="line"></span><br><span class="line"><span class="comment"># Add to PATH</span></span><br><span class="line"><span class="built_in">export</span> PATH=<span class="string">&quot;<span class="subst">$(npm prefix -g)</span>/bin:<span class="variable">$PATH</span>&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Add to ~/.bashrc permanently</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;export PATH=&quot;$(npm prefix -g)/bin:$PATH&quot;&#x27;</span> &gt;&gt; ~/.bashrc</span><br><span class="line"><span class="built_in">source</span> ~/.bashrc</span><br></pre></td></tr></table></figure>
 
 <p><strong>Issue 2: Gateway fails to start</strong></p>
@@ -2462,10 +2464,10 @@ When a mismatch occurs, the text pointer backtracks to i&#x3D;2, and the pattern
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Check API Key</span></span><br><span class="line">openclaw models status</span><br><span class="line"></span><br><span class="line"><span class="comment"># Test connection</span></span><br><span class="line">curl -H <span class="string">&quot;Authorization: Bearer YOUR_API_KEY&quot;</span> \</span><br><span class="line">  https://api.example.com/v1/models</span><br><span class="line"></span><br><span class="line"><span class="comment"># Check network</span></span><br><span class="line">ping api.example.com</span><br></pre></td></tr></table></figure>
 
 <p><a name="112-viewing-logs"></a></p>
-<h3 id="11-2-Viewing-Logs"><a href="#11-2-Viewing-Logs" class="headerlink" title="11.2 Viewing Logs"></a>11.2 Viewing Logs</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Gateway logs</span></span><br><span class="line">journalctl --user -u openclaw-gateway.service -f</span><br><span class="line"></span><br><span class="line"><span class="comment"># Last 50 entries</span></span><br><span class="line">journalctl --user -u openclaw-gateway.service -n 50</span><br><span class="line"></span><br><span class="line"><span class="comment"># Specific time range</span></span><br><span class="line">journalctl --user -u openclaw-gateway.service \</span><br><span class="line">  --since <span class="string">&quot;2026-03-16 10:00:00&quot;</span> --<span class="keyword">until</span> <span class="string">&quot;2026-03-16 12:00:00&quot;</span></span><br></pre></td></tr></table></figure>
+<h3 id="Viewing-Logs"><a href="#Viewing-Logs" class="headerlink" title="Viewing Logs"></a>Viewing Logs</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Gateway logs</span></span><br><span class="line">journalctl --user -u openclaw-gateway.service -f</span><br><span class="line"></span><br><span class="line"><span class="comment"># Last 50 entries</span></span><br><span class="line">journalctl --user -u openclaw-gateway.service -n 50</span><br><span class="line"></span><br><span class="line"><span class="comment"># Specific time range</span></span><br><span class="line">journalctl --user -u openclaw-gateway.service \</span><br><span class="line">  --since <span class="string">&quot;2026-03-16 10:00:00&quot;</span> --<span class="keyword">until</span> <span class="string">&quot;2026-03-16 12:00:00&quot;</span></span><br></pre></td></tr></table></figure>
 
 <p><a name="113-diagnostic-commands"></a></p>
-<h3 id="11-3-Diagnostic-Commands"><a href="#11-3-Diagnostic-Commands" class="headerlink" title="11.3 Diagnostic Commands"></a>11.3 Diagnostic Commands</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Full diagnostics</span></span><br><span class="line">openclaw doctor</span><br><span class="line"></span><br><span class="line"><span class="comment"># Check system</span></span><br><span class="line">openclaw status</span><br><span class="line"></span><br><span class="line"><span class="comment"># Check configuration</span></span><br><span class="line">openclaw config list</span><br></pre></td></tr></table></figure>
+<h3 id="Diagnostic-Commands"><a href="#Diagnostic-Commands" class="headerlink" title="Diagnostic Commands"></a>Diagnostic Commands</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Full diagnostics</span></span><br><span class="line">openclaw doctor</span><br><span class="line"></span><br><span class="line"><span class="comment"># Check system</span></span><br><span class="line">openclaw status</span><br><span class="line"></span><br><span class="line"><span class="comment"># Check configuration</span></span><br><span class="line">openclaw config list</span><br></pre></td></tr></table></figure>
 
 <p><a name="114-reset--recovery"></a></p>
 <h3 id="11-4-Reset-Recovery"><a href="#11-4-Reset-Recovery" class="headerlink" title="11.4 Reset &amp; Recovery"></a>11.4 Reset &amp; Recovery</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Reset configuration (use with caution)</span></span><br><span class="line">openclaw onboard --reset</span><br><span class="line"></span><br><span class="line"><span class="comment"># Reinstall Gateway</span></span><br><span class="line">openclaw gateway uninstall</span><br><span class="line">openclaw gateway install</span><br><span class="line"></span><br><span class="line"><span class="comment"># Clear cache</span></span><br><span class="line"><span class="built_in">rm</span> -rf ~/.openclaw/browser</span><br><span class="line"><span class="built_in">rm</span> -rf ~/.openclaw/cron</span><br></pre></td></tr></table></figure>
@@ -2808,63 +2810,6 @@ When a mismatch occurs, the text pointer backtracks to i&#x3D;2, and the pattern
     <url>/2025/11/03/The-Complete-Guide-to-Modern-CSS-Layouts-From-Flexbox-to-Grid-and-Beyond/</url>
     <content><![CDATA[<p><a href="/HTML/p2/index.html" target="_blank">project demo1</a><br><a href="/HTML/p3/index.html" target="_blank">project demo2</a></p>
 <link rel="stylesheet" href="/css/folder.css" type="text/css"><script src="/js/folder.js" type="text/javascript" async></script>]]></content>
-  </entry>
-  <entry>
-    <title>Workflow Orchestration</title>
-    <url>/2026/02/19/Workflow-Orchestration/</url>
-    <content><![CDATA[<h2 id="Workflow-Orchestration"><a href="#Workflow-Orchestration" class="headerlink" title="Workflow Orchestration"></a>Workflow Orchestration</h2><h3 id="1-Plan-Node-Default"><a href="#1-Plan-Node-Default" class="headerlink" title="1. Plan Node Default"></a>1. Plan Node Default</h3><ul>
-<li>Enter plan mode for ANY non-trivial task (3+ steps or architectural decisions)</li>
-<li>If something goes sideways, STOP and re-plan immediately – don’t keep pushing</li>
-<li>Write detailed specs upfront to reduce ambiguity</li>
-</ul>
-<h3 id="2-Subagent-Strategy"><a href="#2-Subagent-Strategy" class="headerlink" title="2. Subagent Strategy"></a>2. Subagent Strategy</h3><ul>
-<li>Use subagents liberally to keep main context window clean</li>
-<li>Offload research, exploration, and parallel analysis to subagents</li>
-<li>One tack per subagent for focused execution<span id="more"></span></li>
-</ul>
-<h3 id="3-Self-Improvement-Loop"><a href="#3-Self-Improvement-Loop" class="headerlink" title="3. Self-Improvement Loop"></a>3. Self-Improvement Loop</h3><ul>
-<li>After ANY correction from the user: update <code>tasks/lessons.md</code> with the pattern</li>
-<li>Write rules for yourself that prevent the same mistake</li>
-<li>Review lessons at session start for relevant project</li>
-</ul>
-<h3 id="4-Verification-Before-Done"><a href="#4-Verification-Before-Done" class="headerlink" title="4. Verification Before Done"></a>4. Verification Before Done</h3><ul>
-<li>Never mark a task complete without proving it works</li>
-<li>Run tests, check logs, demonstrate correctness</li>
-</ul>
-<h3 id="5-Demand-Elegance-Balanced"><a href="#5-Demand-Elegance-Balanced" class="headerlink" title="5. Demand Elegance (Balanced)"></a>5. Demand Elegance (Balanced)</h3><ul>
-<li>For non-trivial changes: pause and ask “is there a more elegant way?”</li>
-<li>If a fix feels hacky: “Knowing everything I know now, implement the elegant solution”</li>
-<li>Skip this for simple, obvious fixes – don’t over-engineer</li>
-</ul>
-<h3 id="6-Autonomous-Bug-Fixing"><a href="#6-Autonomous-Bug-Fixing" class="headerlink" title="6. Autonomous Bug Fixing"></a>6. Autonomous Bug Fixing</h3><ul>
-<li>When given a bug report: just fix it. Don’t ask for hand-holding</li>
-<li>Point at logs, errors, failing tests – then resolve them</li>
-<li>Zero context switching required from the user</li>
-</ul>
-<h3 id="Task-Management"><a href="#Task-Management" class="headerlink" title="Task Management"></a>Task Management</h3><ol>
-<li><strong>Plan First</strong>: Write plan to <code>tasks/todo.md</code> with checkable items</li>
-<li><strong>Verify Plan</strong>: Check in before starting implementation</li>
-<li><strong>Track Progress</strong>: Mark items complete as you go</li>
-<li><strong>Document Results</strong>: Add review section to <code>tasks/todo.md</code></li>
-<li><strong>Capture Lessons</strong>: Update <code>tasks/lessons.md</code> after corrections</li>
-</ol>
-<h3 id="Core-Principles"><a href="#Core-Principles" class="headerlink" title="Core Principles"></a>Core Principles</h3><ul>
-<li><strong>Simplicity First</strong>: Make every change as simple as possible. Impact minimal code.</li>
-<li><strong>No Laziness</strong>: Find root causes. No temporary fixes. Senior developer standards.</li>
-<li><strong>Minimal Impact</strong>: Changes should only touch what’s necessary. Avoid introducing bugs.</li>
-</ul>
-<link rel="stylesheet" href="/css/folder.css" type="text/css"><script src="/js/folder.js" type="text/javascript" async></script>]]></content>
-      <categories>
-        <category>AI</category>
-        <category>Vibe Coding</category>
-      </categories>
-      <tags>
-        <tag>AI Programming</tag>
-        <tag>Claude</tag>
-        <tag>Productivity</tag>
-        <tag>Workflow</tag>
-        <tag>Automation</tag>
-      </tags>
   </entry>
   <entry>
     <title>TLias Spring Boot Practice Guide</title>
@@ -3354,6 +3299,63 @@ When a mismatch occurs, the text pointer backtracks to i&#x3D;2, and the pattern
         <tag>JWT</tag>
         <tag>AOP</tag>
         <tag>RESTful API</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Workflow Orchestration</title>
+    <url>/2026/02/19/Workflow-Orchestration/</url>
+    <content><![CDATA[<h2 id="Workflow-Orchestration"><a href="#Workflow-Orchestration" class="headerlink" title="Workflow Orchestration"></a>Workflow Orchestration</h2><h3 id="1-Plan-Node-Default"><a href="#1-Plan-Node-Default" class="headerlink" title="1. Plan Node Default"></a>1. Plan Node Default</h3><ul>
+<li>Enter plan mode for ANY non-trivial task (3+ steps or architectural decisions)</li>
+<li>If something goes sideways, STOP and re-plan immediately – don’t keep pushing</li>
+<li>Write detailed specs upfront to reduce ambiguity</li>
+</ul>
+<h3 id="2-Subagent-Strategy"><a href="#2-Subagent-Strategy" class="headerlink" title="2. Subagent Strategy"></a>2. Subagent Strategy</h3><ul>
+<li>Use subagents liberally to keep main context window clean</li>
+<li>Offload research, exploration, and parallel analysis to subagents</li>
+<li>One tack per subagent for focused execution<span id="more"></span></li>
+</ul>
+<h3 id="3-Self-Improvement-Loop"><a href="#3-Self-Improvement-Loop" class="headerlink" title="3. Self-Improvement Loop"></a>3. Self-Improvement Loop</h3><ul>
+<li>After ANY correction from the user: update <code>tasks/lessons.md</code> with the pattern</li>
+<li>Write rules for yourself that prevent the same mistake</li>
+<li>Review lessons at session start for relevant project</li>
+</ul>
+<h3 id="4-Verification-Before-Done"><a href="#4-Verification-Before-Done" class="headerlink" title="4. Verification Before Done"></a>4. Verification Before Done</h3><ul>
+<li>Never mark a task complete without proving it works</li>
+<li>Run tests, check logs, demonstrate correctness</li>
+</ul>
+<h3 id="5-Demand-Elegance-Balanced"><a href="#5-Demand-Elegance-Balanced" class="headerlink" title="5. Demand Elegance (Balanced)"></a>5. Demand Elegance (Balanced)</h3><ul>
+<li>For non-trivial changes: pause and ask “is there a more elegant way?”</li>
+<li>If a fix feels hacky: “Knowing everything I know now, implement the elegant solution”</li>
+<li>Skip this for simple, obvious fixes – don’t over-engineer</li>
+</ul>
+<h3 id="6-Autonomous-Bug-Fixing"><a href="#6-Autonomous-Bug-Fixing" class="headerlink" title="6. Autonomous Bug Fixing"></a>6. Autonomous Bug Fixing</h3><ul>
+<li>When given a bug report: just fix it. Don’t ask for hand-holding</li>
+<li>Point at logs, errors, failing tests – then resolve them</li>
+<li>Zero context switching required from the user</li>
+</ul>
+<h3 id="Task-Management"><a href="#Task-Management" class="headerlink" title="Task Management"></a>Task Management</h3><ol>
+<li><strong>Plan First</strong>: Write plan to <code>tasks/todo.md</code> with checkable items</li>
+<li><strong>Verify Plan</strong>: Check in before starting implementation</li>
+<li><strong>Track Progress</strong>: Mark items complete as you go</li>
+<li><strong>Document Results</strong>: Add review section to <code>tasks/todo.md</code></li>
+<li><strong>Capture Lessons</strong>: Update <code>tasks/lessons.md</code> after corrections</li>
+</ol>
+<h3 id="Core-Principles"><a href="#Core-Principles" class="headerlink" title="Core Principles"></a>Core Principles</h3><ul>
+<li><strong>Simplicity First</strong>: Make every change as simple as possible. Impact minimal code.</li>
+<li><strong>No Laziness</strong>: Find root causes. No temporary fixes. Senior developer standards.</li>
+<li><strong>Minimal Impact</strong>: Changes should only touch what’s necessary. Avoid introducing bugs.</li>
+</ul>
+<link rel="stylesheet" href="/css/folder.css" type="text/css"><script src="/js/folder.js" type="text/javascript" async></script>]]></content>
+      <categories>
+        <category>AI</category>
+        <category>Vibe Coding</category>
+      </categories>
+      <tags>
+        <tag>AI Programming</tag>
+        <tag>Claude</tag>
+        <tag>Productivity</tag>
+        <tag>Workflow</tag>
+        <tag>Automation</tag>
       </tags>
   </entry>
   <entry>
