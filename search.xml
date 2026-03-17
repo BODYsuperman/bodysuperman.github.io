@@ -860,6 +860,200 @@ or <figure class="highlight css"><table><tr><td class="code"><pre><span class="l
       </tags>
   </entry>
   <entry>
+    <title>Dynamic Programming</title>
+    <url>/2025/03/22/Dynamic-Programming/</url>
+    <content><![CDATA[<ol>
+<li><a href="#core-concepts">Core Concepts</a></li>
+<li><a href="#step-solve">Steps to Solve Problems with Dynamic Programming</a><ul>
+<li><a href="#define">Define the State</a></li>
+<li><a href="#formulate">Formulate the Transition</a></li>
+<li><a href="#boundary-conditions">Initialize the Boundary Conditions</a></li>
+<li><a href="#choose-order">Choose an Order</a></li>
+<li><a href="#final-result">Return the Final Result</a></li>
+</ul>
+</li>
+<li><a href="#classic-examples">Classic Examples</a><ul>
+<li><a href="#fibonacci-sequence">Fibonacci Sequence</a></li>
+<li><a href="#01-knapsack-problem">0&#x2F;1 Knapsack Problem</a></li>
+</ul>
+</li>
+<li><a href="#conclusion">Conclusion</a><span id="more"></span></li>
+</ol>
+<h2 id="Core-concepts"><a href="#Core-concepts" class="headerlink" title="Core concepts"></a>Core concepts</h2><p><strong>Dynamic programming</strong><a name="core-concepts"></a> is both a mathematical optimization method and an algorithmic paradigm. The method was developed by Richard Bellman in the 1950s and has found applications in numerous fields, from aerospace engineering to economics. It is a powerful technique used to solve complex problems by breaking them down into simpler subproblems. It’s widely used in computer science for optimization problems, and once you grasp its core idea, it becomes an invaluable tool in your programming toolkit.</p>
+<p>A DP solution hinges on two properties:</p>
+<ul>
+<li><strong>Overlapping Subproblems</strong>: Means that the problem can be broken down into smaller subproblems, where the solutions to the subproblems are overlapping. Having subproblems that are overlapping means that the solution to one subproblem is part of the solution to another subproblem. I will take <a href="https://en.wikipedia.org/wiki/Fibonacci_sequence">Fibonacci sequence</a> as an example in the coming section.</li>
+<li><strong>Optimal Substructure</strong>: Means that the complete solution to a problem can be constructed from the solutions of its smaller subproblems. So not only must the problem have overlapping subproblems, the substructure must also be optimal so that there is a way to piece the solutions to the subproblems together to form the complete solution. I will take the classical <a href="https://en.wikipedia.org/wiki/Knapsack_problem">The 0&#x2F;1 Knapsack Problem</a> as an example, the optimal solution when the knapsack capacity is <code>W</code> can be derived by considering whether to include an item and combining it with the optimal solution when the knapsack capacity is <code>W - weight[i]</code>.</li>
+</ul>
+<h2 id="Steps-to-Solve-Problems-with-Dynamic-Programming"><a href="#Steps-to-Solve-Problems-with-Dynamic-Programming" class="headerlink" title="Steps to Solve Problems with Dynamic Programming:"></a>Steps to Solve Problems with Dynamic Programming:<a name="step-solve"></a></h2><h3 id="Define-the-State"><a href="#Define-the-State" class="headerlink" title="Define the State:"></a><strong>Define the State</strong>:<a name="define"></a></h3><p>Identify parameters that uniquely describe a subproblem (e.g., indices, capacities). For example, in the 0&#x2F;1 knapsack problem, the state can be defined as <code>dp[i][j]</code>, which represents the maximum value that can be obtained when considering the first i items and a knapsack capacity of j.</p>
+<h3 id="Formulate-the-Transition"><a href="#Formulate-the-Transition" class="headerlink" title="Formulate the Transition:"></a><strong>Formulate the Transition</strong>:<a name="formulate"></a></h3><p>Derive a recurrence relation that expresses the state in terms of smaller states.</p>
+<h3 id="Initialize-the-Boundary-Conditions"><a href="#Initialize-the-Boundary-Conditions" class="headerlink" title="Initialize the Boundary Conditions:"></a><strong>Initialize the Boundary Conditions</strong>:<a name="boundary-conditions"></a></h3><p>Initialize the Boundary Conditions: Determine the initial values of the states, which are usually the base cases of the problem. For example, in the 0&#x2F;1 knapsack problem, <code>dp[0][j]=0</code> (when there are no items, the value is 0 regardless of the knapsack capacity), and <code>dp[i][0]=0</code> (when the knapsack capacity is 0, the value is 0 regardless of the number of items).</p>
+<h3 id="Choose-an-Order"><a href="#Choose-an-Order" class="headerlink" title="Choose an Order:"></a><strong>Choose an Order</strong>:<a name="choose-order"></a></h3><p>Decide whether to solve states top‑down (recursion + memo) or bottom‑up (iteration + table). If using the tabular method(the latter one), fill the state table step-by-step according to the state - transition equation and the initial conditions. This step is usually achieved through nested loops.</p>
+<h3 id="Return-the-Final-Result"><a href="#Return-the-Final-Result" class="headerlink" title="Return the Final Result:"></a><strong>Return the Final Result</strong>:<a name="final-result"></a></h3><p>According to the requirements of the problem, obtain the final solution from the state table. For example, in the 0&#x2F;1 knapsack problem, the final result is dp[n][W], that is, the maximum value when considering all n items and a knapsack capacity of <code>W</code>. </p>
+<h2 id="Classic-Examples"><a href="#Classic-Examples" class="headerlink" title="Classic Examples"></a>Classic Examples</h2><h3 id="Find-The-nth-Fibonacci-Number"><a href="#Find-The-nth-Fibonacci-Number" class="headerlink" title="Find The nth Fibonacci Number"></a>Find The nth Fibonacci Number<a name="fibonacci-sequence"></a></h3><p>Let us say we want an algorithm that finds the nth Fibonacci number. We don’t know how to find the nth Fibonacci number yet, except that we want to use Dynamic Programming to design the algorithm.</p>
+<blockquote>
+<p>The Fibonacci numbers is a sequence of numbers starting with 0 and 1 and the next numbers are created by adding the two previous numbers.<br>The 8 first Fibonacci numbers are: <strong>0, 1, 1, 2, 3, 5, 8, 13</strong><br>And counting from 0, the 4th Fibonacci number <code>F(4)</code> is <strong>3</strong>.<br>In general, this is how a Fibonacci number is created based on the two previous:<br>                    <code>F(n) = F(n-1) + F(n-2)</code></p>
+</blockquote>
+<h4 id="Naive-Recursive-Approach"><a href="#Naive-Recursive-Approach" class="headerlink" title="Naive Recursive Approach"></a>Naive Recursive Approach</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public int Fib2(int n)</span><br><span class="line">&#123;</span><br><span class="line">    if (n &lt; 2) return n;</span><br><span class="line">    return Fib(n - 1) + Fib(n - 2);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>Time  Complexity: <strong>O(2<sup>n</sup>)</strong></li>
+<li>Space Complexity: <strong>O(n)</strong><br>This works, but it is inefficient. For <code>n=40</code>, it takes noticeable time because it recalculates the same Fibonacci numbers repeatedly.</li>
+</ul>
+<h4 id="Bottom-Up-DP-Tabulation"><a href="#Bottom-Up-DP-Tabulation" class="headerlink" title="Bottom-Up DP (Tabulation)"></a>Bottom-Up DP (Tabulation)</h4><p>We can optimize it using memoization, where we store results in an array:</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public int Fib(int n)</span><br><span class="line">&#123;</span><br><span class="line">    if (n &lt; 2) return n;</span><br><span class="line">    int[] dp = new int[n + 1];</span><br><span class="line">    dp[0] = 0;</span><br><span class="line">    dp[1] = 1;</span><br><span class="line">    for(int i = 2; i &lt;= n; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        dp[i] = dp[i - 1] + dp[i - 2];</span><br><span class="line">    &#125;</span><br><span class="line">    return dp[n];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>Time  Complexity: <strong>O(n)</strong></li>
+<li>Space Complexity: <strong>O(n)</strong></li>
+</ul>
+<p>In this version, we fill the <code>dp</code> array from the base cases up to <code>n</code>. It’s still <strong>O(n)</strong> time complexity, but it avoids recursion overhead, making it slightly faster in practice.<br>More efficiently, We only need to maintain two values as we don’t need to record the whole sequence.</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public int Fib(int n)</span><br><span class="line">&#123;</span><br><span class="line">    if (n &lt; 2) return n;</span><br><span class="line">    int[] dp = new int[2] &#123;0,1&#125;;</span><br><span class="line">    for(int i = 2; i &lt;= n; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        int temp = dp[0] + dp[1];</span><br><span class="line">        dp[0] = dp[1];</span><br><span class="line">        dp[1] = temp;</span><br><span class="line">    &#125;</span><br><span class="line">    return dp[1];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>Time  Complexity: <strong>O(n)</strong></li>
+<li>Space Complexity: <strong>O(1)</strong></li>
+</ul>
+<h3 id="The-0-1-Knapsack-Problem"><a href="#The-0-1-Knapsack-Problem" class="headerlink" title="The 0&#x2F;1 Knapsack Problem"></a>The 0&#x2F;1 Knapsack Problem<a name="01-knapsack-problem"></a></h3><p>Given items with weight array weights and value array values, and a knapsack with capacity capacity, find the maximum value that can be carried.<br>Solving the 0&#x2F;1 Knapsack Problem helps businesses decide which projects to fund within a budget, maximizing profit without overspending. It is also used in logistics to optimize the loading of goods into trucks and planes, ensuring the most valuable, or highest prioritized, items are included without exceeding weight limits.</p>
+<p><u>Rules</u>:<br>    - Every item has a weight and value.<br>    - Your knapsack has a weight limit.<br>    - Choose which items you want to bring with you in the knapsack.<br>You can either take an item or not, you cannot take half of an item for example.<br><u>Goal</u>:<br>    - Maximize the total value of the items in the knapsack.</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public int Knapsack01(int[] w, int[] v, int cap)</span><br><span class="line">&#123;</span><br><span class="line">    int n = w.Length;</span><br><span class="line">    int[,] dp = new int[n + 1,cap + 1]; </span><br><span class="line">    for (int j = 0; j &lt;= cap; j++)</span><br><span class="line">    &#123;</span><br><span class="line">        dp[0, j] = 0;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    for (int i = 0; i &lt;= n; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        dp[i, 0] = 0;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    for(int i= 1; i &lt;= n; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        for(int j =1;j&lt;= cap; j++)</span><br><span class="line">        &#123;</span><br><span class="line">            if (j &lt; w[i-1])</span><br><span class="line">            &#123;</span><br><span class="line">                dp[i, j] = dp[i - 1, j];</span><br><span class="line">            &#125;</span><br><span class="line">            else</span><br><span class="line">            &#123;</span><br><span class="line">                dp[i, j] = Math.Max(dp[i - 1, j], v[i - 1] + dp[i - 1, j - w[i - 1]]);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return dp[n, cap];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Below is the optimized version, we use a one-dimensional array dp. By updating the dp array in reverse order, we ensure that each item is considered only once, thus avoiding redundant calculations and overwriting problems.</p>
+<ul>
+<li>Reduces space complexity from O(n×capacity) to O(capacity)</li>
+<li>Reverse iteration prevents value overwrite issues</li>
+<li>More efficient memory usage</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public int Knapsack01(int[] w, int[] v, int cap)</span><br><span class="line">&#123;</span><br><span class="line">    int n = w.Length;</span><br><span class="line">    int[] dp = new int[cap + 1];</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    for (int i = 0; i &lt; n; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        //In order to select the item only once, we need to traverse from back to front </span><br><span class="line">        for (int j = cap; j &gt;= w[i]; j--)</span><br><span class="line">        &#123;</span><br><span class="line">            dp[j] = Math.Max(dp[j], v[i] + dp[j - w[i]]);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return dp[cap];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion "></a>Conclusion <a name="conclusion"></a></h2><p>Dynamic programming transforms inefficient recursive solutions into efficient ones by leveraging memory. Whether you choose memoization or tabulation, the key is to avoid redundant work. Arrays or dictionaries are perfect for storing intermediate results, making DP both practical and elegant.By reasonably defining the state, deriving the state-transition equation, and initializing the boundary conditions, we can efficiently solve complex problems using dynamic programming. In practical applications, pay attention to techniques such as space optimization to improve the efficiency and performance of the algorithm.</p>
+<link rel="stylesheet" href="/css/folder.css" type="text/css"><script src="/js/folder.js" type="text/javascript" async></script>]]></content>
+      <categories>
+        <category>Data Structure and Alogrithm</category>
+      </categories>
+      <tags>
+        <tag>Data Structure and Alogrithm</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Git guideline</title>
+    <url>/2025/11/10/Git-guideline/</url>
+    <content><![CDATA[<ul>
+<li><a href="#understanding-git-basics">Understanding Git Basics</a><ul>
+<li><a href="#1-working-directory">1. Working Directory</a></li>
+<li><a href="#2-staging-area-index">2. Staging Area (Index)</a></li>
+<li><a href="#3-repository">3. Repository</a></li>
+</ul>
+</li>
+<li><a href="#essential-git-commands">Essential Git Commands</a><ul>
+<li><a href="#initial-setup">Initial Setup</a></li>
+<li><a href="#cloning-a-repository">Cloning a Repository</a></li>
+<li><a href="#tracking-and-committing-changes">Tracking and Committing Changes</a></li>
+<li><a href="#view-history">View history</a></li>
+<li><a href="#recommended-commit-prefixes">Recommended commit prefixes</a><span id="more"></span></li>
+</ul>
+</li>
+<li><a href="#working-with-remote-repositories">Working with Remote Repositories</a></li>
+<li><a href="#branching-and-merging">Branching and Merging</a><ul>
+<li><a href="#recommended-branch-naming">Recommended branch naming</a></li>
+</ul>
+</li>
+<li><a href="#undoing-changes-and-recovery">Undoing Changes and Recovery</a></li>
+<li><a href="#tags-and-version-releases">Tags and Version Releases</a></li>
+<li><a href="#common-development-scenarios">Common Development Scenarios</a><ul>
+<li><a href="#new-project-push">New Project Push</a></li>
+<li><a href="#team-feature-development">Team Feature Development</a></li>
+<li><a href="#hotfix-production-bug">Hotfix Production Bug</a></li>
+</ul>
+</li>
+<li><a href="#common-pitfalls-and-how-to-avoid-them">Common Pitfalls and How to Avoid Them</a></li>
+<li><a href="#using-ssh-with-github-recommended">Using SSH with GitHub (Recommended)</a></li>
+<li><a href="#git-best-practices">Git Best Practices</a></li>
+<li><a href="#conclusion">Conclusion</a></li>
+</ul>
+<hr>
+<h2 id="Understanding-Git-Basics"><a href="#Understanding-Git-Basics" class="headerlink" title="Understanding Git Basics "></a>Understanding Git Basics <a name="understanding-git-basics"></a></h2><h3 id="Working-Directory"><a href="#Working-Directory" class="headerlink" title="Working Directory "></a>Working Directory <a name="1-working-directory"></a></h3><p>This is where you actually edit files on your local machine.</p>
+<h3 id="Staging-Area-Index"><a href="#Staging-Area-Index" class="headerlink" title="Staging Area (Index) "></a>Staging Area (Index) <a name="2-staging-area-index"></a></h3><p>A buffer between your working directory and the repository.<br>You decide <strong>what exactly goes into the next commit</strong>.</p>
+<h3 id="Repository"><a href="#Repository" class="headerlink" title="Repository "></a>Repository <a name="3-repository"></a></h3><p>The database that stores all commit history.</p>
+<p><strong>Typical workflow:</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Working Directory → Staging Area → Local Repository → Remote Repository</span><br></pre></td></tr></table></figure>
+
+<p>Once this flow makes sense, Git becomes much easier.</p>
+<h2 id="Essential-Git-Commands"><a href="#Essential-Git-Commands" class="headerlink" title="Essential Git Commands "></a>Essential Git Commands <a name="essential-git-commands"></a></h2><h3 id="Initial-Setup"><a href="#Initial-Setup" class="headerlink" title="Initial Setup "></a>Initial Setup <a name="initial-setup"></a></h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git config --global user.name <span class="string">&quot;Your Name&quot;</span></span><br><span class="line">git config --global user.email <span class="string">&quot;you@example.com&quot;</span></span><br><span class="line">git config --global --list</span><br></pre></td></tr></table></figure>
+
+<p>Initialize a repository:</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git init</span><br></pre></td></tr></table></figure>
+
+<h3 id="Cloning-a-Repository"><a href="#Cloning-a-Repository" class="headerlink" title="Cloning a Repository "></a>Cloning a Repository <a name="cloning-a-repository"></a></h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># HTTPS</span></span><br><span class="line">git <span class="built_in">clone</span> https://github.com/username/repo.git</span><br></pre></td></tr></table></figure>
+
+<h1 id="SSH-recommended"><a href="#SSH-recommended" class="headerlink" title="SSH (recommended)"></a>SSH (recommended)</h1><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">git clone git@github.com:username/repo.git</span><br></pre></td></tr></table></figure>
+
+<h3 id="Tracking-and-Committing-Changes"><a href="#Tracking-and-Committing-Changes" class="headerlink" title="Tracking and Committing Changes "></a>Tracking and Committing Changes <a name="tracking-and-committing-changes"></a></h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git status</span><br><span class="line">git add .</span><br><span class="line">git commit -m <span class="string">&quot;feat: add login feature&quot;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="View-history"><a href="#View-history" class="headerlink" title="View history "></a>View history <a name="view-history"></a></h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git <span class="built_in">log</span> --oneline</span><br></pre></td></tr></table></figure>
+
+<h3 id="Recommended-commit-prefixes"><a href="#Recommended-commit-prefixes" class="headerlink" title="Recommended commit prefixes "></a>Recommended commit prefixes <a name="recommended-commit-prefixes"></a></h3><ul>
+<li><code>feat</code>: new feature</li>
+<li><code>fix</code>: bug fix</li>
+<li><code>docs</code>: documentation</li>
+<li><code>refactor</code>: refactoring</li>
+</ul>
+<h2 id="Working-with-Remote-Repositories"><a href="#Working-with-Remote-Repositories" class="headerlink" title="Working with Remote Repositories "></a>Working with Remote Repositories <a name="working-with-remote-repositories"></a></h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git remote add origin &lt;repo-url&gt;</span><br><span class="line">git remote -v</span><br><span class="line">git push origin main</span><br><span class="line">git pull origin main</span><br></pre></td></tr></table></figure>
+
+<p>Avoid force push unless you know exactly what you’re doing:</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git push --force-with-lease</span><br></pre></td></tr></table></figure>
+
+<h2 id="Branching-and-Merging"><a href="#Branching-and-Merging" class="headerlink" title="Branching and Merging "></a>Branching and Merging <a name="branching-and-merging"></a></h2><p>Branches allow safe experimentation.</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git branch</span><br><span class="line">git checkout -b feature/login</span><br><span class="line">git checkout main</span><br><span class="line">git merge feature/login</span><br><span class="line">git branch -d feature/login</span><br></pre></td></tr></table></figure>
+
+<h3 id="Recommended-branch-naming"><a href="#Recommended-branch-naming" class="headerlink" title="Recommended branch naming "></a>Recommended branch naming <a name="recommended-branch-naming"></a></h3><ul>
+<li>main – stable production</li>
+<li>feature&#x2F;* – new features</li>
+<li>hotfix&#x2F;* – urgent fixes</li>
+</ul>
+<h2 id="Undoing-Changes-and-Recovery"><a href="#Undoing-Changes-and-Recovery" class="headerlink" title="Undoing Changes and Recovery "></a>Undoing Changes and Recovery <a name="undoing-changes-and-recovery"></a></h2><p>Git is powerful because almost nothing is truly lost.</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git reset --soft &lt;commit&gt;</span><br><span class="line">git reset --mixed &lt;commit&gt;</span><br><span class="line">git reset --hard &lt;commit&gt;</span><br><span class="line">git reflog</span><br><span class="line">git reflog is your emergency <span class="built_in">exit</span>.</span><br></pre></td></tr></table></figure>
+<h2 id="Tags-and-Version-Releases"><a href="#Tags-and-Version-Releases" class="headerlink" title="Tags and Version Releases "></a>Tags and Version Releases <a name="tags-and-version-releases"></a></h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git tag -a v1.0 -m <span class="string">&quot;First release&quot;</span></span><br><span class="line">git push origin --tags</span><br></pre></td></tr></table></figure>
+
+<p>Tags are ideal for marking stable releases.</p>
+<h2 id="Common-Development-Scenarios"><a href="#Common-Development-Scenarios" class="headerlink" title="Common Development Scenarios "></a>Common Development Scenarios <a name="common-development-scenarios"></a></h2><h3 id="New-Project-Push"><a href="#New-Project-Push" class="headerlink" title="New Project Push "></a>New Project Push <a name="new-project-push"></a></h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git init</span><br><span class="line">git add .</span><br><span class="line">git commit -m <span class="string">&quot;init: initial commit&quot;</span></span><br><span class="line">git remote add origin &lt;repo&gt;</span><br><span class="line">git push -u origin main</span><br></pre></td></tr></table></figure>
+
+<h3 id="Team-Feature-Development"><a href="#Team-Feature-Development" class="headerlink" title="Team Feature Development "></a>Team Feature Development <a name="team-feature-development"></a></h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git checkout -b feature/payment</span><br><span class="line">git commit -m <span class="string">&quot;feat: payment integration&quot;</span></span><br><span class="line">git push origin feature/payment</span><br></pre></td></tr></table></figure>
+
+<h3 id="Hotfix-Production-Bug"><a href="#Hotfix-Production-Bug" class="headerlink" title="Hotfix Production Bug "></a>Hotfix Production Bug <a name="hotfix-production-bug"></a></h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git checkout main</span><br><span class="line">git pull</span><br><span class="line">git checkout -b hotfix/critical-bug</span><br><span class="line">git commit -m <span class="string">&quot;fix: critical production issue&quot;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="Common-Pitfalls-and-How-to-Avoid-Them"><a href="#Common-Pitfalls-and-How-to-Avoid-Them" class="headerlink" title="Common Pitfalls and How to Avoid Them "></a>Common Pitfalls and How to Avoid Them <a name="common-pitfalls-and-how-to-avoid-them"></a></h2><ul>
+<li>Forgot git add</li>
+<li>Merge conflicts ignored</li>
+<li>Panic after git reset –hard</li>
+<li>Using password instead of token&#x2F;SSH</li>
+</ul>
+<p>Tip: If something goes wrong, stop and check git reflog.</p>
+<h2 id="Using-SSH-with-GitHub-Recommended"><a href="#Using-SSH-with-GitHub-Recommended" class="headerlink" title="Using SSH with GitHub (Recommended) "></a>Using SSH with GitHub (Recommended) <a name="using-ssh-with-github-recommended"></a></h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ssh-keygen -t ed25519 -C <span class="string">&quot;you@example.com&quot;</span></span><br><span class="line"><span class="built_in">cat</span> ~/.ssh/id_ed25519.pub</span><br><span class="line">ssh -T git@github.com</span><br></pre></td></tr></table></figure>
+
+<p>Successful output:</p>
+<figure class="highlight rust"><table><tr><td class="code"><pre><span class="line">Hi username! You<span class="symbol">&#x27;ve</span> successfully authenticated.</span><br></pre></td></tr></table></figure>
+
+<h2 id="Git-Best-Practices"><a href="#Git-Best-Practices" class="headerlink" title="Git Best Practices "></a>Git Best Practices <a name="git-best-practices"></a></h2><p>Commit small, meaningful changes</p>
+<p>Write clear commit messages</p>
+<p>Use branches aggressively</p>
+<p>Clean unused branches regularly</p>
+<p>Prefer SSH over HTTPS</p>
+<p>Use fine-grained tokens for automation</p>
+<h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion "></a>Conclusion <a name="conclusion"></a></h2><p>You don’t need to memorize every Git command.</p>
+<p>Git is not about commands—it’s about understanding history and collaboration.</p>
+<p>Once you understand the workflow, Git becomes a powerful safety net rather than a source of anxiety.</p>
+<link rel="stylesheet" href="/css/folder.css" type="text/css"><script src="/js/folder.js" type="text/javascript" async></script>]]></content>
+      <categories>
+        <category>Development</category>
+        <category>Git</category>
+      </categories>
+      <tags>
+        <tag>Git</tag>
+        <tag>Version Control</tag>
+        <tag>GitHub</tag>
+        <tag>CLI</tag>
+        <tag>Software Engineering</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Design Patterns</title>
     <url>/2025/04/19/Design-Patterns/</url>
     <content><![CDATA[<ol>
@@ -1178,200 +1372,6 @@ Use Cases:</li>
         <tag>Creational Patterns</tag>
         <tag>Structural Patterns</tag>
         <tag>Behavioral Patterns</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Dynamic Programming</title>
-    <url>/2025/03/22/Dynamic-Programming/</url>
-    <content><![CDATA[<ol>
-<li><a href="#core-concepts">Core Concepts</a></li>
-<li><a href="#step-solve">Steps to Solve Problems with Dynamic Programming</a><ul>
-<li><a href="#define">Define the State</a></li>
-<li><a href="#formulate">Formulate the Transition</a></li>
-<li><a href="#boundary-conditions">Initialize the Boundary Conditions</a></li>
-<li><a href="#choose-order">Choose an Order</a></li>
-<li><a href="#final-result">Return the Final Result</a></li>
-</ul>
-</li>
-<li><a href="#classic-examples">Classic Examples</a><ul>
-<li><a href="#fibonacci-sequence">Fibonacci Sequence</a></li>
-<li><a href="#01-knapsack-problem">0&#x2F;1 Knapsack Problem</a></li>
-</ul>
-</li>
-<li><a href="#conclusion">Conclusion</a><span id="more"></span></li>
-</ol>
-<h2 id="Core-concepts"><a href="#Core-concepts" class="headerlink" title="Core concepts"></a>Core concepts</h2><p><strong>Dynamic programming</strong><a name="core-concepts"></a> is both a mathematical optimization method and an algorithmic paradigm. The method was developed by Richard Bellman in the 1950s and has found applications in numerous fields, from aerospace engineering to economics. It is a powerful technique used to solve complex problems by breaking them down into simpler subproblems. It’s widely used in computer science for optimization problems, and once you grasp its core idea, it becomes an invaluable tool in your programming toolkit.</p>
-<p>A DP solution hinges on two properties:</p>
-<ul>
-<li><strong>Overlapping Subproblems</strong>: Means that the problem can be broken down into smaller subproblems, where the solutions to the subproblems are overlapping. Having subproblems that are overlapping means that the solution to one subproblem is part of the solution to another subproblem. I will take <a href="https://en.wikipedia.org/wiki/Fibonacci_sequence">Fibonacci sequence</a> as an example in the coming section.</li>
-<li><strong>Optimal Substructure</strong>: Means that the complete solution to a problem can be constructed from the solutions of its smaller subproblems. So not only must the problem have overlapping subproblems, the substructure must also be optimal so that there is a way to piece the solutions to the subproblems together to form the complete solution. I will take the classical <a href="https://en.wikipedia.org/wiki/Knapsack_problem">The 0&#x2F;1 Knapsack Problem</a> as an example, the optimal solution when the knapsack capacity is <code>W</code> can be derived by considering whether to include an item and combining it with the optimal solution when the knapsack capacity is <code>W - weight[i]</code>.</li>
-</ul>
-<h2 id="Steps-to-Solve-Problems-with-Dynamic-Programming"><a href="#Steps-to-Solve-Problems-with-Dynamic-Programming" class="headerlink" title="Steps to Solve Problems with Dynamic Programming:"></a>Steps to Solve Problems with Dynamic Programming:<a name="step-solve"></a></h2><h3 id="Define-the-State"><a href="#Define-the-State" class="headerlink" title="Define the State:"></a><strong>Define the State</strong>:<a name="define"></a></h3><p>Identify parameters that uniquely describe a subproblem (e.g., indices, capacities). For example, in the 0&#x2F;1 knapsack problem, the state can be defined as <code>dp[i][j]</code>, which represents the maximum value that can be obtained when considering the first i items and a knapsack capacity of j.</p>
-<h3 id="Formulate-the-Transition"><a href="#Formulate-the-Transition" class="headerlink" title="Formulate the Transition:"></a><strong>Formulate the Transition</strong>:<a name="formulate"></a></h3><p>Derive a recurrence relation that expresses the state in terms of smaller states.</p>
-<h3 id="Initialize-the-Boundary-Conditions"><a href="#Initialize-the-Boundary-Conditions" class="headerlink" title="Initialize the Boundary Conditions:"></a><strong>Initialize the Boundary Conditions</strong>:<a name="boundary-conditions"></a></h3><p>Initialize the Boundary Conditions: Determine the initial values of the states, which are usually the base cases of the problem. For example, in the 0&#x2F;1 knapsack problem, <code>dp[0][j]=0</code> (when there are no items, the value is 0 regardless of the knapsack capacity), and <code>dp[i][0]=0</code> (when the knapsack capacity is 0, the value is 0 regardless of the number of items).</p>
-<h3 id="Choose-an-Order"><a href="#Choose-an-Order" class="headerlink" title="Choose an Order:"></a><strong>Choose an Order</strong>:<a name="choose-order"></a></h3><p>Decide whether to solve states top‑down (recursion + memo) or bottom‑up (iteration + table). If using the tabular method(the latter one), fill the state table step-by-step according to the state - transition equation and the initial conditions. This step is usually achieved through nested loops.</p>
-<h3 id="Return-the-Final-Result"><a href="#Return-the-Final-Result" class="headerlink" title="Return the Final Result:"></a><strong>Return the Final Result</strong>:<a name="final-result"></a></h3><p>According to the requirements of the problem, obtain the final solution from the state table. For example, in the 0&#x2F;1 knapsack problem, the final result is dp[n][W], that is, the maximum value when considering all n items and a knapsack capacity of <code>W</code>. </p>
-<h2 id="Classic-Examples"><a href="#Classic-Examples" class="headerlink" title="Classic Examples"></a>Classic Examples</h2><h3 id="Find-The-nth-Fibonacci-Number"><a href="#Find-The-nth-Fibonacci-Number" class="headerlink" title="Find The nth Fibonacci Number"></a>Find The nth Fibonacci Number<a name="fibonacci-sequence"></a></h3><p>Let us say we want an algorithm that finds the nth Fibonacci number. We don’t know how to find the nth Fibonacci number yet, except that we want to use Dynamic Programming to design the algorithm.</p>
-<blockquote>
-<p>The Fibonacci numbers is a sequence of numbers starting with 0 and 1 and the next numbers are created by adding the two previous numbers.<br>The 8 first Fibonacci numbers are: <strong>0, 1, 1, 2, 3, 5, 8, 13</strong><br>And counting from 0, the 4th Fibonacci number <code>F(4)</code> is <strong>3</strong>.<br>In general, this is how a Fibonacci number is created based on the two previous:<br>                    <code>F(n) = F(n-1) + F(n-2)</code></p>
-</blockquote>
-<h4 id="Naive-Recursive-Approach"><a href="#Naive-Recursive-Approach" class="headerlink" title="Naive Recursive Approach"></a>Naive Recursive Approach</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public int Fib2(int n)</span><br><span class="line">&#123;</span><br><span class="line">    if (n &lt; 2) return n;</span><br><span class="line">    return Fib(n - 1) + Fib(n - 2);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>Time  Complexity: <strong>O(2<sup>n</sup>)</strong></li>
-<li>Space Complexity: <strong>O(n)</strong><br>This works, but it is inefficient. For <code>n=40</code>, it takes noticeable time because it recalculates the same Fibonacci numbers repeatedly.</li>
-</ul>
-<h4 id="Bottom-Up-DP-Tabulation"><a href="#Bottom-Up-DP-Tabulation" class="headerlink" title="Bottom-Up DP (Tabulation)"></a>Bottom-Up DP (Tabulation)</h4><p>We can optimize it using memoization, where we store results in an array:</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public int Fib(int n)</span><br><span class="line">&#123;</span><br><span class="line">    if (n &lt; 2) return n;</span><br><span class="line">    int[] dp = new int[n + 1];</span><br><span class="line">    dp[0] = 0;</span><br><span class="line">    dp[1] = 1;</span><br><span class="line">    for(int i = 2; i &lt;= n; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        dp[i] = dp[i - 1] + dp[i - 2];</span><br><span class="line">    &#125;</span><br><span class="line">    return dp[n];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>Time  Complexity: <strong>O(n)</strong></li>
-<li>Space Complexity: <strong>O(n)</strong></li>
-</ul>
-<p>In this version, we fill the <code>dp</code> array from the base cases up to <code>n</code>. It’s still <strong>O(n)</strong> time complexity, but it avoids recursion overhead, making it slightly faster in practice.<br>More efficiently, We only need to maintain two values as we don’t need to record the whole sequence.</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public int Fib(int n)</span><br><span class="line">&#123;</span><br><span class="line">    if (n &lt; 2) return n;</span><br><span class="line">    int[] dp = new int[2] &#123;0,1&#125;;</span><br><span class="line">    for(int i = 2; i &lt;= n; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        int temp = dp[0] + dp[1];</span><br><span class="line">        dp[0] = dp[1];</span><br><span class="line">        dp[1] = temp;</span><br><span class="line">    &#125;</span><br><span class="line">    return dp[1];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>Time  Complexity: <strong>O(n)</strong></li>
-<li>Space Complexity: <strong>O(1)</strong></li>
-</ul>
-<h3 id="The-0-1-Knapsack-Problem"><a href="#The-0-1-Knapsack-Problem" class="headerlink" title="The 0&#x2F;1 Knapsack Problem"></a>The 0&#x2F;1 Knapsack Problem<a name="01-knapsack-problem"></a></h3><p>Given items with weight array weights and value array values, and a knapsack with capacity capacity, find the maximum value that can be carried.<br>Solving the 0&#x2F;1 Knapsack Problem helps businesses decide which projects to fund within a budget, maximizing profit without overspending. It is also used in logistics to optimize the loading of goods into trucks and planes, ensuring the most valuable, or highest prioritized, items are included without exceeding weight limits.</p>
-<p><u>Rules</u>:<br>    - Every item has a weight and value.<br>    - Your knapsack has a weight limit.<br>    - Choose which items you want to bring with you in the knapsack.<br>You can either take an item or not, you cannot take half of an item for example.<br><u>Goal</u>:<br>    - Maximize the total value of the items in the knapsack.</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public int Knapsack01(int[] w, int[] v, int cap)</span><br><span class="line">&#123;</span><br><span class="line">    int n = w.Length;</span><br><span class="line">    int[,] dp = new int[n + 1,cap + 1]; </span><br><span class="line">    for (int j = 0; j &lt;= cap; j++)</span><br><span class="line">    &#123;</span><br><span class="line">        dp[0, j] = 0;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    for (int i = 0; i &lt;= n; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        dp[i, 0] = 0;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    for(int i= 1; i &lt;= n; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        for(int j =1;j&lt;= cap; j++)</span><br><span class="line">        &#123;</span><br><span class="line">            if (j &lt; w[i-1])</span><br><span class="line">            &#123;</span><br><span class="line">                dp[i, j] = dp[i - 1, j];</span><br><span class="line">            &#125;</span><br><span class="line">            else</span><br><span class="line">            &#123;</span><br><span class="line">                dp[i, j] = Math.Max(dp[i - 1, j], v[i - 1] + dp[i - 1, j - w[i - 1]]);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return dp[n, cap];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>Below is the optimized version, we use a one-dimensional array dp. By updating the dp array in reverse order, we ensure that each item is considered only once, thus avoiding redundant calculations and overwriting problems.</p>
-<ul>
-<li>Reduces space complexity from O(n×capacity) to O(capacity)</li>
-<li>Reverse iteration prevents value overwrite issues</li>
-<li>More efficient memory usage</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public int Knapsack01(int[] w, int[] v, int cap)</span><br><span class="line">&#123;</span><br><span class="line">    int n = w.Length;</span><br><span class="line">    int[] dp = new int[cap + 1];</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    for (int i = 0; i &lt; n; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        //In order to select the item only once, we need to traverse from back to front </span><br><span class="line">        for (int j = cap; j &gt;= w[i]; j--)</span><br><span class="line">        &#123;</span><br><span class="line">            dp[j] = Math.Max(dp[j], v[i] + dp[j - w[i]]);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return dp[cap];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion "></a>Conclusion <a name="conclusion"></a></h2><p>Dynamic programming transforms inefficient recursive solutions into efficient ones by leveraging memory. Whether you choose memoization or tabulation, the key is to avoid redundant work. Arrays or dictionaries are perfect for storing intermediate results, making DP both practical and elegant.By reasonably defining the state, deriving the state-transition equation, and initializing the boundary conditions, we can efficiently solve complex problems using dynamic programming. In practical applications, pay attention to techniques such as space optimization to improve the efficiency and performance of the algorithm.</p>
-<link rel="stylesheet" href="/css/folder.css" type="text/css"><script src="/js/folder.js" type="text/javascript" async></script>]]></content>
-      <categories>
-        <category>Data Structure and Alogrithm</category>
-      </categories>
-      <tags>
-        <tag>Data Structure and Alogrithm</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Git guideline</title>
-    <url>/2025/11/10/Git-guideline/</url>
-    <content><![CDATA[<ul>
-<li><a href="#understanding-git-basics">Understanding Git Basics</a><ul>
-<li><a href="#1-working-directory">1. Working Directory</a></li>
-<li><a href="#2-staging-area-index">2. Staging Area (Index)</a></li>
-<li><a href="#3-repository">3. Repository</a></li>
-</ul>
-</li>
-<li><a href="#essential-git-commands">Essential Git Commands</a><ul>
-<li><a href="#initial-setup">Initial Setup</a></li>
-<li><a href="#cloning-a-repository">Cloning a Repository</a></li>
-<li><a href="#tracking-and-committing-changes">Tracking and Committing Changes</a></li>
-<li><a href="#view-history">View history</a></li>
-<li><a href="#recommended-commit-prefixes">Recommended commit prefixes</a><span id="more"></span></li>
-</ul>
-</li>
-<li><a href="#working-with-remote-repositories">Working with Remote Repositories</a></li>
-<li><a href="#branching-and-merging">Branching and Merging</a><ul>
-<li><a href="#recommended-branch-naming">Recommended branch naming</a></li>
-</ul>
-</li>
-<li><a href="#undoing-changes-and-recovery">Undoing Changes and Recovery</a></li>
-<li><a href="#tags-and-version-releases">Tags and Version Releases</a></li>
-<li><a href="#common-development-scenarios">Common Development Scenarios</a><ul>
-<li><a href="#new-project-push">New Project Push</a></li>
-<li><a href="#team-feature-development">Team Feature Development</a></li>
-<li><a href="#hotfix-production-bug">Hotfix Production Bug</a></li>
-</ul>
-</li>
-<li><a href="#common-pitfalls-and-how-to-avoid-them">Common Pitfalls and How to Avoid Them</a></li>
-<li><a href="#using-ssh-with-github-recommended">Using SSH with GitHub (Recommended)</a></li>
-<li><a href="#git-best-practices">Git Best Practices</a></li>
-<li><a href="#conclusion">Conclusion</a></li>
-</ul>
-<hr>
-<h2 id="Understanding-Git-Basics"><a href="#Understanding-Git-Basics" class="headerlink" title="Understanding Git Basics "></a>Understanding Git Basics <a name="understanding-git-basics"></a></h2><h3 id="Working-Directory"><a href="#Working-Directory" class="headerlink" title="Working Directory "></a>Working Directory <a name="1-working-directory"></a></h3><p>This is where you actually edit files on your local machine.</p>
-<h3 id="Staging-Area-Index"><a href="#Staging-Area-Index" class="headerlink" title="Staging Area (Index) "></a>Staging Area (Index) <a name="2-staging-area-index"></a></h3><p>A buffer between your working directory and the repository.<br>You decide <strong>what exactly goes into the next commit</strong>.</p>
-<h3 id="Repository"><a href="#Repository" class="headerlink" title="Repository "></a>Repository <a name="3-repository"></a></h3><p>The database that stores all commit history.</p>
-<p><strong>Typical workflow:</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Working Directory → Staging Area → Local Repository → Remote Repository</span><br></pre></td></tr></table></figure>
-
-<p>Once this flow makes sense, Git becomes much easier.</p>
-<h2 id="Essential-Git-Commands"><a href="#Essential-Git-Commands" class="headerlink" title="Essential Git Commands "></a>Essential Git Commands <a name="essential-git-commands"></a></h2><h3 id="Initial-Setup"><a href="#Initial-Setup" class="headerlink" title="Initial Setup "></a>Initial Setup <a name="initial-setup"></a></h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git config --global user.name <span class="string">&quot;Your Name&quot;</span></span><br><span class="line">git config --global user.email <span class="string">&quot;you@example.com&quot;</span></span><br><span class="line">git config --global --list</span><br></pre></td></tr></table></figure>
-
-<p>Initialize a repository:</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git init</span><br></pre></td></tr></table></figure>
-
-<h3 id="Cloning-a-Repository"><a href="#Cloning-a-Repository" class="headerlink" title="Cloning a Repository "></a>Cloning a Repository <a name="cloning-a-repository"></a></h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># HTTPS</span></span><br><span class="line">git <span class="built_in">clone</span> https://github.com/username/repo.git</span><br></pre></td></tr></table></figure>
-
-<h1 id="SSH-recommended"><a href="#SSH-recommended" class="headerlink" title="SSH (recommended)"></a>SSH (recommended)</h1><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">git clone git@github.com:username/repo.git</span><br></pre></td></tr></table></figure>
-
-<h3 id="Tracking-and-Committing-Changes"><a href="#Tracking-and-Committing-Changes" class="headerlink" title="Tracking and Committing Changes "></a>Tracking and Committing Changes <a name="tracking-and-committing-changes"></a></h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git status</span><br><span class="line">git add .</span><br><span class="line">git commit -m <span class="string">&quot;feat: add login feature&quot;</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="View-history"><a href="#View-history" class="headerlink" title="View history "></a>View history <a name="view-history"></a></h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git <span class="built_in">log</span> --oneline</span><br></pre></td></tr></table></figure>
-
-<h3 id="Recommended-commit-prefixes"><a href="#Recommended-commit-prefixes" class="headerlink" title="Recommended commit prefixes "></a>Recommended commit prefixes <a name="recommended-commit-prefixes"></a></h3><ul>
-<li><code>feat</code>: new feature</li>
-<li><code>fix</code>: bug fix</li>
-<li><code>docs</code>: documentation</li>
-<li><code>refactor</code>: refactoring</li>
-</ul>
-<h2 id="Working-with-Remote-Repositories"><a href="#Working-with-Remote-Repositories" class="headerlink" title="Working with Remote Repositories "></a>Working with Remote Repositories <a name="working-with-remote-repositories"></a></h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git remote add origin &lt;repo-url&gt;</span><br><span class="line">git remote -v</span><br><span class="line">git push origin main</span><br><span class="line">git pull origin main</span><br></pre></td></tr></table></figure>
-
-<p>Avoid force push unless you know exactly what you’re doing:</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git push --force-with-lease</span><br></pre></td></tr></table></figure>
-
-<h2 id="Branching-and-Merging"><a href="#Branching-and-Merging" class="headerlink" title="Branching and Merging "></a>Branching and Merging <a name="branching-and-merging"></a></h2><p>Branches allow safe experimentation.</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git branch</span><br><span class="line">git checkout -b feature/login</span><br><span class="line">git checkout main</span><br><span class="line">git merge feature/login</span><br><span class="line">git branch -d feature/login</span><br></pre></td></tr></table></figure>
-
-<h3 id="Recommended-branch-naming"><a href="#Recommended-branch-naming" class="headerlink" title="Recommended branch naming "></a>Recommended branch naming <a name="recommended-branch-naming"></a></h3><ul>
-<li>main – stable production</li>
-<li>feature&#x2F;* – new features</li>
-<li>hotfix&#x2F;* – urgent fixes</li>
-</ul>
-<h2 id="Undoing-Changes-and-Recovery"><a href="#Undoing-Changes-and-Recovery" class="headerlink" title="Undoing Changes and Recovery "></a>Undoing Changes and Recovery <a name="undoing-changes-and-recovery"></a></h2><p>Git is powerful because almost nothing is truly lost.</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git reset --soft &lt;commit&gt;</span><br><span class="line">git reset --mixed &lt;commit&gt;</span><br><span class="line">git reset --hard &lt;commit&gt;</span><br><span class="line">git reflog</span><br><span class="line">git reflog is your emergency <span class="built_in">exit</span>.</span><br></pre></td></tr></table></figure>
-<h2 id="Tags-and-Version-Releases"><a href="#Tags-and-Version-Releases" class="headerlink" title="Tags and Version Releases "></a>Tags and Version Releases <a name="tags-and-version-releases"></a></h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git tag -a v1.0 -m <span class="string">&quot;First release&quot;</span></span><br><span class="line">git push origin --tags</span><br></pre></td></tr></table></figure>
-
-<p>Tags are ideal for marking stable releases.</p>
-<h2 id="Common-Development-Scenarios"><a href="#Common-Development-Scenarios" class="headerlink" title="Common Development Scenarios "></a>Common Development Scenarios <a name="common-development-scenarios"></a></h2><h3 id="New-Project-Push"><a href="#New-Project-Push" class="headerlink" title="New Project Push "></a>New Project Push <a name="new-project-push"></a></h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git init</span><br><span class="line">git add .</span><br><span class="line">git commit -m <span class="string">&quot;init: initial commit&quot;</span></span><br><span class="line">git remote add origin &lt;repo&gt;</span><br><span class="line">git push -u origin main</span><br></pre></td></tr></table></figure>
-
-<h3 id="Team-Feature-Development"><a href="#Team-Feature-Development" class="headerlink" title="Team Feature Development "></a>Team Feature Development <a name="team-feature-development"></a></h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git checkout -b feature/payment</span><br><span class="line">git commit -m <span class="string">&quot;feat: payment integration&quot;</span></span><br><span class="line">git push origin feature/payment</span><br></pre></td></tr></table></figure>
-
-<h3 id="Hotfix-Production-Bug"><a href="#Hotfix-Production-Bug" class="headerlink" title="Hotfix Production Bug "></a>Hotfix Production Bug <a name="hotfix-production-bug"></a></h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git checkout main</span><br><span class="line">git pull</span><br><span class="line">git checkout -b hotfix/critical-bug</span><br><span class="line">git commit -m <span class="string">&quot;fix: critical production issue&quot;</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="Common-Pitfalls-and-How-to-Avoid-Them"><a href="#Common-Pitfalls-and-How-to-Avoid-Them" class="headerlink" title="Common Pitfalls and How to Avoid Them "></a>Common Pitfalls and How to Avoid Them <a name="common-pitfalls-and-how-to-avoid-them"></a></h2><ul>
-<li>Forgot git add</li>
-<li>Merge conflicts ignored</li>
-<li>Panic after git reset –hard</li>
-<li>Using password instead of token&#x2F;SSH</li>
-</ul>
-<p>Tip: If something goes wrong, stop and check git reflog.</p>
-<h2 id="Using-SSH-with-GitHub-Recommended"><a href="#Using-SSH-with-GitHub-Recommended" class="headerlink" title="Using SSH with GitHub (Recommended) "></a>Using SSH with GitHub (Recommended) <a name="using-ssh-with-github-recommended"></a></h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ssh-keygen -t ed25519 -C <span class="string">&quot;you@example.com&quot;</span></span><br><span class="line"><span class="built_in">cat</span> ~/.ssh/id_ed25519.pub</span><br><span class="line">ssh -T git@github.com</span><br></pre></td></tr></table></figure>
-
-<p>Successful output:</p>
-<figure class="highlight rust"><table><tr><td class="code"><pre><span class="line">Hi username! You<span class="symbol">&#x27;ve</span> successfully authenticated.</span><br></pre></td></tr></table></figure>
-
-<h2 id="Git-Best-Practices"><a href="#Git-Best-Practices" class="headerlink" title="Git Best Practices "></a>Git Best Practices <a name="git-best-practices"></a></h2><p>Commit small, meaningful changes</p>
-<p>Write clear commit messages</p>
-<p>Use branches aggressively</p>
-<p>Clean unused branches regularly</p>
-<p>Prefer SSH over HTTPS</p>
-<p>Use fine-grained tokens for automation</p>
-<h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion "></a>Conclusion <a name="conclusion"></a></h2><p>You don’t need to memorize every Git command.</p>
-<p>Git is not about commands—it’s about understanding history and collaboration.</p>
-<p>Once you understand the workflow, Git becomes a powerful safety net rather than a source of anxiety.</p>
-<link rel="stylesheet" href="/css/folder.css" type="text/css"><script src="/js/folder.js" type="text/javascript" async></script>]]></content>
-      <categories>
-        <category>Development</category>
-        <category>Git</category>
-      </categories>
-      <tags>
-        <tag>Git</tag>
-        <tag>Version Control</tag>
-        <tag>GitHub</tag>
-        <tag>CLI</tag>
-        <tag>Software Engineering</tag>
       </tags>
   </entry>
   <entry>
@@ -1820,6 +1820,704 @@ When a mismatch occurs, the text pointer backtracks to i&#x3D;2, and the pattern
       </tags>
   </entry>
   <entry>
+    <title>OpenClaw User Guide - Complete Tutorial</title>
+    <url>/2026/03/08/OpenClaw-CookBook/</url>
+    <content><![CDATA[<h2 id="📖-Table-of-Contents"><a href="#📖-Table-of-Contents" class="headerlink" title="📖 Table of Contents"></a>📖 Table of Contents</h2><ul>
+<li><a href="#1-understanding-openclaw">1. Understanding OpenClaw</a><ul>
+<li><a href="#11-what-is-openclaw">1.1 What is OpenClaw?</a></li>
+<li><a href="#12-core-capabilities">1.2 Core Capabilities</a></li>
+<li><a href="#13-architecture-overview">1.3 Architecture Overview</a></li>
+</ul>
+</li>
+<li><a href="#2-quick-start">2. Quick Start</a><ul>
+<li><a href="#21-system-requirements">2.1 System Requirements</a></li>
+<li><a href="#22-one-click-installation">2.2 One-Click Installation</a></li>
+<li><a href="#23-verify-installation">2.3 Verify Installation</a></li>
+<li><a href="#24-5-minute-quick-experience">2.4 5-Minute Quick Experience</a></li>
+</ul>
+</li>
+<li><a href="#3-installation--deployment">3. Installation &amp; Deployment</a><ul>
+<li><a href="#31-installation-methods-comparison">3.1 Installation Methods Comparison</a></li>
+<li><a href="#32-manual-installation-npm">3.2 Manual Installation (npm)</a></li>
+<li><a href="#33-configure-path-if-needed">3.3 Configure PATH (if needed)</a></li>
+<li><a href="#34-docker-deployment">3.4 Docker Deployment</a></li>
+<li><a href="#35-version-updates">3.5 Version Updates</a><span id="more"></span></li>
+</ul>
+</li>
+<li><a href="#4-channel-integration">4. Channel Integration</a><ul>
+<li><a href="#41-channel-difficulty-comparison">4.1 Channel Difficulty Comparison</a></li>
+<li><a href="#42-telegram-integration-recommended-for-beginners">4.2 Telegram Integration (Recommended for Beginners)</a></li>
+<li><a href="#43-feishu-integration">4.3 Feishu Integration</a></li>
+<li><a href="#44-multi-channel-configuration">4.4 Multi-Channel Configuration</a></li>
+</ul>
+</li>
+<li><a href="#5-configuration-guide">5. Configuration Guide</a><ul>
+<li><a href="#51-configuration-file-locations">5.1 Configuration File Locations</a></li>
+<li><a href="#52-model-configuration">5.2 Model Configuration</a></li>
+<li><a href="#53-recommended-models">5.3 Recommended Models</a></li>
+<li><a href="#54-gateway-configuration">5.4 Gateway Configuration</a></li>
+<li><a href="#55-authentication-modes">5.5 Authentication Modes</a></li>
+</ul>
+</li>
+<li><a href="#6-multi-agent-configuration">6. Multi-Agent Configuration</a><ul>
+<li><a href="#61-what-is-multi-agent">6.1 What is Multi-Agent?</a></li>
+<li><a href="#62-built-in-agent-types">6.2 Built-in Agent Types</a></li>
+<li><a href="#63-creating-custom-agents">6.3 Creating Custom Agents</a></li>
+<li><a href="#64-assign-agents-to-different-tasks">6.4 Assign Agents to Different Tasks</a></li>
+<li><a href="#65-agent-routing-configuration">6.5 Agent Routing Configuration</a></li>
+<li><a href="#66-multi-agent-best-practices">6.6 Multi-Agent Best Practices</a></li>
+<li><a href="#67-view-and-manage-agents">6.7 View and Manage Agents</a></li>
+<li><a href="#68-multi-agent-architecture-example">6.8 Multi-Agent Architecture Example</a></li>
+</ul>
+</li>
+<li><a href="#7-skills-system">7. Skills System</a><ul>
+<li><a href="#71-what-are-skills">7.1 What are Skills?</a></li>
+<li><a href="#72-installing-skills">7.2 Installing Skills</a></li>
+<li><a href="#73-popular-skills">7.3 Popular Skills</a></li>
+<li><a href="#74-creating-custom-skills">7.4 Creating Custom Skills</a></li>
+</ul>
+</li>
+<li><a href="#8-memory-system">8. Memory System</a><ul>
+<li><a href="#81-memory-types">8.1 Memory Types</a></li>
+<li><a href="#82-memory-file-locations">8.2 Memory File Locations</a></li>
+<li><a href="#83-search-memory">8.3 Search Memory</a></li>
+<li><a href="#84-memory-maintenance">8.4 Memory Maintenance</a></li>
+</ul>
+</li>
+<li><a href="#9-scheduled-tasks">9. Scheduled Tasks</a><ul>
+<li><a href="#91-cron-basics">9.1 Cron Basics</a></li>
+<li><a href="#92-cron-expressions">9.2 Cron Expressions</a></li>
+<li><a href="#93-heartbeat-tasks">9.3 Heartbeat Tasks</a></li>
+<li><a href="#94-practical-cron-examples">9.4 Practical Cron Examples</a></li>
+</ul>
+</li>
+<li><a href="#10-common-commands">10. Common Commands</a><ul>
+<li><a href="#101-gateway-management">10.1 Gateway Management</a></li>
+<li><a href="#102-configuration-management">10.2 Configuration Management</a></li>
+<li><a href="#103-model-management">10.3 Model Management</a></li>
+<li><a href="#104-channel-management">10.4 Channel Management</a></li>
+<li><a href="#105-agent-management">10.5 Agent Management</a></li>
+<li><a href="#106-memory-operations">10.6 Memory Operations</a></li>
+<li><a href="#107-session-management">10.7 Session Management</a></li>
+</ul>
+</li>
+<li><a href="#11-troubleshooting">11. Troubleshooting</a><ul>
+<li><a href="#111-common-issues">11.1 Common Issues</a></li>
+<li><a href="#112-viewing-logs">11.2 Viewing Logs</a></li>
+<li><a href="#113-diagnostic-commands">11.3 Diagnostic Commands</a></li>
+<li><a href="#114-reset--recovery">11.4 Reset &amp; Recovery</a></li>
+</ul>
+</li>
+<li><a href="#appendix">Appendix</a><ul>
+<li><a href="#a-resource-links">A. Resource Links</a></li>
+<li><a href="#b-version-information">B. Version Information</a></li>
+<li><a href="#c-contributors">C. Contributors</a></li>
+</ul>
+</li>
+</ul>
+<hr>
+<p><a name="1-understanding-openclaw"></a></p>
+<h2 id="1-Understanding-OpenClaw"><a href="#1-Understanding-OpenClaw" class="headerlink" title="1. Understanding OpenClaw"></a>1. Understanding OpenClaw</h2><p><a name="11-what-is-openclaw"></a></p>
+<h3 id="1-1-What-is-OpenClaw"><a href="#1-1-What-is-OpenClaw" class="headerlink" title="1.1 What is OpenClaw?"></a>1.1 What is OpenClaw?</h3><p>OpenClaw is an <strong>open-source, self-hosted AI Agent system</strong> that transforms AI from a “chat tool” into a “digital employee capable of autonomously executing tasks.”</p>
+<table>
+<thead>
+<tr>
+<th>Dimension</th>
+<th>ChatGPT</th>
+<th>OpenClaw</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Positioning</td>
+<td>Q&amp;A Advisor</td>
+<td>Digital Employee</td>
+</tr>
+<tr>
+<td>Deployment</td>
+<td>Cloud SaaS</td>
+<td>Local Self-hosted</td>
+</tr>
+<tr>
+<td>Interaction</td>
+<td>Web Chat</td>
+<td>20+ Chat Channels</td>
+</tr>
+<tr>
+<td>Capability</td>
+<td>Answer Questions</td>
+<td>Execute Tasks</td>
+</tr>
+<tr>
+<td>Data</td>
+<td>Cloud Storage</td>
+<td>Local Control</td>
+</tr>
+</tbody></table>
+<p><a name="12-core-capabilities"></a></p>
+<h3 id="1-2-Core-Capabilities"><a href="#1-2-Core-Capabilities" class="headerlink" title="1.2 Core Capabilities"></a>1.2 Core Capabilities</h3><ul>
+<li>✅ <strong>Multi-channel Connection</strong>: Telegram, WhatsApp, Feishu, DingTalk, Discord, etc.</li>
+<li>✅ <strong>Persistent Memory</strong>: Remembers your preferences, projects, contacts</li>
+<li>✅ <strong>Skill Extension</strong>: Infinitely expand capabilities through the Skills system</li>
+<li>✅ <strong>Proactive Work</strong>: Scheduled tasks, heartbeat checks, automatic reminders</li>
+<li>✅ <strong>Local Data</strong>: All data stored on your device</li>
+<li>✅ <strong>Multi-Agent Collaboration</strong>: Dedicated agents for different tasks</li>
+</ul>
+<p><a name="13-architecture-overview"></a></p>
+<h3 id="1-3-Architecture-Overview"><a href="#1-3-Architecture-Overview" class="headerlink" title="1.3 Architecture Overview"></a>1.3 Architecture Overview</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">┌─────────────────────────────────────────────────────────┐</span><br><span class="line">│                    User Chat Channels                   │</span><br><span class="line">│   Telegram / WhatsApp / Feishu / DingTalk / Discord ... │</span><br><span class="line">└────────────────────┬────────────────────────────────────┘</span><br><span class="line">                     │</span><br><span class="line">                     ▼</span><br><span class="line">┌─────────────────────────────────────────────────────────┐</span><br><span class="line">│                   Gateway Core Service                  │</span><br><span class="line">│  - Message Routing  - Session Management  - Event Processing  - Task Scheduling │</span><br><span class="line">└────────────────────┬────────────────────────────────────┘</span><br><span class="line">                     │</span><br><span class="line">                     ▼</span><br><span class="line">┌─────────────────────────────────────────────────────────┐</span><br><span class="line">│                    Agent System                         │</span><br><span class="line">│  main / chat / coding / Custom Agents                   │</span><br><span class="line">└────────────────────┬────────────────────────────────────┘</span><br><span class="line">                     │</span><br><span class="line">                     ▼</span><br><span class="line">┌─────────────────────────────────────────────────────────┐</span><br><span class="line">│                   Tools &amp; Skills                        │</span><br><span class="line">│  Skills / Plugins / Tools / Memory / Cron               │</span><br><span class="line">└─────────────────────────────────────────────────────────┘</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p><a name="2-quick-start"></a></p>
+<h2 id="2-Quick-Start"><a href="#2-Quick-Start" class="headerlink" title="2. Quick Start"></a>2. Quick Start</h2><p><a name="21-system-requirements"></a></p>
+<h3 id="2-1-System-Requirements"><a href="#2-1-System-Requirements" class="headerlink" title="2.1 System Requirements"></a>2.1 System Requirements</h3><table>
+<thead>
+<tr>
+<th>Requirement</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Node.js</td>
+<td>v22.0.0 or higher</td>
+</tr>
+<tr>
+<td>Operating System</td>
+<td>macOS &#x2F; Linux &#x2F; Windows (WSL2)</td>
+</tr>
+<tr>
+<td>Memory</td>
+<td>Minimum 2GB, Recommended 4GB+</td>
+</tr>
+<tr>
+<td>Storage</td>
+<td>Minimum 1GB available space</td>
+</tr>
+</tbody></table>
+<p><a name="22-one-click-installation"></a></p>
+<h3 id="2-2-One-Click-Installation"><a href="#2-2-One-Click-Installation" class="headerlink" title="2.2 One-Click Installation"></a>2.2 One-Click Installation</h3><p><strong>macOS &#x2F; Linux:</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">curl -fsSL https://openclaw.bot/install.sh | bash</span><br></pre></td></tr></table></figure>
+
+<p><strong>Windows (PowerShell):</strong></p>
+<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line"><span class="built_in">iwr</span> <span class="literal">-useb</span> https://openclaw.ai/install.ps1 | <span class="built_in">iex</span></span><br></pre></td></tr></table></figure>
+
+<p><a name="23-verify-installation"></a></p>
+<h3 id="2-3-Verify-Installation"><a href="#2-3-Verify-Installation" class="headerlink" title="2.3 Verify Installation"></a>2.3 Verify Installation</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Check version</span></span><br><span class="line">openclaw --version</span><br><span class="line"></span><br><span class="line"><span class="comment"># Run diagnostics</span></span><br><span class="line">openclaw doctor</span><br><span class="line"></span><br><span class="line"><span class="comment"># Check status</span></span><br><span class="line">openclaw status</span><br></pre></td></tr></table></figure>
+
+<p><a name="24-5-minute-quick-experience"></a></p>
+<h3 id="2-4-5-Minute-Quick-Experience"><a href="#2-4-5-Minute-Quick-Experience" class="headerlink" title="2.4 5-Minute Quick Experience"></a>2.4 5-Minute Quick Experience</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 1. Install</span></span><br><span class="line">npm i -g openclaw</span><br><span class="line"></span><br><span class="line"><span class="comment"># 2. Run setup wizard</span></span><br><span class="line">openclaw onboard</span><br><span class="line"></span><br><span class="line"><span class="comment"># 3. Start Gateway</span></span><br><span class="line">openclaw gateway start</span><br><span class="line"></span><br><span class="line"><span class="comment"># 4. Open dashboard</span></span><br><span class="line">openclaw dashboard</span><br><span class="line"></span><br><span class="line"><span class="comment"># 5. Start chatting in your browser!</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<p><a name="3-installation--deployment"></a></p>
+<h2 id="3-Installation-Deployment"><a href="#3-Installation-Deployment" class="headerlink" title="3. Installation &amp; Deployment"></a>3. Installation &amp; Deployment</h2><p><a name="31-installation-methods-comparison"></a></p>
+<h3 id="3-1-Installation-Methods-Comparison"><a href="#3-1-Installation-Methods-Comparison" class="headerlink" title="3.1 Installation Methods Comparison"></a>3.1 Installation Methods Comparison</h3><table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Difficulty</th>
+<th>Use Case</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>One-Click Script</td>
+<td>⭐</td>
+<td>Recommended for beginners</td>
+</tr>
+<tr>
+<td>npm Manual Install</td>
+<td>⭐⭐</td>
+<td>Familiar with Node.js</td>
+</tr>
+<tr>
+<td>Docker</td>
+<td>⭐⭐</td>
+<td>Containerized deployment</td>
+</tr>
+<tr>
+<td>Source Build</td>
+<td>⭐⭐⭐⭐</td>
+<td>Developers</td>
+</tr>
+</tbody></table>
+<p><a name="32-manual-installation-npm"></a></p>
+<h3 id="3-2-Manual-Installation-npm"><a href="#3-2-Manual-Installation-npm" class="headerlink" title="3.2 Manual Installation (npm)"></a>3.2 Manual Installation (npm)</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Check Node.js version</span></span><br><span class="line">node -v  <span class="comment"># Requires &gt;= 22.0.0</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Global installation</span></span><br><span class="line">npm install -g openclaw@latest</span><br><span class="line"></span><br><span class="line"><span class="comment"># If encountering sharp module errors</span></span><br><span class="line">SHARP_IGNORE_GLOBAL_LIBVIPS=1 npm install -g openclaw@latest</span><br></pre></td></tr></table></figure>
+
+<p><a name="33-configure-path-if-needed"></a></p>
+<h3 id="3-3-Configure-PATH-if-needed"><a href="#3-3-Configure-PATH-if-needed" class="headerlink" title="3.3 Configure PATH (if needed)"></a>3.3 Configure PATH (if needed)</h3><p>If you get <code>openclaw: command not found</code>:</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Find npm global path</span></span><br><span class="line">npm prefix -g</span><br><span class="line"></span><br><span class="line"><span class="comment"># Add to ~/.bashrc or ~/.zshrc</span></span><br><span class="line"><span class="built_in">export</span> PATH=<span class="string">&quot;<span class="subst">$(npm prefix -g)</span>/bin:<span class="variable">$PATH</span>&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Apply changes</span></span><br><span class="line"><span class="built_in">source</span> ~/.bashrc</span><br></pre></td></tr></table></figure>
+
+<p><a name="34-docker-deployment"></a></p>
+<h3 id="3-4-Docker-Deployment"><a href="#3-4-Docker-Deployment" class="headerlink" title="3.4 Docker Deployment"></a>3.4 Docker Deployment</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker run -d \</span><br><span class="line">  --name openclaw \</span><br><span class="line">  -v ~/openclaw-data:/root/.openclaw \</span><br><span class="line">  -p 18789:18789 \</span><br><span class="line">  openclaw/openclaw:latest</span><br></pre></td></tr></table></figure>
+
+<p><a name="35-version-updates"></a></p>
+<h3 id="3-5-Version-Updates"><a href="#3-5-Version-Updates" class="headerlink" title="3.5 Version Updates"></a>3.5 Version Updates</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Update to stable version (recommended)</span></span><br><span class="line">openclaw update --channel stable</span><br><span class="line"></span><br><span class="line"><span class="comment"># Update to beta version</span></span><br><span class="line">openclaw update --channel beta</span><br><span class="line"></span><br><span class="line"><span class="comment"># Update to dev version</span></span><br><span class="line">openclaw update --channel dev</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p><a name="4-channel-integration"></a></p>
+<h2 id="4-Channel-Integration"><a href="#4-Channel-Integration" class="headerlink" title="4. Channel Integration"></a>4. Channel Integration</h2><p><a name="41-channel-difficulty-comparison"></a></p>
+<h3 id="4-1-Channel-Difficulty-Comparison"><a href="#4-1-Channel-Difficulty-Comparison" class="headerlink" title="4.1 Channel Difficulty Comparison"></a>4.1 Channel Difficulty Comparison</h3><table>
+<thead>
+<tr>
+<th>Tier</th>
+<th>Platform</th>
+<th>Time</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>First Tier</td>
+<td>Telegram, QQ</td>
+<td>5-10 min</td>
+<td>Easiest, zero threshold</td>
+</tr>
+<tr>
+<td>Second Tier</td>
+<td>Discord, Feishu</td>
+<td>15-20 min</td>
+<td>Well-documented</td>
+</tr>
+<tr>
+<td>Third Tier</td>
+<td>WhatsApp, Slack, DingTalk</td>
+<td>25-40 min</td>
+<td>More configuration</td>
+</tr>
+<tr>
+<td>Fourth Tier</td>
+<td>iMessage, WeChat</td>
+<td>1+ hour</td>
+<td>Additional requirements</td>
+</tr>
+</tbody></table>
+<p><a name="42-telegram-integration-recommended-for-beginners"></a></p>
+<h3 id="4-2-Telegram-Integration-Recommended-for-Beginners"><a href="#4-2-Telegram-Integration-Recommended-for-Beginners" class="headerlink" title="4.2 Telegram Integration (Recommended for Beginners)"></a>4.2 Telegram Integration (Recommended for Beginners)</h3><p><strong>Step 1: Create Bot</strong></p>
+<ol>
+<li>Search for <code>@BotFather</code> in Telegram</li>
+<li>Send <code>/newbot</code> command</li>
+<li>Set bot name (must end with <code>bot</code>)</li>
+<li>Save the returned Bot Token</li>
+</ol>
+<p><strong>Step 2: Configure OpenClaw</strong></p>
+<p>Edit <code>~/.openclaw/openclaw.json</code>:</p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;channels&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;telegram&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;enabled&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;botToken&quot;</span><span class="punctuation">:</span> <span class="string">&quot;YOUR_BOT_TOKEN&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;dmPolicy&quot;</span><span class="punctuation">:</span> <span class="string">&quot;pairing&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;allowFrom&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">&quot;tg:YOUR_USER_ID&quot;</span><span class="punctuation">]</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>Step 3: Start and Pair</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Restart Gateway</span></span><br><span class="line">openclaw gateway restart</span><br><span class="line"></span><br><span class="line"><span class="comment"># Send a message to the bot in Telegram</span></span><br><span class="line"><span class="comment"># You&#x27;ll receive a pairing verification code</span></span><br></pre></td></tr></table></figure>
+
+<p><a name="43-feishu-integration"></a></p>
+<h3 id="4-3-Feishu-Integration"><a href="#4-3-Feishu-Integration" class="headerlink" title="4.3 Feishu Integration"></a>4.3 Feishu Integration</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Run configuration wizard</span></span><br><span class="line">openclaw configure --section feishu</span><br></pre></td></tr></table></figure>
+
+<p>You need to create an enterprise self-built app in the Feishu Open Platform and obtain App ID and App Secret.</p>
+<p><a name="44-multi-channel-configuration"></a></p>
+<h3 id="4-4-Multi-Channel-Configuration"><a href="#4-4-Multi-Channel-Configuration" class="headerlink" title="4.4 Multi-Channel Configuration"></a>4.4 Multi-Channel Configuration</h3><p>You can configure multiple channels simultaneously:</p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;channels&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;telegram&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span> <span class="attr">&quot;enabled&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span> <span class="attr">&quot;botToken&quot;</span><span class="punctuation">:</span> <span class="string">&quot;...&quot;</span> <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;feishu&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span> <span class="attr">&quot;enabled&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span> <span class="attr">&quot;appId&quot;</span><span class="punctuation">:</span> <span class="string">&quot;...&quot;</span><span class="punctuation">,</span> <span class="attr">&quot;appSecret&quot;</span><span class="punctuation">:</span> <span class="string">&quot;...&quot;</span> <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;discord&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span> <span class="attr">&quot;enabled&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span> <span class="attr">&quot;botToken&quot;</span><span class="punctuation">:</span> <span class="string">&quot;...&quot;</span> <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<p><a name="5-configuration-guide"></a></p>
+<h2 id="5-Configuration-Guide"><a href="#5-Configuration-Guide" class="headerlink" title="5. Configuration Guide"></a>5. Configuration Guide</h2><p><a name="51-configuration-file-locations"></a></p>
+<h3 id="5-1-Configuration-File-Locations"><a href="#5-1-Configuration-File-Locations" class="headerlink" title="5.1 Configuration File Locations"></a>5.1 Configuration File Locations</h3><table>
+<thead>
+<tr>
+<th>File</th>
+<th>Path</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Main Config</td>
+<td><code>~/.openclaw/openclaw.json</code></td>
+<td>Gateway, channels, models</td>
+</tr>
+<tr>
+<td>Agent Config</td>
+<td><code>~/.openclaw/agents/*/agent/</code></td>
+<td>Individual agent configs</td>
+</tr>
+<tr>
+<td>Workspace</td>
+<td><code>~/.openclaw/workspace-*/</code></td>
+<td>Agent workspaces</td>
+</tr>
+</tbody></table>
+<p><a name="52-model-configuration"></a></p>
+<h3 id="5-2-Model-Configuration"><a href="#5-2-Model-Configuration" class="headerlink" title="5.2 Model Configuration"></a>5.2 Model Configuration</h3><p>Edit <code>~/.openclaw/openclaw.json</code>:</p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;models&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;mode&quot;</span><span class="punctuation">:</span> <span class="string">&quot;merge&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;providers&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;bailian&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;baseUrl&quot;</span><span class="punctuation">:</span> <span class="string">&quot;https://dashscope.aliyuncs.com/compatible-mode/v1&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;apiKey&quot;</span><span class="punctuation">:</span> <span class="string">&quot;sk-YOUR_API_KEY&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;api&quot;</span><span class="punctuation">:</span> <span class="string">&quot;openai-completions&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;models&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">          <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;qwen3.5-plus&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;qwen3.5-plus&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;contextWindow&quot;</span><span class="punctuation">:</span> <span class="number">1000000</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;maxTokens&quot;</span><span class="punctuation">:</span> <span class="number">65536</span></span><br><span class="line">          <span class="punctuation">&#125;</span></span><br><span class="line">        <span class="punctuation">]</span></span><br><span class="line">      <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;agents&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;defaults&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;model&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;primary&quot;</span><span class="punctuation">:</span> <span class="string">&quot;bailian/qwen3.5-plus&quot;</span></span><br><span class="line">      <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p><a name="53-recommended-models"></a></p>
+<h3 id="5-3-Recommended-Models"><a href="#5-3-Recommended-Models" class="headerlink" title="5.3 Recommended Models"></a>5.3 Recommended Models</h3><table>
+<thead>
+<tr>
+<th>Provider</th>
+<th>Model</th>
+<th>Use Case</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Alibaba Cloud</td>
+<td>qwen3.5-plus</td>
+<td>General tasks, cost-effective</td>
+</tr>
+<tr>
+<td>Anthropic</td>
+<td>Claude Opus 4.6</td>
+<td>Programming, code generation</td>
+</tr>
+<tr>
+<td>Zhipu</td>
+<td>glm-5</td>
+<td>Optimized for Chinese tasks</td>
+</tr>
+<tr>
+<td>Moonshot AI</td>
+<td>kimi-k2.5</td>
+<td>Long text processing</td>
+</tr>
+</tbody></table>
+<p><a name="54-gateway-configuration"></a></p>
+<h3 id="5-4-Gateway-Configuration"><a href="#5-4-Gateway-Configuration" class="headerlink" title="5.4 Gateway Configuration"></a>5.4 Gateway Configuration</h3><figure class="highlight json"><table><tr><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;gateway&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;port&quot;</span><span class="punctuation">:</span> <span class="number">18789</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;mode&quot;</span><span class="punctuation">:</span> <span class="string">&quot;local&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;bind&quot;</span><span class="punctuation">:</span> <span class="string">&quot;lan&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;auth&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;mode&quot;</span><span class="punctuation">:</span> <span class="string">&quot;token&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;token&quot;</span><span class="punctuation">:</span> <span class="string">&quot;your-secure-token&quot;</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;controlUi&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;allowedOrigins&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">&quot;http://192.168.1.100:18789&quot;</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;allowInsecureAuth&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p><a name="55-authentication-modes"></a></p>
+<h3 id="5-5-Authentication-Modes"><a href="#5-5-Authentication-Modes" class="headerlink" title="5.5 Authentication Modes"></a>5.5 Authentication Modes</h3><p><strong>Token Authentication (Recommended for API Integration):</strong></p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;gateway&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;auth&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;mode&quot;</span><span class="punctuation">:</span> <span class="string">&quot;token&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;token&quot;</span><span class="punctuation">:</span> <span class="string">&quot;your-token&quot;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>Password Authentication (Recommended for Web UI):</strong></p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;gateway&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;auth&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;mode&quot;</span><span class="punctuation">:</span> <span class="string">&quot;password&quot;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<p><a name="6-multi-agent-configuration"></a></p>
+<h2 id="6-Multi-Agent-Configuration"><a href="#6-Multi-Agent-Configuration" class="headerlink" title="6. Multi-Agent Configuration"></a>6. Multi-Agent Configuration</h2><p><a name="61-what-is-multi-agent"></a></p>
+<h3 id="6-1-What-is-Multi-Agent"><a href="#6-1-What-is-Multi-Agent" class="headerlink" title="6.1 What is Multi-Agent?"></a>6.1 What is Multi-Agent?</h3><p>OpenClaw supports running multiple independent Agent instances, where each Agent can:</p>
+<ul>
+<li>Use different model configurations</li>
+<li>Have independent workspaces and memory</li>
+<li>Focus on specific types of tasks</li>
+<li>Configure Skills and tools independently</li>
+</ul>
+<p><a name="62-built-in-agent-types"></a></p>
+<h3 id="6-2-Built-in-Agent-Types"><a href="#6-2-Built-in-Agent-Types" class="headerlink" title="6.2 Built-in Agent Types"></a>6.2 Built-in Agent Types</h3><table>
+<thead>
+<tr>
+<th>Agent</th>
+<th>Purpose</th>
+<th>Recommended Model</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>main</strong></td>
+<td>Main conversation Agent, handles daily tasks</td>
+<td>qwen3.5-plus</td>
+</tr>
+<tr>
+<td><strong>chat</strong></td>
+<td>Pure chat Agent, casual conversation</td>
+<td>qwen3.5-plus</td>
+</tr>
+<tr>
+<td><strong>coding</strong></td>
+<td>Programming Agent, code generation&#x2F;review</td>
+<td>Claude Opus 4.6</td>
+</tr>
+<tr>
+<td><strong>analysis</strong></td>
+<td>Data analysis Agent</td>
+<td>qwen3.5-plus</td>
+</tr>
+</tbody></table>
+<p><a name="63-creating-custom-agents"></a></p>
+<h3 id="6-3-Creating-Custom-Agents"><a href="#6-3-Creating-Custom-Agents" class="headerlink" title="6.3 Creating Custom Agents"></a>6.3 Creating Custom Agents</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Create new Agent</span></span><br><span class="line">openclaw agents create my-agent</span><br><span class="line"></span><br><span class="line"><span class="comment"># Set dedicated model</span></span><br><span class="line">openclaw agents config my-agent --model glm-5</span><br><span class="line"></span><br><span class="line"><span class="comment"># Configure workspace</span></span><br><span class="line">openclaw agents workspace my-agent --path ~/projects/my-agent</span><br><span class="line"></span><br><span class="line"><span class="comment"># Start Agent</span></span><br><span class="line">openclaw agents start my-agent</span><br></pre></td></tr></table></figure>
+
+<p><a name="64-assign-agents-to-different-tasks"></a></p>
+<h3 id="6-4-Assign-Agents-to-Different-Tasks"><a href="#6-4-Assign-Agents-to-Different-Tasks" class="headerlink" title="6.4 Assign Agents to Different Tasks"></a>6.4 Assign Agents to Different Tasks</h3><table>
+<thead>
+<tr>
+<th>Task Type</th>
+<th>Recommended Agent</th>
+<th>Invocation</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Daily conversation, Q&amp;A</td>
+<td>main</td>
+<td>Default</td>
+</tr>
+<tr>
+<td>Writing code, Debugging</td>
+<td>coding</td>
+<td><code>/agent coding</code></td>
+</tr>
+<tr>
+<td>Data analysis, Reports</td>
+<td>analysis</td>
+<td><code>/agent analysis</code></td>
+</tr>
+<tr>
+<td>Creative writing</td>
+<td>chat</td>
+<td><code>/agent chat</code></td>
+</tr>
+<tr>
+<td>Domain-specific tasks</td>
+<td>Custom Agent</td>
+<td><code>/agent &lt;name&gt;</code></td>
+</tr>
+</tbody></table>
+<p><a name="65-agent-routing-configuration"></a></p>
+<h3 id="6-5-Agent-Routing-Configuration"><a href="#6-5-Agent-Routing-Configuration" class="headerlink" title="6.5 Agent Routing Configuration"></a>6.5 Agent Routing Configuration</h3><p><strong>Method 1: Command Prefix</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">/agent coding Help me write a Python script</span><br><span class="line">/agent analysis Analyze this data</span><br></pre></td></tr></table></figure>
+
+<p><strong>Method 2: Automatic Routing (Keyword-based)</strong></p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;routing&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;rules&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">      <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;keywords&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">&quot;code&quot;</span><span class="punctuation">,</span> <span class="string">&quot;programming&quot;</span><span class="punctuation">,</span> <span class="string">&quot;python&quot;</span><span class="punctuation">,</span> <span class="string">&quot;javascript&quot;</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;agent&quot;</span><span class="punctuation">:</span> <span class="string">&quot;coding&quot;</span></span><br><span class="line">      <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;keywords&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">&quot;analyze&quot;</span><span class="punctuation">,</span> <span class="string">&quot;data&quot;</span><span class="punctuation">,</span> <span class="string">&quot;chart&quot;</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;agent&quot;</span><span class="punctuation">:</span> <span class="string">&quot;analysis&quot;</span></span><br><span class="line">      <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">]</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>Method 3: Channel Binding</strong></p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;channels&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;telegram&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;defaultAgent&quot;</span><span class="punctuation">:</span> <span class="string">&quot;main&quot;</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;discord&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;defaultAgent&quot;</span><span class="punctuation">:</span> <span class="string">&quot;chat&quot;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p><a name="66-multi-agent-best-practices"></a></p>
+<h3 id="6-6-Multi-Agent-Best-Practices"><a href="#6-6-Multi-Agent-Best-Practices" class="headerlink" title="6.6 Multi-Agent Best Practices"></a>6.6 Multi-Agent Best Practices</h3><p><strong>✅ Recommended:</strong></p>
+<ul>
+<li>Create dedicated Agents for high-frequency tasks</li>
+<li>Use separate Agents for programming (avoid context pollution)</li>
+<li>Create independent Agent instances for different projects</li>
+<li>Regularly clean up inactive Agents</li>
+</ul>
+<p><strong>❌ Avoid:</strong></p>
+<ul>
+<li>Creating too many Agents (recommended ≤5)</li>
+<li>All Agents using the same model (wastes resources)</li>
+<li>Ignoring memory isolation between Agents</li>
+</ul>
+<p><a name="67-view-and-manage-agents"></a></p>
+<h3 id="6-7-View-and-Manage-Agents"><a href="#6-7-View-and-Manage-Agents" class="headerlink" title="6.7 View and Manage Agents"></a>6.7 View and Manage Agents</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># List all Agents</span></span><br><span class="line">openclaw agents list</span><br><span class="line"></span><br><span class="line"><span class="comment"># Check Agent status</span></span><br><span class="line">openclaw agents status my-agent</span><br><span class="line"></span><br><span class="line"><span class="comment"># View Agent configuration</span></span><br><span class="line">openclaw agents config my-agent --show</span><br><span class="line"></span><br><span class="line"><span class="comment"># Stop Agent</span></span><br><span class="line">openclaw agents stop my-agent</span><br><span class="line"></span><br><span class="line"><span class="comment"># Delete Agent</span></span><br><span class="line">openclaw agents delete my-agent</span><br></pre></td></tr></table></figure>
+
+<p><a name="68-multi-agent-architecture-example"></a></p>
+<h3 id="6-8-Multi-Agent-Architecture-Example"><a href="#6-8-Multi-Agent-Architecture-Example" class="headerlink" title="6.8 Multi-Agent Architecture Example"></a>6.8 Multi-Agent Architecture Example</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">┌─────────────────────────────────────────────────────────┐</span><br><span class="line">│                    User Message                          │</span><br><span class="line">└────────────────────┬────────────────────────────────────┘</span><br><span class="line">                     │</span><br><span class="line">                     ▼</span><br><span class="line">┌─────────────────────────────────────────────────────────┐</span><br><span class="line">│              Routing Layer (distributes by rules)        │</span><br><span class="line">│   Keyword Matching / Command Prefix / Channel Binding    │</span><br><span class="line">└──────────┬──────────────┬──────────────┬────────────────┘</span><br><span class="line">           │              │              │</span><br><span class="line">           ▼              ▼              ▼</span><br><span class="line">    ┌──────────┐   ┌──────────┐   ┌──────────┐</span><br><span class="line">    │   main   │   │  coding  │   │ analysis │</span><br><span class="line">    │  Agent   │   │  Agent   │   │  Agent   │</span><br><span class="line">    └────┬─────┘   └────┬─────┘   └────┬─────┘</span><br><span class="line">         │              │              │</span><br><span class="line">         ▼              ▼              ▼</span><br><span class="line">    ┌──────────┐   ┌──────────┐   ┌──────────┐</span><br><span class="line">    │ General  │   │  Code    │   │   Data   │</span><br><span class="line">    │  Memory  │   │  Skills  │   │  Tools   │</span><br><span class="line">    │ Qwen3.5  │   │  Claude  │   │  Pandas  │</span><br><span class="line">    └──────────┘   └──────────┘   └──────────┘</span><br></pre></td></tr></table></figure>
+<h2 id=""><a href="#" class="headerlink" title=""></a><img src="/2026/03/08/OpenClaw-CookBook/a1.png" alt="pic"></h2><p><a name="7-skills-system"></a></p>
+<h2 id="7-Skills-System"><a href="#7-Skills-System" class="headerlink" title="7. Skills System"></a>7. Skills System</h2><p><a name="71-what-are-skills"></a></p>
+<h3 id="7-1-What-are-Skills"><a href="#7-1-What-are-Skills" class="headerlink" title="7.1 What are Skills?"></a>7.1 What are Skills?</h3><p>Skills are OpenClaw’s plugin system, enabling AI to:</p>
+<ul>
+<li>Access external APIs (weather, news, stocks)</li>
+<li>Operate local resources (files, cameras)</li>
+<li>Execute specific tasks (GitHub, calendar, email)</li>
+</ul>
+<p><a name="72-installing-skills"></a></p>
+<h3 id="7-2-Installing-Skills"><a href="#7-2-Installing-Skills" class="headerlink" title="7.2 Installing Skills"></a>7.2 Installing Skills</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Install from ClawHub</span></span><br><span class="line">openclaw skill install &lt;skill-slug&gt;</span><br><span class="line"></span><br><span class="line"><span class="comment"># Search Skills</span></span><br><span class="line">openclaw skill search &lt;keyword&gt;</span><br><span class="line"></span><br><span class="line"><span class="comment"># List installed</span></span><br><span class="line">openclaw skill list</span><br><span class="line"></span><br><span class="line"><span class="comment"># Update Skills</span></span><br><span class="line">openclaw skill update</span><br></pre></td></tr></table></figure>
+
+<p><a name="73-popular-skills"></a></p>
+<h3 id="7-3-Popular-Skills"><a href="#7-3-Popular-Skills" class="headerlink" title="7.3 Popular Skills"></a>7.3 Popular Skills</h3><table>
+<thead>
+<tr>
+<th>Skill</th>
+<th>Function</th>
+<th>Install Command</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>weather</td>
+<td>Weather forecast</td>
+<td><code>skill install weather</code></td>
+</tr>
+<tr>
+<td>github</td>
+<td>GitHub operations</td>
+<td><code>skill install github</code></td>
+</tr>
+<tr>
+<td>news-aggregator</td>
+<td>News aggregation</td>
+<td><code>skill install news-aggregator</code></td>
+</tr>
+<tr>
+<td>pinchtab-browser</td>
+<td>Browser automation</td>
+<td><code>skill install pinchtab-browser</code></td>
+</tr>
+</tbody></table>
+<p><a name="74-creating-custom-skills"></a></p>
+<h3 id="7-4-Creating-Custom-Skills"><a href="#7-4-Creating-Custom-Skills" class="headerlink" title="7.4 Creating Custom Skills"></a>7.4 Creating Custom Skills</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Create Skill directory</span></span><br><span class="line"><span class="built_in">mkdir</span> -p ~/.openclaw/workspace-main/skills/my-skill</span><br><span class="line"></span><br><span class="line"><span class="comment"># Create SKILL.md</span></span><br><span class="line"><span class="built_in">cat</span> &gt; ~/.openclaw/workspace-main/skills/my-skill/SKILL.md &lt;&lt; <span class="string">&#x27;EOF&#x27;</span></span><br><span class="line"><span class="comment"># my-skill</span></span><br><span class="line"></span><br><span class="line"><span class="comment">## Description</span></span><br><span class="line">My custom skill</span><br><span class="line"></span><br><span class="line"><span class="comment">## Usage</span></span><br><span class="line">/MyCommand [arguments]</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p><a name="8-memory-system"></a></p>
+<h2 id="8-Memory-System"><a href="#8-Memory-System" class="headerlink" title="8. Memory System"></a>8. Memory System</h2><p><a name="81-memory-types"></a></p>
+<h3 id="8-1-Memory-Types"><a href="#8-1-Memory-Types" class="headerlink" title="8.1 Memory Types"></a>8.1 Memory Types</h3><table>
+<thead>
+<tr>
+<th>Type</th>
+<th>File</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Long-term Memory</td>
+<td><code>MEMORY.md</code></td>
+<td>Curated important information</td>
+</tr>
+<tr>
+<td>Daily Memory</td>
+<td><code>memory/YYYY-MM-DD.md</code></td>
+<td>Raw logs</td>
+</tr>
+<tr>
+<td>Identity</td>
+<td><code>IDENTITY.md</code></td>
+<td>AI personality settings</td>
+</tr>
+<tr>
+<td>User</td>
+<td><code>USER.md</code></td>
+<td>User information</td>
+</tr>
+<tr>
+<td>Soul</td>
+<td><code>SOUL.md</code></td>
+<td>Behavioral guidelines</td>
+</tr>
+</tbody></table>
+<p><a name="82-memory-file-locations"></a></p>
+<h3 id="8-2-Memory-File-Locations"><a href="#8-2-Memory-File-Locations" class="headerlink" title="8.2 Memory File Locations"></a>8.2 Memory File Locations</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">~/.openclaw/workspace-main/</span><br><span class="line">├── MEMORY.md              # Long-term memory</span><br><span class="line">├── IDENTITY.md            # Identity settings</span><br><span class="line">├── USER.md                # User information</span><br><span class="line">├── SOUL.md                # Behavioral guidelines</span><br><span class="line">├── AGENTS.md              # Workspace description</span><br><span class="line">├── TOOLS.md               # Tool notes</span><br><span class="line">├── HEARTBEAT.md           # Heartbeat tasks</span><br><span class="line">└── memory/</span><br><span class="line">    ├── 2026-03-16.md      # Daily memory</span><br><span class="line">    └── 2026-03-15.md</span><br></pre></td></tr></table></figure>
+
+<p><a name="83-search-memory"></a></p>
+<h3 id="8-3-Search-Memory"><a href="#8-3-Search-Memory" class="headerlink" title="8.3 Search Memory"></a>8.3 Search Memory</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Semantic search</span></span><br><span class="line">openclaw memory search <span class="string">&quot;project mentioned last time&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Search by date</span></span><br><span class="line">openclaw memory search --<span class="built_in">date</span> 2026-03-15 <span class="string">&quot;meeting&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p><a name="84-memory-maintenance"></a></p>
+<h3 id="8-4-Memory-Maintenance"><a href="#8-4-Memory-Maintenance" class="headerlink" title="8.4 Memory Maintenance"></a>8.4 Memory Maintenance</h3><p>Recommended to review MEMORY.md regularly (weekly):</p>
+<ul>
+<li>Remove outdated information</li>
+<li>Add new decisions and context</li>
+<li>Organize highlights from daily memory files</li>
+</ul>
+<hr>
+<p><a name="9-scheduled-tasks"></a></p>
+<h2 id="9-Scheduled-Tasks"><a href="#9-Scheduled-Tasks" class="headerlink" title="9. Scheduled Tasks"></a>9. Scheduled Tasks</h2><p><a name="91-cron-basics"></a></p>
+<h3 id="9-1-Cron-Basics"><a href="#9-1-Cron-Basics" class="headerlink" title="9.1 Cron Basics"></a>9.1 Cron Basics</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Add scheduled task</span></span><br><span class="line">openclaw cron add --schedule <span class="string">&quot;0 9 * * *&quot;</span> --message <span class="string">&quot;Good morning! Today&#x27;s tasks:&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># List tasks</span></span><br><span class="line">openclaw cron list</span><br><span class="line"></span><br><span class="line"><span class="comment"># Run task</span></span><br><span class="line">openclaw cron run &lt;job-id&gt;</span><br><span class="line"></span><br><span class="line"><span class="comment"># Remove task</span></span><br><span class="line">openclaw cron remove &lt;job-id&gt;</span><br></pre></td></tr></table></figure>
+
+<p><a name="92-cron-expressions"></a></p>
+<h3 id="9-2-Cron-Expressions"><a href="#9-2-Cron-Expressions" class="headerlink" title="9.2 Cron Expressions"></a>9.2 Cron Expressions</h3><table>
+<thead>
+<tr>
+<th>Expression</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>0 9 * * *</code></td>
+<td>Daily at 9:00</td>
+</tr>
+<tr>
+<td><code>0 9 * * 1</code></td>
+<td>Every Monday at 9:00</td>
+</tr>
+<tr>
+<td><code>*/30 * * * *</code></td>
+<td>Every 30 minutes</td>
+</tr>
+<tr>
+<td><code>0 0 1 * *</code></td>
+<td>1st of each month at 0:00</td>
+</tr>
+</tbody></table>
+<p><a name="93-heartbeat-tasks"></a></p>
+<h3 id="9-3-Heartbeat-Tasks"><a href="#9-3-Heartbeat-Tasks" class="headerlink" title="9.3 Heartbeat Tasks"></a>9.3 Heartbeat Tasks</h3><p>Edit <code>HEARTBEAT.md</code>:</p>
+<figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line"><span class="section"># HEARTBEAT.md</span></span><br><span class="line"></span><br><span class="line"><span class="bullet">-</span> [ ] Check unread emails</span><br><span class="line"><span class="bullet">-</span> [ ] View calendar (within 24 hours)</span><br><span class="line"><span class="bullet">-</span> [ ] Check weather (if going out)</span><br><span class="line"><span class="bullet">-</span> [ ] Review memory files (weekly)</span><br></pre></td></tr></table></figure>
+
+<p><a name="94-practical-cron-examples"></a></p>
+<h3 id="9-4-Practical-Cron-Examples"><a href="#9-4-Practical-Cron-Examples" class="headerlink" title="9.4 Practical Cron Examples"></a>9.4 Practical Cron Examples</h3><p><strong>Daily News Briefing:</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openclaw cron add \</span><br><span class="line">  --name <span class="string">&quot;daily-news&quot;</span> \</span><br><span class="line">  --schedule <span class="string">&quot;0 8 * * *&quot;</span> \</span><br><span class="line">  --message <span class="string">&quot;Execute news-aggregator skill, send daily news&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>Weekly Backup:</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openclaw cron add \</span><br><span class="line">  --name <span class="string">&quot;weekly-backup&quot;</span> \</span><br><span class="line">  --schedule <span class="string">&quot;0 2 * * 0&quot;</span> \</span><br><span class="line">  --message <span class="string">&quot;Backup workspace and memory directories&quot;</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<p><a name="10-common-commands"></a></p>
+<h2 id="10-Common-Commands"><a href="#10-Common-Commands" class="headerlink" title="10. Common Commands"></a>10. Common Commands</h2><p><a name="101-gateway-management"></a></p>
+<h3 id="10-1-Gateway-Management"><a href="#10-1-Gateway-Management" class="headerlink" title="10.1 Gateway Management"></a>10.1 Gateway Management</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openclaw gateway start      <span class="comment"># Start</span></span><br><span class="line">openclaw gateway stop       <span class="comment"># Stop</span></span><br><span class="line">openclaw gateway restart    <span class="comment"># Restart</span></span><br><span class="line">openclaw gateway status     <span class="comment"># Status</span></span><br><span class="line">openclaw gateway install    <span class="comment"># Install as system service</span></span><br><span class="line">openclaw gateway uninstall  <span class="comment"># Uninstall service</span></span><br></pre></td></tr></table></figure>
+
+<p><a name="102-configuration-management"></a></p>
+<h3 id="10-2-Configuration-Management"><a href="#10-2-Configuration-Management" class="headerlink" title="10.2 Configuration Management"></a>10.2 Configuration Management</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openclaw onboard            <span class="comment"># Initial setup wizard</span></span><br><span class="line">openclaw configure          <span class="comment"># Configure channels</span></span><br><span class="line">openclaw doctor             <span class="comment"># Health check</span></span><br><span class="line">openclaw status             <span class="comment"># Check status</span></span><br><span class="line">openclaw dashboard          <span class="comment"># Open web dashboard</span></span><br><span class="line">openclaw tui                <span class="comment"># Terminal interface</span></span><br></pre></td></tr></table></figure>
+
+<p><a name="103-model-management"></a></p>
+<h3 id="10-3-Model-Management"><a href="#10-3-Model-Management" class="headerlink" title="10.3 Model Management"></a>10.3 Model Management</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openclaw models status      <span class="comment"># Model status</span></span><br><span class="line">openclaw models list        <span class="comment"># List models</span></span><br><span class="line">openclaw models add         <span class="comment"># Add model</span></span><br></pre></td></tr></table></figure>
+
+<p><a name="104-channel-management"></a></p>
+<h3 id="10-4-Channel-Management"><a href="#10-4-Channel-Management" class="headerlink" title="10.4 Channel Management"></a>10.4 Channel Management</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openclaw channels list      <span class="comment"># List channels</span></span><br><span class="line">openclaw channels add       <span class="comment"># Add channel</span></span><br><span class="line">openclaw channels remove    <span class="comment"># Remove channel</span></span><br></pre></td></tr></table></figure>
+
+<p><a name="105-agent-management"></a></p>
+<h3 id="10-5-Agent-Management"><a href="#10-5-Agent-Management" class="headerlink" title="10.5 Agent Management"></a>10.5 Agent Management</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openclaw agents list            <span class="comment"># List Agents</span></span><br><span class="line">openclaw agents create &lt;name&gt;   <span class="comment"># Create Agent</span></span><br><span class="line">openclaw agents config &lt;name&gt;   <span class="comment"># Configure Agent</span></span><br><span class="line">openclaw agents start &lt;name&gt;    <span class="comment"># Start Agent</span></span><br><span class="line">openclaw agents stop &lt;name&gt;     <span class="comment"># Stop Agent</span></span><br><span class="line">openclaw agents delete &lt;name&gt;   <span class="comment"># Delete Agent</span></span><br></pre></td></tr></table></figure>
+
+<p><a name="106-memory-operations"></a></p>
+<h3 id="10-6-Memory-Operations"><a href="#10-6-Memory-Operations" class="headerlink" title="10.6 Memory Operations"></a>10.6 Memory Operations</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openclaw memory search &lt;query&gt;   <span class="comment"># Search memory</span></span><br><span class="line">openclaw memory list             <span class="comment"># List memory files</span></span><br><span class="line">openclaw memory edit             <span class="comment"># Edit memory</span></span><br></pre></td></tr></table></figure>
+
+<p><a name="107-session-management"></a></p>
+<h3 id="10-7-Session-Management"><a href="#10-7-Session-Management" class="headerlink" title="10.7 Session Management"></a>10.7 Session Management</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openclaw sessions list           <span class="comment"># List sessions</span></span><br><span class="line">openclaw sessions <span class="built_in">history</span> &lt;key&gt;  <span class="comment"># View history</span></span><br><span class="line">openclaw sessions send           <span class="comment"># Send message to session</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<p><a name="11-troubleshooting"></a></p>
+<h2 id="11-Troubleshooting"><a href="#11-Troubleshooting" class="headerlink" title="11. Troubleshooting"></a>11. Troubleshooting</h2><p><a name="111-common-issues"></a></p>
+<h3 id="11-1-Common-Issues"><a href="#11-1-Common-Issues" class="headerlink" title="11.1 Common Issues"></a>11.1 Common Issues</h3><p><strong>Issue 1: <code>openclaw: command not found</code></strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Find npm global path</span></span><br><span class="line">npm prefix -g</span><br><span class="line"></span><br><span class="line"><span class="comment"># Add to PATH</span></span><br><span class="line"><span class="built_in">export</span> PATH=<span class="string">&quot;<span class="subst">$(npm prefix -g)</span>/bin:<span class="variable">$PATH</span>&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Add to ~/.bashrc permanently</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;export PATH=&quot;$(npm prefix -g)/bin:$PATH&quot;&#x27;</span> &gt;&gt; ~/.bashrc</span><br><span class="line"><span class="built_in">source</span> ~/.bashrc</span><br></pre></td></tr></table></figure>
+
+<p><strong>Issue 2: Gateway fails to start</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Check port usage</span></span><br><span class="line">lsof -i :18789</span><br><span class="line"></span><br><span class="line"><span class="comment"># View logs</span></span><br><span class="line">journalctl --user -u openclaw-gateway.service -n 50</span><br><span class="line"></span><br><span class="line"><span class="comment"># Restart service</span></span><br><span class="line">systemctl --user restart openclaw-gateway.service</span><br></pre></td></tr></table></figure>
+
+<p><strong>Issue 3: Not receiving Telegram messages</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Check if Bot Token is correct</span></span><br><span class="line"><span class="built_in">cat</span> ~/.openclaw/openclaw.json | grep botToken</span><br><span class="line"></span><br><span class="line"><span class="comment"># Check if offset is updated</span></span><br><span class="line"><span class="built_in">cat</span> ~/.openclaw/telegram/update-offset-*.json</span><br><span class="line"></span><br><span class="line"><span class="comment"># View Gateway logs</span></span><br><span class="line">journalctl -t gateway-start.sh -n 30 | grep telegram</span><br></pre></td></tr></table></figure>
+
+<p><strong>Issue 4: Model API call failures</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Check API Key</span></span><br><span class="line">openclaw models status</span><br><span class="line"></span><br><span class="line"><span class="comment"># Test connection</span></span><br><span class="line">curl -H <span class="string">&quot;Authorization: Bearer YOUR_API_KEY&quot;</span> \</span><br><span class="line">  https://api.example.com/v1/models</span><br><span class="line"></span><br><span class="line"><span class="comment"># Check network</span></span><br><span class="line">ping api.example.com</span><br></pre></td></tr></table></figure>
+
+<p><a name="112-viewing-logs"></a></p>
+<h3 id="11-2-Viewing-Logs"><a href="#11-2-Viewing-Logs" class="headerlink" title="11.2 Viewing Logs"></a>11.2 Viewing Logs</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Gateway logs</span></span><br><span class="line">journalctl --user -u openclaw-gateway.service -f</span><br><span class="line"></span><br><span class="line"><span class="comment"># Last 50 entries</span></span><br><span class="line">journalctl --user -u openclaw-gateway.service -n 50</span><br><span class="line"></span><br><span class="line"><span class="comment"># Specific time range</span></span><br><span class="line">journalctl --user -u openclaw-gateway.service \</span><br><span class="line">  --since <span class="string">&quot;2026-03-16 10:00:00&quot;</span> --<span class="keyword">until</span> <span class="string">&quot;2026-03-16 12:00:00&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p><a name="113-diagnostic-commands"></a></p>
+<h3 id="11-3-Diagnostic-Commands"><a href="#11-3-Diagnostic-Commands" class="headerlink" title="11.3 Diagnostic Commands"></a>11.3 Diagnostic Commands</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Full diagnostics</span></span><br><span class="line">openclaw doctor</span><br><span class="line"></span><br><span class="line"><span class="comment"># Check system</span></span><br><span class="line">openclaw status</span><br><span class="line"></span><br><span class="line"><span class="comment"># Check configuration</span></span><br><span class="line">openclaw config list</span><br></pre></td></tr></table></figure>
+
+<p><a name="114-reset--recovery"></a></p>
+<h3 id="11-4-Reset-Recovery"><a href="#11-4-Reset-Recovery" class="headerlink" title="11.4 Reset &amp; Recovery"></a>11.4 Reset &amp; Recovery</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Reset configuration (use with caution)</span></span><br><span class="line">openclaw onboard --reset</span><br><span class="line"></span><br><span class="line"><span class="comment"># Reinstall Gateway</span></span><br><span class="line">openclaw gateway uninstall</span><br><span class="line">openclaw gateway install</span><br><span class="line"></span><br><span class="line"><span class="comment"># Clear cache</span></span><br><span class="line"><span class="built_in">rm</span> -rf ~/.openclaw/browser</span><br><span class="line"><span class="built_in">rm</span> -rf ~/.openclaw/cron</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p><a name="appendix"></a></p>
+<h2 id="Appendix"><a href="#Appendix" class="headerlink" title="Appendix"></a>Appendix</h2><p><a name="a-resource-links"></a></p>
+<h3 id="A-Resource-Links"><a href="#A-Resource-Links" class="headerlink" title="A. Resource Links"></a>A. Resource Links</h3><table>
+<thead>
+<tr>
+<th>Resource</th>
+<th>Link</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>OpenClaw-Cookbook</td>
+<td><a href="https://github.com/BODYsuperman/OpenClaw-Cookbook">https://github.com/BODYsuperman/OpenClaw-Cookbook</a></td>
+</tr>
+</tbody></table>
+<p><a name="b-version-information"></a></p>
+<h3 id="B-Version-Information"><a href="#B-Version-Information" class="headerlink" title="B. Version Information"></a>B. Version Information</h3><ul>
+<li>Document Version: v1.1</li>
+<li>Applicable OpenClaw Version: v2026.3.11+</li>
+<li>Last Updated: 2026-03-17</li>
+</ul>
+<p><a name="c-contributors"></a></p>
+<h3 id="C-Contributors"><a href="#C-Contributors" class="headerlink" title="C. Contributors"></a>C. Contributors</h3><p>This document integrates content from:</p>
+<ul>
+<li>OpenClaw Orange Book (Hua Shu)</li>
+<li>Datawhale OpenClaw Tutorial</li>
+<li>APIFox OpenClaw User Guide</li>
+<li>OpenClaw Official Documentation</li>
+</ul>
+<hr>
+<p><em>For questions or suggestions, please provide feedback to the OpenClaw community.</em></p>
+<link rel="stylesheet" href="/css/folder.css" type="text/css"><script src="/js/folder.js" type="text/javascript" async></script>]]></content>
+      <categories>
+        <category>AI Agent</category>
+        <category>Tutorials</category>
+      </categories>
+      <tags>
+        <tag>OpenClaw</tag>
+        <tag>AI Agent</tag>
+        <tag>Multi-Agent</tag>
+        <tag>Self-Hosted</tag>
+        <tag>Open Source</tag>
+        <tag>AI Automation</tag>
+        <tag>Digital Employee</tag>
+        <tag>Tutorial</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>RabbitMQ:One broker to queue them all</title>
     <url>/2025/03/29/RabbitMQ-One-broker-to-queue-them-all/</url>
     <content><![CDATA[<ol>
@@ -2103,6 +2801,69 @@ When a mismatch occurs, the text pointer backtracks to i&#x3D;2, and the pattern
       </categories>
       <tags>
         <tag>Data Structure and Alogrithm</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>The Complete Guide to Modern CSS Layouts: From Flexbox to Grid and Beyond</title>
+    <url>/2025/11/03/The-Complete-Guide-to-Modern-CSS-Layouts-From-Flexbox-to-Grid-and-Beyond/</url>
+    <content><![CDATA[<p><a href="/HTML/p2/index.html" target="_blank">project demo1</a><br><a href="/HTML/p3/index.html" target="_blank">project demo2</a></p>
+<link rel="stylesheet" href="/css/folder.css" type="text/css"><script src="/js/folder.js" type="text/javascript" async></script>]]></content>
+  </entry>
+  <entry>
+    <title>Workflow Orchestration</title>
+    <url>/2026/02/19/Workflow-Orchestration/</url>
+    <content><![CDATA[<h2 id="Workflow-Orchestration"><a href="#Workflow-Orchestration" class="headerlink" title="Workflow Orchestration"></a>Workflow Orchestration</h2><h3 id="1-Plan-Node-Default"><a href="#1-Plan-Node-Default" class="headerlink" title="1. Plan Node Default"></a>1. Plan Node Default</h3><ul>
+<li>Enter plan mode for ANY non-trivial task (3+ steps or architectural decisions)</li>
+<li>If something goes sideways, STOP and re-plan immediately – don’t keep pushing</li>
+<li>Write detailed specs upfront to reduce ambiguity</li>
+</ul>
+<h3 id="2-Subagent-Strategy"><a href="#2-Subagent-Strategy" class="headerlink" title="2. Subagent Strategy"></a>2. Subagent Strategy</h3><ul>
+<li>Use subagents liberally to keep main context window clean</li>
+<li>Offload research, exploration, and parallel analysis to subagents</li>
+<li>One tack per subagent for focused execution<span id="more"></span></li>
+</ul>
+<h3 id="3-Self-Improvement-Loop"><a href="#3-Self-Improvement-Loop" class="headerlink" title="3. Self-Improvement Loop"></a>3. Self-Improvement Loop</h3><ul>
+<li>After ANY correction from the user: update <code>tasks/lessons.md</code> with the pattern</li>
+<li>Write rules for yourself that prevent the same mistake</li>
+<li>Review lessons at session start for relevant project</li>
+</ul>
+<h3 id="4-Verification-Before-Done"><a href="#4-Verification-Before-Done" class="headerlink" title="4. Verification Before Done"></a>4. Verification Before Done</h3><ul>
+<li>Never mark a task complete without proving it works</li>
+<li>Run tests, check logs, demonstrate correctness</li>
+</ul>
+<h3 id="5-Demand-Elegance-Balanced"><a href="#5-Demand-Elegance-Balanced" class="headerlink" title="5. Demand Elegance (Balanced)"></a>5. Demand Elegance (Balanced)</h3><ul>
+<li>For non-trivial changes: pause and ask “is there a more elegant way?”</li>
+<li>If a fix feels hacky: “Knowing everything I know now, implement the elegant solution”</li>
+<li>Skip this for simple, obvious fixes – don’t over-engineer</li>
+</ul>
+<h3 id="6-Autonomous-Bug-Fixing"><a href="#6-Autonomous-Bug-Fixing" class="headerlink" title="6. Autonomous Bug Fixing"></a>6. Autonomous Bug Fixing</h3><ul>
+<li>When given a bug report: just fix it. Don’t ask for hand-holding</li>
+<li>Point at logs, errors, failing tests – then resolve them</li>
+<li>Zero context switching required from the user</li>
+</ul>
+<h3 id="Task-Management"><a href="#Task-Management" class="headerlink" title="Task Management"></a>Task Management</h3><ol>
+<li><strong>Plan First</strong>: Write plan to <code>tasks/todo.md</code> with checkable items</li>
+<li><strong>Verify Plan</strong>: Check in before starting implementation</li>
+<li><strong>Track Progress</strong>: Mark items complete as you go</li>
+<li><strong>Document Results</strong>: Add review section to <code>tasks/todo.md</code></li>
+<li><strong>Capture Lessons</strong>: Update <code>tasks/lessons.md</code> after corrections</li>
+</ol>
+<h3 id="Core-Principles"><a href="#Core-Principles" class="headerlink" title="Core Principles"></a>Core Principles</h3><ul>
+<li><strong>Simplicity First</strong>: Make every change as simple as possible. Impact minimal code.</li>
+<li><strong>No Laziness</strong>: Find root causes. No temporary fixes. Senior developer standards.</li>
+<li><strong>Minimal Impact</strong>: Changes should only touch what’s necessary. Avoid introducing bugs.</li>
+</ul>
+<link rel="stylesheet" href="/css/folder.css" type="text/css"><script src="/js/folder.js" type="text/javascript" async></script>]]></content>
+      <categories>
+        <category>AI</category>
+        <category>Vibe Coding</category>
+      </categories>
+      <tags>
+        <tag>AI Programming</tag>
+        <tag>Claude</tag>
+        <tag>Productivity</tag>
+        <tag>Workflow</tag>
+        <tag>Automation</tag>
       </tags>
   </entry>
   <entry>
@@ -2593,69 +3354,6 @@ When a mismatch occurs, the text pointer backtracks to i&#x3D;2, and the pattern
         <tag>JWT</tag>
         <tag>AOP</tag>
         <tag>RESTful API</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>The Complete Guide to Modern CSS Layouts: From Flexbox to Grid and Beyond</title>
-    <url>/2025/11/03/The-Complete-Guide-to-Modern-CSS-Layouts-From-Flexbox-to-Grid-and-Beyond/</url>
-    <content><![CDATA[<p><a href="/HTML/p2/index.html" target="_blank">project demo1</a><br><a href="/HTML/p3/index.html" target="_blank">project demo2</a></p>
-<link rel="stylesheet" href="/css/folder.css" type="text/css"><script src="/js/folder.js" type="text/javascript" async></script>]]></content>
-  </entry>
-  <entry>
-    <title>Workflow Orchestration</title>
-    <url>/2026/02/19/Workflow-Orchestration/</url>
-    <content><![CDATA[<h2 id="Workflow-Orchestration"><a href="#Workflow-Orchestration" class="headerlink" title="Workflow Orchestration"></a>Workflow Orchestration</h2><h3 id="1-Plan-Node-Default"><a href="#1-Plan-Node-Default" class="headerlink" title="1. Plan Node Default"></a>1. Plan Node Default</h3><ul>
-<li>Enter plan mode for ANY non-trivial task (3+ steps or architectural decisions)</li>
-<li>If something goes sideways, STOP and re-plan immediately – don’t keep pushing</li>
-<li>Write detailed specs upfront to reduce ambiguity</li>
-</ul>
-<h3 id="2-Subagent-Strategy"><a href="#2-Subagent-Strategy" class="headerlink" title="2. Subagent Strategy"></a>2. Subagent Strategy</h3><ul>
-<li>Use subagents liberally to keep main context window clean</li>
-<li>Offload research, exploration, and parallel analysis to subagents</li>
-<li>One tack per subagent for focused execution<span id="more"></span></li>
-</ul>
-<h3 id="3-Self-Improvement-Loop"><a href="#3-Self-Improvement-Loop" class="headerlink" title="3. Self-Improvement Loop"></a>3. Self-Improvement Loop</h3><ul>
-<li>After ANY correction from the user: update <code>tasks/lessons.md</code> with the pattern</li>
-<li>Write rules for yourself that prevent the same mistake</li>
-<li>Review lessons at session start for relevant project</li>
-</ul>
-<h3 id="4-Verification-Before-Done"><a href="#4-Verification-Before-Done" class="headerlink" title="4. Verification Before Done"></a>4. Verification Before Done</h3><ul>
-<li>Never mark a task complete without proving it works</li>
-<li>Run tests, check logs, demonstrate correctness</li>
-</ul>
-<h3 id="5-Demand-Elegance-Balanced"><a href="#5-Demand-Elegance-Balanced" class="headerlink" title="5. Demand Elegance (Balanced)"></a>5. Demand Elegance (Balanced)</h3><ul>
-<li>For non-trivial changes: pause and ask “is there a more elegant way?”</li>
-<li>If a fix feels hacky: “Knowing everything I know now, implement the elegant solution”</li>
-<li>Skip this for simple, obvious fixes – don’t over-engineer</li>
-</ul>
-<h3 id="6-Autonomous-Bug-Fixing"><a href="#6-Autonomous-Bug-Fixing" class="headerlink" title="6. Autonomous Bug Fixing"></a>6. Autonomous Bug Fixing</h3><ul>
-<li>When given a bug report: just fix it. Don’t ask for hand-holding</li>
-<li>Point at logs, errors, failing tests – then resolve them</li>
-<li>Zero context switching required from the user</li>
-</ul>
-<h3 id="Task-Management"><a href="#Task-Management" class="headerlink" title="Task Management"></a>Task Management</h3><ol>
-<li><strong>Plan First</strong>: Write plan to <code>tasks/todo.md</code> with checkable items</li>
-<li><strong>Verify Plan</strong>: Check in before starting implementation</li>
-<li><strong>Track Progress</strong>: Mark items complete as you go</li>
-<li><strong>Document Results</strong>: Add review section to <code>tasks/todo.md</code></li>
-<li><strong>Capture Lessons</strong>: Update <code>tasks/lessons.md</code> after corrections</li>
-</ol>
-<h3 id="Core-Principles"><a href="#Core-Principles" class="headerlink" title="Core Principles"></a>Core Principles</h3><ul>
-<li><strong>Simplicity First</strong>: Make every change as simple as possible. Impact minimal code.</li>
-<li><strong>No Laziness</strong>: Find root causes. No temporary fixes. Senior developer standards.</li>
-<li><strong>Minimal Impact</strong>: Changes should only touch what’s necessary. Avoid introducing bugs.</li>
-</ul>
-<link rel="stylesheet" href="/css/folder.css" type="text/css"><script src="/js/folder.js" type="text/javascript" async></script>]]></content>
-      <categories>
-        <category>AI</category>
-        <category>Vibe Coding</category>
-      </categories>
-      <tags>
-        <tag>AI Programming</tag>
-        <tag>Claude</tag>
-        <tag>Productivity</tag>
-        <tag>Workflow</tag>
-        <tag>Automation</tag>
       </tags>
   </entry>
   <entry>
