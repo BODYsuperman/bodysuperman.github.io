@@ -644,10 +644,10 @@ openclaw skill update
 
 | Skill | Function | Install Command |
 |-------|------|----------|
-| weather | Weather forecast | `skill install weather` |
-| github | GitHub operations | `skill install github` |
-| news-aggregator | News aggregation | `skill install news-aggregator` |
-| pinchtab-browser | Browser automation | `skill install pinchtab-browser` |
+| weather | Weather forecast | `openclaw skills install weather` |
+| github | GitHub operations | `openclaw skills install github` |
+| [news-aggregator](https://github.com/BODYsuperman/world-news-aggregator-skill) | News aggregation | `npx skills add https://github.com/BODYsuperman/world-news-aggregator-skill`|
+| pinchtab-browser | Browser automation | `openclaw skills install pinchtab-browser` |
 
 <a name="74-creating-custom-skills"></a>
 ### Creating Custom Skills
