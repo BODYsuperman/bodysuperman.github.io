@@ -17,8 +17,6 @@ tags:
   - Tutorial
 ---
 
-## 📖 Table of Contents
-
 - [1. Understanding OpenClaw](#1-understanding-openclaw)
   - [1.1 What is OpenClaw?](#11-what-is-openclaw)
   - [1.2 Core Capabilities](#12-core-capabilities)
@@ -90,10 +88,10 @@ tags:
 ---
 
 <a name="1-understanding-openclaw"></a>
-## 1. Understanding OpenClaw
+## Understanding OpenClaw
 
 <a name="11-what-is-openclaw"></a>
-### 1.1 What is OpenClaw?
+### What is OpenClaw?
 
 OpenClaw is an **open-source, self-hosted AI Agent system** that transforms AI from a "chat tool" into a "digital employee capable of autonomously executing tasks."
 
@@ -106,7 +104,7 @@ OpenClaw is an **open-source, self-hosted AI Agent system** that transforms AI f
 | Data | Cloud Storage | Local Control |
 
 <a name="12-core-capabilities"></a>
-### 1.2 Core Capabilities
+### Core Capabilities
 
 - ✅ **Multi-channel Connection**: Telegram, WhatsApp, Feishu, DingTalk, Discord, etc.
 - ✅ **Persistent Memory**: Remembers your preferences, projects, contacts
@@ -116,7 +114,7 @@ OpenClaw is an **open-source, self-hosted AI Agent system** that transforms AI f
 - ✅ **Multi-Agent Collaboration**: Dedicated agents for different tasks
 
 <a name="13-architecture-overview"></a>
-### 1.3 Architecture Overview
+### Architecture Overview
 
 ```
 ┌─────────────────────────────────────────────────────────┐
@@ -146,10 +144,10 @@ OpenClaw is an **open-source, self-hosted AI Agent system** that transforms AI f
 ---
 
 <a name="2-quick-start"></a>
-## 2. Quick Start
+## Quick Start
 
 <a name="21-system-requirements"></a>
-### 2.1 System Requirements
+### System Requirements
 
 | Requirement | Description |
 |------|------|
@@ -159,7 +157,7 @@ OpenClaw is an **open-source, self-hosted AI Agent system** that transforms AI f
 | Storage | Minimum 1GB available space |
 
 <a name="22-one-click-installation"></a>
-### 2.2 One-Click Installation
+### One-Click Installation
 
 **macOS / Linux:**
 ```bash
@@ -172,7 +170,7 @@ iwr -useb https://openclaw.ai/install.ps1 | iex
 ```
 
 <a name="23-verify-installation"></a>
-### 2.3 Verify Installation
+### Verify Installation
 
 ```bash
 # Check version
@@ -186,7 +184,7 @@ openclaw status
 ```
 
 <a name="24-5-minute-quick-experience"></a>
-### 2.4 5-Minute Quick Experience
+### 5-Minute Quick Experience
 
 ```bash
 # 1. Install
@@ -207,10 +205,10 @@ openclaw dashboard
 ---
 
 <a name="3-installation--deployment"></a>
-## 3. Installation & Deployment
+## Installation & Deployment
 
 <a name="31-installation-methods-comparison"></a>
-### 3.1 Installation Methods Comparison
+### Installation Methods Comparison
 
 | Method | Difficulty | Use Case |
 |------|------|----------|
@@ -220,7 +218,7 @@ openclaw dashboard
 | Source Build | ⭐⭐⭐⭐ | Developers |
 
 <a name="32-manual-installation-npm"></a>
-### 3.2 Manual Installation (npm)
+### Manual Installation (npm)
 
 ```bash
 # Check Node.js version
@@ -234,7 +232,7 @@ SHARP_IGNORE_GLOBAL_LIBVIPS=1 npm install -g openclaw@latest
 ```
 
 <a name="33-configure-path-if-needed"></a>
-### 3.3 Configure PATH (if needed)
+### Configure PATH (if needed)
 
 If you get `openclaw: command not found`:
 
@@ -250,7 +248,7 @@ source ~/.bashrc
 ```
 
 <a name="34-docker-deployment"></a>
-### 3.4 Docker Deployment
+###  Docker Deployment
 
 ```bash
 docker run -d \
@@ -261,7 +259,7 @@ docker run -d \
 ```
 
 <a name="35-version-updates"></a>
-### 3.5 Version Updates
+###  Version Updates
 
 ```bash
 # Update to stable version (recommended)
@@ -277,10 +275,10 @@ openclaw update --channel dev
 ---
 
 <a name="4-channel-integration"></a>
-## 4. Channel Integration
+## Channel Integration
 
 <a name="41-channel-difficulty-comparison"></a>
-### 4.1 Channel Difficulty Comparison
+###  Channel Difficulty Comparison
 
 | Tier | Platform | Time | Description |
 |------|------|------|------|
@@ -290,7 +288,7 @@ openclaw update --channel dev
 | Fourth Tier | iMessage, WeChat | 1+ hour | Additional requirements |
 
 <a name="42-telegram-integration-recommended-for-beginners"></a>
-### 4.2 Telegram Integration (Recommended for Beginners)
+###  Telegram Integration (Recommended for Beginners)
 
 **Step 1: Create Bot**
 1. Search for `@BotFather` in Telegram
@@ -324,7 +322,7 @@ openclaw gateway restart
 ```
 
 <a name="43-feishu-integration"></a>
-### 4.3 Feishu Integration
+###  Feishu Integration
 
 ```bash
 # Run configuration wizard
@@ -334,7 +332,7 @@ openclaw configure --section feishu
 You need to create an enterprise self-built app in the Feishu Open Platform and obtain App ID and App Secret.
 
 <a name="44-multi-channel-configuration"></a>
-### 4.4 Multi-Channel Configuration
+###  Multi-Channel Configuration
 
 You can configure multiple channels simultaneously:
 
@@ -351,10 +349,10 @@ You can configure multiple channels simultaneously:
 ---
 
 <a name="5-configuration-guide"></a>
-## 5. Configuration Guide
+##  Configuration Guide
 
 <a name="51-configuration-file-locations"></a>
-### 5.1 Configuration File Locations
+###  Configuration File Locations
 
 | File | Path | Description |
 |------|------|------|
@@ -363,7 +361,7 @@ You can configure multiple channels simultaneously:
 | Workspace | `~/.openclaw/workspace-*/` | Agent workspaces |
 
 <a name="52-model-configuration"></a>
-### 5.2 Model Configuration
+###  Model Configuration
 
 Edit `~/.openclaw/openclaw.json`:
 
@@ -398,7 +396,7 @@ Edit `~/.openclaw/openclaw.json`:
 ```
 
 <a name="53-recommended-models"></a>
-### 5.3 Recommended Models
+###  Recommended Models
 
 | Provider | Model | Use Case |
 |--------|------|----------|
@@ -429,7 +427,7 @@ Edit `~/.openclaw/openclaw.json`:
 ```
 
 <a name="55-authentication-modes"></a>
-### 5.5 Authentication Modes
+### Authentication Modes
 
 **Token Authentication (Recommended for API Integration):**
 ```json
@@ -457,10 +455,10 @@ Edit `~/.openclaw/openclaw.json`:
 ---
 
 <a name="6-multi-agent-configuration"></a>
-## 6. Multi-Agent Configuration
+## Multi-Agent Configuration
 
 <a name="61-what-is-multi-agent"></a>
-### 6.1 What is Multi-Agent?
+### What is Multi-Agent?
 
 OpenClaw supports running multiple independent Agent instances, where each Agent can:
 - Use different model configurations
@@ -469,7 +467,7 @@ OpenClaw supports running multiple independent Agent instances, where each Agent
 - Configure Skills and tools independently
 
 <a name="62-built-in-agent-types"></a>
-### 6.2 Built-in Agent Types
+###  Built-in Agent Types
 
 | Agent | Purpose | Recommended Model |
 |-------|------|----------|
@@ -479,7 +477,7 @@ OpenClaw supports running multiple independent Agent instances, where each Agent
 | **analysis** | Data analysis Agent | qwen3.5-plus |
 
 <a name="63-creating-custom-agents"></a>
-### 6.3 Creating Custom Agents
+### Creating Custom Agents
 
 ```bash
 # Create new Agent
@@ -496,7 +494,7 @@ openclaw agents start my-agent
 ```
 
 <a name="64-assign-agents-to-different-tasks"></a>
-### 6.4 Assign Agents to Different Tasks
+###  Assign Agents to Different Tasks
 
 | Task Type | Recommended Agent | Invocation |
 |----------|-----------|----------|
@@ -507,7 +505,7 @@ openclaw agents start my-agent
 | Domain-specific tasks | Custom Agent | `/agent <name>` |
 
 <a name="65-agent-routing-configuration"></a>
-### 6.5 Agent Routing Configuration
+###  Agent Routing Configuration
 
 **Method 1: Command Prefix**
 ```
@@ -548,7 +546,7 @@ openclaw agents start my-agent
 ```
 
 <a name="66-multi-agent-best-practices"></a>
-### 6.6 Multi-Agent Best Practices
+###  Multi-Agent Best Practices
 
 **✅ Recommended:**
 - Create dedicated Agents for high-frequency tasks
@@ -562,7 +560,7 @@ openclaw agents start my-agent
 - Ignoring memory isolation between Agents
 
 <a name="67-view-and-manage-agents"></a>
-### 6.7 View and Manage Agents
+###  View and Manage Agents
 
 ```bash
 # List all Agents
@@ -582,17 +580,17 @@ openclaw agents delete my-agent
 ```
 
 <a name="68-multi-agent-architecture-example"></a>
-### 6.8 Multi-Agent Architecture Example
+###  Multi-Agent Architecture Example
 
 ```
 ┌─────────────────────────────────────────────────────────┐
-│                    User Message                          │
+│                    User Message                         │
 └────────────────────┬────────────────────────────────────┘
                      │
                      ▼
 ┌─────────────────────────────────────────────────────────┐
-│              Routing Layer (distributes by rules)        │
-│   Keyword Matching / Command Prefix / Channel Binding    │
+│              Routing Layer (distributes by rules)       │
+│   Keyword Matching / Command Prefix / Channel Binding   │
 └──────────┬──────────────┬──────────────┬────────────────┘
            │              │              │
            ▼              ▼              ▼
@@ -608,14 +606,16 @@ openclaw agents delete my-agent
     │ Qwen3.5  │   │  Claude  │   │  Pandas  │
     └──────────┘   └──────────┘   └──────────┘
 ```
+Here're the Telegram Bot I've configured with diffent agent roles:
+
 ![pic](a1.png)
----
+
 
 <a name="7-skills-system"></a>
-## 7. Skills System
+## Skills System
 
 <a name="71-what-are-skills"></a>
-### 7.1 What are Skills?
+### What are Skills?
 
 Skills are OpenClaw's plugin system, enabling AI to:
 - Access external APIs (weather, news, stocks)
@@ -623,7 +623,7 @@ Skills are OpenClaw's plugin system, enabling AI to:
 - Execute specific tasks (GitHub, calendar, email)
 
 <a name="72-installing-skills"></a>
-### 7.2 Installing Skills
+### Installing Skills
 
 ```bash
 # Install from ClawHub
@@ -640,7 +640,7 @@ openclaw skill update
 ```
 
 <a name="73-popular-skills"></a>
-### 7.3 Popular Skills
+### Popular Skills
 
 | Skill | Function | Install Command |
 |-------|------|----------|
@@ -650,7 +650,7 @@ openclaw skill update
 | pinchtab-browser | Browser automation | `skill install pinchtab-browser` |
 
 <a name="74-creating-custom-skills"></a>
-### 7.4 Creating Custom Skills
+### Creating Custom Skills
 
 ```bash
 # Create Skill directory
@@ -671,10 +671,10 @@ EOF
 ---
 
 <a name="8-memory-system"></a>
-## 8. Memory System
+##  Memory System
 
 <a name="81-memory-types"></a>
-### 8.1 Memory Types
+###  Memory Types
 
 | Type | File | Description |
 |------|------|------|
@@ -685,7 +685,7 @@ EOF
 | Soul | `SOUL.md` | Behavioral guidelines |
 
 <a name="82-memory-file-locations"></a>
-### 8.2 Memory File Locations
+###  Memory File Locations
 
 ```
 ~/.openclaw/workspace-main/
@@ -702,7 +702,7 @@ EOF
 ```
 
 <a name="83-search-memory"></a>
-### 8.3 Search Memory
+###  Search Memory
 
 ```bash
 # Semantic search
@@ -713,7 +713,7 @@ openclaw memory search --date 2026-03-15 "meeting"
 ```
 
 <a name="84-memory-maintenance"></a>
-### 8.4 Memory Maintenance
+###  Memory Maintenance
 
 Recommended to review MEMORY.md regularly (weekly):
 - Remove outdated information
@@ -723,10 +723,10 @@ Recommended to review MEMORY.md regularly (weekly):
 ---
 
 <a name="9-scheduled-tasks"></a>
-## 9. Scheduled Tasks
+## Scheduled Tasks
 
 <a name="91-cron-basics"></a>
-### 9.1 Cron Basics
+### Cron Basics
 
 ```bash
 # Add scheduled task
@@ -743,7 +743,7 @@ openclaw cron remove <job-id>
 ```
 
 <a name="92-cron-expressions"></a>
-### 9.2 Cron Expressions
+###  Cron Expressions
 
 | Expression | Description |
 |--------|------|
@@ -753,7 +753,7 @@ openclaw cron remove <job-id>
 | `0 0 1 * *` | 1st of each month at 0:00 |
 
 <a name="93-heartbeat-tasks"></a>
-### 9.3 Heartbeat Tasks
+###  Heartbeat Tasks
 
 Edit `HEARTBEAT.md`:
 
@@ -767,7 +767,7 @@ Edit `HEARTBEAT.md`:
 ```
 
 <a name="94-practical-cron-examples"></a>
-### 9.4 Practical Cron Examples
+### Practical Cron Examples
 
 **Daily News Briefing:**
 ```bash
@@ -788,10 +788,10 @@ openclaw cron add \
 ---
 
 <a name="10-common-commands"></a>
-## 10. Common Commands
+## Common Commands
 
 <a name="101-gateway-management"></a>
-### 10.1 Gateway Management
+### Gateway Management
 
 ```bash
 openclaw gateway start      # Start
@@ -803,7 +803,7 @@ openclaw gateway uninstall  # Uninstall service
 ```
 
 <a name="102-configuration-management"></a>
-### 10.2 Configuration Management
+### Configuration Management
 
 ```bash
 openclaw onboard            # Initial setup wizard
@@ -815,7 +815,7 @@ openclaw tui                # Terminal interface
 ```
 
 <a name="103-model-management"></a>
-### 10.3 Model Management
+### Model Management
 
 ```bash
 openclaw models status      # Model status
@@ -824,7 +824,7 @@ openclaw models add         # Add model
 ```
 
 <a name="104-channel-management"></a>
-### 10.4 Channel Management
+### Channel Management
 
 ```bash
 openclaw channels list      # List channels
@@ -833,7 +833,7 @@ openclaw channels remove    # Remove channel
 ```
 
 <a name="105-agent-management"></a>
-### 10.5 Agent Management
+### Agent Management
 
 ```bash
 openclaw agents list            # List Agents
@@ -845,7 +845,7 @@ openclaw agents delete <name>   # Delete Agent
 ```
 
 <a name="106-memory-operations"></a>
-### 10.6 Memory Operations
+### Memory Operations
 
 ```bash
 openclaw memory search <query>   # Search memory
@@ -854,7 +854,7 @@ openclaw memory edit             # Edit memory
 ```
 
 <a name="107-session-management"></a>
-### 10.7 Session Management
+### Session Management
 
 ```bash
 openclaw sessions list           # List sessions
@@ -865,10 +865,10 @@ openclaw sessions send           # Send message to session
 ---
 
 <a name="11-troubleshooting"></a>
-## 11. Troubleshooting
+## Troubleshooting
 
 <a name="111-common-issues"></a>
-### 11.1 Common Issues
+### Common Issues
 
 **Issue 1: `openclaw: command not found`**
 
@@ -925,7 +925,7 @@ ping api.example.com
 ```
 
 <a name="112-viewing-logs"></a>
-### 11.2 Viewing Logs
+###  Viewing Logs
 
 ```bash
 # Gateway logs
@@ -940,7 +940,7 @@ journalctl --user -u openclaw-gateway.service \
 ```
 
 <a name="113-diagnostic-commands"></a>
-### 11.3 Diagnostic Commands
+###  Diagnostic Commands
 
 ```bash
 # Full diagnostics
