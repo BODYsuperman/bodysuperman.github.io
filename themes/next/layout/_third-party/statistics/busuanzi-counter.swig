@@ -2,7 +2,6 @@
 
 {%- if theme.busuanzi_count.enable %}
 
- <script defer src="https://vercount.one/js"></script>
 <div class="busuanzi-count">
   <script{{ pjax }} async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
 
