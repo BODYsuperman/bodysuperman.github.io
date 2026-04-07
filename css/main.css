@@ -1194,7 +1194,7 @@ pre .javascript .function {
 }
 .links-of-author a::before,
 .links-of-author span.exturl::before {
-  background: #4d222d;
+  background: #ffff79;
   border-radius: 50%;
   content: ' ';
   display: inline-block;
@@ -1577,7 +1577,7 @@ pre .javascript .function {
   transform: rotate(30deg);
 }
 .post-button {
-  margin-top: 40px;
+  margin: 40px 0 0 0;
   text-align: center;
 }
 .use-motion .post-block,
@@ -1720,8 +1720,11 @@ pre .javascript .function {
   background: #ccc;
   height: 1px;
   margin: 80px auto 60px;
+  display: block;
+  max-width: 500px;
+  width: 100%;
   text-align: center;
-  width: 8%;
+  background: #f00;
 }
 .post-block:last-of-type .post-eof {
   display: none;
@@ -2649,4 +2652,18 @@ copy.bg_content {
 }
 .busuanzi-count #busuanzi_container_site_pv {
   display: inline;
+}
+.post-button {
+  margin-top: 30px;
+  text-align: center;
+  max-width: 620px;
+  margin: 0 auto;
+}
+.post-eof {
+  background: #e0e0e0;
+  height: 1px;
+  margin: 50px auto 60px;
+  text-align: center;
+  max-width: 620px;
+  width: 100%;
 }
