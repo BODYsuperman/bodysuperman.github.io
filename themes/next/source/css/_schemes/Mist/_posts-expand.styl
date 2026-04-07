@@ -15,13 +15,13 @@
     }
 
     .post-block:first-child {
-      margin-top: -20px; 
-      padding-top: 0;    
+      margin-top: -20px;
+      padding-top: 0;
     }
-  }
 
-  .post-eof {
-    display: none;
+    .post-eof {
+      display: block;
+    }
   }
 
   .post-block:not(:first-child) {
@@ -55,17 +55,24 @@
   }
 }
 
+.posts-expand .post-button {
+  margin-top: 20px;
+}
+
 .post-button {
   margin-top: 20px;
-  text-align: left;
+  text-align: center;
 
   .btn {
+    display: block;
+    margin: 0 auto;
     // color: $grey-dim;
     background: none;
     border: 0;
     border-bottom: 2px solid var(--btn-default-border-color);
     padding: 0;
     transition-property: border;
+    display: inline-block;
 
     &:hover {
       border-bottom-color: var(--btn-default-hover-border-color);

@@ -179,26 +179,8 @@
       {%- if is_index %}
         {%- if post.description and theme.excerpt_description %}
           <p>{{ post.description }}</p>
-          <!--noindex-->
-          {%- if theme.read_more_btn %}
-            <div class="post-button">
-              <a class="btn" href="{{ url_for(post.path) }}">
-                {{ __('post.read_more') }} &raquo;
-              </a>
-            </div>
-          {%- endif %}
-          <!--/noindex-->
         {% elif post.excerpt %}
           {{ post.excerpt }}
-          <!--noindex-->
-          {%- if theme.read_more_btn %}
-            <div class="post-button">
-              <a class="btn" href="{{ url_for(post.path) }}#more" rel="contents">
-                {{ __('post.read_more') }} &raquo;
-              </a>
-            </div>
-          {%- endif %}
-          <!--/noindex-->
         {% else %}
           {{ post.content }}
         {%- endif %}
@@ -210,6 +192,16 @@
     {#####################}
     {### END POST BODY ###}
     {#####################}
+
+    {%- if is_index and theme.read_more_btn %}
+      <!--noindex-->
+      <div class="post-button">
+        <a class="btn" href="{{ url_for(post.path) }}#more" rel="contents">
+          {{ __('post.read_more') }} &raquo;
+        </a>
+      </div>
+      <!--/noindex-->
+    {%- endif %}
 
     {%- if theme.related_posts.enable and (theme.related_posts.display_in_home or not is_index) %}
       {{ partial('_partials/post/post-related.swig') }}
