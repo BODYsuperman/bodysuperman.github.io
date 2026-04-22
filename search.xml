@@ -1,614 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>Backtracking Algorithm</title>
-    <url>/2026/04/12/Backtracking-Algorithm/</url>
-    <content><![CDATA[<ul>
-<li><a href="#1-understanding-backtracking">1. Understanding Backtracking</a><ul>
-<li><a href="#11-what-is-backtracking">1.1 What is Backtracking?</a></li>
-<li><a href="#12-real-world-analogy">1.2 Real-World Analogy</a></li>
-<li><a href="#13-when-to-use-backtracking">1.3 When to Use Backtracking</a></li>
-</ul>
-</li>
-<li><a href="#2-the-core-pattern">2. The Core Pattern</a><ul>
-<li><a href="#21-the-three-step-cycle">2.1 The Three-Step Cycle</a></li>
-<li><a href="#22-why-undo-is-critical">2.2 Why “Undo” is Critical</a></li>
-<li><a href="#23-the-standard-template">2.3 The Standard Template</a></li>
-</ul>
-</li>
-<li><a href="#3-decision-tree-mental-model">3. Decision Tree Mental Model</a><ul>
-<li><a href="#31-tree-levels-vs-branches">3.1 Tree Levels vs Branches</a></li>
-<li><a href="#32-understanding-startindex">3.2 Understanding startIndex</a></li>
-<li><a href="#33-what-i-1-really-means">3.3 What i + 1 Really Means</a></li>
-</ul>
-</li>
-<li><a href="#4-pruning-necessity-not-optimization">4. Pruning: Necessity, Not Optimization</a><ul>
-<li><a href="#41-early-termination-logic">4.1 Early Termination Logic</a></li>
-<li><a href="#42-pruning-in-practice">4.2 Pruning in practice</a></li>
-</ul>
-</li>
-<li><a href="#5-deduplication-strategy">5. Deduplication Strategy</a><ul>
-<li><a href="#51-why-deduplication-matters">5.1 Why Deduplication Matters</a></li>
-<li><a href="#52-the-i--startindex-pattern">5.2 The i &gt; startIndex Pattern</a><span id="more"></span></li>
-</ul>
-</li>
-<li><a href="#6-from-easy-to-hard-problem-progression">6. From Easy to Hard: Problem Progression</a><ul>
-<li><a href="#61-combinations">6.1 Combinations</a></li>
-<li><a href="#62-subsets">6.2 Subsets</a></li>
-<li><a href="#63-permutations">6.3 Permutations</a></li>
-<li><a href="#64-n-queens">6.4 N-Queens</a></li>
-</ul>
-</li>
-<li><a href="#7-the-inefficiency-illusion">7. The “Inefficiency” Illusion</a><ul>
-<li><a href="#71-why-it-feels-like-doing-nothing">7.1 Why It Feels Like Doing Nothing</a></li>
-<li><a href="#72-embracing-the-process">7.2 Embracing the Process</a></li>
-</ul>
-</li>
-<li><a href="#8-real-world-applications">8. Real-World Applications</a><ul>
-<li><a href="#81-task-scheduling">8.1 Task Scheduling</a></li>
-<li><a href="#82-configuration-generation">8.2 Configuration Generation</a></li>
-<li><a href="#83-constraint-solving">8.3 Constraint Solving</a></li>
-</ul>
-</li>
-<li><a href="#9-a-reusable-mental-model">9. A Reusable Mental Model</a><ul>
-<li><a href="#91-the-6-critical-questions">9.1 The 6 Critical Questions</a></li>
-<li><a href="#92-decision-tree-checklist">9.2 Decision Tree Checklist</a></li>
-</ul>
-</li>
-<li><a href="#10-common-leetcode-problems">10. Common LeetCode Problems</a></li>
-<li><a href="#11-final-takeaways">11. Final Takeaways</a></li>
-</ul>
-<hr>
-<p><a name="1-understanding-backtracking"></a></p>
-<h2 id="Understanding-Backtracking"><a href="#Understanding-Backtracking" class="headerlink" title="Understanding Backtracking"></a>Understanding Backtracking</h2><p><a name="11-what-is-backtracking"></a></p>
-<h3 id="What-is-Backtracking"><a href="#What-is-Backtracking" class="headerlink" title="What is Backtracking?"></a>What is Backtracking?</h3><p>Backtracking is a class of algorithms for finding solutions to computational problems, particularly constraint satisfaction and enumeration problems. It works by:</p>
-<ol>
-<li><strong>Incrementally building candidates</strong> to the solution</li>
-<li><strong>Abandoning candidates</strong> (“backtracking”) as soon as it determines they cannot possibly be completed to a valid solution</li>
-</ol>
-<blockquote>
-<p>“Backtracking is like exploring a maze - you try a path, and if it leads nowhere, you return to the last decision point and try another.”</p>
-</blockquote>
-<p><img src="/2026/04/12/Backtracking-Algorithm/pic01.png" alt="pic"></p>
-<p><a name="12-real-world-analogy"></a></p>
-<h3 id="Real-World-Analogy"><a href="#Real-World-Analogy" class="headerlink" title="Real-World Analogy"></a>Real-World Analogy</h3><table>
-<thead>
-<tr>
-<th>Scenario</th>
-<th>Backtracking Equivalent</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>Solving a maze</td>
-<td>Try path → Hit dead end → Return to fork → Try next path</td>
-</tr>
-<tr>
-<td>Sudoku solver</td>
-<td>Place number → Check conflicts → Backtrack → Try next number</td>
-</tr>
-<tr>
-<td>Auto-correct</td>
-<td>Generate word → Check dictionary → Backtrack → Try different letters</td>
-</tr>
-</tbody></table>
-<p><a name="13-when-to-use-backtracking"></a></p>
-<h3 id="When-to-Use-Backtracking"><a href="#When-to-Use-Backtracking" class="headerlink" title="When to Use Backtracking"></a>When to Use Backtracking</h3><p><strong>Suitable problems:</strong></p>
-<ul>
-<li>Generate all valid combinations&#x2F;subsets&#x2F;permutations</li>
-<li>Constraint satisfaction problems (N-Queens, Sudoku)</li>
-<li>Decision trees with clear “valid&#x2F;invalid” tests</li>
-<li>Problems requiring enumeration of all solutions</li>
-</ul>
-<p><strong>Not suitable:</strong></p>
-<ul>
-<li>Finding a single optimal path (use Dijkstra&#x2F;BFS)</li>
-<li>Unordered linear searches</li>
-<li>Problems without “partial candidate” concept</li>
-</ul>
-<hr>
-<p><a name="2-the-core-pattern"></a></p>
-<h2 id="The-Core-Pattern"><a href="#The-Core-Pattern" class="headerlink" title="The Core Pattern"></a>The Core Pattern</h2><p><a name="21-the-three-step-cycle"></a></p>
-<h3 id="The-Three-Step-Cycle"><a href="#The-Three-Step-Cycle" class="headerlink" title="The Three-Step Cycle"></a>The Three-Step Cycle</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Choose → Explore → Undo</span><br></pre></td></tr></table></figure>
-
-<table>
-<thead>
-<tr>
-<th>Step</th>
-<th>Code Pattern</th>
-<th>Purpose</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>Choose</td>
-<td><code>path.add(candidate)</code></td>
-<td>Make a decision</td>
-</tr>
-<tr>
-<td>Explore</td>
-<td><code>dfs(next_level)</code></td>
-<td>Go deeper</td>
-</tr>
-<tr>
-<td>Undo</td>
-<td><code>path.remove(path.size() - 1)</code></td>
-<td>Restore state</td>
-</tr>
-</tbody></table>
-<p><a name="22-why-undo-is-critical"></a></p>
-<h3 id="Why-“Undo”-is-Critical"><a href="#Why-“Undo”-is-Critical" class="headerlink" title="Why “Undo” is Critical"></a>Why “Undo” is Critical</h3><p>Without the undo step:</p>
-<table>
-<thead>
-<tr>
-<th>With Undo</th>
-<th>Without Undo</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>✅ State restores after each branch</td>
-<td>❌ Later branches inherit wrong state</td>
-</tr>
-<tr>
-<td>✅ Each branch explores independently</td>
-<td>❌ “Contamination” between branches</td>
-</tr>
-<tr>
-<td>✅ Correct solution space traversal</td>
-<td>❌ Misses valid solutions</td>
-</tr>
-</tbody></table>
-<p><a name="23-the-standard-template"></a></p>
-<h3 id="The-Standard-Template"><a href="#The-Standard-Template" class="headerlink" title="The Standard Template"></a>The Standard Template</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">void</span> <span class="title function_">backtrack</span><span class="params">(<span class="type">int</span> startIndex, List&lt;Integer&gt; path, List&lt;List&lt;Integer&gt;&gt; res)</span> &#123;</span><br><span class="line">    <span class="comment">// 1. Base case: when to stop?</span></span><br><span class="line">    <span class="keyword">if</span> (终止条件) &#123;</span><br><span class="line">        res.add(<span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;(path));</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 2. Loop through choices</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> startIndex; i &lt; n; i++) &#123;</span><br><span class="line">        <span class="comment">// 3. Choose</span></span><br><span class="line">        path.add(nums[i]);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 4. Explore</span></span><br><span class="line">        backtrack(i + <span class="number">1</span>, path, res);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 5. Undo (backtrack)</span></span><br><span class="line">        path.remove(path.size() - <span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<hr>
-<p><a name="3-decision-tree-mental-model"></a></p>
-<h2 id="Decision-Tree-Mental-Model"><a href="#Decision-Tree-Mental-Model" class="headerlink" title="Decision Tree Mental Model"></a>Decision Tree Mental Model</h2><p><a name="31-tree-levels-vs-branches"></a></p>
-<h3 id="Tree-Levels-vs-Branches"><a href="#Tree-Levels-vs-Branches" class="headerlink" title="Tree Levels vs Branches"></a>Tree Levels vs Branches</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">                Level 0 (root)</span><br><span class="line">               /        |        \</span><br><span class="line">              /         |         \</span><br><span class="line">             /          |          \</span><br><span class="line">       Level 1:1    Level 1:2    Level 1:3  ← Different branches at same level</span><br><span class="line">         /  \         /   \</span><br><span class="line">        /    \       /     \</span><br><span class="line">Level 2:2  Level 2:3  Level 2:3  ← Deeper level</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><strong>Level</strong>: Depth in the tree (how many choices made)</li>
-<li><strong>Branch</strong>: Different options at the same level (alternatives)</li>
-</ul>
-<p><a name="32-understanding-startindex"></a></p>
-<h3 id="Understanding-startIndex"><a href="#Understanding-startIndex" class="headerlink" title="Understanding startIndex"></a>Understanding startIndex</h3><p><code>startIndex</code> controls <strong>where the current level begins searching</strong>.</p>
-<table>
-<thead>
-<tr>
-<th>Scenario</th>
-<th>startIndex Behavior</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>Combinations</td>
-<td><code>i + 1</code> - start from next element</td>
-</tr>
-<tr>
-<td>Permutations</td>
-<td>Always <code>0</code> - can use any unused element</td>
-</tr>
-<tr>
-<td>Subsets</td>
-<td><code>i + 1</code> - expand search range</td>
-</tr>
-</tbody></table>
-<p><a name="33-what-i-1-really-means"></a></p>
-<h3 id="What-i-1-Really-Means"><a href="#What-i-1-Really-Means" class="headerlink" title="What i + 1 Really Means"></a>What <code>i + 1</code> Really Means</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">If we pick element at index i:</span><br><span class="line">  - Current level: uses nums[i]</span><br><span class="line">  - Next level: starts from index i + 1</span><br><span class="line">  - Result: avoids reusing nums[i] or earlier elements</span><br></pre></td></tr></table></figure>
-
-<p><strong>Why this prevents duplicates:</strong></p>
-<ul>
-<li>Branch 1 (start&#x3D;0): picks nums[0]&#x3D;1 → then search range [1,2,3…]</li>
-<li>Branch 2 (start&#x3D;1): picks nums[1]&#x3D;2 → then search range [2,3…]</li>
-<li>Branch 3 (start&#x3D;2): picks nums[2]&#x3D;3 → then search range [3…]</li>
-<li>Result: [1,2] and [2,1] never both appear</li>
-</ul>
-<hr>
-<p><a name="4-pruning-necessity-not-optimization"></a></p>
-<h2 id="Pruning-Necessity-Not-Optimization"><a href="#Pruning-Necessity-Not-Optimization" class="headerlink" title="Pruning: Necessity, Not Optimization"></a>Pruning: Necessity, Not Optimization</h2><p><a name="41-early-termination-logic"></a></p>
-<h3 id="Early-Termination-Logic"><a href="#Early-Termination-Logic" class="headerlink" title="Early Termination Logic"></a>Early Termination Logic</h3><p>Pruning eliminates paths that <strong>cannot possibly succeed</strong>:</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Example: Choose k elements from n</span><br><span class="line">Remaining elements needed: k - path.size()</span><br><span class="line">Remaining elements available: n - i + 1</span><br><span class="line"></span><br><span class="line">If (n - i + 1 &lt; k - path.size()) → impossible to succeed → skip</span><br></pre></td></tr></table></figure>
-
-<p>The constraint: <code>i &lt;= n - (k - path.size()) + 1</code></p>
-<table>
-<thead>
-<tr>
-<th>Variable</th>
-<th>Meaning</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><code>n</code></td>
-<td>Total elements available</td>
-</tr>
-<tr>
-<td><code>k</code></td>
-<td>Target number of elements</td>
-</tr>
-<tr>
-<td><code>path.size()</code></td>
-<td>Elements already chosen</td>
-</tr>
-<tr>
-<td><code>n - i + 1</code></td>
-<td>Elements remaining (including current)</td>
-</tr>
-</tbody></table>
-<p><a name="42-pruning-in-practice"></a></p>
-<h3 id="Pruning-in-practice"><a href="#Pruning-in-practice" class="headerlink" title="Pruning in practice"></a>Pruning in practice</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// Without pruning - explores unnecessary branches</span></span><br><span class="line"><span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> startIndex; i &lt;= n; i++) &#123;</span><br><span class="line">    path.add(nums[i]);</span><br><span class="line">    backtrack(i + <span class="number">1</span>, path, res);</span><br><span class="line">    path.remove(path.size() - <span class="number">1</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// With pruning - skips impossible branches</span></span><br><span class="line"><span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> startIndex; i &lt;= n - (k - path.size()) + <span class="number">1</span>; i++) &#123;</span><br><span class="line">    path.add(nums[i]);</span><br><span class="line">    backtrack(i + <span class="number">1</span>, path, res);</span><br><span class="line">    path.remove(path.size() - <span class="number">1</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<hr>
-<p><a name="5-deduplication-strategy"></a></p>
-<h2 id="Deduplication-Strategy"><a href="#Deduplication-Strategy" class="headerlink" title="Deduplication Strategy"></a>Deduplication Strategy</h2><p><a name="51-why-deduplication-matters"></a></p>
-<h3 id="Why-Deduplication-Matters"><a href="#Why-Deduplication-Matters" class="headerlink" title="Why Deduplication Matters"></a>Why Deduplication Matters</h3><p>Without deduplication, problems with duplicate values produce duplicate results:</p>
-<table>
-<thead>
-<tr>
-<th>Input</th>
-<th>Without Dedup</th>
-<th>With Dedup</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>[1,1,2]</td>
-<td>[[1,1,2],[1,2,1],[1,1,2],[1,2,1],…]</td>
-<td>[[1,1,2],[1,2,1]]</td>
-</tr>
-</tbody></table>
-<p><a name="52-the-i--startindex-pattern"></a></p>
-<h3 id="The-i-startIndex-Pattern"><a href="#The-i-startIndex-Pattern" class="headerlink" title="The i &gt; startIndex Pattern"></a>The <code>i &gt; startIndex</code> Pattern</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span> (i &gt; startIndex &amp;&amp; nums[i] == nums[i - <span class="number">1</span>]) <span class="keyword">continue</span>;</span><br></pre></td></tr></table></figure>
-
-<p><strong>Correct interpretation:</strong></p>
-<ul>
-<li><code>i &gt; startIndex</code>: We’re at the same tree level (same decision depth)</li>
-<li><code>nums[i] == nums[i-1]</code>: Same value as previous branch</li>
-<li><strong>Meaning</strong>: Avoid picking the same value twice within the same level</li>
-</ul>
-<p><strong>What it does NOT mean:</strong></p>
-<ul>
-<li>❌ “No duplicates allowed in the input”</li>
-<li>❌ “No duplicates allowed in the result”</li>
-</ul>
-<hr>
-<p><a name="6-from-easy-to-hard-problem-progression"></a></p>
-<h2 id="From-Easy-to-Hard-Problem-Progression"><a href="#From-Easy-to-Hard-Problem-Progression" class="headerlink" title="From Easy to Hard: Problem Progression"></a>From Easy to Hard: Problem Progression</h2><p><a name="61-combinations"></a></p>
-<h3 id="Combinations"><a href="#Combinations" class="headerlink" title="Combinations"></a>Combinations</h3><p><strong>Problem</strong>: Choose k elements from n, order doesn’t matter</p>
-<p><strong>Key constraint</strong>: <code> startIndex</code> + <code>i + 1</code></p>
-<p><strong>Template</strong>:</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">void</span> <span class="title function_">combine</span><span class="params">(<span class="type">int</span> n, <span class="type">int</span> k)</span> &#123;</span><br><span class="line">    backtrack(<span class="number">1</span>, n, k, <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;(), result);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> startIndex; i &lt;= n - (k - path.size()) + <span class="number">1</span>; i++) &#123;</span><br><span class="line">    path.add(i);</span><br><span class="line">    backtrack(i + <span class="number">1</span>, n, k, path, res);</span><br><span class="line">    path.remove(path.size() - <span class="number">1</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><a name="62-subsets"></a></p>
-<h3 id="Subsets"><a href="#Subsets" class="headerlink" title="Subsets"></a>Subsets</h3><p><strong>Problem</strong>: Generate all possible subsets (the power set)</p>
-<p><strong>Key difference</strong>: Collect result at <strong>every</strong> step, not just leaf nodes</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">void</span> <span class="title function_">subsets</span><span class="params">(<span class="type">int</span>[] nums)</span> &#123;</span><br><span class="line">    backtrack(<span class="number">0</span>, nums, <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;(), res);</span><br><span class="line">    res.add(<span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;()); <span class="comment">// empty set</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Collect at beginning of each call</span></span><br><span class="line">res.add(<span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;(path));</span><br><span class="line"><span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> startIndex; i &lt; nums.length; i++) &#123;</span><br><span class="line">    <span class="comment">// ... choose, explore, undo</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><a name="63-permutations"></a></p>
-<h3 id="Permutations"><a href="#Permutations" class="headerlink" title="Permutations"></a>Permutations</h3><p><strong>Problem</strong>: Arrange all elements in all possible orders</p>
-<p><strong>Key difference</strong>: <code>startIndex</code> is always <code>0</code>, but track used elements</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">void</span> <span class="title function_">permute</span><span class="params">(<span class="type">int</span>[] nums)</span> &#123;</span><br><span class="line">    <span class="type">boolean</span>[] used = <span class="keyword">new</span> <span class="title class_">boolean</span>[nums.length];</span><br><span class="line">    backtrack(nums, used, <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;(), res);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; nums.length; i++) &#123;</span><br><span class="line">    <span class="keyword">if</span> (used[i]) <span class="keyword">continue</span>;  <span class="comment">// Skip already used</span></span><br><span class="line">    used[i] = <span class="literal">true</span>;</span><br><span class="line">    path.add(nums[i]);</span><br><span class="line">    backtrack(nums, used, path, res);  <span class="comment">// startIndex remains 0</span></span><br><span class="line">    path.remove(path.size() - <span class="number">1</span>);</span><br><span class="line">    used[i] = <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><a name="64-n-queens"></a></p>
-<h3 id="N-Queens"><a href="#N-Queens" class="headerlink" title="N-Queens"></a>N-Queens</h3><p><strong>Problem</strong>: Place N queens on N×N board so no two attack each other</p>
-<p><strong>Constraints</strong>:</p>
-<ul>
-<li>One queen per row</li>
-<li>One queen per column</li>
-<li>No two on same diagonal</li>
-</ul>
-<p><strong>State tracking</strong>:</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// Columns occupied</span></span><br><span class="line"><span class="type">boolean</span>[] cols = <span class="keyword">new</span> <span class="title class_">boolean</span>[n];</span><br><span class="line"></span><br><span class="line"><span class="comment">// Diagonal \ (row - col is constant)</span></span><br><span class="line"><span class="type">boolean</span>[] diag1 = <span class="keyword">new</span> <span class="title class_">boolean</span>[<span class="number">2</span> * n - <span class="number">1</span>];</span><br><span class="line"></span><br><span class="line"><span class="comment">// Diagonal / (row + col is constant)</span></span><br><span class="line"><span class="type">boolean</span>[] diag2 = <span class="keyword">new</span> <span class="title class_">boolean</span>[<span class="number">2</span> * n - <span class="number">1</span>];</span><br><span class="line"></span><br><span class="line"><span class="comment">// Check before placing queen at (row, col)</span></span><br><span class="line"><span class="keyword">if</span> (!cols[col] &amp;&amp; !diag1[row - col + n - <span class="number">1</span>] &amp;&amp; !diag2[row + col]) &#123;</span><br><span class="line">    <span class="comment">// Place queen and recurse</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<hr>
-<p><a name="7-the-inefficiency-illusion"></a></p>
-<h2 id="The-“Inefficiency”-Illusion"><a href="#The-“Inefficiency”-Illusion" class="headerlink" title="The “Inefficiency” Illusion"></a>The “Inefficiency” Illusion</h2><p><a name="71-why-it-feels-like-doing-nothing"></a></p>
-<h3 id="Why-It-Feels-Like-Doing-Nothing"><a href="#Why-It-Feels-Like-Doing-Nothing" class="headerlink" title="Why It Feels Like Doing Nothing"></a>Why It Feels Like Doing Nothing</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Most paths are invalid</span><br><span class="line">↓</span><br><span class="line">Constant loop of: Try → Fail → Backtrack → Try again</span><br><span class="line">↓</span><br><span class="line">No immediate visible progress</span><br><span class="line">↓</span><br><span class="line">Feeling of &quot;wasting time&quot;</span><br></pre></td></tr></table></figure>
-
-<p><strong>Reality</strong>: Backtracking is <strong>eliminating wrong answers</strong>, not directly building the right one.</p>
-<p><a name="72-embracing-the-process"></a></p>
-<h3 id="Embracing-the-Process"><a href="#Embracing-the-Process" class="headerlink" title="Embracing the Process"></a>Embracing the Process</h3><table>
-<thead>
-<tr>
-<th>Mindset</th>
-<th>Impact</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>“This is useless”</td>
-<td>Likely to give up</td>
-</tr>
-<tr>
-<td>“I’m narrowing the search space”</td>
-<td>Persistent, systematic</td>
-</tr>
-<tr>
-<td>“Each failure teaches me what doesn’t work”</td>
-<td>Learning approach</td>
-</tr>
-</tbody></table>
-<hr>
-<p><a name="8-real-world-applications"></a></p>
-<h2 id="Real-World-Applications"><a href="#Real-World-Applications" class="headerlink" title="Real-World Applications"></a>Real-World Applications</h2><p><a name="81-task-scheduling"></a></p>
-<h3 id="Task-Scheduling"><a href="#Task-Scheduling" class="headerlink" title="Task Scheduling"></a>Task Scheduling</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Constraints:</span><br><span class="line">- Task A must finish before B</span><br><span class="line">- Task C requires 2GB RAM</span><br><span class="line">- Only 3 tasks can run in parallel</span><br><span class="line"></span><br><span class="line">Backtracking finds all valid schedules</span><br></pre></td></tr></table></figure>
-
-<p><a name="82-configuration-generation"></a></p>
-<h3 id="Configuration-Generation"><a href="#Configuration-Generation" class="headerlink" title="Configuration Generation"></a>Configuration Generation</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Generate all valid configurations:</span><br><span class="line">- Option 1: [A, B, C]</span><br><span class="line">- Option 2: [A, B, D]</span><br><span class="line">- Option 3: [A, C, D]  ← skips invalid [A, B, E] due to constraints</span><br></pre></td></tr></table></figure>
-
-<p><a name="83-constraint-solving"></a></p>
-<h3 id="Constraint-Solving"><a href="#Constraint-Solving" class="headerlink" title="Constraint Solving"></a>Constraint Solving</h3><table>
-<thead>
-<tr>
-<th>Domain</th>
-<th>Backtracking Application</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>AI Planning</td>
-<td>Sequence of actions to achieve goal</td>
-</tr>
-<tr>
-<td>Circuit design</td>
-<td>Component placement with constraints</td>
-</tr>
-<tr>
-<td>Resource allocation</td>
-<td>Assign resources subject to limits</td>
-</tr>
-<tr>
-<td>Game AI</td>
-<td>Search all possible moves and counter-moves</td>
-</tr>
-</tbody></table>
-<hr>
-<p><a name="9-a-reusable-mental-model"></a></p>
-<h2 id="A-Reusable-Mental-Model"><a href="#A-Reusable-Mental-Model" class="headerlink" title="A Reusable Mental Model"></a>A Reusable Mental Model</h2><p><a name="91-the-6-critical-questions"></a></p>
-<h3 id="The-6-Critical-Questions"><a href="#The-6-Critical-Questions" class="headerlink" title="The 6 Critical Questions"></a>The 6 Critical Questions</h3><p>Before writing backtracking code, ask:</p>
-<ol>
-<li><strong>What is the result?</strong> (<code>res</code> - List&lt;List&lt;&gt;&gt; or similar)</li>
-<li><strong>What is the current path?</strong> (<code>path</code> - what we’re building)</li>
-<li><strong>What are the choices at each step?</strong> (the <code>for</code> loop candidates)</li>
-<li><strong>When should we stop?</strong> (base case &#x2F; termination condition)</li>
-<li><strong>Do we need deduplication?</strong> (duplicate values in input)</li>
-<li><strong>Can we prune?</strong> (early termination conditions)</li>
-</ol>
-<p><a name="92-decision-tree-checklist"></a></p>
-<h3 id="Decision-Tree-Checklist"><a href="#Decision-Tree-Checklist" class="headerlink" title="Decision Tree Checklist"></a>Decision Tree Checklist</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[ ] Define the tree structure</span><br><span class="line">    - What represents a level?</span><br><span class="line">    - What represents branches at each level?</span><br><span class="line"></span><br><span class="line">[ ] Identify the state to track</span><br><span class="line">    - Current path</span><br><span class="line">    - Used elements / visited nodes</span><br><span class="line">    - Constraints satisfaction</span><br><span class="line"></span><br><span class="line">[ ] Write the base case first</span><br><span class="line">    - When is a complete solution found?</span><br><span class="line">    - When should we abandon early?</span><br><span class="line"></span><br><span class="line">[ ] Implement the loop</span><br><span class="line">    - What is the search range?</span><br><span class="line">    - How do we avoid duplicates?</span><br><span class="line"></span><br><span class="line">[ ] Verify undo works correctly</span><br><span class="line">    - Does state restore after each iteration?</span><br></pre></td></tr></table></figure>
-
-<hr>
-<p><a name="10-common-leetcode-problems"></a></p>
-<h2 id="Common-LeetCode-Problems"><a href="#Common-LeetCode-Problems" class="headerlink" title="Common LeetCode Problems"></a>Common LeetCode Problems</h2><table>
-<thead>
-<tr>
-<th>Problem</th>
-<th>Difficulty</th>
-<th>Key Concept</th>
-<th>Result Count</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>[78] Subsets</td>
-<td>Medium</td>
-<td>Collect at every step</td>
-<td>2^n</td>
-</tr>
-<tr>
-<td>[77] Combinations</td>
-<td>Medium</td>
-<td>startIndex + pruning</td>
-<td>C(n,k)</td>
-</tr>
-<tr>
-<td>[46] Permutations</td>
-<td>Medium</td>
-<td>Track used elements</td>
-<td>n!</td>
-</tr>
-<tr>
-<td>[784] Letter Case Permutation</td>
-<td>Medium</td>
-<td>Branch on conditions</td>
-<td>2^L (L&#x3D;letters)</td>
-</tr>
-<tr>
-<td>[22] Generate Parentheses</td>
-<td>Medium</td>
-<td>Validity checking</td>
-<td>Catalan(n)</td>
-</tr>
-<tr>
-<td>[39] Combination Sum</td>
-<td>Medium</td>
-<td>Reuse allowed</td>
-<td>Variable</td>
-</tr>
-<tr>
-<td>[40] Combination Sum II</td>
-<td>Medium</td>
-<td>Deduplication</td>
-<td>Variable</td>
-</tr>
-<tr>
-<td>[51] N-Queens</td>
-<td>Hard</td>
-<td>2D constraint tracking</td>
-<td>Variable</td>
-</tr>
-<tr>
-<td>[131] Palindrome Partitioning</td>
-<td>Medium</td>
-<td>Validity check</td>
-<td>Variable</td>
-</tr>
-<tr>
-<td>[93] Restore IP Addresses</td>
-<td>Medium</td>
-<td>Multiple constraints</td>
-<td>Variable</td>
-</tr>
-</tbody></table>
-<hr>
-<h3 id="1-78-Subsets-Medium"><a href="#1-78-Subsets-Medium" class="headerlink" title="1. [78] Subsets - Medium"></a>1. [78] Subsets - Medium</h3><p><strong>Problem</strong>: Given an integer array <code>nums</code> of unique elements, return all possible subsets.</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> List&lt;List&lt;Integer&gt;&gt; <span class="title function_">subsets</span><span class="params">(<span class="type">int</span>[] nums)</span> &#123;</span><br><span class="line">        List&lt;List&lt;Integer&gt;&gt; res = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">        backtrack(nums, <span class="number">0</span>, <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;(), res);</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">backtrack</span><span class="params">(<span class="type">int</span>[] nums, <span class="type">int</span> startIndex,</span></span><br><span class="line"><span class="params">                           List&lt;Integer&gt; path, List&lt;List&lt;Integer&gt;&gt; res)</span> &#123;</span><br><span class="line">        res.add(<span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;(path));</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> startIndex; i &lt; nums.length; i++) &#123;</span><br><span class="line">            path.add(nums[i]);</span><br><span class="line">            backtrack(nums, i + <span class="number">1</span>, path, res);</span><br><span class="line">            path.remove(path.size() - <span class="number">1</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>Tree Traversal</strong> for <code>nums = [1,2,3]</code> (8 results &#x3D; 2^3):</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[]</span><br><span class="line">├── 1</span><br><span class="line">│   ├── 2</span><br><span class="line">│   │   └── 3 → [1,2,3]</span><br><span class="line">│   └── 3 → [1,3]</span><br><span class="line">└── 2</span><br><span class="line">    └── 3 → [2,3]</span><br><span class="line">→ [] [1] [1,2] [1,2,3] [1,3] [2] [2,3] [3]</span><br><span class="line">Total: 8 subsets</span><br></pre></td></tr></table></figure>
-
-<hr>
-<h3 id="2-77-Combinations-Medium"><a href="#2-77-Combinations-Medium" class="headerlink" title="2. [77] Combinations - Medium"></a>2. [77] Combinations - Medium</h3><p><strong>Problem</strong>: Return all possible combinations of k numbers from [1, n].</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> List&lt;List&lt;Integer&gt;&gt; <span class="title function_">combine</span><span class="params">(<span class="type">int</span> n, <span class="type">int</span> k)</span> &#123;</span><br><span class="line">        List&lt;List&lt;Integer&gt;&gt; res = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">        backtrack(<span class="number">1</span>, n, k, <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;(), res);</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">backtrack</span><span class="params">(<span class="type">int</span> startIndex, <span class="type">int</span> n, <span class="type">int</span> k,</span></span><br><span class="line"><span class="params">                           List&lt;Integer&gt; path, List&lt;List&lt;Integer&gt;&gt; res)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (path.size() == k) &#123;</span><br><span class="line">            res.add(<span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;(path));</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> startIndex; i &lt;= n - (k - path.size()) + <span class="number">1</span>; i++) &#123;</span><br><span class="line">            path.add(i);</span><br><span class="line">            backtrack(i + <span class="number">1</span>, n, k, path, res);</span><br><span class="line">            path.remove(path.size() - <span class="number">1</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>Tree Traversal</strong> for <code>n=4, k=2</code> (6 results &#x3D; C(4,2)):</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[]</span><br><span class="line">├── 1</span><br><span class="line">│   ├── 2 → [1,2]</span><br><span class="line">│   ├── 3 → [1,3]</span><br><span class="line">│   └── 4 → [1,4]</span><br><span class="line">├── 2</span><br><span class="line">│   ├── 3 → [2,3]</span><br><span class="line">│   └── 4 → [2,4]</span><br><span class="line">├── 3</span><br><span class="line">│   └── 4 → [3,4]</span><br><span class="line">└── 4 (pruned - not enough remaining)</span><br><span class="line">Total: 6 combinations</span><br></pre></td></tr></table></figure>
-
-<hr>
-<h3 id="3-46-Permutations-Medium"><a href="#3-46-Permutations-Medium" class="headerlink" title="3. [46] Permutations - Medium"></a>3. [46] Permutations - Medium</h3><p><strong>Problem</strong>: Return all possible permutations of distinct integers.</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> List&lt;List&lt;Integer&gt;&gt; <span class="title function_">permute</span><span class="params">(<span class="type">int</span>[] nums)</span> &#123;</span><br><span class="line">        List&lt;List&lt;Integer&gt;&gt; res = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">        <span class="type">boolean</span>[] used = <span class="keyword">new</span> <span class="title class_">boolean</span>[nums.length];</span><br><span class="line">        backtrack(nums, used, <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;(), res);</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">backtrack</span><span class="params">(<span class="type">int</span>[] nums, <span class="type">boolean</span>[] used,</span></span><br><span class="line"><span class="params">                           List&lt;Integer&gt; path, List&lt;List&lt;Integer&gt;&gt; res)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (path.size() == nums.length) &#123;</span><br><span class="line">            res.add(<span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;(path));</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; nums.length; i++) &#123;</span><br><span class="line">            <span class="keyword">if</span> (used[i]) <span class="keyword">continue</span>;</span><br><span class="line">            used[i] = <span class="literal">true</span>;</span><br><span class="line">            path.add(nums[i]);</span><br><span class="line">            backtrack(nums, used, path, res);</span><br><span class="line">            path.remove(path.size() - <span class="number">1</span>);</span><br><span class="line">            used[i] = <span class="literal">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>Tree Traversal</strong> for <code>nums = [1,2,3]</code> (6 results &#x3D; 3!):</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[]</span><br><span class="line">├── 1</span><br><span class="line">│   ├── 2</span><br><span class="line">│   │   └── 3 → [1,2,3]</span><br><span class="line">│   └── 3</span><br><span class="line">│       └── 2 → [1,3,2]</span><br><span class="line">├── 2</span><br><span class="line">│   ├── 1</span><br><span class="line">│   │   └── 3 → [2,1,3]</span><br><span class="line">│   └── 3</span><br><span class="line">│       └── 1 → [2,3,1]</span><br><span class="line">├── 3</span><br><span class="line">│   ├── 1</span><br><span class="line">│   │   └── 2 → [3,1,2]</span><br><span class="line">│   └── 2</span><br><span class="line">│       └── 1 → [3,2,1]</span><br><span class="line">Total: 6 permutations</span><br></pre></td></tr></table></figure>
-
-<hr>
-<h3 id="4-784-Letter-Case-Permutation-Medium"><a href="#4-784-Letter-Case-Permutation-Medium" class="headerlink" title="4. [784] Letter Case Permutation - Medium"></a>4. [784] Letter Case Permutation - Medium</h3><p><strong>Problem</strong>: Given a string, return all possible strings with lowercase&#x2F;uppercase letters.</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> List&lt;String&gt; <span class="title function_">letterCasePermutation</span><span class="params">(String s)</span> &#123;</span><br><span class="line">        List&lt;String&gt; res = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">        backtrack(s.toCharArray(), <span class="number">0</span>, <span class="keyword">new</span> <span class="title class_">StringBuilder</span>(), res);</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">backtrack</span><span class="params">(<span class="type">char</span>[] arr, <span class="type">int</span> index, StringBuilder sb,</span></span><br><span class="line"><span class="params">                           List&lt;String&gt; res)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (index == arr.length) &#123;</span><br><span class="line">            res.add(sb.toString());</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="type">char</span> <span class="variable">c</span> <span class="operator">=</span> arr[index];</span><br><span class="line">        <span class="keyword">if</span> (Character.isLetter(c)) &#123;</span><br><span class="line">            sb.append(Character.toLowerCase(c));</span><br><span class="line">            backtrack(arr, index + <span class="number">1</span>, sb, res);</span><br><span class="line">            sb.deleteCharAt(sb.length() - <span class="number">1</span>);</span><br><span class="line">            sb.append(Character.toUpperCase(c));</span><br><span class="line">            backtrack(arr, index + <span class="number">1</span>, sb, res);</span><br><span class="line">            sb.deleteCharAt(sb.length() - <span class="number">1</span>);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            sb.append(c);</span><br><span class="line">            backtrack(arr, index + <span class="number">1</span>, sb, res);</span><br><span class="line">            sb.deleteCharAt(sb.length() - <span class="number">1</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>Tree Traversal</strong> for <code>s = &quot;a1b&quot;</code> (4 results &#x3D; 2^2):</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&quot;&quot;</span><br><span class="line">├── a</span><br><span class="line">│   └── 1</span><br><span class="line">│       └── b → &quot;a1b&quot;</span><br><span class="line">│       └── B → &quot;a1B&quot;</span><br><span class="line">└── A</span><br><span class="line">    └── 1</span><br><span class="line">        └── b → &quot;A1b&quot;</span><br><span class="line">        └── B → &quot;A1B&quot;</span><br><span class="line">Total: 4 permutations</span><br></pre></td></tr></table></figure>
-
-<hr>
-<h3 id="5-22-Generate-Parentheses-Medium"><a href="#5-22-Generate-Parentheses-Medium" class="headerlink" title="5. [22] Generate Parentheses - Medium"></a>5. [22] Generate Parentheses - Medium</h3><p><strong>Problem</strong>: Generate all combinations of well-formed parentheses.</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> List&lt;String&gt; <span class="title function_">generateParenthesis</span><span class="params">(<span class="type">int</span> n)</span> &#123;</span><br><span class="line">        List&lt;String&gt; res = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">        backtrack(n, n, <span class="keyword">new</span> <span class="title class_">StringBuilder</span>(), res);</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">backtrack</span><span class="params">(<span class="type">int</span> left, <span class="type">int</span> right, StringBuilder sb, List&lt;String&gt; res)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (left == <span class="number">0</span> &amp;&amp; right == <span class="number">0</span>) &#123;</span><br><span class="line">            res.add(sb.toString());</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (left &gt; <span class="number">0</span>) &#123;</span><br><span class="line">            sb.append(<span class="string">&#x27;(&#x27;</span>);</span><br><span class="line">            backtrack(left - <span class="number">1</span>, right, sb, res);</span><br><span class="line">            sb.deleteCharAt(sb.length() - <span class="number">1</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (right &gt; left) &#123;</span><br><span class="line">            sb.append(<span class="string">&#x27;)&#x27;</span>);</span><br><span class="line">            backtrack(left, right - <span class="number">1</span>, sb, res);</span><br><span class="line">            sb.deleteCharAt(sb.length() - <span class="number">1</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>Tree Traversal</strong> for <code>n=3</code> (5 results &#x3D; Catalan(3)):</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&quot;&quot;</span><br><span class="line">├── (</span><br><span class="line">│   ├── (</span><br><span class="line">│   │   ├── (</span><br><span class="line">│   │   │   └── ) → &quot;((()))&quot;</span><br><span class="line">│   │   └── )</span><br><span class="line">│   │       └── ) → &quot;(()())&quot;</span><br><span class="line">│   └── )</span><br><span class="line">│       ├── (</span><br><span class="line">│       │   └── ) → &quot;(())()&quot;</span><br><span class="line">│       └── (</span><br><span class="line">│           └── ) → &quot;()()()&quot;</span><br><span class="line">└── ) (invalid - skipped)</span><br><span class="line">Total: 5 valid combinations</span><br></pre></td></tr></table></figure>
-
-<hr>
-<h3 id="6-39-Combination-Sum-Medium"><a href="#6-39-Combination-Sum-Medium" class="headerlink" title="6. [39] Combination Sum - Medium"></a>6. [39] Combination Sum - Medium</h3><p><strong>Problem</strong>: Find all unique combinations where chosen numbers sum to target (reuse allowed).</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> List&lt;List&lt;Integer&gt;&gt; <span class="title function_">combinationSum</span><span class="params">(<span class="type">int</span>[] candidates, <span class="type">int</span> target)</span> &#123;</span><br><span class="line">        List&lt;List&lt;Integer&gt;&gt; res = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">        backtrack(candidates, <span class="number">0</span>, target, <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;(), res);</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">backtrack</span><span class="params">(<span class="type">int</span>[] candidates, <span class="type">int</span> startIndex, <span class="type">int</span> target,</span></span><br><span class="line"><span class="params">                           List&lt;Integer&gt; path, List&lt;List&lt;Integer&gt;&gt; res)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (target == <span class="number">0</span>) &#123;</span><br><span class="line">            res.add(<span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;(path));</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (target &lt; <span class="number">0</span>) <span class="keyword">return</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> startIndex; i &lt; candidates.length; i++) &#123;</span><br><span class="line">            path.add(candidates[i]);</span><br><span class="line">            backtrack(candidates, i, target - candidates[i], path, res);</span><br><span class="line">            path.remove(path.size() - <span class="number">1</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>Tree Traversal</strong> for <code>candidates = [2,3,6,7], target = 7</code>:</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[]</span><br><span class="line">├── 2</span><br><span class="line">│   ├── 2</span><br><span class="line">│   │   ├── 2</span><br><span class="line">│   │   │   └── 2 → sum=8 (exceeds, backtrack)</span><br><span class="line">│   │   └── 3 → sum=7 → [2,2,3]</span><br><span class="line">│   └── 3</span><br><span class="line">│       └── 3 → sum=8 (exceeds)</span><br><span class="line">└── 3</span><br><span class="line">    └── 3</span><br><span class="line">        └── 3 → sum=9 (exceeds)</span><br><span class="line">└── 7 → sum=7 → [7]</span><br><span class="line">Total: 2 results: [2,2,3], [7]</span><br></pre></td></tr></table></figure>
-
-<hr>
-<h3 id="7-40-Combination-Sum-II-Medium"><a href="#7-40-Combination-Sum-II-Medium" class="headerlink" title="7. [40] Combination Sum II - Medium"></a>7. [40] Combination Sum II - Medium</h3><p><strong>Problem</strong>: Each number may only be used once; handle duplicates.</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> List&lt;List&lt;Integer&gt;&gt; <span class="title function_">combinationSum2</span><span class="params">(<span class="type">int</span>[] candidates, <span class="type">int</span> target)</span> &#123;</span><br><span class="line">        Arrays.sort(candidates);</span><br><span class="line">        List&lt;List&lt;Integer&gt;&gt; res = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">        backtrack(candidates, <span class="number">0</span>, target, <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;(), res);</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">backtrack</span><span class="params">(<span class="type">int</span>[] candidates, <span class="type">int</span> startIndex, <span class="type">int</span> target,</span></span><br><span class="line"><span class="params">                           List&lt;Integer&gt; path, List&lt;List&lt;Integer&gt;&gt; res)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (target == <span class="number">0</span>) &#123;</span><br><span class="line">            res.add(<span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;(path));</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (target &lt; <span class="number">0</span>) <span class="keyword">return</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> startIndex; i &lt; candidates.length; i++) &#123;</span><br><span class="line">            <span class="keyword">if</span> (i &gt; startIndex &amp;&amp; candidates[i] == candidates[i - <span class="number">1</span>]) <span class="keyword">continue</span>;</span><br><span class="line">            path.add(candidates[i]);</span><br><span class="line">            backtrack(candidates, i + <span class="number">1</span>, target - candidates[i], path, res);</span><br><span class="line">            path.remove(path.size() - <span class="number">1</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>Tree Traversal</strong> for <code>candidates = [1,1,2,5,6,7,10], target = 8</code>:</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[]</span><br><span class="line">├── 1 (first)</span><br><span class="line">│   ├── 1 (second)</span><br><span class="line">│   │   └── 2</span><br><span class="line">│   │       └── 5 → sum=9 (exceeds)</span><br><span class="line">│   │   └── 5 → sum=8 → [1,1,2,5]</span><br><span class="line">│   ├── 2</span><br><span class="line">│   │   └── 5 → sum=8 → [1,2,5]</span><br><span class="line">│   └── 5</span><br><span class="line">│       └── 6 → sum=12 (exceeds)</span><br><span class="line">├── 1 (second - SKIP, same as first at this level)</span><br><span class="line">├── 2</span><br><span class="line">│   └── 6 → sum=8 → [2,6]</span><br><span class="line">└── 6</span><br><span class="line">    └── 7 → sum=15 (exceeds)</span><br><span class="line">└── 7</span><br><span class="line">    └── 1 → [7,1]</span><br><span class="line">Total: 4 results: [1,1,6], [1,2,5], [2,6], [7,1]</span><br></pre></td></tr></table></figure>
-
-<hr>
-<h3 id="8-51-N-Queens-Hard"><a href="#8-51-N-Queens-Hard" class="headerlink" title="8. [51] N-Queens - Hard"></a>8. [51] N-Queens - Hard</h3><p><strong>Problem</strong>: Place n queens on n×n board so no two attack each other.</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> List&lt;List&lt;String&gt;&gt; <span class="title function_">solveNQueens</span><span class="params">(<span class="type">int</span> n)</span> &#123;</span><br><span class="line">        List&lt;List&lt;String&gt;&gt; res = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">        <span class="type">char</span>[][] board = <span class="keyword">new</span> <span class="title class_">char</span>[n][n];</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">char</span>[] row : board) Arrays.fill(<span class="string">&#x27;.&#x27;</span>);</span><br><span class="line">        <span class="type">boolean</span>[] cols = <span class="keyword">new</span> <span class="title class_">boolean</span>[n];</span><br><span class="line">        <span class="type">boolean</span>[] diag1 = <span class="keyword">new</span> <span class="title class_">boolean</span>[<span class="number">2</span> * n - <span class="number">1</span>];</span><br><span class="line">        <span class="type">boolean</span>[] diag2 = <span class="keyword">new</span> <span class="title class_">boolean</span>[<span class="number">2</span> * n - <span class="number">1</span>];</span><br><span class="line">        backtrack(<span class="number">0</span>, n, board, cols, diag1, diag2, res);</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">backtrack</span><span class="params">(<span class="type">int</span> row, <span class="type">int</span> n, <span class="type">char</span>[][] board,</span></span><br><span class="line"><span class="params">                           <span class="type">boolean</span>[] cols, <span class="type">boolean</span>[] diag1, <span class="type">boolean</span>[] diag2,</span></span><br><span class="line"><span class="params">                           List&lt;List&lt;String&gt;&gt; res)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (row == n) &#123;</span><br><span class="line">            List&lt;String&gt; solution = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">char</span>[] r : board) solution.add(<span class="keyword">new</span> <span class="title class_">String</span>(r));</span><br><span class="line">            res.add(solution);</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">col</span> <span class="operator">=</span> <span class="number">0</span>; col &lt; n; col++) &#123;</span><br><span class="line">            <span class="keyword">if</span> (cols[col] || diag1[row - col + n - <span class="number">1</span>] || diag2[row + col]) <span class="keyword">continue</span>;</span><br><span class="line">            board[row][col] = <span class="string">&#x27;Q&#x27;</span>;</span><br><span class="line">            cols[col] = <span class="literal">true</span>;</span><br><span class="line">            diag1[row - col + n - <span class="number">1</span>] = <span class="literal">true</span>;</span><br><span class="line">            diag2[row + col] = <span class="literal">true</span>;</span><br><span class="line">            backtrack(row + <span class="number">1</span>, n, board, cols, diag1, diag2, res);</span><br><span class="line">            board[row][col] = <span class="string">&#x27;.&#x27;</span>;</span><br><span class="line">            cols[col] = <span class="literal">false</span>;</span><br><span class="line">            diag1[row - col + n - <span class="number">1</span>] = <span class="literal">false</span>;</span><br><span class="line">            diag2[row + col] = <span class="literal">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>Tree Traversal</strong> for <code>n=4</code> (2 results):</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Row 0</span><br><span class="line">├── Col 0 (Q at 0,0)</span><br><span class="line">│   ├── Col 2 (Q at 1,2) - diagonal conflict, skip</span><br><span class="line">│   └── Col 3 (Q at 1,3) - diagonal conflict, skip</span><br><span class="line">│   → No solution from this branch</span><br><span class="line">├── Col 1 (Q at 0,1)</span><br><span class="line">│   ├── Col 3 (Q at 1,3)</span><br><span class="line">│   │   ├── Col 0 (Q at 2,0)</span><br><span class="line">│   │   │   └── Col 2 (Q at 3,2) → Valid! [&quot;.Q..&quot;,&quot;...Q&quot;,&quot;Q...&quot;,&quot;..Q.&quot;]</span><br><span class="line">│   └── Col 0 (Q at 1,0)</span><br><span class="line">│       └── ... (symmetric to above)</span><br><span class="line">├── Col 2 (Q at 0,2) - symmetric to Col 1</span><br><span class="line">└── Col 3 (Q at 0,3) - symmetric to Col 0</span><br><span class="line">Total: 2 solutions</span><br></pre></td></tr></table></figure>
-
-<p><strong>Result Count</strong> by n:</p>
-<table>
-<thead>
-<tr>
-<th>n</th>
-<th>Solutions</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>1</td>
-<td>1</td>
-</tr>
-<tr>
-<td>2</td>
-<td>0</td>
-</tr>
-<tr>
-<td>3</td>
-<td>0</td>
-</tr>
-<tr>
-<td>4</td>
-<td>2</td>
-</tr>
-<tr>
-<td>5</td>
-<td>10</td>
-</tr>
-<tr>
-<td>6</td>
-<td>4</td>
-</tr>
-<tr>
-<td>7</td>
-<td>40</td>
-</tr>
-<tr>
-<td>8</td>
-<td>92</td>
-</tr>
-</tbody></table>
-<hr>
-<h3 id="9-131-Palindrome-Partitioning-Medium"><a href="#9-131-Palindrome-Partitioning-Medium" class="headerlink" title="9. [131] Palindrome Partitioning - Medium"></a>9. [131] Palindrome Partitioning - Medium</h3><p><strong>Problem</strong>: Partition a string such that every substring is a palindrome.</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> List&lt;List&lt;String&gt;&gt; <span class="title function_">partition</span><span class="params">(String s)</span> &#123;</span><br><span class="line">        List&lt;List&lt;String&gt;&gt; res = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">        backtrack(s, <span class="number">0</span>, <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;(), res);</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">backtrack</span><span class="params">(String s, <span class="type">int</span> startIndex,</span></span><br><span class="line"><span class="params">                           List&lt;String&gt; path, List&lt;List&lt;String&gt;&gt; res)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (startIndex == s.length()) &#123;</span><br><span class="line">            res.add(<span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;(path));</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> startIndex; i &lt; s.length(); i++) &#123;</span><br><span class="line">            <span class="keyword">if</span> (isPalindrome(s, startIndex, i)) &#123;</span><br><span class="line">                path.add(s.substring(startIndex, i + <span class="number">1</span>));</span><br><span class="line">                backtrack(s, i + <span class="number">1</span>, path, res);</span><br><span class="line">                path.remove(path.size() - <span class="number">1</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="type">boolean</span> <span class="title function_">isPalindrome</span><span class="params">(String s, <span class="type">int</span> left, <span class="type">int</span> right)</span> &#123;</span><br><span class="line">        <span class="keyword">while</span> (left &lt; right) &#123;</span><br><span class="line">            <span class="keyword">if</span> (s.charAt(left++) != s.charAt(right--)) <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>Tree Traversal</strong> for <code>s = &quot;aab&quot;</code> (2 results):</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&quot;aab&quot;</span><br><span class="line">├── &quot;a&quot;</span><br><span class="line">│   ├── &quot;a&quot;</span><br><span class="line">│   │   └── &quot;b&quot; → [&quot;a&quot;,&quot;a&quot;,&quot;b&quot;]</span><br><span class="line">│   └── &quot;ab&quot; (not palindrome, skip)</span><br><span class="line">├── &quot;aa&quot;</span><br><span class="line">│   └── &quot;b&quot; → [&quot;aa&quot;,&quot;b&quot;]</span><br><span class="line">└── &quot;aab&quot; (not palindrome, skip)</span><br><span class="line">Total: 2 valid partitions</span><br></pre></td></tr></table></figure>
-
-<hr>
-<h3 id="10-93-Restore-IP-Addresses-Medium"><a href="#10-93-Restore-IP-Addresses-Medium" class="headerlink" title="10. [93] Restore IP Addresses - Medium"></a>10. [93] Restore IP Addresses - Medium</h3><p><strong>Problem</strong>: Return all possible valid IP addresses from a string.</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> List&lt;String&gt; <span class="title function_">restoreIpAddresses</span><span class="params">(String s)</span> &#123;</span><br><span class="line">        List&lt;String&gt; res = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">        backtrack(s, <span class="number">0</span>, <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;(), res);</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">backtrack</span><span class="params">(String s, <span class="type">int</span> startIndex,</span></span><br><span class="line"><span class="params">                           List&lt;String&gt; segments, List&lt;String&gt; res)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (segments.size() == <span class="number">4</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span> (startIndex == s.length()) &#123;</span><br><span class="line">                res.add(String.join(<span class="string">&quot;.&quot;</span>, segments));</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">len</span> <span class="operator">=</span> <span class="number">1</span>; len &lt;= <span class="number">3</span> &amp;&amp; startIndex + len &lt;= s.length(); len++) &#123;</span><br><span class="line">            <span class="type">String</span> <span class="variable">segment</span> <span class="operator">=</span> s.substring(startIndex, startIndex + len);</span><br><span class="line">            <span class="keyword">if</span> (segment.length() &gt; <span class="number">1</span> &amp;&amp; segment.charAt(<span class="number">0</span>) == <span class="string">&#x27;0&#x27;</span>) <span class="keyword">continue</span>;</span><br><span class="line">            <span class="keyword">if</span> (Integer.parseInt(segment) &gt; <span class="number">255</span>) <span class="keyword">continue</span>;</span><br><span class="line">            segments.add(segment);</span><br><span class="line">            backtrack(s, startIndex + len, segments, res);</span><br><span class="line">            segments.remove(segments.size() - <span class="number">1</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>Tree Traversal</strong> for <code>s = &quot;25525511135&quot;</code> (2 results):</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&quot;25525511135&quot;</span><br><span class="line">├── &quot;255&quot;</span><br><span class="line">│   ├── &quot;255&quot;</span><br><span class="line">│   │   ├── &quot;11&quot; → &quot;255.255.11.&quot;</span><br><span class="line">│   │   │   └── &quot;135&quot; (3 digits OK, 135 ≤ 255) → &quot;255.255.11.135&quot; ✓</span><br><span class="line">│   │   └── &quot;111&quot; → &quot;255.255.111.&quot;</span><br><span class="line">│   │       └── &quot;35&quot; → &quot;255.255.111.35&quot; ✓</span><br><span class="line">│   └── &quot;1&quot; → &quot;255.1.&quot;</span><br><span class="line">│       ├── &quot;1&quot; → &quot;255.1.1.&quot;</span><br><span class="line">│       │   └── &quot;135&quot; (invalid, 135 &gt; 255)</span><br><span class="line">│       └── &quot;11&quot; → &quot;255.1.11.&quot;</span><br><span class="line">│           └── &quot;135&quot; (invalid)</span><br><span class="line">└── &quot;25&quot; and others fail early</span><br><span class="line">Total: 2 results</span><br></pre></td></tr></table></figure>
-
-<p><a name="11-final-takeaways"></a></p>
-<h2 id="Final-Takeaways"><a href="#Final-Takeaways" class="headerlink" title="Final Takeaways"></a>Final Takeaways</h2><ol>
-<li><p><strong>Backtracking &#x3D; Decision Tree Traversal</strong></p>
-<ul>
-<li>Not about constructing the answer directly</li>
-<li>About exploring possibilities and filtering</li>
-</ul>
-</li>
-<li><p><strong>The Three-Step Cycle is Sacred</strong></p>
-<ul>
-<li>Choose → Explore → Undo</li>
-<li>Missing any step breaks the algorithm</li>
-</ul>
-</li>
-<li><p><strong>Pruning is mandatory, not optional</strong></p>
-<ul>
-<li>Without pruning, backtracking is just brute force</li>
-<li>Early termination saves exponential work</li>
-</ul>
-</li>
-<li><p><strong>Deduplication is subtle</strong></p>
-<ul>
-<li><code>i &gt; startIndex</code> means “same tree level”</li>
-<li>Not about input values, but about branching behavior</li>
-</ul>
-</li>
-<li><p><strong>The “inefficiency” is a feature</strong></p>
-<ul>
-<li>Systematically exploring the search space</li>
-<li>Each “failed” path provides information</li>
-</ul>
-</li>
-</ol>
-<p><strong>Bonus Insight</strong>: Two things make backtracking click:</p>
-<ul>
-<li>Understanding that “undo” is state restoration</li>
-<li>Visualizing tree levels vs branches correctly</li>
-</ul>
-<hr>
-<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ul>
-<li><a href="https://github.com/BODYsuperman/algorithm-learning-java">algorithm-learning-java</a> - My Java implementation of common algorithms with detailed comments and tree visualization.</li>
-</ul>
-<link rel="stylesheet" href="/css/folder.css" type="text/css"><script src="/js/folder.js" type="text/javascript" async></script>]]></content>
-      <categories>
-        <category>Data Structure and Algorithm</category>
-      </categories>
-      <tags>
-        <tag>Backtracking</tag>
-        <tag>DFS</tag>
-        <tag>Recursion</tag>
-        <tag>LeetCode</tag>
-        <tag>Mental Model</tag>
-        <tag>Developer Journey</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Binary Tree</title>
     <url>/2025/03/15/BinaryTree/</url>
     <content><![CDATA[<h1 id="Binary-Tree"><a href="#Binary-Tree" class="headerlink" title="Binary Tree"></a>Binary Tree</h1><ol>
@@ -1662,185 +1054,6 @@ or <figure class="highlight css"><table><tr><td class="code"><pre><span class="l
       </tags>
   </entry>
   <entry>
-    <title>Hash Table</title>
-    <url>/2025/04/05/Hash-Table/</url>
-    <content><![CDATA[<ol>
-<li><a href="#introduction">What is Hash Table</a> <ul>
-<li><a href="#core">Core Concepts</a></li>
-<li><a href="#common">Common operations of hash table</a></li>
-</ul>
-</li>
-<li><a href="#hc">Hash Collision</a><ul>
-<li><a href="#sc">Separate Chaining</a></li>
-<li><a href="#oa">Open Addressing</a></li>
-</ul>
-</li>
-<li><a href="#ha">Hash Alogrithm</a><ul>
-<li><a href="#goal">Goals of hash algorithms</a></li>
-<li><a href="#cha">Common hash algorithms</a></li>
-</ul>
-</li>
-<li><a href="#pa">Practical Examples</a><ul>
-<li><a href="#fs">four sum</a><span id="more"></span></li>
-</ul>
-</li>
-</ol>
-<h2 id="What-is-Hash-Table"><a href="#What-is-Hash-Table" class="headerlink" title="What is Hash Table?"></a>What is Hash Table?<a name="introduction"></a></h2><p>A <strong><a href="https://en.wikipedia.org/wiki/Hash_table">Hash Table</a></strong> is a high-efficiency data structure that stores key-value pairs.It uses a hash function to map keys to storage locations, achieving average <strong>O(1)</strong> time complexity for <strong>fast insertions, lookups, and deletions</strong>.The index functions as a storage location for the matching value. In simple words, it maps the keys with the value.Widely used in caching systems, database indexing, and compiler symbol tables.<br><img src="/2025/04/05/Hash-Table/hs01.png" alt="pic"></p>
-<h3 id="Core-Concepts"><a href="#Core-Concepts" class="headerlink" title="Core Concepts"></a>Core Concepts<a name="core"></a></h3><ul>
-<li><strong>Key</strong>: A unique identifier for the data.</li>
-<li><strong>Value</strong>: The data associated with the key (simplified to just storing keys in this example).</li>
-<li><strong>Bucket</strong>: A storage unit in the hash table (typically an array).</li>
-<li><strong>Hash Functions:</strong><br>A hash function converts a key into an index for the underlying array:<ul>
-<li>Deterministic: Same key always produces the same index.</li>
-<li>Efficient: Computed quickly to avoid performance bottlenecks.</li>
-<li>Uniform: Distributes keys evenly to minimize collisions.</li>
-</ul>
-</li>
-<li><strong>Handling Hash Collisions:</strong><br>When two different keys produce the same index, a collision occurs. Common solutions include:<ul>
-<li><strong>Seperate Chaining</strong>: Store conflicting elements in a linked list at the same index.</li>
-<li><strong>Open Addressing</strong>: Find the next available slot in the array.</li>
-</ul>
-</li>
-</ul>
-<p>In addition to hash tables, arrays and linked lists can also be used to implement query functionality, but the time complexity is different. </p>
-<table>
-<thead>
-<tr>
-<th align="center"></th>
-<th align="center"><strong>Array</strong></th>
-<th align="center"><strong>Linked List</strong></th>
-<th align="center"><strong>Hash Table</strong></th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">Search</td>
-<td align="center">O(n)</td>
-<td align="center">O(n)</td>
-<td align="center">O(1)</td>
-</tr>
-<tr>
-<td align="center">Insert</td>
-<td align="center">O(1)</td>
-<td align="center">O(1)</td>
-<td align="center">O(1)</td>
-</tr>
-<tr>
-<td align="center">Delete</td>
-<td align="center">O(n)</td>
-<td align="center">O(n)</td>
-<td align="center">O(1)</td>
-</tr>
-</tbody></table>
-<p>Per aboved comparison, <strong>the time complexity for operations (insertion, deletion, searching, and modification) in a hash table is O(1)</strong>, which is highly efficient.</p>
-<h3 id="Common-operations-of-hash-table"><a href="#Common-operations-of-hash-table" class="headerlink" title="Common operations of hash table"></a>Common operations of hash table<a name="common"></a></h3><p>Common operations of a hash table include: initialization, querying, adding key-value pairs, and deleting key-value pairs. Here is an example code:</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">/* Initialize hash table */</span><br><span class="line">Dictionary&lt;int, string&gt; map = new() &#123;</span><br><span class="line">    /* Add operation */</span><br><span class="line">    // Add key-value pair (key, value) to hash table</span><br><span class="line">    &#123; 13835, &quot;Tom&quot; &#125;,</span><br><span class="line">    &#123; 16937, &quot;Jerry&quot; &#125;,</span><br><span class="line">    &#123; 16852, &quot;Steve&quot; &#125;,</span><br><span class="line">    &#123; 13200, &quot;James&quot; &#125;,</span><br><span class="line">    &#123; 14583, &quot;Lisa&quot; &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">/* Query operation */</span><br><span class="line">// Input key into hash table, get value</span><br><span class="line">string name = map[16937];</span><br><span class="line"></span><br><span class="line">/* Delete operation */</span><br><span class="line">// Delete key-value pair (key, value) from hash table</span><br><span class="line">map.Remove(14583);</span><br></pre></td></tr></table></figure>
-<p>There are three common ways to traverse a hash table: traversing key-value pairs, traversing keys, and traversing values. Here is an example code:</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">/* Traverse hash table */</span><br><span class="line">// Traverse key-value pairs Key-&gt;Value</span><br><span class="line">foreach (var kv in map) &#123;</span><br><span class="line">    Console.WriteLine(kv.Key + &quot; -&gt; &quot; + kv.Value);</span><br><span class="line">&#125;</span><br><span class="line">// Traverse keys only</span><br><span class="line">foreach (int key in map.Keys) &#123;</span><br><span class="line">    Console.WriteLine(key);</span><br><span class="line">&#125;</span><br><span class="line">// Traverse values only</span><br><span class="line">foreach (string val in map.Values) &#123;</span><br><span class="line">    Console.WriteLine(val);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="Hash-Collision"><a href="#Hash-Collision" class="headerlink" title="Hash Collision"></a>Hash Collision<a name="hc"></a></h2><p>The hashing process generates a small number for a big key, so there is a possibility that two keys could produce the same value. The situation where the newly inserted key maps to an already occupied, and it must be handled using some collision handling technology.<br><img src="/2025/04/05/Hash-Table/hs02.png" alt="pic"></p>
-<p>There are mainly two methods to handle collision:</p>
-<ul>
-<li>Separate Chaining</li>
-<li>Open Addressing</li>
-</ul>
-<h3 id="Separate-Chaining"><a href="#Separate-Chaining" class="headerlink" title="Separate Chaining "></a>Separate Chaining <a name="sc"></a></h3><p>Separate chaining converts a single element into a linked list, treating key-value pairs as list nodes, storing all colliding key-value pairs in the same linked list.<br>The operations of a hash table implemented with separate chaining have changed as follows:</p>
-<ul>
-<li>Searching Elements: Input key, obtain the bucket index through the hash function, then access the head node of the linked list. Traverse the linked list and compare key to find the target key-value pair.</li>
-<li>Inserting Elements: Access the head node of the linked list via the hash function, then append the node (key-value pair) to the list.</li>
-<li>Deleting Elements: Access the head of the linked list based on the result of the hash function, then traverse the linked list to find the target node and delete it.<br><img src="/2025/04/05/Hash-Table/hs03.png" alt="pic"></li>
-</ul>
-<p>The code below provides a simple implementation of a separate chaining hash table, with two things to note:</p>
-<ul>
-<li>Lists (dynamic arrays) are used instead of linked lists for simplicity. In this setup, the hash table (array) contains multiple buckets, each of which is a list.</li>
-<li>This implementation includes a hash table resizing method. When the load factor exceeds <strong>0.7</strong>, we expand the hash table to twice its original size.<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title">Hash</span></span><br><span class="line">&#123;</span><br><span class="line">      <span class="built_in">int</span> BUCKET;</span><br><span class="line">      List&lt;<span class="built_in">int</span>&gt;[] table;</span><br><span class="line">      <span class="built_in">int</span> elementCount;</span><br><span class="line">      <span class="keyword">const</span> <span class="built_in">double</span> LOAD_FACTOR_THRESHOLD = <span class="number">0.7</span>;</span><br><span class="line">      <span class="function"><span class="keyword">public</span> <span class="title">Hash</span>(<span class="params"><span class="built_in">int</span> V</span>)</span></span><br><span class="line">      &#123;</span><br><span class="line">          <span class="keyword">this</span>.BUCKET = V;</span><br><span class="line">          table = <span class="keyword">new</span> List&lt;<span class="built_in">int</span>&gt;[BUCKET];</span><br><span class="line">          elementCount = <span class="number">0</span>;</span><br><span class="line">          <span class="keyword">for</span> (<span class="built_in">int</span> i = <span class="number">0</span>; i &lt; BUCKET; i++)</span><br><span class="line">              table[i] = <span class="keyword">new</span> List&lt;<span class="built_in">int</span>&gt;();</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="comment">// Hash function to map values to key</span></span><br><span class="line">      <span class="function"><span class="keyword">private</span> <span class="built_in">int</span> <span class="title">hashFunction</span>(<span class="params"><span class="built_in">int</span> x</span>)</span></span><br><span class="line">      &#123;</span><br><span class="line">          <span class="built_in">int</span> hash = x.GetHashCode();</span><br><span class="line">          <span class="keyword">return</span> (hash % BUCKET + BUCKET) % BUCKET;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="function"><span class="built_in">double</span> <span class="title">GetLoadFactor</span>()</span></span><br><span class="line">      &#123;</span><br><span class="line">          <span class="keyword">return</span> (<span class="built_in">double</span>)elementCount / BUCKET;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="function"><span class="keyword">void</span> <span class="title">Rehash</span>()</span></span><br><span class="line">      &#123;</span><br><span class="line">          <span class="built_in">int</span> oldBucket = BUCKET; <span class="comment">// old bucket</span></span><br><span class="line">          <span class="built_in">int</span> newBucket = oldBucket * <span class="number">2</span>; <span class="comment">// new bucket</span></span><br><span class="line">          List&lt;<span class="built_in">int</span>&gt;[] newTable = <span class="keyword">new</span> List&lt;<span class="built_in">int</span>&gt;[newBucket];</span><br><span class="line">          <span class="keyword">for</span>(<span class="built_in">int</span> i = <span class="number">0</span>; i &lt; newBucket; i++)</span><br><span class="line">          &#123;</span><br><span class="line">              newTable[i] = <span class="keyword">new</span> List&lt;<span class="built_in">int</span>&gt;();</span><br><span class="line">          &#125;</span><br><span class="line"></span><br><span class="line">          <span class="keyword">for</span>(<span class="built_in">int</span> i = <span class="number">0</span>;i&lt; oldBucket; i++)</span><br><span class="line">          &#123;</span><br><span class="line">              <span class="keyword">foreach</span>(<span class="built_in">int</span> key <span class="keyword">in</span> table[i])</span><br><span class="line">              &#123;</span><br><span class="line">                  <span class="built_in">int</span> newIndex = key%newBucket;</span><br><span class="line"></span><br><span class="line">                  <span class="keyword">if</span> (!newTable[newIndex].Contains(key))</span><br><span class="line">                  &#123;</span><br><span class="line">                      newTable[newIndex].Add(key);</span><br><span class="line">                  &#125;</span><br><span class="line">                  </span><br><span class="line">              &#125;</span><br><span class="line">          &#125;</span><br><span class="line">          table = newTable;</span><br><span class="line">          BUCKET = newBucket;</span><br><span class="line">          Console.WriteLine(<span class="string">$&quot;Rehashed to <span class="subst">&#123;newBucket&#125;</span> buckets&quot;</span>);</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="function"><span class="keyword">public</span> <span class="built_in">bool</span> <span class="title">Contains</span>(<span class="params"><span class="built_in">int</span> key</span>)</span></span><br><span class="line">      &#123;</span><br><span class="line">          <span class="built_in">int</span> index = hashFunction(key);</span><br><span class="line">          <span class="keyword">return</span> table[index].Contains(key);</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">insertItem</span>(<span class="params"><span class="built_in">int</span> key</span>)</span></span><br><span class="line">      &#123;</span><br><span class="line">          <span class="keyword">if</span> (Contains(key))</span><br><span class="line">          &#123;</span><br><span class="line">              Console.WriteLine(<span class="string">$&quot;Key <span class="subst">&#123;key&#125;</span> already exists&quot;</span>);</span><br><span class="line">              <span class="keyword">return</span>;</span><br><span class="line">          &#125;</span><br><span class="line">          <span class="built_in">int</span> index = hashFunction(key);</span><br><span class="line">          table[index].Add(key);</span><br><span class="line"></span><br><span class="line">          elementCount++;</span><br><span class="line">          <span class="keyword">if</span>(GetLoadFactor()&gt; LOAD_FACTOR_THRESHOLD)</span><br><span class="line">          &#123;</span><br><span class="line">              Rehash();</span><br><span class="line">          &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="comment">// Deletes a key from the hash table</span></span><br><span class="line">      <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">deleteItem</span>(<span class="params"><span class="built_in">int</span> key</span>)</span></span><br><span class="line">      &#123;</span><br><span class="line">          <span class="built_in">int</span> index = hashFunction(key);</span><br><span class="line">          table[index].Remove(key);</span><br><span class="line">          elementCount--;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">displayHash</span>()</span></span><br><span class="line">      &#123;</span><br><span class="line">          <span class="keyword">for</span> (<span class="built_in">int</span> i = <span class="number">0</span>; i &lt; BUCKET; i++)</span><br><span class="line">          &#123;</span><br><span class="line">              Console.Write(i + <span class="string">&quot; --&gt; &quot;</span>);</span><br><span class="line">              <span class="keyword">foreach</span> (<span class="built_in">int</span> x <span class="keyword">in</span> table[i])</span><br><span class="line">                  Console.Write(x + <span class="string">&quot; &quot;</span>);</span><br><span class="line">              Console.WriteLine();</span><br><span class="line">          &#125;</span><br><span class="line">      &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<img src="/2025/04/05/Hash-Table/hs04.png" alt="pic"></li>
-</ul>
-<p>It is worth noting that when the linked list is very long, the query efficiency<br>is poor. In this case, the list can be converted to an <strong>“AVL tree”</strong> or <strong>“Red-Black tree”</strong> to optimize the time complexity of the query operation to <strong>O(log n)</strong>.</p>
-<h3 id="Open-Addressing"><a href="#Open-Addressing" class="headerlink" title="Open Addressing "></a>Open Addressing <a name="oa"></a></h3><p>In open addressing, all elements are stored in the hash table itself. Each table entry contains either a record or NIL. When searching for an element, we examine the table slots one by one until the desired element is found or it is clear that the element is not in the table.</p>
-<p>Probe Strategies:</p>
-<ul>
-<li><strong>Linear Probing:</strong><br>In linear probing, the hash table is searched sequentially that starts from the original location of the hash. If in case the location that we get is already occupied, then we check for the next location.</li>
-<li><strong>Quadratic Probing</strong>: Search with step size i^2.</li>
-<li><strong>Double Hashing</strong>: Use a second hash function to calculate the step size.</li>
-</ul>
-<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title">OpenAddressingHash</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="built_in">int</span> BUCKET;             <span class="comment">// Number of buckets</span></span><br><span class="line">    <span class="keyword">private</span> <span class="built_in">int</span>?[] table;           <span class="comment">// Storage for keys, null indicates empty</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">OpenAddressingHash</span>(<span class="params"><span class="built_in">int</span> V</span>)</span> &#123;</span><br><span class="line">        <span class="keyword">this</span>.BUCKET = V;</span><br><span class="line">        table = <span class="keyword">new</span> <span class="built_in">int</span>?[BUCKET]; <span class="comment">// Initialize as empty</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Hash function: Modulo operation</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="built_in">int</span> <span class="title">hashFunction</span>(<span class="params"><span class="built_in">int</span> x</span>)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> (x % BUCKET);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Insert item</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="built_in">bool</span> <span class="title">insertItem</span>(<span class="params"><span class="built_in">int</span> key</span>)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (isFull()) <span class="keyword">return</span> <span class="literal">false</span>; <span class="comment">// Hash table is full</span></span><br><span class="line"></span><br><span class="line">        <span class="built_in">int</span> index = hashFunction(key);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Linear probing</span></span><br><span class="line">        <span class="built_in">int</span> i = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span> (table[(index + i) % BUCKET] != <span class="literal">null</span>) &#123;</span><br><span class="line">            i++;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        table[(index + i) % BUCKET] = key;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Search item</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="built_in">bool</span> <span class="title">searchItem</span>(<span class="params"><span class="built_in">int</span> key</span>)</span> &#123;</span><br><span class="line">        <span class="built_in">int</span> index = hashFunction(key);</span><br><span class="line"></span><br><span class="line">        <span class="built_in">int</span> i = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span> (table[(index + i) % BUCKET] != <span class="literal">null</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span> (table[(index + i) % BUCKET] == key)</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">            i++;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Delete item</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="built_in">bool</span> <span class="title">deleteItem</span>(<span class="params"><span class="built_in">int</span> key</span>)</span> &#123;</span><br><span class="line">        <span class="built_in">int</span> index = hashFunction(key);</span><br><span class="line"></span><br><span class="line">        <span class="built_in">int</span> i = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span> (table[(index + i) % BUCKET] != <span class="literal">null</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span> (table[(index + i) % BUCKET] == key) &#123;</span><br><span class="line">                table[(index + i) % BUCKET] = <span class="literal">null</span>; <span class="comment">// Mark as empty</span></span><br><span class="line">                <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            i++;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Check if hash table is full</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="built_in">bool</span> <span class="title">isFull</span>()</span> &#123;</span><br><span class="line">        <span class="keyword">foreach</span> (<span class="keyword">var</span> item <span class="keyword">in</span> table) &#123;</span><br><span class="line">            <span class="keyword">if</span> (item == <span class="literal">null</span>)</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Display hash table</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">displayHash</span>()</span> &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="built_in">int</span> i = <span class="number">0</span>; i &lt; BUCKET; i++) &#123;</span><br><span class="line">            Console.WriteLine(<span class="string">$&quot;<span class="subst">&#123;i&#125;</span> --&gt; <span class="subst">&#123;table[i]&#125;</span>&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="Hash-Alogrithm"><a href="#Hash-Alogrithm" class="headerlink" title="Hash Alogrithm"></a>Hash Alogrithm<a name="ha"></a></h2><h3 id="Goals-of-hash-algorithms"><a href="#Goals-of-hash-algorithms" class="headerlink" title="Goals of hash algorithms"></a>Goals of hash algorithms<a name="goal"></a></h3><p>To achieve a fast and stable hash table data structure, hash algorithms should have the following characteristics:</p>
-<ul>
-<li><strong>Determinism</strong>: For the same input, the hash algorithm should always produce the same output. Only then can the hash table be reliable.</li>
-<li><strong>High efficiency</strong>: The process of computing the hash value should be fast enough. The smaller the computational overhead, the more practical the hash table.</li>
-<li><strong>Uniform distribution</strong>: The hash algorithm should ensure that key-value pairs are evenly distributed in the hash table. The more uniform the distribution, the lower the probability of hash collisions.</li>
-</ul>
-<p>Your company might use a hashing algorithm for:</p>
-<ul>
-<li><strong>Password storage</strong>. You must keep records of all of the username&#x2F;password combinations people use to access your resources. But if a hacker gains entry, stealing unprotected data is easy. Hashing ensures that the data is stored in a scrambled state, so it is harder to steal.</li>
-<li><strong>Digital signatures</strong>. A tiny bit of data proves that a note wasn’t modified from the time it leaves a user’s outbox and reaches your inbox.</li>
-<li><strong>Document management</strong>. Hashing algorithms can be used to authenticate data. The writer uses a hash to secure the document when it’s complete. The hash works a bit like a seal of approval.<br>A recipient can generate a hash and compare it to the original. If the two are equal, the data is considered genuine. If they don’t match, the document has been changed.</li>
-</ul>
-<h3 id="Common-hash-algorithms"><a href="#Common-hash-algorithms" class="headerlink" title="Common hash algorithms"></a>Common hash algorithms<a name="cha"></a></h3><p>Over the past century, hash algorithms have been in a continuous process of upgrading and optimization. Some researchers strive to improve the performance of hash algorithms, while others, including hackers, are dedicated to finding security issues in hash algorithms.</p>
-<ul>
-<li><strong>MD5</strong> and <strong>SHA-1</strong> have been successfully attacked multiple times and are thus abandoned in various security applications.</li>
-<li><strong>SHA-2</strong> series, especially SHA-256, is one of the most secure hash algorithms to date, with no successful attacks reported, hence commonly used in various security applications and protocols.</li>
-<li><strong>SHA-3</strong> has lower implementation costs and higher computational efficiency compared to SHA-2, but its current usage coverage is not as extensive as the SHA-2 series.</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th align="center"></th>
-<th align="center"><strong>MD5</strong></th>
-<th align="center"><strong>SHA-1</strong></th>
-<th align="center"><strong>SHA-2</strong></th>
-<th align="center"><strong>SHA-3</strong></th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">Release Year</td>
-<td align="center">1992</td>
-<td align="center">1995</td>
-<td align="center">2002</td>
-<td align="center">2008</td>
-</tr>
-<tr>
-<td align="center">Output Length</td>
-<td align="center">O(1)</td>
-<td align="center">O(1)</td>
-<td align="center">O(1)</td>
-<td align="center">224&#x2F;256&#x2F;384&#x2F;512 bit</td>
-</tr>
-<tr>
-<td align="center">Hash Collisions</td>
-<td align="center">Frequent</td>
-<td align="center">Frequent</td>
-<td align="center">Rare</td>
-<td align="center">Rare</td>
-</tr>
-<tr>
-<td align="center">Security Level</td>
-<td align="center">Low, has been successfully attacked</td>
-<td align="center">Low, has been successfully attacked</td>
-<td align="center">High</td>
-<td align="center">High</td>
-</tr>
-<tr>
-<td align="center">Applications</td>
-<td align="center">Abandoned, still used for data integrity checks</td>
-<td align="center">Abandoned</td>
-<td align="center">Cryptocurrency transaction verification, digital signatures, etc.</td>
-<td align="center">Can be used to replace SHA-2</td>
-</tr>
-</tbody></table>
-<h3 id="Four-Sum"><a href="#Four-Sum" class="headerlink" title="Four Sum "></a>Four Sum <a name="fs"></a></h3><p>Given an array nums of n integers, return an array of all the unique quadruplets [nums[a], nums[b], nums[c], nums[d]] such that:</p>
-<ul>
-<li>0 &lt;&#x3D; i, j, k, l &lt; n</li>
-<li>nums1[i] + nums2[j] + nums3[k] + nums4[l] &#x3D;&#x3D; 0<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="built_in">int</span> <span class="title">FourSumCount</span>(<span class="params"><span class="built_in">int</span>[] nums1, <span class="built_in">int</span>[] nums2, <span class="built_in">int</span>[] nums3, <span class="built_in">int</span>[] nums4</span>)</span> &#123;</span><br><span class="line">       Dictionary&lt;<span class="built_in">int</span>, <span class="built_in">int</span>&gt; dic = <span class="keyword">new</span> Dictionary&lt;<span class="built_in">int</span>, <span class="built_in">int</span>&gt;();</span><br><span class="line">        <span class="keyword">foreach</span>(<span class="keyword">var</span> i <span class="keyword">in</span> nums1)&#123;</span><br><span class="line">            <span class="keyword">foreach</span>(<span class="keyword">var</span> j <span class="keyword">in</span> nums2)&#123;</span><br><span class="line">                <span class="built_in">int</span> sum = i + j;</span><br><span class="line">                <span class="keyword">if</span>(dic.ContainsKey(sum))&#123;</span><br><span class="line">                    dic[sum]++;</span><br><span class="line">                &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                    dic.Add(sum, <span class="number">1</span>);</span><br><span class="line">                &#125;</span><br><span class="line">                </span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">int</span> res = <span class="number">0</span>;</span><br><span class="line">         <span class="keyword">foreach</span>(<span class="keyword">var</span> a <span class="keyword">in</span> nums3)&#123;</span><br><span class="line">            <span class="keyword">foreach</span>(<span class="keyword">var</span> b <span class="keyword">in</span> nums4)&#123;</span><br><span class="line">                <span class="built_in">int</span> sum = a+b;</span><br><span class="line">                <span class="keyword">if</span>(dic.TryGetValue(-sum, <span class="keyword">out</span> <span class="keyword">var</span> result))&#123;</span><br><span class="line">                    res += result;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
-</ul>
-<link rel="stylesheet" href="/css/folder.css" type="text/css"><script src="/js/folder.js" type="text/javascript" async></script>]]></content>
-      <categories>
-        <category>Data Structure and Alogrithm</category>
-      </categories>
-      <tags>
-        <tag>Data Structure and Alogrithm</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Design Patterns</title>
     <url>/2025/04/19/Design-Patterns/</url>
     <content><![CDATA[<ol>
@@ -2159,6 +1372,185 @@ Use Cases:</li>
         <tag>Creational Patterns</tag>
         <tag>Structural Patterns</tag>
         <tag>Behavioral Patterns</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Hash Table</title>
+    <url>/2025/04/05/Hash-Table/</url>
+    <content><![CDATA[<ol>
+<li><a href="#introduction">What is Hash Table</a> <ul>
+<li><a href="#core">Core Concepts</a></li>
+<li><a href="#common">Common operations of hash table</a></li>
+</ul>
+</li>
+<li><a href="#hc">Hash Collision</a><ul>
+<li><a href="#sc">Separate Chaining</a></li>
+<li><a href="#oa">Open Addressing</a></li>
+</ul>
+</li>
+<li><a href="#ha">Hash Alogrithm</a><ul>
+<li><a href="#goal">Goals of hash algorithms</a></li>
+<li><a href="#cha">Common hash algorithms</a></li>
+</ul>
+</li>
+<li><a href="#pa">Practical Examples</a><ul>
+<li><a href="#fs">four sum</a><span id="more"></span></li>
+</ul>
+</li>
+</ol>
+<h2 id="What-is-Hash-Table"><a href="#What-is-Hash-Table" class="headerlink" title="What is Hash Table?"></a>What is Hash Table?<a name="introduction"></a></h2><p>A <strong><a href="https://en.wikipedia.org/wiki/Hash_table">Hash Table</a></strong> is a high-efficiency data structure that stores key-value pairs.It uses a hash function to map keys to storage locations, achieving average <strong>O(1)</strong> time complexity for <strong>fast insertions, lookups, and deletions</strong>.The index functions as a storage location for the matching value. In simple words, it maps the keys with the value.Widely used in caching systems, database indexing, and compiler symbol tables.<br><img src="/2025/04/05/Hash-Table/hs01.png" alt="pic"></p>
+<h3 id="Core-Concepts"><a href="#Core-Concepts" class="headerlink" title="Core Concepts"></a>Core Concepts<a name="core"></a></h3><ul>
+<li><strong>Key</strong>: A unique identifier for the data.</li>
+<li><strong>Value</strong>: The data associated with the key (simplified to just storing keys in this example).</li>
+<li><strong>Bucket</strong>: A storage unit in the hash table (typically an array).</li>
+<li><strong>Hash Functions:</strong><br>A hash function converts a key into an index for the underlying array:<ul>
+<li>Deterministic: Same key always produces the same index.</li>
+<li>Efficient: Computed quickly to avoid performance bottlenecks.</li>
+<li>Uniform: Distributes keys evenly to minimize collisions.</li>
+</ul>
+</li>
+<li><strong>Handling Hash Collisions:</strong><br>When two different keys produce the same index, a collision occurs. Common solutions include:<ul>
+<li><strong>Seperate Chaining</strong>: Store conflicting elements in a linked list at the same index.</li>
+<li><strong>Open Addressing</strong>: Find the next available slot in the array.</li>
+</ul>
+</li>
+</ul>
+<p>In addition to hash tables, arrays and linked lists can also be used to implement query functionality, but the time complexity is different. </p>
+<table>
+<thead>
+<tr>
+<th align="center"></th>
+<th align="center"><strong>Array</strong></th>
+<th align="center"><strong>Linked List</strong></th>
+<th align="center"><strong>Hash Table</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">Search</td>
+<td align="center">O(n)</td>
+<td align="center">O(n)</td>
+<td align="center">O(1)</td>
+</tr>
+<tr>
+<td align="center">Insert</td>
+<td align="center">O(1)</td>
+<td align="center">O(1)</td>
+<td align="center">O(1)</td>
+</tr>
+<tr>
+<td align="center">Delete</td>
+<td align="center">O(n)</td>
+<td align="center">O(n)</td>
+<td align="center">O(1)</td>
+</tr>
+</tbody></table>
+<p>Per aboved comparison, <strong>the time complexity for operations (insertion, deletion, searching, and modification) in a hash table is O(1)</strong>, which is highly efficient.</p>
+<h3 id="Common-operations-of-hash-table"><a href="#Common-operations-of-hash-table" class="headerlink" title="Common operations of hash table"></a>Common operations of hash table<a name="common"></a></h3><p>Common operations of a hash table include: initialization, querying, adding key-value pairs, and deleting key-value pairs. Here is an example code:</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">/* Initialize hash table */</span><br><span class="line">Dictionary&lt;int, string&gt; map = new() &#123;</span><br><span class="line">    /* Add operation */</span><br><span class="line">    // Add key-value pair (key, value) to hash table</span><br><span class="line">    &#123; 13835, &quot;Tom&quot; &#125;,</span><br><span class="line">    &#123; 16937, &quot;Jerry&quot; &#125;,</span><br><span class="line">    &#123; 16852, &quot;Steve&quot; &#125;,</span><br><span class="line">    &#123; 13200, &quot;James&quot; &#125;,</span><br><span class="line">    &#123; 14583, &quot;Lisa&quot; &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">/* Query operation */</span><br><span class="line">// Input key into hash table, get value</span><br><span class="line">string name = map[16937];</span><br><span class="line"></span><br><span class="line">/* Delete operation */</span><br><span class="line">// Delete key-value pair (key, value) from hash table</span><br><span class="line">map.Remove(14583);</span><br></pre></td></tr></table></figure>
+<p>There are three common ways to traverse a hash table: traversing key-value pairs, traversing keys, and traversing values. Here is an example code:</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">/* Traverse hash table */</span><br><span class="line">// Traverse key-value pairs Key-&gt;Value</span><br><span class="line">foreach (var kv in map) &#123;</span><br><span class="line">    Console.WriteLine(kv.Key + &quot; -&gt; &quot; + kv.Value);</span><br><span class="line">&#125;</span><br><span class="line">// Traverse keys only</span><br><span class="line">foreach (int key in map.Keys) &#123;</span><br><span class="line">    Console.WriteLine(key);</span><br><span class="line">&#125;</span><br><span class="line">// Traverse values only</span><br><span class="line">foreach (string val in map.Values) &#123;</span><br><span class="line">    Console.WriteLine(val);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="Hash-Collision"><a href="#Hash-Collision" class="headerlink" title="Hash Collision"></a>Hash Collision<a name="hc"></a></h2><p>The hashing process generates a small number for a big key, so there is a possibility that two keys could produce the same value. The situation where the newly inserted key maps to an already occupied, and it must be handled using some collision handling technology.<br><img src="/2025/04/05/Hash-Table/hs02.png" alt="pic"></p>
+<p>There are mainly two methods to handle collision:</p>
+<ul>
+<li>Separate Chaining</li>
+<li>Open Addressing</li>
+</ul>
+<h3 id="Separate-Chaining"><a href="#Separate-Chaining" class="headerlink" title="Separate Chaining "></a>Separate Chaining <a name="sc"></a></h3><p>Separate chaining converts a single element into a linked list, treating key-value pairs as list nodes, storing all colliding key-value pairs in the same linked list.<br>The operations of a hash table implemented with separate chaining have changed as follows:</p>
+<ul>
+<li>Searching Elements: Input key, obtain the bucket index through the hash function, then access the head node of the linked list. Traverse the linked list and compare key to find the target key-value pair.</li>
+<li>Inserting Elements: Access the head node of the linked list via the hash function, then append the node (key-value pair) to the list.</li>
+<li>Deleting Elements: Access the head of the linked list based on the result of the hash function, then traverse the linked list to find the target node and delete it.<br><img src="/2025/04/05/Hash-Table/hs03.png" alt="pic"></li>
+</ul>
+<p>The code below provides a simple implementation of a separate chaining hash table, with two things to note:</p>
+<ul>
+<li>Lists (dynamic arrays) are used instead of linked lists for simplicity. In this setup, the hash table (array) contains multiple buckets, each of which is a list.</li>
+<li>This implementation includes a hash table resizing method. When the load factor exceeds <strong>0.7</strong>, we expand the hash table to twice its original size.<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title">Hash</span></span><br><span class="line">&#123;</span><br><span class="line">      <span class="built_in">int</span> BUCKET;</span><br><span class="line">      List&lt;<span class="built_in">int</span>&gt;[] table;</span><br><span class="line">      <span class="built_in">int</span> elementCount;</span><br><span class="line">      <span class="keyword">const</span> <span class="built_in">double</span> LOAD_FACTOR_THRESHOLD = <span class="number">0.7</span>;</span><br><span class="line">      <span class="function"><span class="keyword">public</span> <span class="title">Hash</span>(<span class="params"><span class="built_in">int</span> V</span>)</span></span><br><span class="line">      &#123;</span><br><span class="line">          <span class="keyword">this</span>.BUCKET = V;</span><br><span class="line">          table = <span class="keyword">new</span> List&lt;<span class="built_in">int</span>&gt;[BUCKET];</span><br><span class="line">          elementCount = <span class="number">0</span>;</span><br><span class="line">          <span class="keyword">for</span> (<span class="built_in">int</span> i = <span class="number">0</span>; i &lt; BUCKET; i++)</span><br><span class="line">              table[i] = <span class="keyword">new</span> List&lt;<span class="built_in">int</span>&gt;();</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="comment">// Hash function to map values to key</span></span><br><span class="line">      <span class="function"><span class="keyword">private</span> <span class="built_in">int</span> <span class="title">hashFunction</span>(<span class="params"><span class="built_in">int</span> x</span>)</span></span><br><span class="line">      &#123;</span><br><span class="line">          <span class="built_in">int</span> hash = x.GetHashCode();</span><br><span class="line">          <span class="keyword">return</span> (hash % BUCKET + BUCKET) % BUCKET;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="function"><span class="built_in">double</span> <span class="title">GetLoadFactor</span>()</span></span><br><span class="line">      &#123;</span><br><span class="line">          <span class="keyword">return</span> (<span class="built_in">double</span>)elementCount / BUCKET;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="function"><span class="keyword">void</span> <span class="title">Rehash</span>()</span></span><br><span class="line">      &#123;</span><br><span class="line">          <span class="built_in">int</span> oldBucket = BUCKET; <span class="comment">// old bucket</span></span><br><span class="line">          <span class="built_in">int</span> newBucket = oldBucket * <span class="number">2</span>; <span class="comment">// new bucket</span></span><br><span class="line">          List&lt;<span class="built_in">int</span>&gt;[] newTable = <span class="keyword">new</span> List&lt;<span class="built_in">int</span>&gt;[newBucket];</span><br><span class="line">          <span class="keyword">for</span>(<span class="built_in">int</span> i = <span class="number">0</span>; i &lt; newBucket; i++)</span><br><span class="line">          &#123;</span><br><span class="line">              newTable[i] = <span class="keyword">new</span> List&lt;<span class="built_in">int</span>&gt;();</span><br><span class="line">          &#125;</span><br><span class="line"></span><br><span class="line">          <span class="keyword">for</span>(<span class="built_in">int</span> i = <span class="number">0</span>;i&lt; oldBucket; i++)</span><br><span class="line">          &#123;</span><br><span class="line">              <span class="keyword">foreach</span>(<span class="built_in">int</span> key <span class="keyword">in</span> table[i])</span><br><span class="line">              &#123;</span><br><span class="line">                  <span class="built_in">int</span> newIndex = key%newBucket;</span><br><span class="line"></span><br><span class="line">                  <span class="keyword">if</span> (!newTable[newIndex].Contains(key))</span><br><span class="line">                  &#123;</span><br><span class="line">                      newTable[newIndex].Add(key);</span><br><span class="line">                  &#125;</span><br><span class="line">                  </span><br><span class="line">              &#125;</span><br><span class="line">          &#125;</span><br><span class="line">          table = newTable;</span><br><span class="line">          BUCKET = newBucket;</span><br><span class="line">          Console.WriteLine(<span class="string">$&quot;Rehashed to <span class="subst">&#123;newBucket&#125;</span> buckets&quot;</span>);</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="function"><span class="keyword">public</span> <span class="built_in">bool</span> <span class="title">Contains</span>(<span class="params"><span class="built_in">int</span> key</span>)</span></span><br><span class="line">      &#123;</span><br><span class="line">          <span class="built_in">int</span> index = hashFunction(key);</span><br><span class="line">          <span class="keyword">return</span> table[index].Contains(key);</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">insertItem</span>(<span class="params"><span class="built_in">int</span> key</span>)</span></span><br><span class="line">      &#123;</span><br><span class="line">          <span class="keyword">if</span> (Contains(key))</span><br><span class="line">          &#123;</span><br><span class="line">              Console.WriteLine(<span class="string">$&quot;Key <span class="subst">&#123;key&#125;</span> already exists&quot;</span>);</span><br><span class="line">              <span class="keyword">return</span>;</span><br><span class="line">          &#125;</span><br><span class="line">          <span class="built_in">int</span> index = hashFunction(key);</span><br><span class="line">          table[index].Add(key);</span><br><span class="line"></span><br><span class="line">          elementCount++;</span><br><span class="line">          <span class="keyword">if</span>(GetLoadFactor()&gt; LOAD_FACTOR_THRESHOLD)</span><br><span class="line">          &#123;</span><br><span class="line">              Rehash();</span><br><span class="line">          &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="comment">// Deletes a key from the hash table</span></span><br><span class="line">      <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">deleteItem</span>(<span class="params"><span class="built_in">int</span> key</span>)</span></span><br><span class="line">      &#123;</span><br><span class="line">          <span class="built_in">int</span> index = hashFunction(key);</span><br><span class="line">          table[index].Remove(key);</span><br><span class="line">          elementCount--;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">displayHash</span>()</span></span><br><span class="line">      &#123;</span><br><span class="line">          <span class="keyword">for</span> (<span class="built_in">int</span> i = <span class="number">0</span>; i &lt; BUCKET; i++)</span><br><span class="line">          &#123;</span><br><span class="line">              Console.Write(i + <span class="string">&quot; --&gt; &quot;</span>);</span><br><span class="line">              <span class="keyword">foreach</span> (<span class="built_in">int</span> x <span class="keyword">in</span> table[i])</span><br><span class="line">                  Console.Write(x + <span class="string">&quot; &quot;</span>);</span><br><span class="line">              Console.WriteLine();</span><br><span class="line">          &#125;</span><br><span class="line">      &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<img src="/2025/04/05/Hash-Table/hs04.png" alt="pic"></li>
+</ul>
+<p>It is worth noting that when the linked list is very long, the query efficiency<br>is poor. In this case, the list can be converted to an <strong>“AVL tree”</strong> or <strong>“Red-Black tree”</strong> to optimize the time complexity of the query operation to <strong>O(log n)</strong>.</p>
+<h3 id="Open-Addressing"><a href="#Open-Addressing" class="headerlink" title="Open Addressing "></a>Open Addressing <a name="oa"></a></h3><p>In open addressing, all elements are stored in the hash table itself. Each table entry contains either a record or NIL. When searching for an element, we examine the table slots one by one until the desired element is found or it is clear that the element is not in the table.</p>
+<p>Probe Strategies:</p>
+<ul>
+<li><strong>Linear Probing:</strong><br>In linear probing, the hash table is searched sequentially that starts from the original location of the hash. If in case the location that we get is already occupied, then we check for the next location.</li>
+<li><strong>Quadratic Probing</strong>: Search with step size i^2.</li>
+<li><strong>Double Hashing</strong>: Use a second hash function to calculate the step size.</li>
+</ul>
+<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title">OpenAddressingHash</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="built_in">int</span> BUCKET;             <span class="comment">// Number of buckets</span></span><br><span class="line">    <span class="keyword">private</span> <span class="built_in">int</span>?[] table;           <span class="comment">// Storage for keys, null indicates empty</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">OpenAddressingHash</span>(<span class="params"><span class="built_in">int</span> V</span>)</span> &#123;</span><br><span class="line">        <span class="keyword">this</span>.BUCKET = V;</span><br><span class="line">        table = <span class="keyword">new</span> <span class="built_in">int</span>?[BUCKET]; <span class="comment">// Initialize as empty</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Hash function: Modulo operation</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="built_in">int</span> <span class="title">hashFunction</span>(<span class="params"><span class="built_in">int</span> x</span>)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> (x % BUCKET);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Insert item</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="built_in">bool</span> <span class="title">insertItem</span>(<span class="params"><span class="built_in">int</span> key</span>)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (isFull()) <span class="keyword">return</span> <span class="literal">false</span>; <span class="comment">// Hash table is full</span></span><br><span class="line"></span><br><span class="line">        <span class="built_in">int</span> index = hashFunction(key);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Linear probing</span></span><br><span class="line">        <span class="built_in">int</span> i = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span> (table[(index + i) % BUCKET] != <span class="literal">null</span>) &#123;</span><br><span class="line">            i++;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        table[(index + i) % BUCKET] = key;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Search item</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="built_in">bool</span> <span class="title">searchItem</span>(<span class="params"><span class="built_in">int</span> key</span>)</span> &#123;</span><br><span class="line">        <span class="built_in">int</span> index = hashFunction(key);</span><br><span class="line"></span><br><span class="line">        <span class="built_in">int</span> i = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span> (table[(index + i) % BUCKET] != <span class="literal">null</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span> (table[(index + i) % BUCKET] == key)</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">            i++;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Delete item</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="built_in">bool</span> <span class="title">deleteItem</span>(<span class="params"><span class="built_in">int</span> key</span>)</span> &#123;</span><br><span class="line">        <span class="built_in">int</span> index = hashFunction(key);</span><br><span class="line"></span><br><span class="line">        <span class="built_in">int</span> i = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span> (table[(index + i) % BUCKET] != <span class="literal">null</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span> (table[(index + i) % BUCKET] == key) &#123;</span><br><span class="line">                table[(index + i) % BUCKET] = <span class="literal">null</span>; <span class="comment">// Mark as empty</span></span><br><span class="line">                <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            i++;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Check if hash table is full</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="built_in">bool</span> <span class="title">isFull</span>()</span> &#123;</span><br><span class="line">        <span class="keyword">foreach</span> (<span class="keyword">var</span> item <span class="keyword">in</span> table) &#123;</span><br><span class="line">            <span class="keyword">if</span> (item == <span class="literal">null</span>)</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Display hash table</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">displayHash</span>()</span> &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="built_in">int</span> i = <span class="number">0</span>; i &lt; BUCKET; i++) &#123;</span><br><span class="line">            Console.WriteLine(<span class="string">$&quot;<span class="subst">&#123;i&#125;</span> --&gt; <span class="subst">&#123;table[i]&#125;</span>&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="Hash-Alogrithm"><a href="#Hash-Alogrithm" class="headerlink" title="Hash Alogrithm"></a>Hash Alogrithm<a name="ha"></a></h2><h3 id="Goals-of-hash-algorithms"><a href="#Goals-of-hash-algorithms" class="headerlink" title="Goals of hash algorithms"></a>Goals of hash algorithms<a name="goal"></a></h3><p>To achieve a fast and stable hash table data structure, hash algorithms should have the following characteristics:</p>
+<ul>
+<li><strong>Determinism</strong>: For the same input, the hash algorithm should always produce the same output. Only then can the hash table be reliable.</li>
+<li><strong>High efficiency</strong>: The process of computing the hash value should be fast enough. The smaller the computational overhead, the more practical the hash table.</li>
+<li><strong>Uniform distribution</strong>: The hash algorithm should ensure that key-value pairs are evenly distributed in the hash table. The more uniform the distribution, the lower the probability of hash collisions.</li>
+</ul>
+<p>Your company might use a hashing algorithm for:</p>
+<ul>
+<li><strong>Password storage</strong>. You must keep records of all of the username&#x2F;password combinations people use to access your resources. But if a hacker gains entry, stealing unprotected data is easy. Hashing ensures that the data is stored in a scrambled state, so it is harder to steal.</li>
+<li><strong>Digital signatures</strong>. A tiny bit of data proves that a note wasn’t modified from the time it leaves a user’s outbox and reaches your inbox.</li>
+<li><strong>Document management</strong>. Hashing algorithms can be used to authenticate data. The writer uses a hash to secure the document when it’s complete. The hash works a bit like a seal of approval.<br>A recipient can generate a hash and compare it to the original. If the two are equal, the data is considered genuine. If they don’t match, the document has been changed.</li>
+</ul>
+<h3 id="Common-hash-algorithms"><a href="#Common-hash-algorithms" class="headerlink" title="Common hash algorithms"></a>Common hash algorithms<a name="cha"></a></h3><p>Over the past century, hash algorithms have been in a continuous process of upgrading and optimization. Some researchers strive to improve the performance of hash algorithms, while others, including hackers, are dedicated to finding security issues in hash algorithms.</p>
+<ul>
+<li><strong>MD5</strong> and <strong>SHA-1</strong> have been successfully attacked multiple times and are thus abandoned in various security applications.</li>
+<li><strong>SHA-2</strong> series, especially SHA-256, is one of the most secure hash algorithms to date, with no successful attacks reported, hence commonly used in various security applications and protocols.</li>
+<li><strong>SHA-3</strong> has lower implementation costs and higher computational efficiency compared to SHA-2, but its current usage coverage is not as extensive as the SHA-2 series.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="center"></th>
+<th align="center"><strong>MD5</strong></th>
+<th align="center"><strong>SHA-1</strong></th>
+<th align="center"><strong>SHA-2</strong></th>
+<th align="center"><strong>SHA-3</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">Release Year</td>
+<td align="center">1992</td>
+<td align="center">1995</td>
+<td align="center">2002</td>
+<td align="center">2008</td>
+</tr>
+<tr>
+<td align="center">Output Length</td>
+<td align="center">O(1)</td>
+<td align="center">O(1)</td>
+<td align="center">O(1)</td>
+<td align="center">224&#x2F;256&#x2F;384&#x2F;512 bit</td>
+</tr>
+<tr>
+<td align="center">Hash Collisions</td>
+<td align="center">Frequent</td>
+<td align="center">Frequent</td>
+<td align="center">Rare</td>
+<td align="center">Rare</td>
+</tr>
+<tr>
+<td align="center">Security Level</td>
+<td align="center">Low, has been successfully attacked</td>
+<td align="center">Low, has been successfully attacked</td>
+<td align="center">High</td>
+<td align="center">High</td>
+</tr>
+<tr>
+<td align="center">Applications</td>
+<td align="center">Abandoned, still used for data integrity checks</td>
+<td align="center">Abandoned</td>
+<td align="center">Cryptocurrency transaction verification, digital signatures, etc.</td>
+<td align="center">Can be used to replace SHA-2</td>
+</tr>
+</tbody></table>
+<h3 id="Four-Sum"><a href="#Four-Sum" class="headerlink" title="Four Sum "></a>Four Sum <a name="fs"></a></h3><p>Given an array nums of n integers, return an array of all the unique quadruplets [nums[a], nums[b], nums[c], nums[d]] such that:</p>
+<ul>
+<li>0 &lt;&#x3D; i, j, k, l &lt; n</li>
+<li>nums1[i] + nums2[j] + nums3[k] + nums4[l] &#x3D;&#x3D; 0<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="built_in">int</span> <span class="title">FourSumCount</span>(<span class="params"><span class="built_in">int</span>[] nums1, <span class="built_in">int</span>[] nums2, <span class="built_in">int</span>[] nums3, <span class="built_in">int</span>[] nums4</span>)</span> &#123;</span><br><span class="line">       Dictionary&lt;<span class="built_in">int</span>, <span class="built_in">int</span>&gt; dic = <span class="keyword">new</span> Dictionary&lt;<span class="built_in">int</span>, <span class="built_in">int</span>&gt;();</span><br><span class="line">        <span class="keyword">foreach</span>(<span class="keyword">var</span> i <span class="keyword">in</span> nums1)&#123;</span><br><span class="line">            <span class="keyword">foreach</span>(<span class="keyword">var</span> j <span class="keyword">in</span> nums2)&#123;</span><br><span class="line">                <span class="built_in">int</span> sum = i + j;</span><br><span class="line">                <span class="keyword">if</span>(dic.ContainsKey(sum))&#123;</span><br><span class="line">                    dic[sum]++;</span><br><span class="line">                &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                    dic.Add(sum, <span class="number">1</span>);</span><br><span class="line">                &#125;</span><br><span class="line">                </span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">int</span> res = <span class="number">0</span>;</span><br><span class="line">         <span class="keyword">foreach</span>(<span class="keyword">var</span> a <span class="keyword">in</span> nums3)&#123;</span><br><span class="line">            <span class="keyword">foreach</span>(<span class="keyword">var</span> b <span class="keyword">in</span> nums4)&#123;</span><br><span class="line">                <span class="built_in">int</span> sum = a+b;</span><br><span class="line">                <span class="keyword">if</span>(dic.TryGetValue(-sum, <span class="keyword">out</span> <span class="keyword">var</span> result))&#123;</span><br><span class="line">                    res += result;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<link rel="stylesheet" href="/css/folder.css" type="text/css"><script src="/js/folder.js" type="text/javascript" async></script>]]></content>
+      <categories>
+        <category>Data Structure and Alogrithm</category>
+      </categories>
+      <tags>
+        <tag>Data Structure and Alogrithm</tag>
       </tags>
   </entry>
   <entry>
@@ -3420,6 +2812,146 @@ When a mismatch occurs, the text pointer backtracks to i&#x3D;2, and the pattern
 <link rel="stylesheet" href="/css/folder.css" type="text/css"><script src="/js/folder.js" type="text/javascript" async></script>]]></content>
   </entry>
   <entry>
+    <title>Workflow Orchestration</title>
+    <url>/2026/02/19/Workflow-Orchestration/</url>
+    <content><![CDATA[<h2 id="Workflow-Orchestration"><a href="#Workflow-Orchestration" class="headerlink" title="Workflow Orchestration"></a>Workflow Orchestration</h2><h3 id="1-Plan-Node-Default"><a href="#1-Plan-Node-Default" class="headerlink" title="1. Plan Node Default"></a>1. Plan Node Default</h3><ul>
+<li>Enter plan mode for ANY non-trivial task (3+ steps or architectural decisions)</li>
+<li>If something goes sideways, STOP and re-plan immediately – don’t keep pushing</li>
+<li>Write detailed specs upfront to reduce ambiguity</li>
+</ul>
+<h3 id="2-Subagent-Strategy"><a href="#2-Subagent-Strategy" class="headerlink" title="2. Subagent Strategy"></a>2. Subagent Strategy</h3><ul>
+<li>Use subagents liberally to keep main context window clean</li>
+<li>Offload research, exploration, and parallel analysis to subagents</li>
+<li>One tack per subagent for focused execution<span id="more"></span></li>
+</ul>
+<h3 id="3-Self-Improvement-Loop"><a href="#3-Self-Improvement-Loop" class="headerlink" title="3. Self-Improvement Loop"></a>3. Self-Improvement Loop</h3><ul>
+<li>After ANY correction from the user: update <code>tasks/lessons.md</code> with the pattern</li>
+<li>Write rules for yourself that prevent the same mistake</li>
+<li>Review lessons at session start for relevant project</li>
+</ul>
+<h3 id="4-Verification-Before-Done"><a href="#4-Verification-Before-Done" class="headerlink" title="4. Verification Before Done"></a>4. Verification Before Done</h3><ul>
+<li>Never mark a task complete without proving it works</li>
+<li>Run tests, check logs, demonstrate correctness</li>
+</ul>
+<h3 id="5-Demand-Elegance-Balanced"><a href="#5-Demand-Elegance-Balanced" class="headerlink" title="5. Demand Elegance (Balanced)"></a>5. Demand Elegance (Balanced)</h3><ul>
+<li>For non-trivial changes: pause and ask “is there a more elegant way?”</li>
+<li>If a fix feels hacky: “Knowing everything I know now, implement the elegant solution”</li>
+<li>Skip this for simple, obvious fixes – don’t over-engineer</li>
+</ul>
+<h3 id="6-Autonomous-Bug-Fixing"><a href="#6-Autonomous-Bug-Fixing" class="headerlink" title="6. Autonomous Bug Fixing"></a>6. Autonomous Bug Fixing</h3><ul>
+<li>When given a bug report: just fix it. Don’t ask for hand-holding</li>
+<li>Point at logs, errors, failing tests – then resolve them</li>
+<li>Zero context switching required from the user</li>
+</ul>
+<h3 id="Task-Management"><a href="#Task-Management" class="headerlink" title="Task Management"></a>Task Management</h3><ol>
+<li><strong>Plan First</strong>: Write plan to <code>tasks/todo.md</code> with checkable items</li>
+<li><strong>Verify Plan</strong>: Check in before starting implementation</li>
+<li><strong>Track Progress</strong>: Mark items complete as you go</li>
+<li><strong>Document Results</strong>: Add review section to <code>tasks/todo.md</code></li>
+<li><strong>Capture Lessons</strong>: Update <code>tasks/lessons.md</code> after corrections</li>
+</ol>
+<h3 id="Core-Principles"><a href="#Core-Principles" class="headerlink" title="Core Principles"></a>Core Principles</h3><ul>
+<li><strong>Simplicity First</strong>: Make every change as simple as possible. Impact minimal code.</li>
+<li><strong>No Laziness</strong>: Find root causes. No temporary fixes. Senior developer standards.</li>
+<li><strong>Minimal Impact</strong>: Changes should only touch what’s necessary. Avoid introducing bugs.</li>
+</ul>
+<link rel="stylesheet" href="/css/folder.css" type="text/css"><script src="/js/folder.js" type="text/javascript" async></script>]]></content>
+      <categories>
+        <category>AI</category>
+        <category>Vibe Coding</category>
+      </categories>
+      <tags>
+        <tag>AI Programming</tag>
+        <tag>Claude</tag>
+        <tag>Productivity</tag>
+        <tag>Workflow</tag>
+        <tag>Automation</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Doubly Linked List</title>
+    <url>/2025/02/19/doublylinkedlist/</url>
+    <content><![CDATA[<h1 id="Doubly-Linked-List-in-C-A-Fun-and-Practical-Guide"><a href="#Doubly-Linked-List-in-C-A-Fun-and-Practical-Guide" class="headerlink" title="Doubly Linked List in C#: A Fun and Practical Guide"></a>Doubly Linked List in C#: A Fun and Practical Guide</h1><ol>
+<li><a href="#what-is-a-doubly-linked-list">What is a Doubly Linked List?</a></li>
+<li><a href="#creating-a-doubly-linked-list-class">Creating a Doubly Linked List Class</a></li>
+<li><a href="#insertion-operations">Insertion Operations</a><ul>
+<li><a href="#insert-at-the-beginning">Insert at the Beginning</a></li>
+<li><a href="#insert-at-the-end">Insert at the End</a></li>
+<li><a href="#insert-after-a-spefific-node">Insert after a spefific Node</a></li>
+</ul>
+</li>
+<li><a href="#deletion-operations">Deletion Operations</a><span id="more"></span></li>
+<li><a href="#traversal">Traversal</a><ul>
+<li><a href="#forward-traversal">Forward Traversal</a></li>
+<li><a href="#backward-traversal">Backward Traversal</a></li>
+</ul>
+</li>
+<li><a href="#search">Search Node</a></li>
+<li><a href="#complexity">Complexity Analysis</a></li>
+<li><a href="#use">Use Cases</a></li>
+<li><a href="#conclusion">Conclusion</a></li>
+</ol>
+<h2 id="1-What-is-a-Doubly-Linked-List"><a href="#1-What-is-a-Doubly-Linked-List" class="headerlink" title="1. What is a Doubly Linked List?"></a>1. What is a Doubly Linked List?<a name="what-is-a-doubly-linked-list"></a></h2><p>In a Doubly Linked List, each node contains two links - the first link points to the previous node and the next link points to the next node in the sequence.The prev pointer of the first node and next pointer of the last node will point to null.<br><img src="/uploads/2.png" alt="pic"></p>
+<p>Let us start by defining the <code>Node</code> class using C#:</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public class Node&lt;T&gt;</span><br><span class="line">&#123;</span><br><span class="line">    public T Data &#123; get; set; &#125; </span><br><span class="line">    public Node&lt;T&gt; Next &#123; get; set; &#125;</span><br><span class="line">    public Node&lt;T&gt; Prev &#123; get; set; &#125;</span><br><span class="line"></span><br><span class="line">    public Node (T data)</span><br><span class="line">    &#123;</span><br><span class="line">        Data = data;</span><br><span class="line">        Next = null;</span><br><span class="line">        Prev = null;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="2-Creating-a-Doubly-Linked-List-Class"><a href="#2-Creating-a-Doubly-Linked-List-Class" class="headerlink" title="2. Creating a Doubly Linked List Class "></a>2. Creating a Doubly Linked List Class <a name="creating-a-doubly-linked-list-class"></a></h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public class DoublyLinkedList&lt;T&gt;</span><br><span class="line">&#123;</span><br><span class="line">    private Node&lt;T&gt; head;</span><br><span class="line">    private Node&lt;T&gt; tail;</span><br><span class="line"></span><br><span class="line">    private int size;</span><br><span class="line">    public DoublyLinkedList()</span><br><span class="line">    &#123;</span><br><span class="line">        head = null;</span><br><span class="line">        tail = null;</span><br><span class="line">        size = 0;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public int Size() =&gt; size;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-Insertion-Operations"><a href="#3-Insertion-Operations" class="headerlink" title="3. Insertion Operations "></a>3. Insertion Operations <a name="insertion-operations"></a></h2><h3 id="Insert-at-the-Beginning"><a href="#Insert-at-the-Beginning" class="headerlink" title="Insert at the Beginning "></a>Insert at the Beginning <a name="insert-at-the-beginning"></a></h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public void AddFirst(T data)</span><br><span class="line">&#123;</span><br><span class="line">     Node&lt;T&gt; newNode = new Node&lt;T&gt;(data);</span><br><span class="line">     if (head == null)</span><br><span class="line">     &#123;</span><br><span class="line">         head = tail = newNode;</span><br><span class="line">     &#125;</span><br><span class="line">     else</span><br><span class="line">     &#123;</span><br><span class="line">         newNode.Next = head;</span><br><span class="line">         head.Prev = newNode;</span><br><span class="line">         head = newNode;</span><br><span class="line">     &#125;</span><br><span class="line"></span><br><span class="line">     size++;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Insert-at-the-End"><a href="#Insert-at-the-End" class="headerlink" title="Insert at the End "></a>Insert at the End <a name="insert-at-the-end"></a></h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public void AddTail(T data)</span><br><span class="line"> &#123;</span><br><span class="line">     Node&lt;T&gt; newNode = new Node&lt;T&gt;(data);</span><br><span class="line">     if (head == null)</span><br><span class="line">     &#123;</span><br><span class="line">         head = tail = newNode;</span><br><span class="line">     &#125;</span><br><span class="line">     else</span><br><span class="line">     &#123;</span><br><span class="line">         tail.Next = newNode;</span><br><span class="line">         newNode.Prev = tail;</span><br><span class="line">         tail = newNode;</span><br><span class="line">     &#125;</span><br><span class="line">     size++;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Insert-after-a-specific-Node"><a href="#Insert-after-a-specific-Node" class="headerlink" title="Insert after a specific Node "></a>Insert after a specific Node <a name="insert-after-a-spefific-node"></a></h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public void InsertAt(T data, int index)</span><br><span class="line">&#123;</span><br><span class="line">     if (index &lt; 0 || index&gt; size)</span><br><span class="line">     &#123;</span><br><span class="line">         throw new ArgumentOutOfRangeException(&quot;Index&quot;, index, &quot;Index must be non - negative&quot;);</span><br><span class="line">     &#125;</span><br><span class="line">     if(index == 0)</span><br><span class="line">     &#123;</span><br><span class="line">         AddFirst(data);</span><br><span class="line">         return;</span><br><span class="line">     &#125;</span><br><span class="line">     else if (index == size)</span><br><span class="line">     &#123;</span><br><span class="line">         AddTail(data);</span><br><span class="line">         return;</span><br><span class="line">     &#125;</span><br><span class="line">     else</span><br><span class="line">     &#123;</span><br><span class="line">         Node&lt;T&gt; current = head;</span><br><span class="line">         for (int i = 0; i &lt; index - 1; i++)</span><br><span class="line">         &#123;</span><br><span class="line">             current = current.Next;</span><br><span class="line">         &#125;</span><br><span class="line">         Node&lt;T&gt; newNode = new Node&lt;T&gt;(data);</span><br><span class="line">         newNode.Next = current.Next;</span><br><span class="line">         newNode.Prev = current;</span><br><span class="line">         current.Next.Prev = newNode;</span><br><span class="line">         current.Next = newNode;</span><br><span class="line">         size++;</span><br><span class="line">     &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="4-Deletion-Operation"><a href="#4-Deletion-Operation" class="headerlink" title="4. Deletion Operation "></a>4. Deletion Operation <a name="deletion-operations"></a></h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public void Delete(T Data)</span><br><span class="line"> &#123;</span><br><span class="line">     Node&lt;T&gt; current = head;</span><br><span class="line"></span><br><span class="line">     while (current != null)</span><br><span class="line">     &#123;</span><br><span class="line">         if (current.Data.Equals(Data))</span><br><span class="line">         &#123;</span><br><span class="line">             //if the node is not the head</span><br><span class="line">             if (current.Prev != null)</span><br><span class="line">             &#123;</span><br><span class="line">                 current.Prev.Next = current.Next;</span><br><span class="line">             &#125;</span><br><span class="line">             else</span><br><span class="line">             &#123;</span><br><span class="line">                 head = current.Next;</span><br><span class="line">             &#125;</span><br><span class="line"></span><br><span class="line">             if (current.Next != null)</span><br><span class="line">             &#123;</span><br><span class="line">                 current.Next.Prev = current.Prev;</span><br><span class="line">             &#125;</span><br><span class="line">             else</span><br><span class="line">             &#123;</span><br><span class="line">                 tail = current.Prev;</span><br><span class="line">             &#125;</span><br><span class="line">             size--;</span><br><span class="line">             return;</span><br><span class="line">         &#125;</span><br><span class="line"></span><br><span class="line">         current = current.Next;</span><br><span class="line">     &#125;</span><br><span class="line">     Console.WriteLine(&quot;Node with data &#123;0&#125; not found&quot;, Data);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="5-Traversal"><a href="#5-Traversal" class="headerlink" title="5. Traversal "></a>5. Traversal <a name="traversal"></a></h2><h3 id="Forward-Traversal"><a href="#Forward-Traversal" class="headerlink" title="Forward Traversal "></a>Forward Traversal <a name="forward-traversal"></a></h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public void PrintForward()</span><br><span class="line">&#123;</span><br><span class="line">    Node&lt;T&gt; current = head;</span><br><span class="line">    while (current != null)</span><br><span class="line">    &#123;</span><br><span class="line">        Console.Write(current.Data + &quot; &quot;);</span><br><span class="line">        current = current.Next;</span><br><span class="line">    &#125;</span><br><span class="line">    Console.WriteLine();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Backward-Traversal"><a href="#Backward-Traversal" class="headerlink" title="Backward Traversal "></a>Backward Traversal <a name="backward-traversal"></a></h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public void PrintBackward()</span><br><span class="line">&#123;</span><br><span class="line">    Node&lt;T&gt; current = tail;</span><br><span class="line">    while (current != null)</span><br><span class="line">    &#123;</span><br><span class="line">        Console.Write(current.Data + &quot; &quot;);</span><br><span class="line">        current = current.Prev;</span><br><span class="line">    &#125;</span><br><span class="line">    Console.WriteLine();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="6-Search-Node"><a href="#6-Search-Node" class="headerlink" title="6. Search Node "></a>6. Search Node <a name="search"></a></h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public void Find(T Data)</span><br><span class="line">&#123;</span><br><span class="line">     Node&lt;T&gt; current = head;</span><br><span class="line">     while (current != null)</span><br><span class="line">     &#123;</span><br><span class="line">         if (current.Data.Equals(Data))</span><br><span class="line">         &#123;</span><br><span class="line">             Console.WriteLine(&quot;Found: &quot; + Data);</span><br><span class="line">             return;</span><br><span class="line">         &#125;</span><br><span class="line">         current = current.Next;</span><br><span class="line">     &#125;</span><br><span class="line">     Console.WriteLine(&quot;Not Found: &quot; + Data);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="7-Complexity-Analysis"><a href="#7-Complexity-Analysis" class="headerlink" title="7. Complexity Analysis "></a>7. Complexity Analysis <a name="Complexity"></a></h2><table>
+<thead>
+<tr>
+<th align="center">Operation</th>
+<th align="center">Time Complexity</th>
+<th align="center">Space Complexity</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">Insertion</td>
+<td align="center">O(1)&#x2F;O(n)</td>
+<td align="center">O(1)</td>
+</tr>
+<tr>
+<td align="center">Deletion</td>
+<td align="center">O(1)</td>
+<td align="center">O(1)</td>
+</tr>
+<tr>
+<td align="center">Search</td>
+<td align="center">O(n)</td>
+<td align="center">O(1)</td>
+</tr>
+<tr>
+<td align="center">Traverse</td>
+<td align="center">O(n)</td>
+<td align="center">O(1)</td>
+</tr>
+</tbody></table>
+<h2 id="8-Use-Cases"><a href="#8-Use-Cases" class="headerlink" title="8. Use Cases "></a>8. Use Cases <a name="use"></a></h2><ul>
+<li>Browser history management</li>
+<li>Music&#x2F;Video playlists</li>
+<li>Undo&#x2F;Redo functionality</li>
+<li>Navigation systems</li>
+</ul>
+<h2 id="9-Conclusion"><a href="#9-Conclusion" class="headerlink" title="9. Conclusion  "></a>9. Conclusion  <a name="conclusion"></a></h2><p><strong>Doubly Linked Lists</strong> provide enhanced flexibility compared to single linked lists at the cost of additional memory usage.They are particularly useful in scenarios requiring bidirectional traversal and frequent modifications.When implementing DLLs, careful pointer management is crucial to avoid broken links and memory leaks.</p>
+<link rel="stylesheet" href="/css/folder.css" type="text/css"><script src="/js/folder.js" type="text/javascript" async></script>]]></content>
+      <categories>
+        <category>Data Structure and Alogrithm</category>
+      </categories>
+      <tags>
+        <tag>Data Structure and Alogrithm</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>TLias Spring Boot Practice Guide</title>
     <url>/2026/02/18/TLias-Spring-Boot-Practice-Guide/</url>
     <content><![CDATA[<ul>
@@ -3907,146 +3439,6 @@ When a mismatch occurs, the text pointer backtracks to i&#x3D;2, and the pattern
         <tag>JWT</tag>
         <tag>AOP</tag>
         <tag>RESTful API</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Doubly Linked List</title>
-    <url>/2025/02/19/doublylinkedlist/</url>
-    <content><![CDATA[<h1 id="Doubly-Linked-List-in-C-A-Fun-and-Practical-Guide"><a href="#Doubly-Linked-List-in-C-A-Fun-and-Practical-Guide" class="headerlink" title="Doubly Linked List in C#: A Fun and Practical Guide"></a>Doubly Linked List in C#: A Fun and Practical Guide</h1><ol>
-<li><a href="#what-is-a-doubly-linked-list">What is a Doubly Linked List?</a></li>
-<li><a href="#creating-a-doubly-linked-list-class">Creating a Doubly Linked List Class</a></li>
-<li><a href="#insertion-operations">Insertion Operations</a><ul>
-<li><a href="#insert-at-the-beginning">Insert at the Beginning</a></li>
-<li><a href="#insert-at-the-end">Insert at the End</a></li>
-<li><a href="#insert-after-a-spefific-node">Insert after a spefific Node</a></li>
-</ul>
-</li>
-<li><a href="#deletion-operations">Deletion Operations</a><span id="more"></span></li>
-<li><a href="#traversal">Traversal</a><ul>
-<li><a href="#forward-traversal">Forward Traversal</a></li>
-<li><a href="#backward-traversal">Backward Traversal</a></li>
-</ul>
-</li>
-<li><a href="#search">Search Node</a></li>
-<li><a href="#complexity">Complexity Analysis</a></li>
-<li><a href="#use">Use Cases</a></li>
-<li><a href="#conclusion">Conclusion</a></li>
-</ol>
-<h2 id="1-What-is-a-Doubly-Linked-List"><a href="#1-What-is-a-Doubly-Linked-List" class="headerlink" title="1. What is a Doubly Linked List?"></a>1. What is a Doubly Linked List?<a name="what-is-a-doubly-linked-list"></a></h2><p>In a Doubly Linked List, each node contains two links - the first link points to the previous node and the next link points to the next node in the sequence.The prev pointer of the first node and next pointer of the last node will point to null.<br><img src="/uploads/2.png" alt="pic"></p>
-<p>Let us start by defining the <code>Node</code> class using C#:</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public class Node&lt;T&gt;</span><br><span class="line">&#123;</span><br><span class="line">    public T Data &#123; get; set; &#125; </span><br><span class="line">    public Node&lt;T&gt; Next &#123; get; set; &#125;</span><br><span class="line">    public Node&lt;T&gt; Prev &#123; get; set; &#125;</span><br><span class="line"></span><br><span class="line">    public Node (T data)</span><br><span class="line">    &#123;</span><br><span class="line">        Data = data;</span><br><span class="line">        Next = null;</span><br><span class="line">        Prev = null;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="2-Creating-a-Doubly-Linked-List-Class"><a href="#2-Creating-a-Doubly-Linked-List-Class" class="headerlink" title="2. Creating a Doubly Linked List Class "></a>2. Creating a Doubly Linked List Class <a name="creating-a-doubly-linked-list-class"></a></h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public class DoublyLinkedList&lt;T&gt;</span><br><span class="line">&#123;</span><br><span class="line">    private Node&lt;T&gt; head;</span><br><span class="line">    private Node&lt;T&gt; tail;</span><br><span class="line"></span><br><span class="line">    private int size;</span><br><span class="line">    public DoublyLinkedList()</span><br><span class="line">    &#123;</span><br><span class="line">        head = null;</span><br><span class="line">        tail = null;</span><br><span class="line">        size = 0;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public int Size() =&gt; size;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="3-Insertion-Operations"><a href="#3-Insertion-Operations" class="headerlink" title="3. Insertion Operations "></a>3. Insertion Operations <a name="insertion-operations"></a></h2><h3 id="Insert-at-the-Beginning"><a href="#Insert-at-the-Beginning" class="headerlink" title="Insert at the Beginning "></a>Insert at the Beginning <a name="insert-at-the-beginning"></a></h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public void AddFirst(T data)</span><br><span class="line">&#123;</span><br><span class="line">     Node&lt;T&gt; newNode = new Node&lt;T&gt;(data);</span><br><span class="line">     if (head == null)</span><br><span class="line">     &#123;</span><br><span class="line">         head = tail = newNode;</span><br><span class="line">     &#125;</span><br><span class="line">     else</span><br><span class="line">     &#123;</span><br><span class="line">         newNode.Next = head;</span><br><span class="line">         head.Prev = newNode;</span><br><span class="line">         head = newNode;</span><br><span class="line">     &#125;</span><br><span class="line"></span><br><span class="line">     size++;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="Insert-at-the-End"><a href="#Insert-at-the-End" class="headerlink" title="Insert at the End "></a>Insert at the End <a name="insert-at-the-end"></a></h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public void AddTail(T data)</span><br><span class="line"> &#123;</span><br><span class="line">     Node&lt;T&gt; newNode = new Node&lt;T&gt;(data);</span><br><span class="line">     if (head == null)</span><br><span class="line">     &#123;</span><br><span class="line">         head = tail = newNode;</span><br><span class="line">     &#125;</span><br><span class="line">     else</span><br><span class="line">     &#123;</span><br><span class="line">         tail.Next = newNode;</span><br><span class="line">         newNode.Prev = tail;</span><br><span class="line">         tail = newNode;</span><br><span class="line">     &#125;</span><br><span class="line">     size++;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="Insert-after-a-specific-Node"><a href="#Insert-after-a-specific-Node" class="headerlink" title="Insert after a specific Node "></a>Insert after a specific Node <a name="insert-after-a-spefific-node"></a></h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public void InsertAt(T data, int index)</span><br><span class="line">&#123;</span><br><span class="line">     if (index &lt; 0 || index&gt; size)</span><br><span class="line">     &#123;</span><br><span class="line">         throw new ArgumentOutOfRangeException(&quot;Index&quot;, index, &quot;Index must be non - negative&quot;);</span><br><span class="line">     &#125;</span><br><span class="line">     if(index == 0)</span><br><span class="line">     &#123;</span><br><span class="line">         AddFirst(data);</span><br><span class="line">         return;</span><br><span class="line">     &#125;</span><br><span class="line">     else if (index == size)</span><br><span class="line">     &#123;</span><br><span class="line">         AddTail(data);</span><br><span class="line">         return;</span><br><span class="line">     &#125;</span><br><span class="line">     else</span><br><span class="line">     &#123;</span><br><span class="line">         Node&lt;T&gt; current = head;</span><br><span class="line">         for (int i = 0; i &lt; index - 1; i++)</span><br><span class="line">         &#123;</span><br><span class="line">             current = current.Next;</span><br><span class="line">         &#125;</span><br><span class="line">         Node&lt;T&gt; newNode = new Node&lt;T&gt;(data);</span><br><span class="line">         newNode.Next = current.Next;</span><br><span class="line">         newNode.Prev = current;</span><br><span class="line">         current.Next.Prev = newNode;</span><br><span class="line">         current.Next = newNode;</span><br><span class="line">         size++;</span><br><span class="line">     &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="4-Deletion-Operation"><a href="#4-Deletion-Operation" class="headerlink" title="4. Deletion Operation "></a>4. Deletion Operation <a name="deletion-operations"></a></h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public void Delete(T Data)</span><br><span class="line"> &#123;</span><br><span class="line">     Node&lt;T&gt; current = head;</span><br><span class="line"></span><br><span class="line">     while (current != null)</span><br><span class="line">     &#123;</span><br><span class="line">         if (current.Data.Equals(Data))</span><br><span class="line">         &#123;</span><br><span class="line">             //if the node is not the head</span><br><span class="line">             if (current.Prev != null)</span><br><span class="line">             &#123;</span><br><span class="line">                 current.Prev.Next = current.Next;</span><br><span class="line">             &#125;</span><br><span class="line">             else</span><br><span class="line">             &#123;</span><br><span class="line">                 head = current.Next;</span><br><span class="line">             &#125;</span><br><span class="line"></span><br><span class="line">             if (current.Next != null)</span><br><span class="line">             &#123;</span><br><span class="line">                 current.Next.Prev = current.Prev;</span><br><span class="line">             &#125;</span><br><span class="line">             else</span><br><span class="line">             &#123;</span><br><span class="line">                 tail = current.Prev;</span><br><span class="line">             &#125;</span><br><span class="line">             size--;</span><br><span class="line">             return;</span><br><span class="line">         &#125;</span><br><span class="line"></span><br><span class="line">         current = current.Next;</span><br><span class="line">     &#125;</span><br><span class="line">     Console.WriteLine(&quot;Node with data &#123;0&#125; not found&quot;, Data);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="5-Traversal"><a href="#5-Traversal" class="headerlink" title="5. Traversal "></a>5. Traversal <a name="traversal"></a></h2><h3 id="Forward-Traversal"><a href="#Forward-Traversal" class="headerlink" title="Forward Traversal "></a>Forward Traversal <a name="forward-traversal"></a></h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public void PrintForward()</span><br><span class="line">&#123;</span><br><span class="line">    Node&lt;T&gt; current = head;</span><br><span class="line">    while (current != null)</span><br><span class="line">    &#123;</span><br><span class="line">        Console.Write(current.Data + &quot; &quot;);</span><br><span class="line">        current = current.Next;</span><br><span class="line">    &#125;</span><br><span class="line">    Console.WriteLine();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="Backward-Traversal"><a href="#Backward-Traversal" class="headerlink" title="Backward Traversal "></a>Backward Traversal <a name="backward-traversal"></a></h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public void PrintBackward()</span><br><span class="line">&#123;</span><br><span class="line">    Node&lt;T&gt; current = tail;</span><br><span class="line">    while (current != null)</span><br><span class="line">    &#123;</span><br><span class="line">        Console.Write(current.Data + &quot; &quot;);</span><br><span class="line">        current = current.Prev;</span><br><span class="line">    &#125;</span><br><span class="line">    Console.WriteLine();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="6-Search-Node"><a href="#6-Search-Node" class="headerlink" title="6. Search Node "></a>6. Search Node <a name="search"></a></h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public void Find(T Data)</span><br><span class="line">&#123;</span><br><span class="line">     Node&lt;T&gt; current = head;</span><br><span class="line">     while (current != null)</span><br><span class="line">     &#123;</span><br><span class="line">         if (current.Data.Equals(Data))</span><br><span class="line">         &#123;</span><br><span class="line">             Console.WriteLine(&quot;Found: &quot; + Data);</span><br><span class="line">             return;</span><br><span class="line">         &#125;</span><br><span class="line">         current = current.Next;</span><br><span class="line">     &#125;</span><br><span class="line">     Console.WriteLine(&quot;Not Found: &quot; + Data);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="7-Complexity-Analysis"><a href="#7-Complexity-Analysis" class="headerlink" title="7. Complexity Analysis "></a>7. Complexity Analysis <a name="Complexity"></a></h2><table>
-<thead>
-<tr>
-<th align="center">Operation</th>
-<th align="center">Time Complexity</th>
-<th align="center">Space Complexity</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">Insertion</td>
-<td align="center">O(1)&#x2F;O(n)</td>
-<td align="center">O(1)</td>
-</tr>
-<tr>
-<td align="center">Deletion</td>
-<td align="center">O(1)</td>
-<td align="center">O(1)</td>
-</tr>
-<tr>
-<td align="center">Search</td>
-<td align="center">O(n)</td>
-<td align="center">O(1)</td>
-</tr>
-<tr>
-<td align="center">Traverse</td>
-<td align="center">O(n)</td>
-<td align="center">O(1)</td>
-</tr>
-</tbody></table>
-<h2 id="8-Use-Cases"><a href="#8-Use-Cases" class="headerlink" title="8. Use Cases "></a>8. Use Cases <a name="use"></a></h2><ul>
-<li>Browser history management</li>
-<li>Music&#x2F;Video playlists</li>
-<li>Undo&#x2F;Redo functionality</li>
-<li>Navigation systems</li>
-</ul>
-<h2 id="9-Conclusion"><a href="#9-Conclusion" class="headerlink" title="9. Conclusion  "></a>9. Conclusion  <a name="conclusion"></a></h2><p><strong>Doubly Linked Lists</strong> provide enhanced flexibility compared to single linked lists at the cost of additional memory usage.They are particularly useful in scenarios requiring bidirectional traversal and frequent modifications.When implementing DLLs, careful pointer management is crucial to avoid broken links and memory leaks.</p>
-<link rel="stylesheet" href="/css/folder.css" type="text/css"><script src="/js/folder.js" type="text/javascript" async></script>]]></content>
-      <categories>
-        <category>Data Structure and Alogrithm</category>
-      </categories>
-      <tags>
-        <tag>Data Structure and Alogrithm</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Workflow Orchestration</title>
-    <url>/2026/02/19/Workflow-Orchestration/</url>
-    <content><![CDATA[<h2 id="Workflow-Orchestration"><a href="#Workflow-Orchestration" class="headerlink" title="Workflow Orchestration"></a>Workflow Orchestration</h2><h3 id="1-Plan-Node-Default"><a href="#1-Plan-Node-Default" class="headerlink" title="1. Plan Node Default"></a>1. Plan Node Default</h3><ul>
-<li>Enter plan mode for ANY non-trivial task (3+ steps or architectural decisions)</li>
-<li>If something goes sideways, STOP and re-plan immediately – don’t keep pushing</li>
-<li>Write detailed specs upfront to reduce ambiguity</li>
-</ul>
-<h3 id="2-Subagent-Strategy"><a href="#2-Subagent-Strategy" class="headerlink" title="2. Subagent Strategy"></a>2. Subagent Strategy</h3><ul>
-<li>Use subagents liberally to keep main context window clean</li>
-<li>Offload research, exploration, and parallel analysis to subagents</li>
-<li>One tack per subagent for focused execution<span id="more"></span></li>
-</ul>
-<h3 id="3-Self-Improvement-Loop"><a href="#3-Self-Improvement-Loop" class="headerlink" title="3. Self-Improvement Loop"></a>3. Self-Improvement Loop</h3><ul>
-<li>After ANY correction from the user: update <code>tasks/lessons.md</code> with the pattern</li>
-<li>Write rules for yourself that prevent the same mistake</li>
-<li>Review lessons at session start for relevant project</li>
-</ul>
-<h3 id="4-Verification-Before-Done"><a href="#4-Verification-Before-Done" class="headerlink" title="4. Verification Before Done"></a>4. Verification Before Done</h3><ul>
-<li>Never mark a task complete without proving it works</li>
-<li>Run tests, check logs, demonstrate correctness</li>
-</ul>
-<h3 id="5-Demand-Elegance-Balanced"><a href="#5-Demand-Elegance-Balanced" class="headerlink" title="5. Demand Elegance (Balanced)"></a>5. Demand Elegance (Balanced)</h3><ul>
-<li>For non-trivial changes: pause and ask “is there a more elegant way?”</li>
-<li>If a fix feels hacky: “Knowing everything I know now, implement the elegant solution”</li>
-<li>Skip this for simple, obvious fixes – don’t over-engineer</li>
-</ul>
-<h3 id="6-Autonomous-Bug-Fixing"><a href="#6-Autonomous-Bug-Fixing" class="headerlink" title="6. Autonomous Bug Fixing"></a>6. Autonomous Bug Fixing</h3><ul>
-<li>When given a bug report: just fix it. Don’t ask for hand-holding</li>
-<li>Point at logs, errors, failing tests – then resolve them</li>
-<li>Zero context switching required from the user</li>
-</ul>
-<h3 id="Task-Management"><a href="#Task-Management" class="headerlink" title="Task Management"></a>Task Management</h3><ol>
-<li><strong>Plan First</strong>: Write plan to <code>tasks/todo.md</code> with checkable items</li>
-<li><strong>Verify Plan</strong>: Check in before starting implementation</li>
-<li><strong>Track Progress</strong>: Mark items complete as you go</li>
-<li><strong>Document Results</strong>: Add review section to <code>tasks/todo.md</code></li>
-<li><strong>Capture Lessons</strong>: Update <code>tasks/lessons.md</code> after corrections</li>
-</ol>
-<h3 id="Core-Principles"><a href="#Core-Principles" class="headerlink" title="Core Principles"></a>Core Principles</h3><ul>
-<li><strong>Simplicity First</strong>: Make every change as simple as possible. Impact minimal code.</li>
-<li><strong>No Laziness</strong>: Find root causes. No temporary fixes. Senior developer standards.</li>
-<li><strong>Minimal Impact</strong>: Changes should only touch what’s necessary. Avoid introducing bugs.</li>
-</ul>
-<link rel="stylesheet" href="/css/folder.css" type="text/css"><script src="/js/folder.js" type="text/javascript" async></script>]]></content>
-      <categories>
-        <category>AI</category>
-        <category>Vibe Coding</category>
-      </categories>
-      <tags>
-        <tag>AI Programming</tag>
-        <tag>Claude</tag>
-        <tag>Productivity</tag>
-        <tag>Workflow</tag>
-        <tag>Automation</tag>
       </tags>
   </entry>
 </search>
