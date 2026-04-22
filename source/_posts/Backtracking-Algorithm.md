@@ -1,18 +1,17 @@
----
 title: Backtracking Algorithm
 date: 2026-04-12 12:48:28
 updated: 2026-04-22 00:00:00
 comments: true
 categories:
-  - Data Structure and Algorithm
-tags:
-  - Backtracking
-  - DFS
-  - Recursion
-  - LeetCode
-  - Mental Model
-  - Developer Journey
----
+
+- Data Structure and Algorithm
+  tags:
+- Backtracking
+- DFS
+- Recursion
+- LeetCode
+- Mental Model
+- Developer Journey
 
 - [1. Understanding Backtracking](#1-understanding-backtracking)
   - [1.1 What is Backtracking?](#11-what-is-backtracking)
@@ -97,8 +96,6 @@ Backtracking is a class of algorithms for finding solutions to computational pro
 - Unordered linear searches
 - Problems without "partial candidate" concept
 
----
-
 <a name="2-the-core-pattern"></a>
 
 ## The Core Pattern
@@ -155,8 +152,6 @@ void backtrack(int startIndex, List<Integer> path, List<List<Integer>> res) {
 }
 ```
 
----
-
 <a name="3-decision-tree-mental-model"></a>
 
 ## Decision Tree Mental Model
@@ -209,8 +204,6 @@ If we pick element at index i:
 - Branch 3 (start=2): picks nums[2]=3 → then search range [3...]
 - Result: [1,2] and [2,1] never both appear
 
----
-
 <a name="4-pruning-necessity-not-optimization"></a>
 
 ## Pruning: Necessity, Not Optimization
@@ -258,8 +251,6 @@ for (int i = startIndex; i <= n - (k - path.size()) + 1; i++) {
 }
 ```
 
----
-
 <a name="5-deduplication-strategy"></a>
 
 ## Deduplication Strategy
@@ -292,8 +283,6 @@ if (i > startIndex && nums[i] == nums[i - 1]) continue;
 
 - ❌ "No duplicates allowed in the input"
 - ❌ "No duplicates allowed in the result"
-
----
 
 <a name="6-from-easy-to-hard-problem-progression"></a>
 
@@ -396,8 +385,6 @@ if (!cols[col] && !diag1[row - col + n - 1] && !diag2[row + col]) {
 }
 ```
 
----
-
 <a name="7-the-inefficiency-illusion"></a>
 
 ## The "Inefficiency" Illusion
@@ -427,8 +414,6 @@ Feeling of "wasting time"
 | "This is useless"                           | Likely to give up      |
 | "I'm narrowing the search space"            | Persistent, systematic |
 | "Each failure teaches me what doesn't work" | Learning approach      |
-
----
 
 <a name="8-real-world-applications"></a>
 
@@ -468,8 +453,6 @@ Generate all valid configurations:
 | Circuit design      | Component placement with constraints        |
 | Resource allocation | Assign resources subject to limits          |
 | Game AI             | Search all possible moves and counter-moves |
-
----
 
 <a name="9-a-reusable-mental-model"></a>
 
@@ -514,8 +497,6 @@ Before writing backtracking code, ask:
     - Does state restore after each iteration?
 ```
 
----
-
 <a name="10-common-leetcode-problems"></a>
 
 ## Common LeetCode Problems
@@ -532,8 +513,6 @@ Before writing backtracking code, ask:
 | [51] N-Queens                 | Hard       | 2D constraint tracking | Variable        |
 | [131] Palindrome Partitioning | Medium     | Validity check         | Variable        |
 | [93] Restore IP Addresses     | Medium     | Multiple constraints   | Variable        |
-
----
 
 ### 1. [78] Subsets - Medium
 
@@ -572,8 +551,6 @@ class Solution {
 → [] [1] [1,2] [1,2,3] [1,3] [2] [2,3] [3]
 Total: 8 subsets
 ```
-
----
 
 ### 2. [77] Combinations - Medium
 
@@ -618,8 +595,6 @@ class Solution {
 └── 4 (pruned - not enough remaining)
 Total: 6 combinations
 ```
-
----
 
 ### 3. [46] Permutations - Medium
 
@@ -674,8 +649,6 @@ class Solution {
 Total: 6 permutations
 ```
 
----
-
 ### 4. [784] Letter Case Permutation - Medium
 
 **Problem**: Given a string, return all possible strings with lowercase/uppercase letters.
@@ -725,8 +698,6 @@ class Solution {
         └── B → "A1B"
 Total: 4 permutations
 ```
-
----
 
 ### 5. [22] Generate Parentheses - Medium
 
@@ -778,8 +749,6 @@ class Solution {
 Total: 5 valid combinations
 ```
 
----
-
 ### 6. [39] Combination Sum - Medium
 
 **Problem**: Find all unique combinations where chosen numbers sum to target (reuse allowed).
@@ -825,8 +794,6 @@ class Solution {
 └── 7 → sum=7 → [7]
 Total: 2 results: [2,2,3], [7]
 ```
-
----
 
 ### 7. [40] Combination Sum II - Medium
 
@@ -880,8 +847,6 @@ class Solution {
     └── 1 → [7,1]
 Total: 4 results: [1,1,6], [1,2,5], [2,6], [7,1]
 ```
-
----
 
 ### 8. [51] N-Queens - Hard
 
@@ -956,8 +921,6 @@ Total: 2 solutions
 | 7 | 40 |
 | 8 | 92 |
 
----
-
 ### 9. [131] Palindrome Partitioning - Medium
 
 **Problem**: Partition a string such that every substring is a palindrome.
@@ -1007,8 +970,6 @@ class Solution {
 └── "aab" (not palindrome, skip)
 Total: 2 valid partitions
 ```
-
----
 
 ### 10. [93] Restore IP Addresses - Medium
 
@@ -1089,8 +1050,6 @@ Total: 2 results
 
 - Understanding that "undo" is state restoration
 - Visualizing tree levels vs branches correctly
-
----
 
 ## References
 
