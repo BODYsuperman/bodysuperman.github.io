@@ -5,13 +5,18 @@ comments: true
 categories:
 
 - Data Structure and Algorithm
-  tags:
+
+tags:
+
 - Backtracking
 - DFS
 - Recursion
 - LeetCode
+- Problem Solving
 - Mental Model
 - Developer Journey
+
+---
 
 - [1. Understanding Backtracking](#1-understanding-backtracking)
   - [1.1 What is Backtracking?](#11-what-is-backtracking)
