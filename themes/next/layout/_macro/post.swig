@@ -214,10 +214,6 @@
         {{ partial('_partials/post/post-reward.swig') }}
       {%- endif %}
 
-      {%- if theme.creative_commons.license and theme.creative_commons.post %}
-        {{ partial('_partials/post/post-copyright.swig') }}
-      {%- endif %}
-
       {%- if theme.follow_me %}
         {{ partial('_partials/post/post-followme.swig', {}, {cache: theme.cache.enable}) }}
       {%- endif %}

@@ -1,7 +1,30 @@
 .post-copyright {
   background: var(--card-bg-color);
-  border-left: 3px solid $red;
-  list-style: none;
-  margin: 2em 0 0;
-  padding: .5em 1em;
+  border-left: 4px solid $red;
+  padding: 0.8em 1.2em;
+  border-radius: 0 6px 6px 0;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  margin: 0 0 10px 0;
+
+  .post-copyright-author,
+  .post-copyright-link,
+  .post-copyright-license {
+    font-size: 0.9em;
+    color: var(--text-color);
+    line-height: 1.4;
+
+    strong {
+      color: $red;
+      margin-right: 0.3em;
+      white-space: nowrap;
+    }
+  }
+
+  a {
+    color: $link-color;
+    word-break: break-all;
+    &:hover {
+      color: $link-hover-color;
+    }
+  }
 }
