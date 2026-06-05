@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/logo-180.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/logo-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/logo-16.png">
+  <link rel="mask-icon" href="/images/logo-512.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|monospace:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"bodysuperman.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null,"use":"Gitalk","text":true},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="Table of Contents Introduction: Why We Need Message Middleware Message Queue Comparison RabbitMQ Core Concepts Exchange Types Explained Spring AMQP in Practice Message Reliability Guarantees Delayed M">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Message Middleware Selection Guide: RabbitMQ">
+<meta property="og:url" content="https://bodysuperman.github.io/2026/04/26/Message-Middleware-Selection-Guide-RabbitMQ/index.html">
+<meta property="og:site_name" content="AI with Alex&#39;s Blog">
+<meta property="og:description" content="Table of Contents Introduction: Why We Need Message Middleware Message Queue Comparison RabbitMQ Core Concepts Exchange Types Explained Spring AMQP in Practice Message Reliability Guarantees Delayed M">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2026-04-26T04:48:28.000Z">
+<meta property="article:modified_time" content="2026-06-04T16:00:00.000Z">
+<meta property="article:author" content="AI with Alex">
+<meta property="article:tag" content="Java">
+<meta property="article:tag" content="RabbitMQ">
+<meta property="article:tag" content="Message Queue">
+<meta property="article:tag" content="Microservices">
+<meta property="article:tag" content="Spring Boot">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://bodysuperman.github.io/2026/04/26/Message-Middleware-Selection-Guide-RabbitMQ/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>Message Middleware Selection Guide: RabbitMQ | AI with Alex's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+
+
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">AI with Alex's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+   
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://bodysuperman.github.io/2026/04/26/Message-Middleware-Selection-Guide-RabbitMQ/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+      <meta itemprop="name" content="AI with Alex">
+      <meta itemprop="description" content="Attention Is All You Need">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="AI with Alex's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Message Middleware Selection Guide: RabbitMQ
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2026-04-26 12:48:28" itemprop="dateCreated datePublished" datetime="2026-04-26T12:48:28+08:00">2026-04-26</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2026-06-05 00:00:00" itemprop="dateModified" datetime="2026-06-05T00:00:00+08:00">2026-06-05</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Backend-Development/" itemprop="url" rel="index"><span itemprop="name">Backend Development</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>11k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>10 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="Table-of-Contents"><a href="#Table-of-Contents" class="headerlink" title="Table of Contents"></a>Table of Contents</h2><ol>
+<li><a href="#introduction-why-we-need-message-middleware">Introduction: Why We Need Message Middleware</a></li>
+<li><a href="#message-queue-comparison">Message Queue Comparison</a></li>
+<li><a href="#rabbitmq-core-concepts">RabbitMQ Core Concepts</a></li>
+<li><a href="#exchange-types-explained">Exchange Types Explained</a></li>
+<li><a href="#spring-amqp-in-practice">Spring AMQP in Practice</a></li>
+<li><a href="#message-reliability-guarantees">Message Reliability Guarantees</a></li>
+<li><a href="#delayed-message-implementation">Delayed Message Implementation</a></li>
+<li><a href="#best-practices--common-issues">Best Practices &amp; Common Issues</a></li>
+<li><a href="#summary">Summary</a></li>
+</ol>
+<span id="more"></span>
+
+<h2 id="Introduction-Why-We-Need-Message-Middleware"><a href="#Introduction-Why-We-Need-Message-Middleware" class="headerlink" title="Introduction: Why We Need Message Middleware"></a>Introduction: Why We Need Message Middleware</h2><h3 id="Pain-Points-of-Synchronous-Calls"><a href="#Pain-Points-of-Synchronous-Calls" class="headerlink" title="Pain Points of Synchronous Calls"></a>Pain Points of Synchronous Calls</h3><p>In microservices architecture, inter-service communication typically uses synchronous methods like OpenFeign. This “phone call” style communication is straightforward but has three core problems:</p>
+<table>
+<thead>
+<tr>
+<th>Problem</th>
+<th>Symptom</th>
+<th>Impact</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Poor Extensibility</strong></td>
+<td>New features require modifying existing code</td>
+<td>Violates Open-Closed Principle</td>
+</tr>
+<tr>
+<td><strong>Performance Degradation</strong></td>
+<td>Longer call chains increase total latency</td>
+<td>Poor user experience</td>
+</tr>
+<tr>
+<td><strong>Cascading Failures</strong></td>
+<td>Downstream failures cause transaction rollback</td>
+<td>System instability</td>
+</tr>
+</tbody></table>
+<h3 id="Advantages-of-Asynchronous-Communication"><a href="#Advantages-of-Asynchronous-Communication" class="headerlink" title="Advantages of Asynchronous Communication"></a>Advantages of Asynchronous Communication</h3><p>Message middleware introduces <strong>asynchronous communication</strong>, similar to “sending messages”:</p>
+<ul>
+<li><strong>Decoupling</strong>: Publishers don’t need to know message receivers</li>
+<li><strong>Load Leveling</strong>: Smooths burst traffic, protecting downstream systems</li>
+<li><strong>Fault Tolerance</strong>: Single service failure doesn’t break the flow</li>
+<li><strong>Scalability</strong>: Add consumers by simply subscribing to queues</li>
+</ul>
+<hr>
+<h2 id="Message-Queue-Comparison"><a href="#Message-Queue-Comparison" class="headerlink" title="Message Queue Comparison"></a>Message Queue Comparison</h2><h3 id="Mainstream-MQ-Comparison"><a href="#Mainstream-MQ-Comparison" class="headerlink" title="Mainstream MQ Comparison"></a>Mainstream MQ Comparison</h3><table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>ActiveMQ</th>
+<th>RabbitMQ</th>
+<th>RocketMQ</th>
+<th>Kafka</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Availability</strong></td>
+<td>Average</td>
+<td>High</td>
+<td>Very High</td>
+<td>Very High</td>
+</tr>
+<tr>
+<td><strong>Reliability</strong></td>
+<td>Average</td>
+<td>High</td>
+<td>High</td>
+<td>Medium</td>
+</tr>
+<tr>
+<td><strong>Throughput</strong></td>
+<td>10K&#x2F;s</td>
+<td>10K&#x2F;s</td>
+<td>100K&#x2F;s</td>
+<td>Million&#x2F;s</td>
+</tr>
+<tr>
+<td><strong>Latency</strong></td>
+<td>ms</td>
+<td>μs</td>
+<td>ms</td>
+<td>ms</td>
+</tr>
+<tr>
+<td><strong>Community</strong></td>
+<td>Low</td>
+<td>High</td>
+<td>Medium</td>
+<td>High</td>
+</tr>
+</tbody></table>
+<h3 id="Selection-Recommendations"><a href="#Selection-Recommendations" class="headerlink" title="Selection Recommendations"></a>Selection Recommendations</h3><ul>
+<li><strong>Low Latency</strong>: RabbitMQ, Kafka</li>
+<li><strong>High Reliability</strong>: RabbitMQ, RocketMQ</li>
+<li><strong>High Throughput</strong>: RocketMQ, Kafka</li>
+<li><strong>Quick Start</strong>: RabbitMQ (intuitive management UI, extensive documentation)</li>
+</ul>
+<blockquote>
+<p>RabbitMQ offers balanced performance across all aspects, making it especially suitable for small and medium-sized enterprises to quickly adopt message queue solutions.</p>
+</blockquote>
+<hr>
+<h2 id="RabbitMQ-Core-Concepts"><a href="#RabbitMQ-Core-Concepts" class="headerlink" title="RabbitMQ Core Concepts"></a>RabbitMQ Core Concepts</h2><h3 id="Architecture-Overview"><a href="#Architecture-Overview" class="headerlink" title="Architecture Overview"></a>Architecture Overview</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">┌─────────────┐     ┌──────────┐     ┌─────────────┐</span><br><span class="line">│  Publisher  │────▶│ Exchange │────▶│    Queue    │</span><br><span class="line">│  (Producer) │     │          │     │             │</span><br><span class="line">└─────────────┘     └──────────┘     └──────┬──────┘</span><br><span class="line">                                            │</span><br><span class="line">                                            ▼</span><br><span class="line">                                     ┌─────────────┐</span><br><span class="line">                                     │  Consumer   │</span><br><span class="line">                                     │             │</span><br><span class="line">                                     └─────────────┘</span><br></pre></td></tr></table></figure>
+
+<h3 id="Core-Components"><a href="#Core-Components" class="headerlink" title="Core Components"></a>Core Components</h3><table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Function</th>
+<th>Characteristics</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Exchange</strong></td>
+<td>Receives and routes messages to queues</td>
+<td>No storage capability</td>
+</tr>
+<tr>
+<td><strong>Queue</strong></td>
+<td>Stores messages</td>
+<td>Where message persistence happens</td>
+</tr>
+<tr>
+<td><strong>Binding</strong></td>
+<td>Links exchanges to queues</td>
+<td>Determines routing rules</td>
+</tr>
+<tr>
+<td><strong>Virtual Host</strong></td>
+<td>Logical isolation unit</td>
+<td>Like namespaces</td>
+</tr>
+</tbody></table>
+<h3 id="Docker-Quick-Start"><a href="#Docker-Quick-Start" class="headerlink" title="Docker Quick Start"></a>Docker Quick Start</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">docker run \</span><br><span class="line">  -e RABBITMQ_DEFAULT_USER=admin \</span><br><span class="line">  -e RABBITMQ_DEFAULT_PASS=123456 \</span><br><span class="line">  --name mq \</span><br><span class="line">  -p 15672:15672 \</span><br><span class="line">  -p 5672:5672 \</span><br><span class="line">  -d rabbitmq:3.8-management</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>15672</code>: Management console port</li>
+<li><code>5672</code>: AMQP protocol port</li>
+</ul>
+<hr>
+<h2 id="Exchange-Types-Explained"><a href="#Exchange-Types-Explained" class="headerlink" title="Exchange Types Explained"></a>Exchange Types Explained</h2><h3 id="1-Fanout-Broadcast"><a href="#1-Fanout-Broadcast" class="headerlink" title="1. Fanout (Broadcast)"></a>1. Fanout (Broadcast)</h3><p><strong>Characteristics</strong>: Routes messages to all bound queues</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Declare Fanout exchange</span></span><br><span class="line"><span class="meta">@Bean</span></span><br><span class="line"><span class="keyword">public</span> FanoutExchange <span class="title function_">fanoutExchange</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">FanoutExchange</span>(<span class="string">&quot;order.fanout&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Send message (no routingKey needed)</span></span><br><span class="line">rabbitTemplate.convertAndSend(<span class="string">&quot;order.fanout&quot;</span>, <span class="string">&quot;&quot;</span>, message);</span><br></pre></td></tr></table></figure>
+
+<p><strong>Use Cases</strong>: Notifications, log broadcasting</p>
+<h3 id="2-Direct-Point-to-Point"><a href="#2-Direct-Point-to-Point" class="headerlink" title="2. Direct (Point-to-Point)"></a>2. Direct (Point-to-Point)</h3><p><strong>Characteristics</strong>: Exact RoutingKey matching</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Declare Direct exchange and bind</span></span><br><span class="line"><span class="meta">@RabbitListener(bindings = @QueueBinding(</span></span><br><span class="line"><span class="meta">    value = @Queue(name = &quot;order.queue&quot;),</span></span><br><span class="line"><span class="meta">    exchange = @Exchange(name = &quot;order.direct&quot;, type = ExchangeTypes.DIRECT),</span></span><br><span class="line"><span class="meta">    key = &#123;&quot;pay.success&quot;, &quot;pay.refund&quot;&#125;</span></span><br><span class="line"><span class="meta">))</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>Use Cases</strong>: Targeted message distribution</p>
+<h3 id="3-Topic-Pattern-Matching"><a href="#3-Topic-Pattern-Matching" class="headerlink" title="3. Topic (Pattern Matching)"></a>3. Topic (Pattern Matching)</h3><p><strong>Characteristics</strong>: Supports wildcard patterns</p>
+<table>
+<thead>
+<tr>
+<th>Wildcard</th>
+<th>Meaning</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>#</code></td>
+<td>Matches 0 or more words</td>
+<td><code>order.#</code> matches <code>order.create</code>, <code>order.pay.success</code></td>
+</tr>
+<tr>
+<td><code>*</code></td>
+<td>Matches exactly 1 word</td>
+<td><code>order.*</code> only matches <code>order.create</code></td>
+</tr>
+</tbody></table>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Binding patterns</span></span><br><span class="line">key = <span class="string">&quot;order.#&quot;</span>  <span class="comment">// Receives all order-related messages</span></span><br><span class="line">key = <span class="string">&quot;#.error&quot;</span>  <span class="comment">// Receives all error messages</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>Use Cases</strong>: Complex routing rules, log levels</p>
+<hr>
+<h2 id="Spring-AMQP-in-Practice"><a href="#Spring-AMQP-in-Practice" class="headerlink" title="Spring AMQP in Practice"></a>Spring AMQP in Practice</h2><h3 id="Dependency-Configuration"><a href="#Dependency-Configuration" class="headerlink" title="Dependency Configuration"></a>Dependency Configuration</h3><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-amqp<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="Basic-Configuration"><a href="#Basic-Configuration" class="headerlink" title="Basic Configuration"></a>Basic Configuration</h3><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">rabbitmq:</span></span><br><span class="line">    <span class="attr">host:</span> <span class="string">localhost</span></span><br><span class="line">    <span class="attr">port:</span> <span class="number">5672</span></span><br><span class="line">    <span class="attr">virtual-host:</span> <span class="string">/</span></span><br><span class="line">    <span class="attr">username:</span> <span class="string">admin</span></span><br><span class="line">    <span class="attr">password:</span> <span class="string">*****</span></span><br><span class="line">    <span class="attr">listener:</span></span><br><span class="line">      <span class="attr">simple:</span></span><br><span class="line">        <span class="attr">prefetch:</span> <span class="number">1</span>  <span class="comment"># Fetch 1 at a time, fair dispatch</span></span><br><span class="line">        <span class="attr">acknowledge-mode:</span> <span class="string">auto</span>  <span class="comment"># Auto-acknowledge</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="Producer-Example"><a href="#Producer-Example" class="headerlink" title="Producer Example"></a>Producer Example</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Service</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">OrderProducer</span> &#123;</span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> RabbitTemplate rabbitTemplate;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">sendOrder</span><span class="params">(Order order)</span> &#123;</span><br><span class="line">        rabbitTemplate.convertAndSend(</span><br><span class="line">            <span class="string">&quot;order.exchange&quot;</span>,     <span class="comment">// exchange</span></span><br><span class="line">            <span class="string">&quot;order.created&quot;</span>,      <span class="comment">// routingKey</span></span><br><span class="line">            order,                <span class="comment">// message body</span></span><br><span class="line">            message -&gt; &#123;</span><br><span class="line">                <span class="comment">// Set message properties</span></span><br><span class="line">                message.getMessageProperties()</span><br><span class="line">                       .setDeliveryMode(MessageDeliveryMode.PERSISTENT);</span><br><span class="line">                <span class="keyword">return</span> message;</span><br><span class="line">            &#125;</span><br><span class="line">        );</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Consumer-Example"><a href="#Consumer-Example" class="headerlink" title="Consumer Example"></a>Consumer Example</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="meta">@Slf4j</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">OrderConsumer</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@RabbitListener(bindings = @QueueBinding(</span></span><br><span class="line"><span class="meta">        value = @Queue(name = &quot;order.queue&quot;, durable = &quot;true&quot;),</span></span><br><span class="line"><span class="meta">        exchange = @Exchange(name = &quot;order.exchange&quot;, type = ExchangeTypes.TOPIC),</span></span><br><span class="line"><span class="meta">        key = &quot;order.created&quot;</span></span><br><span class="line"><span class="meta">    ))</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">handleOrder</span><span class="params">(Order order)</span> &#123;</span><br><span class="line">        log.info(<span class="string">&quot;Received order message: &#123;&#125;&quot;</span>, order.getId());</span><br><span class="line">        <span class="comment">// Process order logic</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="WorkQueues-Work-Distribution"><a href="#WorkQueues-Work-Distribution" class="headerlink" title="WorkQueues (Work Distribution)"></a>WorkQueues (Work Distribution)</h3><p>Multiple consumers competing for messages from the same queue:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Consumer 1 - Fast processing</span></span><br><span class="line"><span class="meta">@RabbitListener(queues = &quot;work.queue&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">consumer1</span><span class="params">(String msg)</span> &#123;</span><br><span class="line">    log.info(<span class="string">&quot;Consumer1 processing: &#123;&#125;&quot;</span>, msg);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Consumer 2 - Slow processing</span></span><br><span class="line"><span class="meta">@RabbitListener(queues = &quot;work.queue&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">consumer2</span><span class="params">(String msg)</span> <span class="keyword">throws</span> InterruptedException &#123;</span><br><span class="line">    Thread.sleep(<span class="number">1000</span>);  <span class="comment">// Simulate slow processing</span></span><br><span class="line">    log.info(<span class="string">&quot;Consumer2 processing: &#123;&#125;&quot;</span>, msg);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>Configure prefetch for fair dispatch</strong>:</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">rabbitmq:</span></span><br><span class="line">    <span class="attr">listener:</span></span><br><span class="line">      <span class="attr">simple:</span></span><br><span class="line">        <span class="attr">prefetch:</span> <span class="number">1</span> <span class="comment"># Each consumer fetches 1 message at a time</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="Message-Reliability-Guarantees"><a href="#Message-Reliability-Guarantees" class="headerlink" title="Message Reliability Guarantees"></a>Message Reliability Guarantees</h2><h3 id="Producer-Reliability"><a href="#Producer-Reliability" class="headerlink" title="Producer Reliability"></a>Producer Reliability</h3><h4 id="1-Publisher-Confirm"><a href="#1-Publisher-Confirm" class="headerlink" title="1. Publisher Confirm"></a>1. Publisher Confirm</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Enable configuration</span></span><br><span class="line">spring:</span><br><span class="line">  rabbitmq:</span><br><span class="line">    publisher-confirm-type: correlated</span><br><span class="line">    publisher-returns: <span class="literal">true</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// Set ReturnCallback (routing failure callback)</span></span><br><span class="line"><span class="meta">@Bean</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">init</span><span class="params">()</span> &#123;</span><br><span class="line">    rabbitTemplate.setReturnsCallback(returned -&gt; &#123;</span><br><span class="line">        log.error(<span class="string">&quot;Message routing failed: &#123;&#125;&quot;</span>, returned.getMessage());</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Send message with ConfirmCallback</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">sendWithConfirm</span><span class="params">(String exchange, String routingKey, Object msg)</span> &#123;</span><br><span class="line">    <span class="type">CorrelationData</span> <span class="variable">cd</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">CorrelationData</span>();</span><br><span class="line">    cd.getFuture().addCallback(</span><br><span class="line">        confirm -&gt; &#123;</span><br><span class="line">            <span class="keyword">if</span> (confirm.isAck()) &#123;</span><br><span class="line">                log.info(<span class="string">&quot;Message sent successfully&quot;</span>);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                log.error(<span class="string">&quot;Message send failed: &#123;&#125;&quot;</span>, confirm.getReason());</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;,</span><br><span class="line">        ex -&gt; log.error(<span class="string">&quot;Send exception&quot;</span>, ex)</span><br><span class="line">    );</span><br><span class="line">    rabbitTemplate.convertAndSend(exchange, routingKey, msg, cd);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="MQ-Reliability"><a href="#MQ-Reliability" class="headerlink" title="MQ Reliability"></a>MQ Reliability</h3><h4 id="Data-Persistence"><a href="#Data-Persistence" class="headerlink" title="Data Persistence"></a>Data Persistence</h4><table>
+<thead>
+<tr>
+<th>Level</th>
+<th>Configuration</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Exchange Persistence</strong></td>
+<td><code>durable = true</code></td>
+<td>Exchange survives restart</td>
+</tr>
+<tr>
+<td><strong>Queue Persistence</strong></td>
+<td><code>durable = true</code></td>
+<td>Queue survives restart</td>
+</tr>
+<tr>
+<td><strong>Message Persistence</strong></td>
+<td><code>deliveryMode = 2</code></td>
+<td>Message written to disk</td>
+</tr>
+</tbody></table>
+<h4 id="Lazy-Queues"><a href="#Lazy-Queues" class="headerlink" title="Lazy Queues"></a>Lazy Queues</h4><p>Starting from version 3.12, all queues use lazy queue mode by default:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Bean</span></span><br><span class="line"><span class="keyword">public</span> Queue <span class="title function_">lazyQueue</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> QueueBuilder</span><br><span class="line">        .durable(<span class="string">&quot;lazy.queue&quot;</span>)</span><br><span class="line">        .lazy()  <span class="comment">// Enable lazy mode</span></span><br><span class="line">        .build();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>Advantages</strong>:</p>
+<ul>
+<li>Messages stored on disk directly, no memory pressure</li>
+<li>Supports millions of message backlogs</li>
+</ul>
+<h3 id="Consumer-Reliability"><a href="#Consumer-Reliability" class="headerlink" title="Consumer Reliability"></a>Consumer Reliability</h3><h4 id="Consumer-Acknowledgment-Modes"><a href="#Consumer-Acknowledgment-Modes" class="headerlink" title="Consumer Acknowledgment Modes"></a>Consumer Acknowledgment Modes</h4><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">rabbitmq:</span></span><br><span class="line">    <span class="attr">listener:</span></span><br><span class="line">      <span class="attr">simple:</span></span><br><span class="line">        <span class="attr">acknowledge-mode:</span> <span class="string">auto</span> <span class="comment"># none/auto/manual</span></span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>Mode</th>
+<th>Description</th>
+<th>Use Case</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>none</code></td>
+<td>Auto-ack, delete on arrival</td>
+<td>Testing only</td>
+</tr>
+<tr>
+<td><code>auto</code></td>
+<td>Auto-ack on success, retry on failure</td>
+<td>Recommended for production</td>
+</tr>
+<tr>
+<td><code>manual</code></td>
+<td>Manual ack control</td>
+<td>Fine-grained control needed</td>
+</tr>
+</tbody></table>
+<h4 id="Consumer-Retry-and-Failure-Handling"><a href="#Consumer-Retry-and-Failure-Handling" class="headerlink" title="Consumer Retry and Failure Handling"></a>Consumer Retry and Failure Handling</h4><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">rabbitmq:</span></span><br><span class="line">    <span class="attr">listener:</span></span><br><span class="line">      <span class="attr">simple:</span></span><br><span class="line">        <span class="attr">retry:</span></span><br><span class="line">          <span class="attr">enabled:</span> <span class="literal">true</span></span><br><span class="line">          <span class="attr">initial-interval:</span> <span class="string">1000ms</span></span><br><span class="line">          <span class="attr">multiplier:</span> <span class="number">2</span></span><br><span class="line">          <span class="attr">max-attempts:</span> <span class="number">3</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>Recovery strategy after retries exhausted</strong>:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Bean</span></span><br><span class="line"><span class="keyword">public</span> MessageRecoverer <span class="title function_">republishMessageRecoverer</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="comment">// Forward failed messages to designated exchange</span></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">RepublishMessageRecoverer</span>(</span><br><span class="line">        rabbitTemplate,</span><br><span class="line">        <span class="string">&quot;error.exchange&quot;</span>,</span><br><span class="line">        <span class="string">&quot;error.routingKey&quot;</span></span><br><span class="line">    );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Idempotency-Guarantees"><a href="#Idempotency-Guarantees" class="headerlink" title="Idempotency Guarantees"></a>Idempotency Guarantees</h3><p>Messages may be consumed repeatedly; ensure idempotent business logic:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Option 1: Unique message ID</span></span><br><span class="line"><span class="meta">@Bean</span></span><br><span class="line"><span class="keyword">public</span> MessageConverter <span class="title function_">messageConverter</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="type">Jackson2JsonMessageConverter</span> <span class="variable">converter</span> <span class="operator">=</span></span><br><span class="line">        <span class="keyword">new</span> <span class="title class_">Jackson2JsonMessageConverter</span>();</span><br><span class="line">    converter.setCreateMessageIds(<span class="literal">true</span>);  <span class="comment">// Auto-generate message ID</span></span><br><span class="line">    <span class="keyword">return</span> converter;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Option 2: Business state check (recommended)</span></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">markOrderPaySuccess</span><span class="params">(Long orderId)</span> &#123;</span><br><span class="line">    <span class="comment">// State machine check - only unpaid orders can be updated</span></span><br><span class="line">    lambdaUpdate()</span><br><span class="line">        .set(Order::getStatus, PAID)</span><br><span class="line">        .eq(Order::getId, orderId)</span><br><span class="line">        .eq(Order::getStatus, UNPAID)  <span class="comment">// Critical condition</span></span><br><span class="line">        .update();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="Delayed-Message-Implementation"><a href="#Delayed-Message-Implementation" class="headerlink" title="Delayed Message Implementation"></a>Delayed Message Implementation</h2><h3 id="Solution-1-Dead-Letter-Exchange-TTL"><a href="#Solution-1-Dead-Letter-Exchange-TTL" class="headerlink" title="Solution 1: Dead Letter Exchange + TTL"></a>Solution 1: Dead Letter Exchange + TTL</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Producer ──▶ ttl.queue (set expiration, no consumer)</span><br><span class="line">              │</span><br><span class="line">              ▼ (expires and becomes dead letter)</span><br><span class="line">         dead.exchange ──▶ delay.queue ──▶ Consumer</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Bean</span></span><br><span class="line"><span class="keyword">public</span> Queue <span class="title function_">ttlQueue</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> QueueBuilder.durable(<span class="string">&quot;ttl.queue&quot;</span>)</span><br><span class="line">        .withArgument(<span class="string">&quot;x-dead-letter-exchange&quot;</span>, <span class="string">&quot;dead.exchange&quot;</span>)</span><br><span class="line">        .withArgument(<span class="string">&quot;x-dead-letter-routing-key&quot;</span>, <span class="string">&quot;delay.key&quot;</span>)</span><br><span class="line">        .withArgument(<span class="string">&quot;x-message-ttl&quot;</span>, <span class="number">5000</span>)  <span class="comment">// 5 second expiration</span></span><br><span class="line">        .build();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Solution-2-Delayed-Message-Plugin-Recommended"><a href="#Solution-2-Delayed-Message-Plugin-Recommended" class="headerlink" title="Solution 2: Delayed Message Plugin (Recommended)"></a>Solution 2: Delayed Message Plugin (Recommended)</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Declare delayed exchange</span></span><br><span class="line"><span class="meta">@Bean</span></span><br><span class="line"><span class="keyword">public</span> Exchange <span class="title function_">delayExchange</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> ExchangeBuilder</span><br><span class="line">        .directExchange(<span class="string">&quot;delay.exchange&quot;</span>)</span><br><span class="line">        .delayed()  <span class="comment">// Set delayed property</span></span><br><span class="line">        .durable(<span class="literal">true</span>)</span><br><span class="line">        .build();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Send delayed message</span></span><br><span class="line">rabbitTemplate.convertAndSend(</span><br><span class="line">    <span class="string">&quot;delay.exchange&quot;</span>,</span><br><span class="line">    <span class="string">&quot;delay.key&quot;</span>,</span><br><span class="line">    message,</span><br><span class="line">    msg -&gt; &#123;</span><br><span class="line">        msg.getMessageProperties().setDelay(<span class="number">30000</span>);  <span class="comment">// 30 second delay</span></span><br><span class="line">        <span class="keyword">return</span> msg;</span><br><span class="line">    &#125;</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="Best-Practices-Common-Issues"><a href="#Best-Practices-Common-Issues" class="headerlink" title="Best Practices &amp; Common Issues"></a>Best Practices &amp; Common Issues</h2><h3 id="1-Message-Backlog-Handling"><a href="#1-Message-Backlog-Handling" class="headerlink" title="1. Message Backlog Handling"></a>1. Message Backlog Handling</h3><table>
+<thead>
+<tr>
+<th>Emergency Solutions</th>
+<th>Long-term Solutions</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Temporarily scale up consumers</td>
+<td>Plan consumer capacity properly</td>
+</tr>
+<tr>
+<td>Optimize consumption logic (batch)</td>
+<td>Use lazy queues</td>
+</tr>
+<tr>
+<td>Limit production rate</td>
+<td>Reduce synchronous code</td>
+</tr>
+</tbody></table>
+<h3 id="2-Common-Interview-Questions"><a href="#2-Common-Interview-Questions" class="headerlink" title="2. Common Interview Questions"></a>2. Common Interview Questions</h3><p><strong>Q: How to ensure message reliability?</strong></p>
+<ul>
+<li>Producer: Enable Confirm mechanism</li>
+<li>MQ: Enable persistence (exchange, queue, message)</li>
+<li>Consumer: Enable manual ack or auto-retry</li>
+</ul>
+<p><strong>Q: How to handle duplicate consumption?</strong></p>
+<ul>
+<li>Message ID deduplication</li>
+<li>Business state check (recommended)</li>
+</ul>
+<p><strong>Q: How to design order timeout cancellation?</strong></p>
+<ul>
+<li>Use delayed message plugin</li>
+<li>Multi-level delay checks (avoid resource waste)</li>
+</ul>
+<h3 id="3-Configuration-Cheat-Sheet"><a href="#3-Configuration-Cheat-Sheet" class="headerlink" title="3. Configuration Cheat Sheet"></a>3. Configuration Cheat Sheet</h3><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">rabbitmq:</span></span><br><span class="line">    <span class="comment"># Connection</span></span><br><span class="line">    <span class="attr">host:</span> <span class="string">localhost</span></span><br><span class="line">    <span class="attr">port:</span> <span class="number">5672</span></span><br><span class="line">    <span class="attr">virtual-host:</span> <span class="string">/</span></span><br><span class="line">    <span class="attr">username:</span> <span class="string">guest</span></span><br><span class="line">    <span class="attr">password:</span> <span class="string">guest</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># Producer</span></span><br><span class="line">    <span class="attr">publisher-confirm-type:</span> <span class="string">correlated</span> <span class="comment"># Enable confirm</span></span><br><span class="line">    <span class="attr">publisher-returns:</span> <span class="literal">true</span> <span class="comment"># Enable return</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># Consumer</span></span><br><span class="line">    <span class="attr">listener:</span></span><br><span class="line">      <span class="attr">simple:</span></span><br><span class="line">        <span class="attr">prefetch:</span> <span class="number">1</span> <span class="comment"># Prefetch count</span></span><br><span class="line">        <span class="attr">acknowledge-mode:</span> <span class="string">auto</span> <span class="comment"># Ack mode</span></span><br><span class="line">        <span class="attr">retry:</span></span><br><span class="line">          <span class="attr">enabled:</span> <span class="literal">true</span> <span class="comment"># Enable retry</span></span><br><span class="line">          <span class="attr">initial-interval:</span> <span class="string">1000ms</span></span><br><span class="line">          <span class="attr">max-attempts:</span> <span class="number">3</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="Summary"><a href="#Summary" class="headerlink" title="Summary"></a>Summary</h2><p>RabbitMQ is a mature message middleware with excellent performance in reliability, usability, and functionality. Key takeaways from this article:</p>
+<ol>
+<li><strong>Selection</strong>: For small to medium scale scenarios, prioritize RabbitMQ for its mature ecosystem and ease of use</li>
+<li><strong>Core Concepts</strong>: Exchanges handle routing, queues handle storage, bindings determine routing rules</li>
+<li><strong>Exchange Types</strong>: Fanout for broadcast, Direct for exact match, Topic for pattern matching</li>
+<li><strong>Reliability</strong>: Producer Confirm + MQ Persistence + Consumer Ack + Business Idempotency</li>
+<li><strong>Delayed Messages</strong>: Dead letter exchange and delayed plugin approaches</li>
+</ol>
+<p>Proper use of message middleware can effectively improve system decoupling, scalability, and stability.</p>
+<hr>
+<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://www.rabbitmq.com/documentation.html">RabbitMQ Official Documentation</a></li>
+<li><a target="_blank" rel="noopener" href="https://spring.io/projects/spring-amqp">Spring AMQP Official Documentation</a></li>
+<li><a target="_blank" rel="noopener" href="https://developer.aliyun.com/article/769883">Alibaba Cloud Developer Community - RabbitMQ Guide</a></li>
+<li><a target="_blank" rel="noopener" href="https://rabbitmq.mr-ping.com/">RabbitMQ Chinese Documentation</a></li>
+<li><a target="_blank" rel="noopener" href="https://javabetter.cn/mq/rabbitmq-rumen.html">Java Guide - RabbitMQ Getting Started</a></li>
+</ul>
+<link rel="stylesheet" href="/css/folder.css" type="text/css"><script src="/js/folder.js" type="text/javascript" async></script>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Java/" rel="tag"># Java</a>
+              <a href="/tags/RabbitMQ/" rel="tag"># RabbitMQ</a>
+              <a href="/tags/Message-Queue/" rel="tag"># Message Queue</a>
+              <a href="/tags/Microservices/" rel="tag"># Microservices</a>
+              <a href="/tags/Spring-Boot/" rel="tag"># Spring Boot</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2026/04/19/Getting-Started-with-Docker-A-Practical-Guide-for-Developers/" rel="prev" title="Getting Started with Docker">
+      <i class="fa fa-chevron-left"></i> Getting Started with Docker
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+
+            
+            <div class="post-copyright" style="margin: 0 0 10px 0;">
+              <p class="post-copyright-author" style="margin: 0 0 5px 0 !important;"><strong>Author:</strong> <a href="https://github.com/BODYsuperman" target="_blank">Alex</a></p>
+              <p class="post-copyright-link" style="margin: 0 0 5px 0 !important;"><strong>Article Link:</strong> <a href="https://bodysuperman.github.io/2026/04/26/Message-Middleware-Selection-Guide-RabbitMQ/" target="_blank">https://bodysuperman.github.io/2026/04/26/Message-Middleware-Selection-Guide-RabbitMQ/</a></p>
+              <p class="post-copyright-license" style="margin: 0 !important;"><strong>License:</strong> This article is licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a>. Please credit the original author and include the source link when reposting.</p>
+            </div>
+
+          </div>
+          
+    <div class="comments" id="gitalk-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Table-of-Contents"><span class="nav-number">1.</span> <span class="nav-text">Table of Contents</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Introduction-Why-We-Need-Message-Middleware"><span class="nav-number">2.</span> <span class="nav-text">Introduction: Why We Need Message Middleware</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Pain-Points-of-Synchronous-Calls"><span class="nav-number">2.1.</span> <span class="nav-text">Pain Points of Synchronous Calls</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Advantages-of-Asynchronous-Communication"><span class="nav-number">2.2.</span> <span class="nav-text">Advantages of Asynchronous Communication</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Message-Queue-Comparison"><span class="nav-number">3.</span> <span class="nav-text">Message Queue Comparison</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Mainstream-MQ-Comparison"><span class="nav-number">3.1.</span> <span class="nav-text">Mainstream MQ Comparison</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Selection-Recommendations"><span class="nav-number">3.2.</span> <span class="nav-text">Selection Recommendations</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RabbitMQ-Core-Concepts"><span class="nav-number">4.</span> <span class="nav-text">RabbitMQ Core Concepts</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Architecture-Overview"><span class="nav-number">4.1.</span> <span class="nav-text">Architecture Overview</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Core-Components"><span class="nav-number">4.2.</span> <span class="nav-text">Core Components</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Docker-Quick-Start"><span class="nav-number">4.3.</span> <span class="nav-text">Docker Quick Start</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Exchange-Types-Explained"><span class="nav-number">5.</span> <span class="nav-text">Exchange Types Explained</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-Fanout-Broadcast"><span class="nav-number">5.1.</span> <span class="nav-text">1. Fanout (Broadcast)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-Direct-Point-to-Point"><span class="nav-number">5.2.</span> <span class="nav-text">2. Direct (Point-to-Point)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-Topic-Pattern-Matching"><span class="nav-number">5.3.</span> <span class="nav-text">3. Topic (Pattern Matching)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Spring-AMQP-in-Practice"><span class="nav-number">6.</span> <span class="nav-text">Spring AMQP in Practice</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Dependency-Configuration"><span class="nav-number">6.1.</span> <span class="nav-text">Dependency Configuration</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Basic-Configuration"><span class="nav-number">6.2.</span> <span class="nav-text">Basic Configuration</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Producer-Example"><span class="nav-number">6.3.</span> <span class="nav-text">Producer Example</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Consumer-Example"><span class="nav-number">6.4.</span> <span class="nav-text">Consumer Example</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#WorkQueues-Work-Distribution"><span class="nav-number">6.5.</span> <span class="nav-text">WorkQueues (Work Distribution)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Message-Reliability-Guarantees"><span class="nav-number">7.</span> <span class="nav-text">Message Reliability Guarantees</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Producer-Reliability"><span class="nav-number">7.1.</span> <span class="nav-text">Producer Reliability</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-Publisher-Confirm"><span class="nav-number">7.1.1.</span> <span class="nav-text">1. Publisher Confirm</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MQ-Reliability"><span class="nav-number">7.2.</span> <span class="nav-text">MQ Reliability</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Data-Persistence"><span class="nav-number">7.2.1.</span> <span class="nav-text">Data Persistence</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Lazy-Queues"><span class="nav-number">7.2.2.</span> <span class="nav-text">Lazy Queues</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Consumer-Reliability"><span class="nav-number">7.3.</span> <span class="nav-text">Consumer Reliability</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Consumer-Acknowledgment-Modes"><span class="nav-number">7.3.1.</span> <span class="nav-text">Consumer Acknowledgment Modes</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Consumer-Retry-and-Failure-Handling"><span class="nav-number">7.3.2.</span> <span class="nav-text">Consumer Retry and Failure Handling</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Idempotency-Guarantees"><span class="nav-number">7.4.</span> <span class="nav-text">Idempotency Guarantees</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Delayed-Message-Implementation"><span class="nav-number">8.</span> <span class="nav-text">Delayed Message Implementation</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Solution-1-Dead-Letter-Exchange-TTL"><span class="nav-number">8.1.</span> <span class="nav-text">Solution 1: Dead Letter Exchange + TTL</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Solution-2-Delayed-Message-Plugin-Recommended"><span class="nav-number">8.2.</span> <span class="nav-text">Solution 2: Delayed Message Plugin (Recommended)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Best-Practices-Common-Issues"><span class="nav-number">9.</span> <span class="nav-text">Best Practices &amp; Common Issues</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-Message-Backlog-Handling"><span class="nav-number">9.1.</span> <span class="nav-text">1. Message Backlog Handling</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-Common-Interview-Questions"><span class="nav-number">9.2.</span> <span class="nav-text">2. Common Interview Questions</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-Configuration-Cheat-Sheet"><span class="nav-number">9.3.</span> <span class="nav-text">3. Configuration Cheat Sheet</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Summary"><span class="nav-number">10.</span> <span class="nav-text">Summary</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#References"><span class="nav-number">11.</span> <span class="nav-text">References</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="AI with Alex"
+      src="/uploads/avatar.jpg">
+  <p class="site-author-name" itemprop="name">AI with Alex</p>
+  <div class="site-description" itemprop="description">Attention Is All You Need</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">21</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">27</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">56</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/BODYsuperman" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;BODYsuperman" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://stackoverflow.com/users/9644964/alexandar-may-msft?tab=answers&sort=votes" title="StackOverflow → https:&#x2F;&#x2F;stackoverflow.com&#x2F;users&#x2F;9644964&#x2F;alexandar-may-msft?tab&#x3D;answers&amp;sort&#x3D;votes" rel="noopener" target="_blank"><i class="fab fa-stack-overflow fa-fw"></i>StackOverflow</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">AI with Alex</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">Symbols count total: </span>
+    <span title="Symbols count total">245k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">Reading time total &asymp;</span>
+    <span title="Reading time total">3:43</span>
+    
+    <!--
+    
+    -->
+</div>
+
+<!--
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a>
+   </div>
+--><script color="0,0,255" opacity="0.5" zIndex="-1" count="99" src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1/dist/canvas-nest.js"></script>
+
+
+
+
+
+
+        
+
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv"  >
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv"  >
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : 'Ov23liVJTzqy1rzaDXXM',
+      clientSecret: '5e785a7d46e69f7509e6c2f7730855a55944df33',
+      repo        : 'blog-comment',
+      owner       : 'BODYsuperman',
+      admin       : ['BODYsuperman'],
+      id          : '67a40f10bd61574560085673079a50cd',
+        language: '',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+
+</body>
+</html>
