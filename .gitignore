@@ -5,3 +5,29 @@ db.json
 node_modules/
 public/
 .deploy*/
+
+
+.env
+.env.*
+.venv/
+node_modules/
+
+
+
+.claude/settings.local.json
+
+secrets/
+credentials/
+
+*.db
+*.sqlite
+
+
+
+# ssh
+*.pem
+*.key
+
+# vscode
+.vscode
+
