@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/logo-180.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/logo-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/logo-16.png">
+  <link rel="mask-icon" href="/images/logo-512.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|monospace:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"bodysuperman.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null,"use":"Gitalk","text":true},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="Understanding Docker Technology Application Scenarios of Docker Core Advantages Core Concepts   Docker vs Virtual Machines Basic Commands Docker Data Volumes What is a Data Volume Volume Commands Mou">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Getting Started with Docker">
+<meta property="og:url" content="https://bodysuperman.github.io/2026/04/19/Getting-Started-with-Docker-A-Practical-Guide-for-Developers/index.html">
+<meta property="og:site_name" content="AI with Alex&#39;s Blog">
+<meta property="og:description" content="Understanding Docker Technology Application Scenarios of Docker Core Advantages Core Concepts   Docker vs Virtual Machines Basic Commands Docker Data Volumes What is a Data Volume Volume Commands Mou">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2026-04-19T04:48:28.000Z">
+<meta property="article:modified_time" content="2026-06-04T16:00:00.000Z">
+<meta property="article:author" content="AI with Alex">
+<meta property="article:tag" content="Docker Network">
+<meta property="article:tag" content="Docker Compose">
+<meta property="article:tag" content="Containerization">
+<meta property="article:tag" content="MySQL">
+<meta property="article:tag" content="Nacos">
+<meta property="article:tag" content="Hands-on Tutorial">
+<meta property="article:tag" content="Microservices Architecture">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://bodysuperman.github.io/2026/04/19/Getting-Started-with-Docker-A-Practical-Guide-for-Developers/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>Getting Started with Docker | AI with Alex's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+
+
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">AI with Alex's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+   
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://bodysuperman.github.io/2026/04/19/Getting-Started-with-Docker-A-Practical-Guide-for-Developers/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+      <meta itemprop="name" content="AI with Alex">
+      <meta itemprop="description" content="Attention Is All You Need">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="AI with Alex's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Getting Started with Docker
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2026-04-19 12:48:28" itemprop="dateCreated datePublished" datetime="2026-04-19T12:48:28+08:00">2026-04-19</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2026-06-05 00:00:00" itemprop="dateModified" datetime="2026-06-05T00:00:00+08:00">2026-06-05</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Docker/" itemprop="url" rel="index"><span itemprop="name">Docker</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Docker/Backend-Development/" itemprop="url" rel="index"><span itemprop="name">Backend Development</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Docker/Backend-Development/DevOps/" itemprop="url" rel="index"><span itemprop="name">DevOps</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>12k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>11 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <ul>
+<li><a href="#understanding-docker-technology">Understanding Docker Technology</a><ul>
+<li><a href="#application-scenarios-of-docker">Application Scenarios of Docker</a></li>
+<li><a href="#core-advantages">Core Advantages</a></li>
+<li><a href="#core-concepts">Core Concepts</a></li>
+</ul>
+</li>
+<li><a href="#docker-vs-virtual-machines">Docker vs Virtual Machines</a></li>
+<li><a href="#basic-commands">Basic Commands</a></li>
+<li><a href="#docker-data-volumes">Docker Data Volumes</a><ul>
+<li><a href="#what-is-a-data-volume">What is a Data Volume</a></li>
+<li><a href="#volume-commands">Volume Commands</a></li>
+<li><a href="#mounting-local-directories">Mounting Local Directories</a></li>
+</ul>
+</li>
+<li><a href="#docker-networking">Docker Networking</a><ul>
+<li><a href="#default-networks">Default Networks</a></li>
+<li><a href="#custom-networks">Custom Networks</a></li>
+</ul>
+</li>
+<li><a href="#building-custom-images">Building Custom Images</a><ul>
+<li><a href="#image-structure">Image Structure</a></li>
+<li><a href="#dockerfile-syntax">Dockerfile Syntax</a></li>
+<li><a href="#building-images">Building Images</a></li>
+</ul>
+</li>
+<li><a href="#docker-compose">Docker Compose</a><ul>
+<li><a href="#basic-syntax">Basic Syntax</a></li>
+<li><a href="#common-commands">Common Commands</a></li>
+</ul>
+</li>
+<li><a href="#practical-examples">Practical Examples</a><ul>
+<li><a href="#deploying-mysql">Deploying MySQL</a></li>
+<li><a href="#deploying-a-java-application">Deploying a Java Application</a></li>
+</ul>
+</li>
+<li><a href="#best-practices">Best Practices</a></li>
+<li><a href="#faq">FAQ</a></li>
+<li><a href="#summary">Summary</a></li>
+<li><a href="#references">References</a></li>
+</ul>
+<span id="more"></span>
+
+<h2 id="Understanding-Docker-Technology"><a href="#Understanding-Docker-Technology" class="headerlink" title="Understanding Docker Technology"></a>Understanding Docker Technology</h2><p>Docker is a platform designed to help developers build, share, and run container applications. It handles the tedious setup, so you can focus on the code. Docker is an open-source application container engine, built on the <a target="_blank" rel="noopener" href="https://go.dev/">Go</a> programming language and released under the Apache 2.0 license. Docker allows developers to package their applications and dependent packages into a lightweight, portable container, which can then be deployed on any popular Linux machine, and also enables virtualization.</p>
+<p>Containers utilize a sandbox mechanism exclusively, with no interfaces between them (similar to apps on an iPhone). More importantly, the performance overhead of containers is extremely low.</p>
+<h3 id="Application-Scenarios-of-Docker"><a href="#Application-Scenarios-of-Docker" class="headerlink" title="Application Scenarios of Docker"></a>Application Scenarios of Docker</h3><table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Microservices architecture</strong></td>
+<td>Each service is containerized independently, facilitating management and scalability</td>
+</tr>
+<tr>
+<td><strong>CI&#x2F;CD pipeline</strong></td>
+<td>Integrate with Jenkins&#x2F;GitLab CI to achieve automated build and testing</td>
+</tr>
+<tr>
+<td><strong>Development environment standardization</strong></td>
+<td>New members can start a full set of dependent services (such as databases and message queues) with one click</td>
+</tr>
+<tr>
+<td><strong>Cloud-native foundation</strong></td>
+<td>Orchestration tools such as Kubernetes manage container clusters based on Docker</td>
+</tr>
+</tbody></table>
+<h3 id="Core-Advantages"><a href="#Core-Advantages" class="headerlink" title="Core Advantages"></a>Core Advantages</h3><table>
+<thead>
+<tr>
+<th>Advantage</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Cross-platform consistency</strong></td>
+<td>Address the issue of “it works on my machine” and ensure consistency across development, testing, and production environments</td>
+</tr>
+<tr>
+<td><strong>Resource efficiency</strong></td>
+<td>Containers directly share the host kernel, eliminating the need to virtualize the entire operating system, thereby saving memory and CPU resources</td>
+</tr>
+<tr>
+<td><strong>Rapid deployment</strong></td>
+<td>Launch containers in seconds and support automated scaling</td>
+</tr>
+<tr>
+<td><strong>Isolation</strong></td>
+<td>Each container possesses an independent file system, network, and process space</td>
+</tr>
+</tbody></table>
+<h3 id="Core-Concepts"><a href="#Core-Concepts" class="headerlink" title="Core Concepts"></a>Core Concepts</h3><table>
+<thead>
+<tr>
+<th>Concept</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Container</strong></td>
+<td>A lightweight running instance that contains application code, runtime environment, and dependent libraries. It is created based on an image, isolated from other containers, and shares the host operating system kernel (more efficient than virtual machines)</td>
+</tr>
+<tr>
+<td><strong>Image</strong></td>
+<td>A read-only template that defines the runtime environment of a container (such as operating system, software configuration, etc.). It optimizes space and build speed through layered storage</td>
+</tr>
+<tr>
+<td><strong>Dockerfile</strong></td>
+<td>A text file that describes how to automatically build an image (such as specifying the base image, installing software, copying files, etc.)</td>
+</tr>
+<tr>
+<td><strong>Repository&#x2F;Registry</strong></td>
+<td>A platform for storing and distributing images, such as Docker Hub (the official public registry) or private registries (like Harbor)</td>
+</tr>
+</tbody></table>
+<h2 id="Docker-vs-Virtual-Machines"><a href="#Docker-vs-Virtual-Machines" class="headerlink" title="Docker vs Virtual Machines"></a>Docker vs Virtual Machines</h2><table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Virtual Machine</th>
+<th>Docker Container</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Isolation Level</td>
+<td>Hardware-level virtualization</td>
+<td>Operating system-level virtualization</td>
+</tr>
+<tr>
+<td>Operating System</td>
+<td>Each VM requires a complete OS</td>
+<td>Sharing the host OS kernel</td>
+</tr>
+<tr>
+<td>Resource Consumption</td>
+<td>Heavyweight, consuming more resources</td>
+<td>Lightweight, consuming less resources</td>
+</tr>
+<tr>
+<td>Startup Time</td>
+<td>Minutes</td>
+<td>Seconds</td>
+</tr>
+<tr>
+<td>Performance Overhead</td>
+<td>Relatively high</td>
+<td>Close to native performance</td>
+</tr>
+<tr>
+<td>Image Size</td>
+<td>GB level</td>
+<td>MB level</td>
+</tr>
+</tbody></table>
+<p><strong>Architecture Comparison:</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">Traditional VMs:                    Docker Containers:</span><br><span class="line">┌─────────────────┐                ┌─────────────────┐</span><br><span class="line">│   App A         │                │   App A         │</span><br><span class="line">│   Bin/Libs      │                │   App B         │</span><br><span class="line">│   Guest OS      │                │   App C         │</span><br><span class="line">├─────────────────┤                ├─────────────────┤</span><br><span class="line">│   Hypervisor    │                │   Docker Engine │</span><br><span class="line">├─────────────────┤                ├─────────────────┤</span><br><span class="line">│   Host OS       │                │   Host OS       │</span><br><span class="line">├─────────────────┤                ├─────────────────┤</span><br><span class="line">│   Infrastructure│                │   Infrastructure│</span><br><span class="line">└─────────────────┘                └─────────────────┘</span><br></pre></td></tr></table></figure>
+
+<h2 id="Basic-Commands"><a href="#Basic-Commands" class="headerlink" title="Basic Commands"></a>Basic Commands</h2><h3 id="Image-Commands"><a href="#Image-Commands" class="headerlink" title="Image Commands"></a>Image Commands</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Pull an image (such as the official Nginx image)</span></span><br><span class="line">docker pull nginx</span><br><span class="line"></span><br><span class="line"><span class="comment"># Pull a specific version</span></span><br><span class="line">docker pull nginx:1.24</span><br><span class="line"></span><br><span class="line"><span class="comment"># View local images</span></span><br><span class="line">docker images</span><br><span class="line"></span><br><span class="line"><span class="comment"># Remove an image</span></span><br><span class="line">docker rmi nginx</span><br><span class="line"></span><br><span class="line"><span class="comment"># Build image from Dockerfile</span></span><br><span class="line">docker build -t my-app:1.0 .</span><br></pre></td></tr></table></figure>
+
+<h3 id="Container-Commands"><a href="#Container-Commands" class="headerlink" title="Container Commands"></a>Container Commands</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Run a container (-d for detached, -p for port mapping)</span></span><br><span class="line">docker run -d -p 80:80 --name my-nginx nginx</span><br><span class="line"></span><br><span class="line"><span class="comment"># View running containers</span></span><br><span class="line">docker ps</span><br><span class="line"></span><br><span class="line"><span class="comment"># View all containers (including stopped)</span></span><br><span class="line">docker ps -a</span><br><span class="line"></span><br><span class="line"><span class="comment"># Start/Stop/Restart containers</span></span><br><span class="line">docker start my-nginx</span><br><span class="line">docker stop my-nginx</span><br><span class="line">docker restart my-nginx</span><br><span class="line"></span><br><span class="line"><span class="comment"># Remove a container</span></span><br><span class="line">docker <span class="built_in">rm</span> my-nginx</span><br><span class="line"></span><br><span class="line"><span class="comment"># Force remove a running container</span></span><br><span class="line">docker <span class="built_in">rm</span> -f my-nginx</span><br><span class="line"></span><br><span class="line"><span class="comment"># Enter a running container</span></span><br><span class="line">docker <span class="built_in">exec</span> -it my-nginx /bin/bash</span><br><span class="line"></span><br><span class="line"><span class="comment"># View container logs</span></span><br><span class="line">docker logs my-nginx</span><br><span class="line"></span><br><span class="line"><span class="comment"># View container details</span></span><br><span class="line">docker inspect my-nginx</span><br></pre></td></tr></table></figure>
+
+<h3 id="System-Commands"><a href="#System-Commands" class="headerlink" title="System Commands"></a>System Commands</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># View Docker system usage</span></span><br><span class="line">docker system <span class="built_in">df</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Clean up unused resources</span></span><br><span class="line">docker system prune</span><br><span class="line"></span><br><span class="line"><span class="comment"># View Docker info</span></span><br><span class="line">docker info</span><br></pre></td></tr></table></figure>
+
+<h2 id="Docker-Data-Volumes"><a href="#Docker-Data-Volumes" class="headerlink" title="Docker Data Volumes"></a>Docker Data Volumes</h2><h3 id="What-is-a-Data-Volume"><a href="#What-is-a-Data-Volume" class="headerlink" title="What is a Data Volume"></a>What is a Data Volume</h3><p><strong>Data Volume</strong> is a virtual directory that acts as a bridge between container directories and host directories. It solves several problems:</p>
+<table>
+<thead>
+<tr>
+<th>Problem</th>
+<th>Solution</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Data persistence</td>
+<td>Data remains when container is removed</td>
+</tr>
+<tr>
+<td>Configuration management</td>
+<td>Easy to modify configuration files</td>
+</tr>
+<tr>
+<td>Static resources</td>
+<td>Serve external static files</td>
+</tr>
+</tbody></table>
+<h3 id="Volume-Commands"><a href="#Volume-Commands" class="headerlink" title="Volume Commands"></a>Volume Commands</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Create a volume</span></span><br><span class="line">docker volume create my-volume</span><br><span class="line"></span><br><span class="line"><span class="comment"># List volumes</span></span><br><span class="line">docker volume <span class="built_in">ls</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Inspect a volume</span></span><br><span class="line">docker volume inspect my-volume</span><br><span class="line"></span><br><span class="line"><span class="comment"># Remove a volume</span></span><br><span class="line">docker volume <span class="built_in">rm</span> my-volume</span><br><span class="line"></span><br><span class="line"><span class="comment"># Mount volume when running container</span></span><br><span class="line">docker run -d --name nginx -p 80:80 -v html:/usr/share/nginx/html nginx</span><br></pre></td></tr></table></figure>
+
+<h3 id="Mounting-Local-Directories"><a href="#Mounting-Local-Directories" class="headerlink" title="Mounting Local Directories"></a>Mounting Local Directories</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Mount local directory (use absolute path or ./)</span></span><br><span class="line">docker run -d \</span><br><span class="line">  --name mysql \</span><br><span class="line">  -p 3306:3306 \</span><br><span class="line">  -e TZ=Asia/Shanghai \</span><br><span class="line">  -e MYSQL_ROOT_PASSWORD=123456 \</span><br><span class="line">  -v ./mysql/data:/var/lib/mysql \</span><br><span class="line">  -v ./mysql/conf:/etc/mysql/conf.d \</span><br><span class="line">  mysql:8.0</span><br></pre></td></tr></table></figure>
+
+<p><strong>Important:</strong> Local directories must start with <code>/</code> or <code>./</code>. Names without these prefixes are treated as volume names.</p>
+<h2 id="Docker-Networking"><a href="#Docker-Networking" class="headerlink" title="Docker Networking"></a>Docker Networking</h2><h3 id="Default-Networks"><a href="#Default-Networks" class="headerlink" title="Default Networks"></a>Default Networks</h3><table>
+<thead>
+<tr>
+<th>Network</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>bridge</code></td>
+<td>Default network for containers; provides isolation</td>
+</tr>
+<tr>
+<td><code>host</code></td>
+<td>Shares host network stack; no isolation</td>
+</tr>
+<tr>
+<td><code>none</code></td>
+<td>No network connectivity</td>
+</tr>
+</tbody></table>
+<h3 id="Custom-Networks"><a href="#Custom-Networks" class="headerlink" title="Custom Networks"></a>Custom Networks</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Create a custom network</span></span><br><span class="line">docker network create my-network</span><br><span class="line"></span><br><span class="line"><span class="comment"># List networks</span></span><br><span class="line">docker network <span class="built_in">ls</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Connect container to network</span></span><br><span class="line">docker network connect my-network my-container</span><br><span class="line"></span><br><span class="line"><span class="comment"># Run container with network</span></span><br><span class="line">docker run -d --name app --network my-network my-image</span><br><span class="line"></span><br><span class="line"><span class="comment"># Inspect network</span></span><br><span class="line">docker network inspect my-network</span><br></pre></td></tr></table></figure>
+
+<p><strong>Key Benefit:</strong> In custom networks, containers can communicate using container names as hostnames:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># In &#x27;my-network&#x27;, &#x27;mysql&#x27; container can be accessed via &#x27;mysql&#x27; hostname</span></span><br><span class="line">docker run -d --name web --network my-network -e DB_HOST=mysql my-app</span><br></pre></td></tr></table></figure>
+
+<h2 id="Building-Custom-Images"><a href="#Building-Custom-Images" class="headerlink" title="Building Custom Images"></a>Building Custom Images</h2><h3 id="Image-Structure"><a href="#Image-Structure" class="headerlink" title="Image Structure"></a>Image Structure</h3><p>Docker images are built in layers:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Layer 4: Application Layer    (your jar/code)</span><br><span class="line">Layer 3: Dependencies Layer   (libraries)</span><br><span class="line">Layer 2: Runtime Layer        (JDK/Python/etc)</span><br><span class="line">Layer 1: Base Layer           (OS environment)</span><br></pre></td></tr></table></figure>
+
+<h3 id="Dockerfile-Syntax"><a href="#Dockerfile-Syntax" class="headerlink" title="Dockerfile Syntax"></a>Dockerfile Syntax</h3><p>Common Dockerfile instructions:</p>
+<table>
+<thead>
+<tr>
+<th>Instruction</th>
+<th>Description</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>FROM</code></td>
+<td>Base image</td>
+<td><code>FROM openjdk:11-jre</code></td>
+</tr>
+<tr>
+<td><code>ENV</code></td>
+<td>Environment variables</td>
+<td><code>ENV TZ=Asia/Shanghai</code></td>
+</tr>
+<tr>
+<td><code>COPY</code></td>
+<td>Copy files from host</td>
+<td><code>COPY app.jar /app.jar</code></td>
+</tr>
+<tr>
+<td><code>ADD</code></td>
+<td>Copy and extract archives</td>
+<td><code>ADD config.tar.gz /config</code></td>
+</tr>
+<tr>
+<td><code>RUN</code></td>
+<td>Execute commands</td>
+<td><code>RUN apt-get update</code></td>
+</tr>
+<tr>
+<td><code>EXPOSE</code></td>
+<td>Expose ports</td>
+<td><code>EXPOSE 8080</code></td>
+</tr>
+<tr>
+<td><code>ENTRYPOINT</code></td>
+<td>Container startup command</td>
+<td><code>ENTRYPOINT [&quot;java&quot;, &quot;-jar&quot;, &quot;/app.jar&quot;]</code></td>
+</tr>
+<tr>
+<td><code>CMD</code></td>
+<td>Default command arguments</td>
+<td><code>CMD [&quot;--server.port=8080&quot;]</code></td>
+</tr>
+</tbody></table>
+<h3 id="Building-Images"><a href="#Building-Images" class="headerlink" title="Building Images"></a>Building Images</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Build from Dockerfile in current directory</span></span><br><span class="line">docker build -t my-app:1.0 .</span><br><span class="line"></span><br><span class="line"><span class="comment"># Build with specific Dockerfile</span></span><br><span class="line">docker build -f Dockerfile.prod -t my-app:prod .</span><br><span class="line"></span><br><span class="line"><span class="comment"># Build without cache</span></span><br><span class="line">docker build --no-cache -t my-app:1.0 .</span><br></pre></td></tr></table></figure>
+
+<h2 id="Docker-Compose"><a href="#Docker-Compose" class="headerlink" title="Docker Compose"></a>Docker Compose</h2><p>Docker Compose allows you to define and run multi-container applications using a YAML file.</p>
+<h3 id="Basic-Syntax"><a href="#Basic-Syntax" class="headerlink" title="Basic Syntax"></a>Basic Syntax</h3><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">version:</span> <span class="string">&quot;3.8&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">mysql:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">mysql:8.0</span></span><br><span class="line">    <span class="attr">container_name:</span> <span class="string">mysql</span></span><br><span class="line">    <span class="attr">ports:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;3306:3306&quot;</span></span><br><span class="line">    <span class="attr">environment:</span></span><br><span class="line">      <span class="attr">MYSQL_ROOT_PASSWORD:</span> <span class="number">123456</span></span><br><span class="line">      <span class="attr">TZ:</span> <span class="string">Asia/Shanghai</span></span><br><span class="line">    <span class="attr">volumes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">./mysql/data:/var/lib/mysql</span></span><br><span class="line">    <span class="attr">networks:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">my-network</span></span><br><span class="line"></span><br><span class="line">  <span class="attr">app:</span></span><br><span class="line">    <span class="attr">build:</span> <span class="string">.</span></span><br><span class="line">    <span class="attr">container_name:</span> <span class="string">my-app</span></span><br><span class="line">    <span class="attr">ports:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;8080:8080&quot;</span></span><br><span class="line">    <span class="attr">depends_on:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">mysql</span></span><br><span class="line">    <span class="attr">networks:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">my-network</span></span><br><span class="line"></span><br><span class="line"><span class="attr">networks:</span></span><br><span class="line">  <span class="attr">my-network:</span></span><br><span class="line">    <span class="attr">driver:</span> <span class="string">bridge</span></span><br><span class="line"></span><br><span class="line"><span class="attr">volumes:</span></span><br><span class="line">  <span class="attr">mysql_data:</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="Common-Commands"><a href="#Common-Commands" class="headerlink" title="Common Commands"></a>Common Commands</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Start all services</span></span><br><span class="line">docker compose up -d</span><br><span class="line"></span><br><span class="line"><span class="comment"># Stop all services</span></span><br><span class="line">docker compose down</span><br><span class="line"></span><br><span class="line"><span class="comment"># View logs</span></span><br><span class="line">docker compose logs -f</span><br><span class="line"></span><br><span class="line"><span class="comment"># Scale specific service</span></span><br><span class="line">docker compose up -d --scale web=3</span><br><span class="line"></span><br><span class="line"><span class="comment"># Build images</span></span><br><span class="line">docker compose build</span><br><span class="line"></span><br><span class="line"><span class="comment"># Pull latest images</span></span><br><span class="line">docker compose pull</span><br></pre></td></tr></table></figure>
+
+<h2 id="Practical-Examples"><a href="#Practical-Examples" class="headerlink" title="Practical Examples"></a>Practical Examples</h2><h3 id="Deploying-MySQL"><a href="#Deploying-MySQL" class="headerlink" title="Deploying MySQL"></a>Deploying MySQL</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">docker run -d \</span><br><span class="line">  --name mysql \</span><br><span class="line">  -p 3306:3306 \</span><br><span class="line">  -e TZ=Asia/Shanghai \</span><br><span class="line">  -e MYSQL_ROOT_PASSWORD=YourStrongPassword \</span><br><span class="line">  -v ./mysql/data:/var/lib/mysql \</span><br><span class="line">  -v ./mysql/conf:/etc/mysql/conf.d \</span><br><span class="line">  --restart unless-stopped \</span><br><span class="line">  mysql:8.0</span><br></pre></td></tr></table></figure>
+
+<h3 id="Deploying-a-Java-Application"><a href="#Deploying-a-Java-Application" class="headerlink" title="Deploying a Java Application"></a>Deploying a Java Application</h3><p><strong>Dockerfile:</strong></p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">FROM</span> openjdk:<span class="number">11</span>-jre-slim</span><br><span class="line"></span><br><span class="line"><span class="keyword">ENV</span> TZ=Asia/Shanghai</span><br><span class="line"><span class="keyword">WORKDIR</span><span class="language-bash"> /app</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">COPY</span><span class="language-bash"> target/*.jar app.jar</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">EXPOSE</span> <span class="number">8080</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">ENTRYPOINT</span><span class="language-bash"> [<span class="string">&quot;java&quot;</span>, <span class="string">&quot;-jar&quot;</span>, <span class="string">&quot;app.jar&quot;</span>]</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>Build and Run:</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Build image</span></span><br><span class="line">docker build -t my-java-app:1.0 .</span><br><span class="line"></span><br><span class="line"><span class="comment"># Run container</span></span><br><span class="line">docker run -d \</span><br><span class="line">  --name my-app \</span><br><span class="line">  -p 8080:8080 \</span><br><span class="line">  --network my-network \</span><br><span class="line">  --restart unless-stopped \</span><br><span class="line">  my-java-app:1.0</span><br></pre></td></tr></table></figure>
+
+<h2 id="Best-Practices"><a href="#Best-Practices" class="headerlink" title="Best Practices"></a>Best Practices</h2><h3 id="Security"><a href="#Security" class="headerlink" title="Security"></a>Security</h3><ol>
+<li><strong>Use specific image versions</strong>: Avoid <code>latest</code> tag in production; use explicit version numbers</li>
+<li><strong>Run as non-root user</strong>: Add <code>USER</code> instruction in Dockerfile<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">RUN</span><span class="language-bash"> adduser -D appuser</span></span><br><span class="line"><span class="keyword">USER</span> appuser</span><br></pre></td></tr></table></figure></li>
+<li><strong>Scan images for vulnerabilities</strong>: Use <code>docker scan</code> or integrate with CI&#x2F;CD</li>
+<li><strong>Don’t embed secrets</strong>: Use environment variables, Docker secrets, or external vaults</li>
+</ol>
+<h3 id="Performance"><a href="#Performance" class="headerlink" title="Performance"></a>Performance</h3><ol>
+<li><p><strong>Leverage build cache</strong>: Order Dockerfile instructions from least to most frequently changing</p>
+</li>
+<li><p><strong>Minimize layers</strong>: Combine multiple <code>RUN</code> commands when logical</p>
+</li>
+<li><p><strong>Use multi-stage builds</strong>:</p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Build stage</span></span><br><span class="line"><span class="keyword">FROM</span> maven:<span class="number">3.8</span>-openjdk-<span class="number">11</span> AS build</span><br><span class="line"><span class="keyword">COPY</span><span class="language-bash"> . .</span></span><br><span class="line"><span class="keyword">RUN</span><span class="language-bash"> mvn clean package</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Runtime stage</span></span><br><span class="line"><span class="keyword">FROM</span> openjdk:<span class="number">11</span>-jre-slim</span><br><span class="line"><span class="keyword">COPY</span><span class="language-bash"> --from=build /app/target/*.jar app.jar</span></span><br><span class="line"><span class="keyword">ENTRYPOINT</span><span class="language-bash"> [<span class="string">&quot;java&quot;</span>, <span class="string">&quot;-jar&quot;</span>, <span class="string">&quot;app.jar&quot;</span>]</span></span><br></pre></td></tr></table></figure></li>
+</ol>
+<h3 id="Maintenance"><a href="#Maintenance" class="headerlink" title="Maintenance"></a>Maintenance</h3><ol>
+<li><strong>Label your images</strong>:<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">LABEL</span><span class="language-bash"> maintainer=<span class="string">&quot;your-email@example.com&quot;</span></span></span><br><span class="line"><span class="keyword">LABEL</span><span class="language-bash"> version=<span class="string">&quot;1.0&quot;</span></span></span><br><span class="line"><span class="keyword">LABEL</span><span class="language-bash"> description=<span class="string">&quot;My Application&quot;</span></span></span><br></pre></td></tr></table></figure></li>
+<li><strong>Use <code>.dockerignore</code></strong>: Exclude unnecessary files from build context</li>
+<li><strong>Set resource limits</strong>: Prevent containers from consuming all resources</li>
+<li><strong>Implement health checks</strong>:<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">HEALTHCHECK</span><span class="language-bash"> --interval=30s --<span class="built_in">timeout</span>=3s --start-period=5s --retries=3 \</span></span><br><span class="line"><span class="language-bash">  CMD curl -f http://localhost:8080/health || <span class="built_in">exit</span> 1</span></span><br></pre></td></tr></table></figure></li>
+</ol>
+<h3 id="Production-Readiness"><a href="#Production-Readiness" class="headerlink" title="Production Readiness"></a>Production Readiness</h3><table>
+<thead>
+<tr>
+<th>Practice</th>
+<th>Command&#x2F;Config</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Restart policy</td>
+<td><code>docker run --restart unless-stopped</code></td>
+</tr>
+<tr>
+<td>Resource limits</td>
+<td><code>docker run --memory=512m --cpus=1.0</code></td>
+</tr>
+<tr>
+<td>Log rotation</td>
+<td>Configure Docker daemon logging options</td>
+</tr>
+<tr>
+<td>Network isolation</td>
+<td>Use custom networks, not default bridge</td>
+</tr>
+</tbody></table>
+<h2 id="FAQ"><a href="#FAQ" class="headerlink" title="FAQ"></a>FAQ</h2><h3 id="Q-What-is-the-difference-between-COPY-and-ADD-in-Dockerfile"><a href="#Q-What-is-the-difference-between-COPY-and-ADD-in-Dockerfile" class="headerlink" title="Q: What is the difference between COPY and ADD in Dockerfile?"></a>Q: What is the difference between <code>COPY</code> and <code>ADD</code> in Dockerfile?</h3><p><strong>A:</strong> <code>COPY</code> simply copies files from host to container. <code>ADD</code> has additional features:</p>
+<ul>
+<li>Can extract local tar archives automatically</li>
+<li>Can download files from URLs</li>
+</ul>
+<p><strong>Recommendation:</strong> Use <code>COPY</code> for most cases; use <code>ADD</code> only when you need its special features.</p>
+<h3 id="Q-How-do-I-access-a-container-from-another-machine-on-the-same-network"><a href="#Q-How-do-I-access-a-container-from-another-machine-on-the-same-network" class="headerlink" title="Q: How do I access a container from another machine on the same network?"></a>Q: How do I access a container from another machine on the same network?</h3><p><strong>A:</strong> Use the host machine’s IP address with the mapped port. For example, if the host IP is <code>192.168.1.100</code> and you mapped port 8080:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://192.168.1.100:8080</span><br></pre></td></tr></table></figure>
+
+<h3 id="Q-Why-is-my-container-exiting-immediately"><a href="#Q-Why-is-my-container-exiting-immediately" class="headerlink" title="Q: Why is my container exiting immediately?"></a>Q: Why is my container exiting immediately?</h3><p><strong>A:</strong> Common causes:</p>
+<ol>
+<li>The foreground process exited (containers stop when the main process stops)</li>
+<li>Incorrect command or entrypoint</li>
+<li>Application error on startup</li>
+</ol>
+<p><strong>Debug:</strong> Check logs with <code>docker logs &lt;container&gt;</code> or run interactively without <code>-d</code> flag.</p>
+<h3 id="Q-How-do-I-persist-data-when-a-container-is-removed"><a href="#Q-How-do-I-persist-data-when-a-container-is-removed" class="headerlink" title="Q: How do I persist data when a container is removed?"></a>Q: How do I persist data when a container is removed?</h3><p><strong>A:</strong> Use named volumes or bind mounts:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Named volume</span></span><br><span class="line">docker run -v mydata:/data my-image</span><br><span class="line"></span><br><span class="line"><span class="comment"># Bind mount</span></span><br><span class="line">docker run -v /host/path:/container/path my-image</span><br></pre></td></tr></table></figure>
+
+<h3 id="Q-What-is-the-difference-between-docker-compose-and-docker-compose"><a href="#Q-What-is-the-difference-between-docker-compose-and-docker-compose" class="headerlink" title="Q: What is the difference between docker-compose and docker compose?"></a>Q: What is the difference between <code>docker-compose</code> and <code>docker compose</code>?</h3><p><strong>A:</strong> <code>docker-compose</code> (V1) is the Python-based legacy tool. <code>docker compose</code> (V2) is the Go-based plugin integrated into Docker CLI. V2 is now recommended.</p>
+<h3 id="Q-How-do-I-reduce-Docker-image-size"><a href="#Q-How-do-I-reduce-Docker-image-size" class="headerlink" title="Q: How do I reduce Docker image size?"></a>Q: How do I reduce Docker image size?</h3><p><strong>A:</strong> Strategies:</p>
+<ol>
+<li>Use smaller base images (Alpine, Distroless)</li>
+<li>Use multi-stage builds</li>
+<li>Remove unnecessary dependencies and cache files</li>
+<li>Minimize layer count where appropriate</li>
+</ol>
+<h3 id="Q-Can-I-run-GUI-applications-in-Docker"><a href="#Q-Can-I-run-GUI-applications-in-Docker" class="headerlink" title="Q: Can I run GUI applications in Docker?"></a>Q: Can I run GUI applications in Docker?</h3><p><strong>A:</strong> Yes, but it’s complex. You need to:</p>
+<ul>
+<li>Share X11 socket with the host</li>
+<li>Set appropriate DISPLAY environment variable</li>
+<li>Handle permissions</li>
+</ul>
+<p>Generally not recommended for production, but possible for development.</p>
+<h3 id="Q-How-do-I-troubleshoot-network-connectivity-between-containers"><a href="#Q-How-do-I-troubleshoot-network-connectivity-between-containers" class="headerlink" title="Q: How do I troubleshoot network connectivity between containers?"></a>Q: How do I troubleshoot network connectivity between containers?</h3><p><strong>A:</strong> Steps:</p>
+<ol>
+<li>Ensure containers are on the same network</li>
+<li>Verify using container names for DNS resolution</li>
+<li>Use <code>docker network inspect</code> to check configuration</li>
+<li>Use <code>docker exec</code> to ping from inside containers</li>
+</ol>
+<h2 id="Summary"><a href="#Summary" class="headerlink" title="Summary"></a>Summary</h2><p>Docker revolutionizes application deployment through containerization. Key takeaways:</p>
+<table>
+<thead>
+<tr>
+<th>Concept</th>
+<th>Key Point</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Containers vs VMs</td>
+<td>Containers share host kernel; VMs virtualize hardware</td>
+</tr>
+<tr>
+<td>Images vs Containers</td>
+<td>Images are blueprints; containers are running instances</td>
+</tr>
+<tr>
+<td>Data Persistence</td>
+<td>Use volumes for data that must survive container restarts</td>
+</tr>
+<tr>
+<td>Networking</td>
+<td>Custom networks enable service discovery via container names</td>
+</tr>
+<tr>
+<td>Docker Compose</td>
+<td>Ideal for multi-container application orchestration</td>
+</tr>
+</tbody></table>
+<p>Docker enables developers to build once and run anywhere, solving the “it works on my machine” problem and streamlining the path from development to production.</p>
+<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ol>
+<li><a target="_blank" rel="noopener" href="https://docs.docker.com/get-started/">Docker Official Documentation</a></li>
+<li><a target="_blank" rel="noopener" href="https://docs.docker.com/engine/reference/commandline/cli/">Docker CLI Reference</a></li>
+<li><a target="_blank" rel="noopener" href="https://docs.docker.com/engine/reference/builder/">Dockerfile Reference</a></li>
+<li><a target="_blank" rel="noopener" href="https://docs.docker.com/compose/compose-file/">Docker Compose Specification</a></li>
+<li><a target="_blank" rel="noopener" href="https://hub.docker.com/">Docker Hub</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.runoob.com/docker/docker-tutorial.html">Docker Tutorial - Runoob</a></li>
+</ol>
+<link rel="stylesheet" href="/css/folder.css" type="text/css"><script src="/js/folder.js" type="text/javascript" async></script>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Docker-Network/" rel="tag"># Docker Network</a>
+              <a href="/tags/Docker-Compose/" rel="tag"># Docker Compose</a>
+              <a href="/tags/Containerization/" rel="tag"># Containerization</a>
+              <a href="/tags/MySQL/" rel="tag"># MySQL</a>
+              <a href="/tags/Nacos/" rel="tag"># Nacos</a>
+              <a href="/tags/Hands-on-Tutorial/" rel="tag"># Hands-on Tutorial</a>
+              <a href="/tags/Microservices-Architecture/" rel="tag"># Microservices Architecture</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2026/04/12/Backtracking-Algorithm/" rel="prev" title="Backtracking Algorithm">
+      <i class="fa fa-chevron-left"></i> Backtracking Algorithm
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+
+            
+            <div class="post-copyright" style="margin: 0 0 10px 0;">
+              <p class="post-copyright-author" style="margin: 0 0 5px 0 !important;"><strong>Author:</strong> <a href="https://github.com/BODYsuperman" target="_blank">Alex</a></p>
+              <p class="post-copyright-link" style="margin: 0 0 5px 0 !important;"><strong>Article Link:</strong> <a href="https://bodysuperman.github.io/2026/04/19/Getting-Started-with-Docker-A-Practical-Guide-for-Developers/" target="_blank">https://bodysuperman.github.io/2026/04/19/Getting-Started-with-Docker-A-Practical-Guide-for-Developers/</a></p>
+              <p class="post-copyright-license" style="margin: 0 !important;"><strong>License:</strong> This article is licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a>. Please credit the original author and include the source link when reposting.</p>
+            </div>
+
+          </div>
+          
+    <div class="comments" id="gitalk-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Understanding-Docker-Technology"><span class="nav-number">1.</span> <span class="nav-text">Understanding Docker Technology</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Application-Scenarios-of-Docker"><span class="nav-number">1.1.</span> <span class="nav-text">Application Scenarios of Docker</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Core-Advantages"><span class="nav-number">1.2.</span> <span class="nav-text">Core Advantages</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Core-Concepts"><span class="nav-number">1.3.</span> <span class="nav-text">Core Concepts</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Docker-vs-Virtual-Machines"><span class="nav-number">2.</span> <span class="nav-text">Docker vs Virtual Machines</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Basic-Commands"><span class="nav-number">3.</span> <span class="nav-text">Basic Commands</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Image-Commands"><span class="nav-number">3.1.</span> <span class="nav-text">Image Commands</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Container-Commands"><span class="nav-number">3.2.</span> <span class="nav-text">Container Commands</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#System-Commands"><span class="nav-number">3.3.</span> <span class="nav-text">System Commands</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Docker-Data-Volumes"><span class="nav-number">4.</span> <span class="nav-text">Docker Data Volumes</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#What-is-a-Data-Volume"><span class="nav-number">4.1.</span> <span class="nav-text">What is a Data Volume</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Volume-Commands"><span class="nav-number">4.2.</span> <span class="nav-text">Volume Commands</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Mounting-Local-Directories"><span class="nav-number">4.3.</span> <span class="nav-text">Mounting Local Directories</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Docker-Networking"><span class="nav-number">5.</span> <span class="nav-text">Docker Networking</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Default-Networks"><span class="nav-number">5.1.</span> <span class="nav-text">Default Networks</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Custom-Networks"><span class="nav-number">5.2.</span> <span class="nav-text">Custom Networks</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Building-Custom-Images"><span class="nav-number">6.</span> <span class="nav-text">Building Custom Images</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Image-Structure"><span class="nav-number">6.1.</span> <span class="nav-text">Image Structure</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Dockerfile-Syntax"><span class="nav-number">6.2.</span> <span class="nav-text">Dockerfile Syntax</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Building-Images"><span class="nav-number">6.3.</span> <span class="nav-text">Building Images</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Docker-Compose"><span class="nav-number">7.</span> <span class="nav-text">Docker Compose</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Basic-Syntax"><span class="nav-number">7.1.</span> <span class="nav-text">Basic Syntax</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Common-Commands"><span class="nav-number">7.2.</span> <span class="nav-text">Common Commands</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Practical-Examples"><span class="nav-number">8.</span> <span class="nav-text">Practical Examples</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Deploying-MySQL"><span class="nav-number">8.1.</span> <span class="nav-text">Deploying MySQL</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Deploying-a-Java-Application"><span class="nav-number">8.2.</span> <span class="nav-text">Deploying a Java Application</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Best-Practices"><span class="nav-number">9.</span> <span class="nav-text">Best Practices</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Security"><span class="nav-number">9.1.</span> <span class="nav-text">Security</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Performance"><span class="nav-number">9.2.</span> <span class="nav-text">Performance</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Maintenance"><span class="nav-number">9.3.</span> <span class="nav-text">Maintenance</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Production-Readiness"><span class="nav-number">9.4.</span> <span class="nav-text">Production Readiness</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#FAQ"><span class="nav-number">10.</span> <span class="nav-text">FAQ</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Q-What-is-the-difference-between-COPY-and-ADD-in-Dockerfile"><span class="nav-number">10.1.</span> <span class="nav-text">Q: What is the difference between COPY and ADD in Dockerfile?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Q-How-do-I-access-a-container-from-another-machine-on-the-same-network"><span class="nav-number">10.2.</span> <span class="nav-text">Q: How do I access a container from another machine on the same network?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Q-Why-is-my-container-exiting-immediately"><span class="nav-number">10.3.</span> <span class="nav-text">Q: Why is my container exiting immediately?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Q-How-do-I-persist-data-when-a-container-is-removed"><span class="nav-number">10.4.</span> <span class="nav-text">Q: How do I persist data when a container is removed?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Q-What-is-the-difference-between-docker-compose-and-docker-compose"><span class="nav-number">10.5.</span> <span class="nav-text">Q: What is the difference between docker-compose and docker compose?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Q-How-do-I-reduce-Docker-image-size"><span class="nav-number">10.6.</span> <span class="nav-text">Q: How do I reduce Docker image size?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Q-Can-I-run-GUI-applications-in-Docker"><span class="nav-number">10.7.</span> <span class="nav-text">Q: Can I run GUI applications in Docker?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Q-How-do-I-troubleshoot-network-connectivity-between-containers"><span class="nav-number">10.8.</span> <span class="nav-text">Q: How do I troubleshoot network connectivity between containers?</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Summary"><span class="nav-number">11.</span> <span class="nav-text">Summary</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#References"><span class="nav-number">12.</span> <span class="nav-text">References</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="AI with Alex"
+      src="/uploads/avatar.jpg">
+  <p class="site-author-name" itemprop="name">AI with Alex</p>
+  <div class="site-description" itemprop="description">Attention Is All You Need</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">20</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">26</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">53</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/BODYsuperman" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;BODYsuperman" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://stackoverflow.com/users/9644964/alexandar-may-msft?tab=answers&sort=votes" title="StackOverflow → https:&#x2F;&#x2F;stackoverflow.com&#x2F;users&#x2F;9644964&#x2F;alexandar-may-msft?tab&#x3D;answers&amp;sort&#x3D;votes" rel="noopener" target="_blank"><i class="fab fa-stack-overflow fa-fw"></i>StackOverflow</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">AI with Alex</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">Symbols count total: </span>
+    <span title="Symbols count total">234k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">Reading time total &asymp;</span>
+    <span title="Reading time total">3:33</span>
+    
+    <!--
+    
+    -->
+</div>
+
+<!--
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a>
+   </div>
+--><script color="0,0,255" opacity="0.5" zIndex="-1" count="99" src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1/dist/canvas-nest.js"></script>
+
+
+
+
+
+
+        
+
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv"  >
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv"  >
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : 'Ov23liVJTzqy1rzaDXXM',
+      clientSecret: '5e785a7d46e69f7509e6c2f7730855a55944df33',
+      repo        : 'blog-comment',
+      owner       : 'BODYsuperman',
+      admin       : ['BODYsuperman'],
+      id          : 'fa3406e497df547957f09c285f4d8120',
+        language: '',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+
+</body>
+</html>

@@ -590,417 +590,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Binary Tree</title>
-    <url>/2025/03/15/BinaryTree/</url>
-    <content><![CDATA[<h1 id="Binary-Tree"><a href="#Binary-Tree" class="headerlink" title="Binary Tree"></a>Binary Tree</h1><ol>
-<li><a href="#what-is-a-binary-tree">What is a Binary Tree?</a></li>
-<li><a href="#key-components">Key Components and Terms</a></li>
-<li><a href="#types-of-binarytree">Types of Binary Tree On the basis of the completion of levels</a></li>
-<li><a href="#traversal-techniques"> Tree Traversal Techniques</a><ul>
-<li><a href="#dfs">Depth-First Search (DFS)</a></li>
-<li><a href="#bfs">Breadth First Search (BFS)</a></li>
-</ul>
-</li>
-<li><a href="#bst">Binary Search Tree (BST)</a> <ul>
-<li><a href="#bstim">BST Implementation</a></li>
-<li><a href="#deletebst">How to delete Node in a BST</a></li>
-</ul>
-</li>
-<li><a href="#depth">Maximum Depth of Binary Tree</a></li>
-<li><a href="#applications">Real-World Applications</a><span id="more"></span></li>
-</ol>
-<h2 id="1-What-is-a-Binary-Tree"><a href="#1-What-is-a-Binary-Tree" class="headerlink" title="1. What is a Binary Tree? "></a>1. What is a Binary Tree? <a name="what-is-a-doubly-linked-list"></a></h2><p>A <strong>binary tree</strong> is a <a href="https://en.wikipedia.org/wiki/Tree_(data_structure)">tree data structure</a> in which each node has at most two children, referred to as the <strong>left child</strong> and the <strong>right child</strong>.The topmost node is the <strong>root</strong>, and nodes without children are called <strong>leaves</strong>.It is commonly used in computer science for efficient storage and retrieval of data, with various operations such as insertion, deletion, and traversal.</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">     A  &lt;- Root</span><br><span class="line">   /   \</span><br><span class="line">  B     C  &lt;- Children</span><br><span class="line"> / \</span><br><span class="line">D   E  &lt;- Leave</span><br></pre></td></tr></table></figure>
-<p>Generic TreeNode class:</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public class TreeNode&lt;T&gt; where T : IComparable&lt;T&gt;</span><br><span class="line">&#123;</span><br><span class="line">    public T Data &#123; get; set; &#125;</span><br><span class="line">    public TreeNode&lt;T&gt;? Left &#123; get; set; &#125;</span><br><span class="line">    public TreeNode&lt;T&gt;? Right &#123; get; set; &#125;</span><br><span class="line"></span><br><span class="line">    public TreeNode(T data)</span><br><span class="line">    &#123;</span><br><span class="line">        Data = data;</span><br><span class="line">        Left = null;</span><br><span class="line">        Right = null;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="2-Key-Components-and-Terms"><a href="#2-Key-Components-and-Terms" class="headerlink" title="2. Key Components and Terms: "></a>2. Key Components and Terms: <a name="key-components"></a></h2><ul>
-<li><strong>Root</strong>: Top node (A in our example)  </li>
-<li><strong>Parent&#x2F;Child</strong>: A is parent of B and C  </li>
-<li><strong>Leaf</strong>: Nodes without children (D, E, C)  </li>
-<li><strong>Subtree</strong>: Any node with its descendants  </li>
-<li><strong>Depth</strong>: Distance from the root to a node (root has default depth 1)</li>
-<li><strong>Height</strong>: Longest path from a node to a leaf</li>
-<li><strong>Level</strong>: All nodes at the same depth</li>
-</ul>
-<h2 id="3-Types-of-Binary-Tree-On-the-basis-of-the-completion-of-levels"><a href="#3-Types-of-Binary-Tree-On-the-basis-of-the-completion-of-levels" class="headerlink" title="3. Types of Binary Tree On the basis of the completion of levels "></a>3. Types of Binary Tree On the basis of the completion of levels <a name="types-of-binarytree"></a></h2><ul>
-<li>Complete Binary Tree</li>
-<li>Perfect Binary Tree</li>
-<li>Balanced Binary Tree</li>
-</ul>
-<h3 id="Perfect-Binary-Tree"><a href="#Perfect-Binary-Tree" class="headerlink" title="Perfect Binary Tree"></a>Perfect Binary Tree</h3><p>A Binary tree is a Perfect Binary Tree in which all the internal nodes have two children and all leaf nodes are at the same level.<br>A Perfect Binary Tree of height h (where the height of the binary tree is the number of edges in the longest path from the root node to any leaf node in the tree, height of root node is 0) has <strong>2<sup>h+1</sup>-1</strong> node.<br><img src="/images/b1.png" alt="pic"></p>
-<h3 id="Complete-Binary-Tree"><a href="#Complete-Binary-Tree" class="headerlink" title="Complete Binary Tree"></a>Complete Binary Tree</h3><p>A Binary Tree is a Complete Binary Tree if all the levels are completely filled except possibly the last level and the last level has all keys as left as possible.<br>A complete binary tree is just like a full binary tree, but with two major differences:</p>
-<ul>
-<li>Every level except the last level must be completely filled.</li>
-<li>All the leaf elements must lean towards the left.(I think they must be continuous from left to right)</li>
-<li>The last leaf element might not have a right sibling i.e. a complete binary tree doesn’t have to be a full binary tree.<br><img src="/images/b2.png" alt="pic"></li>
-</ul>
-<h3 id="Full-Binary-Tree"><a href="#Full-Binary-Tree" class="headerlink" title="Full Binary Tree"></a>Full Binary Tree</h3><p>A full binary tree is a binary tree with either zero or two child nodes for each node.<br><img src="/images/b3.png" alt="pic"></p>
-<h3 id="Balanced-Binary-Tree"><a href="#Balanced-Binary-Tree" class="headerlink" title="Balanced Binary Tree"></a>Balanced Binary Tree</h3><p>A binary tree is balanced if the height of the tree is O(Log n) where n is the number of nodes. For Example, the AVL tree maintains O(Log n) height by making sure that the difference between the heights of the left and right subtrees is at most <strong>1</strong>(key attribute!). Red-Black trees maintain O(Log n) height by making sure that the number of Black nodes on every root to leaf paths is the same and that there are no adjacent red nodes. Balanced Binary Search trees are performance-wise good as they provide O(log n) time for search, insert and delete.<br><img src="/images/b4.png" alt="pic"></p>
-<h2 id="4-Tree-Traversal-Techniques"><a href="#4-Tree-Traversal-Techniques" class="headerlink" title="4. Tree Traversal Techniques "></a>4. Tree Traversal Techniques <a name="traversal-techniques"></a></h2><p>Tree Traversal refers to the process of visiting or accessing each node of the tree exactly once in a certain order. Tree traversal algorithms help us visit and process all the nodes of the tree. Since a tree is not a linear data structure, there can be multiple choices for the next node to be visited. Hence we have many ways to traverse a tree.</p>
-<ul>
-<li>Depth First Search or DFS<ul>
-<li>Inorder Traversal</li>
-<li>Preorder Traversal</li>
-<li>Postorder Traversal</li>
-</ul>
-</li>
-<li>Level Order Traversal or Breadth First Search or BFS</li>
-</ul>
-<h3 id="Depth-First-Search-DFS"><a href="#Depth-First-Search-DFS" class="headerlink" title="Depth-First Search (DFS) "></a>Depth-First Search (DFS) <a name="dfs"></a></h3><ul>
-<li><p>Inorder Traversal (Left-Root-Right)</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">void Inorder(TreeNode node) &#123;</span><br><span class="line">    if (node == null) return;</span><br><span class="line">    Inorder(node.Left);</span><br><span class="line">    Console.Write(node.Value + &quot; &quot;);</span><br><span class="line">    Inorder(node.Right);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><strong>Output</strong>:<code> D B E A C</code></p>
-</li>
-<li><p>Preorder Traversal (Root-Left-Right)</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">void Preorder(TreeNode node) &#123;</span><br><span class="line">    if (node == null) return;</span><br><span class="line">    Console.Write(node.Value + &quot; &quot;);</span><br><span class="line">    Preorder(node.Left);</span><br><span class="line">    Preorder(node.Right);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><strong>Output</strong>:<code>A B D E C</code></p>
-</li>
-<li><p>Postorder Traversal (Left-Right-Root)</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">void Postorder(TreeNode node) &#123;</span><br><span class="line">    if (node == null) return;</span><br><span class="line">    Postorder(node.Left);</span><br><span class="line">    Postorder(node.Right);</span><br><span class="line">    Console.Write(node.Value + &quot; &quot;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><strong>Output</strong>: <code>D E B C A</code></p>
-</li>
-</ul>
-<h3 id="Level-Order-Traversal-or-Breadth-First-Search-or-BFS"><a href="#Level-Order-Traversal-or-Breadth-First-Search-or-BFS" class="headerlink" title="Level Order Traversal or Breadth First Search or BFS "></a>Level Order Traversal or Breadth First Search or BFS <a name="bfs"></a></h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public IList&lt;IList&lt;int&gt;&gt; LevelOrder(TreeNode root)</span><br><span class="line">&#123;</span><br><span class="line">    var res = new List&lt;IList&lt;int&gt;&gt;();</span><br><span class="line">    var que = new Queue&lt;TreeNode&gt;();</span><br><span class="line">    if (root == null) return res;</span><br><span class="line">    que.Enqueue(root);</span><br><span class="line">    while (que.Count != 0)</span><br><span class="line">    &#123;</span><br><span class="line">        var size = que.Count;</span><br><span class="line">        var vec = new List&lt;int&gt;();</span><br><span class="line">        for (int i = 0; i &lt; size; i++)</span><br><span class="line">        &#123;</span><br><span class="line">            var cur = que.Dequeue();</span><br><span class="line">            vec.Add(cur.val);</span><br><span class="line">            if (cur.left != null) que.Enqueue(cur.left);</span><br><span class="line">            if (cur.right != null) que.Enqueue(cur.right);</span><br><span class="line">        &#125;</span><br><span class="line">        res.Add(vec);</span><br><span class="line">    &#125;</span><br><span class="line">    return res;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><strong>Output</strong>: <code>A B C D E</code></p>
-<h2 id="5-Binary-Search-Tree-BST"><a href="#5-Binary-Search-Tree-BST" class="headerlink" title="5. Binary Search Tree (BST) "></a>5. Binary Search Tree (BST) <a name="bst"></a></h2><p>Accdoring to the <a href="https://en.wikipedia.org/wiki/Binary_search_tree">wikipedia</a>:</p>
-<blockquote>
-<p>In computer science, a <strong>binary search tree</strong> (<strong>BST</strong>), also called an <strong>ordered</strong> or <strong>sorted binary tree</strong>, is a rooted binary tree data structure with the key of each internal node being greater than all the keys in the respective node’s left subtree and less than the ones in its right subtree. The time complexity of operations on the binary search tree is linear with respect to the height of the tree.</p>
-</blockquote>
-<p><strong><a href="https://en.wikipedia.org/wiki/Time_complexity">Time complexity</a> in <a href="https://en.wikipedia.org/wiki/Big_O_notation">big O notation</a></strong></p>
-<table>
-<thead>
-<tr>
-<th align="center">Operation</th>
-<th align="center">Average</th>
-<th align="center">Worst case</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">Search</td>
-<td align="center">O(log n)</td>
-<td align="center">O(n)</td>
-</tr>
-<tr>
-<td align="center">Insert</td>
-<td align="center">O(log n)</td>
-<td align="center">O(n)</td>
-</tr>
-<tr>
-<td align="center">Delete</td>
-<td align="center">O(log n)</td>
-<td align="center">O(n)</td>
-</tr>
-</tbody></table>
-<h3 id="BST-Implementation"><a href="#BST-Implementation" class="headerlink" title="BST Implementation "></a>BST Implementation <a name="bstim"></a></h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public class BinarySearchTree&lt;T&gt; where T : IComparable&lt;T&gt;</span><br><span class="line">&#123;</span><br><span class="line">    private TreeNode&lt;T&gt;? _root;</span><br><span class="line"></span><br><span class="line">    public void Insert(T data)</span><br><span class="line">    &#123;</span><br><span class="line">        _root = InsertRec(_root, data);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private TreeNode&lt;T&gt; InsertRec(TreeNode&lt;T&gt;? node, T data)</span><br><span class="line">    &#123;</span><br><span class="line">        if (node == null) return new TreeNode&lt;T&gt;(data);</span><br><span class="line">        </span><br><span class="line">        int comparison = data.CompareTo(node.Data);</span><br><span class="line">        if (comparison &lt; 0)</span><br><span class="line">            node.Left = InsertRec(node.Left, data);</span><br><span class="line">        else if (comparison &gt; 0)</span><br><span class="line">            node.Right = InsertRec(node.Right, data);</span><br><span class="line">            </span><br><span class="line">        return node;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public bool Search(T data)</span><br><span class="line">    &#123;</span><br><span class="line">        return SearchRec(_root, data);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private bool SearchRec(TreeNode&lt;T&gt;? node, T data)</span><br><span class="line">    &#123;</span><br><span class="line">        if (node == null) return false;</span><br><span class="line">        </span><br><span class="line">        int comparison = data.CompareTo(node.Data);</span><br><span class="line">        return comparison == 0 || </span><br><span class="line">               SearchRec(comparison &lt; 0 ? node.Left : node.Right, data);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="How-to-delete-Node-in-a-BST"><a href="#How-to-delete-Node-in-a-BST" class="headerlink" title="How to delete Node in a BST? "></a>How to delete Node in a BST? <a name="deletebst"></a></h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public TreeNode DeleteNode(TreeNode root, int key)</span><br><span class="line">&#123;</span><br><span class="line">    /*</span><br><span class="line">     * 1.Not found the target key </span><br><span class="line">     * </span><br><span class="line">     * 2. Found</span><br><span class="line">     * 2.1 the left and right node is null which mean its a leaf node</span><br><span class="line">     * 2.2 the left is null and  the right is not null</span><br><span class="line">     * 2.3 the left is not null and  the right is null</span><br><span class="line">     * 2.4 Both left and right node is not null</span><br><span class="line">     * </span><br><span class="line">     */</span><br><span class="line">    //not found</span><br><span class="line">    if (root == null) return null;</span><br><span class="line">    //Found</span><br><span class="line">    if(root.val == key)</span><br><span class="line">    &#123;</span><br><span class="line">        if (root.left == null &amp;&amp; root.right == null) return null;</span><br><span class="line">        if (root.left == null &amp;&amp; root.right != null) return root.right;</span><br><span class="line">        if (root.left != null &amp;&amp; root.right == null) return root.left;</span><br><span class="line">        if (root.left != null &amp;&amp; root.right != null)</span><br><span class="line">        &#123;</span><br><span class="line">            TreeNode leftode = root.right;</span><br><span class="line">            while(leftode.left != null)</span><br><span class="line">            &#123;</span><br><span class="line">                leftode = leftode.left;</span><br><span class="line">            &#125;</span><br><span class="line">            leftode.left = root.left;</span><br><span class="line">            return root.right;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    if (root.val &gt; key) root.left = DeleteNode(root.left, key);</span><br><span class="line">    if (root.val &lt; key) root.right = DeleteNode(root.right, key);</span><br><span class="line"></span><br><span class="line">    return root;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="6-Maximum-Depth-of-Binary-Tree"><a href="#6-Maximum-Depth-of-Binary-Tree" class="headerlink" title="6. Maximum Depth of Binary Tree "></a>6. Maximum Depth of Binary Tree <a name="depth"></a></h2><p>Given a binary tree, the task is to find the maximum depth of the tree. The maximum depth or height of the tree is the number of edges in the tree from the root to the deepest node.</p>
-<ul>
-<li><p>Approach 1: Using Recursion – O(n) Time and O(h) Space</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public int MaxDepth(TreeNode root) &#123;</span><br><span class="line">    if(root == null) return 0;</span><br><span class="line"></span><br><span class="line">    int leftDepth = MaxDepth(root.left);</span><br><span class="line">    int rightDepth = MaxDepth(root.right);</span><br><span class="line"></span><br><span class="line">    return 1 + Math.Max(leftDepth, rightDepth);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>Approach 2: Level Order Traversal without using Null Delimiter – O(n) Time and O(n) Space</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public int MaxDepth(TreeNode root)</span><br><span class="line">&#123;</span><br><span class="line">    int depth = 0;</span><br><span class="line">    Queue&lt;TreeNode&gt; que = new();</span><br><span class="line">    if (root == null) return depth;</span><br><span class="line">    que.Enqueue(root);</span><br><span class="line">    while (que.Count != 0)</span><br><span class="line">    &#123;</span><br><span class="line">        int size = que.Count;</span><br><span class="line">        depth++;</span><br><span class="line">        for (int i = 0; i &lt; size; i++)</span><br><span class="line">        &#123;</span><br><span class="line">            var node = que.Dequeue();</span><br><span class="line">            if (node.left != null) que.Enqueue(node.left);</span><br><span class="line">            if (node.right != null) que.Enqueue(node.right);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return depth;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
-</ul>
-<h2 id="7-Real-World-Applications"><a href="#7-Real-World-Applications" class="headerlink" title="7. Real-World Applications "></a>7. Real-World Applications <a name="applications"></a></h2><ol>
-<li>LINQ Query Optimization<ul>
-<li>Expression trees power LINQ queries</li>
-</ul>
-</li>
-<li>Game Development<ul>
-<li>Unity uses spatial partitioning trees (Octrees&#x2F;BVH)</li>
-</ul>
-</li>
-<li>Database Systems<ul>
-<li>SQL Server uses B-trees for index storage</li>
-</ul>
-</li>
-</ol>
-<link rel="stylesheet" href="/css/folder.css" type="text/css"><script src="/js/folder.js" type="text/javascript" async></script>]]></content>
-      <categories>
-        <category>Data Structure and Alogrithm</category>
-      </categories>
-      <tags>
-        <tag>Data Structure and Alogrithm</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>CS229 Notes (Part 1): Mathematical Basics of Linear Regression — From Model Formulation to Gradient Descent</title>
-    <url>/2025/10/19/CS229-Notes-Part-1-Mathematical-Basics-of-Linear-Regression-%E2%80%94-From-Model-Formulation-to-Gradient-Descent/</url>
-    <content><![CDATA[<ul>
-<li><a href="#introduction">1. Introduction:</a><ul>
-<li><a href="#welcome">1.1 Welcome to the world of Machine Learning</a></li>
-<li><a href="#what-is-ml">1.2 What Is Machine Learning?</a></li>
-<li><a href="#sl">1.3 Supervised Learning</a></li>
-<li><a href="#ul">1.4 Unsupervised Learning</a></li>
-</ul>
-</li>
-<li><a href="#lr">2. Linear Regression with One Variable</a><ul>
-<li><a href="#mp">2.1 Model Representation</a></li>
-<li><a href="#cf">2.2 Cost Function</a><ul>
-<li><a href="#dcf">2.2.1 Definition of the Cost Function</a></li>
-</ul>
-</li>
-<li><a href="#intuition">2.3 Intuition for the Cost Function (I)</a></li>
-<li><a href="#plot">2.4 Intuition for the Cost Function (II): Contour Plots</a></li>
-<li><a href="#gd">2.5 Gradient Descent</a></li>
-<li><a href="#gdi">2.6 Gradient Descent Intuition</a></li>
-<li><a href="#gdlr">2.7 Gradient Descent for Linear Regression</a></li>
-</ul>
-</li>
-</ul>
-<span id="more"></span>
-<h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction:"></a>Introduction:<a name="introduction"></a></h2><h3 id="Welcome-to-the-world-of-Machine-Learning"><a href="#Welcome-to-the-world-of-Machine-Learning" class="headerlink" title="Welcome to the world of Machine Learning"></a>Welcome to the world of Machine Learning<a name="welcome"></a></h3><p><a href="https://en.wikipedia.org/wiki/Machine_learning">Machine learning (ML)</a> is one of the most exciting fields in modern computer science.<br>From natural language processing and spam filters to image recognition,computer vision, recommendation systems, self-driving cars, agriculture and medicine, machine learning is everywhere.</p>
-<p>This course will not only cover cutting-edge theories of machine learning but also emphasize hands-on practice. By implementing algorithms yourself, you will gain a deep understanding of their internal mechanisms. This is crucial because merely mastering algorithms and mathematical knowledge is not sufficient to solve practical problems.</p>
-<p>The popularity of machine learning stems from its ability to break the limitations of traditional programming. For complex tasks such as web search and photo tagging, we cannot directly write fixed programs to achieve the desired outcomes. Instead, machine learning <code>enables computers to independently learn solutions from data</code>. Today, machine learning is widely used in numerous fields including database mining, medical record analysis, computational biology, and unmanned helicopter control, with market demand far exceeding the supply of professionals.</p>
-<p>Learning ML is not just about formulas and algorithms, but also about:</p>
-<ul>
-<li>Understanding which problems are suitable for ML</li>
-<li>Knowing how to choose models and methods</li>
-<li>Being able to implement and tune algorithms in practice</li>
-</ul>
-<h3 id="What-Is-Machine-Learning"><a href="#What-Is-Machine-Learning" class="headerlink" title="What Is Machine Learning?"></a>What Is Machine Learning?<a name="what-is-ml"></a></h3><p>Two Classic Definitions:</p>
-<p><strong>1.Arthur Samuel (1950s)</strong>:</p>
-<blockquote>
-<p>The field of study that gives computers the ability to learn without being explicitly programmed.<br>He wrote a chess program that played against itself; through thousands of self-played games, the program surpassed its own creator.</p>
-</blockquote>
-<p><strong>2.Tom Mitchell (Modern)</strong>:</p>
-<blockquote>
-<p>A computer program is said to learn from experience E with respect to some class of tasks T and performance measure P, if its performance at tasks in T, as measured by P, improves with experience E.</p>
-</blockquote>
-<p><strong>Memory formula</strong>: <code>T(E)ₚ</code> - Improving task T’s performance on metric P through experience E</p>
-<p><strong>Example: Spam Filter</strong></p>
-<ul>
-<li>T (Task): Classify emails as spam or not spam</li>
-<li>E (Experience): Samples marked as spam by users</li>
-<li>P (Performance): Probability of correctly identifying spam emails</li>
-</ul>
-<p>In simple terms:<br>👉 <strong>Instead of hard-coding rules, we let machines learn patterns from data.</strong></p>
-<p>Why machine learning?<br>Because for many complex problems:</p>
-<ul>
-<li>❌ It is hard to write explicit rules</li>
-<li>✅ But we often have plenty of data to learn from</li>
-</ul>
-<h3 id="Supervised-Learning"><a href="#Supervised-Learning" class="headerlink" title="Supervised Learning"></a>Supervised Learning<a name="sl"></a></h3><p>Supervised learning means that <strong>each sample in the training dataset is accompanied by a “correct answer” (label)</strong>. The algorithm learns the mapping relationship between sample features and labels to achieve prediction for new samples. </p>
-<p><strong>Characteristics</strong>:</p>
-<ul>
-<li>Training data include inputs <code>x</code> and correct outputs <code>y</code></li>
-<li>The goal is to learn a mapping from <code>x → y</code></li>
-</ul>
-<p>Form:<br><code>(x, y)</code></p>
-<p>Two main types:</p>
-<ol>
-<li><strong>✅ Regression Problems</strong> - Predicting continuous values<br>such as:</li>
-</ol>
-<ul>
-<li>House prices</li>
-<li>Temperature</li>
-<li>Sales<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Example: House price prediction</span><br><span class="line">Input: House area (750 square feet)</span><br><span class="line">Output: Predicted price ($150,000)</span><br><span class="line">Feature: Output is continuous numerical values that can take any real number</span><br></pre></td></tr></table></figure>
-<img src="/2025/10/19/CS229-Notes-Part-1-Mathematical-Basics-of-Linear-Regression-%E2%80%94-From-Model-Formulation-to-Gradient-Descent/ml1.1.png" alt="pic"></li>
-</ul>
-<ol start="2">
-<li><strong>✅ Classification Problems</strong> - Predicting discrete categories</li>
-</ol>
-<p>such as:</p>
-<ul>
-<li>Spam &#x2F; not spam</li>
-<li>Disease &#x2F; healthy</li>
-<li>Image categories<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Example: Tumor diagnosis</span><br><span class="line">Input: Tumor features (size, density, etc.)</span><br><span class="line">Output: Benign(0) / Malignant(1)</span><br><span class="line">Feature: Output is a finite set of discrete values</span><br></pre></td></tr></table></figure>
-<img src="/2025/10/19/CS229-Notes-Part-1-Mathematical-Basics-of-Linear-Regression-%E2%80%94-From-Model-Formulation-to-Gradient-Descent/ml1.2.png" alt="pic"></li>
-</ul>
-<p><img src="/2025/10/19/CS229-Notes-Part-1-Mathematical-Basics-of-Linear-Regression-%E2%80%94-From-Model-Formulation-to-Gradient-Descent/ml1.3.png" alt="pic"></p>
-<p><strong>Essence of supervised learning</strong>:</p>
-<blockquote>
-<p>Learn from labeled data so the model can make predictions on new examples.</p>
-</blockquote>
-<h3 id="Unsupervised-Learning"><a href="#Unsupervised-Learning" class="headerlink" title="Unsupervised Learning"></a>Unsupervised Learning<a name="ul"></a></h3><p>The core difference between unsupervised learning and supervised learning is that <strong>training data has no labels</strong>. The algorithm needs to independently discover potential structures from the data. A typical representative of unsupervised learning is <strong>clustering algorithms</strong>.</p>
-<p><img src="/2025/10/19/CS229-Notes-Part-1-Mathematical-Basics-of-Linear-Regression-%E2%80%94-From-Model-Formulation-to-Gradient-Descent/ml1.4.png" alt="pic"><br><strong>Characteristics</strong>:</p>
-<ul>
-<li>Only input data x</li>
-<li>No labels y</li>
-<li>The goal is to <strong>discover structure</strong> in the data</li>
-</ul>
-<p><strong>Common task: Clustering</strong></p>
-<ol>
-<li>Applications:</li>
-</ol>
-<ul>
-<li>Automatically grouping news (e.g., Google News)</li>
-<li>Customer segmentation</li>
-<li>Gene analysis</li>
-<li>Community detection in social networks</li>
-</ul>
-<ol start="2">
-<li>Cocktail Party Problem:</li>
-</ol>
-<p>matlab:</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">% Audio separation achieved with just one line of code</span><br><span class="line">[W,s,v] = svd((repmat(sum(x.*x,1),size(x,1),1).*x)*x&#x27;);</span><br></pre></td></tr></table></figure>
-<ul>
-<li>Separating different speakers’ audio from mixed sounds</li>
-<li>Demonstrates the importance of using the right tools<br><img src="/2025/10/19/CS229-Notes-Part-1-Mathematical-Basics-of-Linear-Regression-%E2%80%94-From-Model-Formulation-to-Gradient-Descent/ml1.5.png" alt="pic"><br><strong>Intuition</strong>:<blockquote>
-<p>We do not know the categories in advance, but want the algorithm to find similar groups by itself.</p>
-</blockquote>
-</li>
-</ul>
-<p>Comparison:</p>
-<table>
-<thead>
-<tr>
-<th align="center"><strong>Size in feet</strong></th>
-<th align="center"><strong>Labeled?</strong></th>
-<th align="center"><strong>Goal</strong></th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">Supervised Learning</td>
-<td align="center">Yes</td>
-<td align="center">Prediction</td>
-</tr>
-<tr>
-<td align="center">Unsupervised Learning</td>
-<td align="center">No</td>
-<td align="center">Discover structure</td>
-</tr>
-</tbody></table>
-<h2 id="Linear-Regression-with-One-Variable"><a href="#Linear-Regression-with-One-Variable" class="headerlink" title="Linear Regression with One Variable "></a>Linear Regression with One Variable <a name="lr"></a></h2><h3 id="Model-Representation"><a href="#Model-Representation" class="headerlink" title="Model Representation"></a>Model Representation<a name="mp"></a></h3><p>Linear regression with one variable is an introductory machine learning algorithm used to solve single-feature regression problems (e.g., predicting house prices using house size).<br>Let’s start with an example: This example is about predicting house prices, and we’ll use a dataset containing housing prices in Portland, Oregon. Here, I’ll plot our dataset based on the prices of houses sold for different house sizes.<br>For instance, if your friend’s house is 1,250 square feet in size, you want to tell them how much it could sell for. One thing you can do is build a model—perhaps a straight line—and from this model, you might tell your friend they could sell the house for about $220,000.<br>This is an example of a supervised learning algorithm.<br><img src="/2025/10/19/CS229-Notes-Part-1-Mathematical-Basics-of-Linear-Regression-%E2%80%94-From-Model-Formulation-to-Gradient-Descent/ml2.1.png" alt="pic"></p>
-<p>Training Set:<br><img src="/2025/10/19/CS229-Notes-Part-1-Mathematical-Basics-of-Linear-Regression-%E2%80%94-From-Model-Formulation-to-Gradient-Descent/ml2.2.png" alt="pic"></p>
-<p>Notation:</p>
-<ul>
-<li>m: number of training examples</li>
-<li>x: feature</li>
-<li>y: target</li>
-<li>(x⁽ⁱ⁾, y⁽ⁱ⁾): The i-th training example</li>
-<li>h(x): hypothesis (model),used to predict the value of y<br>Univariate linear regression model:<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">hθ(x) = θ₀ + θ₁ x</span><br></pre></td></tr></table></figure></li>
-</ul>
-<p>This is a straight line, where:</p>
-<ul>
-<li><code>θ₀</code> is the intercept,the point where the hypothesis function intersects the y-axis</li>
-<li><code>θ₁</code> is the slope,the degree of influence of feature x on target y</li>
-</ul>
-<p>Goal:<br>Find <code>θ₀</code> and <code>θ₁</code> so that the line fits the data as well as possible.</p>
-<p><img src="/2025/10/19/CS229-Notes-Part-1-Mathematical-Basics-of-Linear-Regression-%E2%80%94-From-Model-Formulation-to-Gradient-Descent/ml2.3.png" alt="pic"></p>
-<h3 id="Cost-Function"><a href="#Cost-Function" class="headerlink" title="Cost Function"></a>Cost Function<a name="cf"></a></h3><p>To measure the prediction error of the hypothesis function, we need to define a Cost Function, which primarily calculates the sum of squared errors between predicted values and actual values.</p>
-<h4 id="Definition-of-the-Cost-Function"><a href="#Definition-of-the-Cost-Function" class="headerlink" title="Definition of the Cost Function"></a>Definition of the Cost Function<a name="dcf"></a></h4><p>Linear regression with one variable uses the Mean Squared Error (MSE) as its cost function, defined by the formula:</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">J(θ₀, θ₁) = (1 / 2m) * Σ (hθ(x⁽ⁱ⁾) - y⁽ⁱ⁾)²</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>1&#x2F;2: Included to cancel out the coefficient from the square term during differentiation, simplifying calculations</li>
-<li>Σ (hθ(x⁽ⁱ⁾) - y⁽ⁱ⁾)²:Sum of squared prediction errors for all samples</li>
-<li>J(θ₀, θ₁)： A smaller value of the cost function indicates higher prediction accuracy of the model</li>
-</ul>
-<p><img src="/2025/10/19/CS229-Notes-Part-1-Mathematical-Basics-of-Linear-Regression-%E2%80%94-From-Model-Formulation-to-Gradient-Descent/ml2.5.png" alt="pic"><br>Meaning:<br>Square the errors<br>Average over all training examples<br>The smaller, the better</p>
-<p>👉 Our objective:</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">minimize J(θ₀, θ₁)</span><br></pre></td></tr></table></figure>
-
-<p>Why Choose Squared Error?</p>
-<ol>
-<li>Mathematically: Facilitates differentiation and enables smoother optimization<br>This is the primary reason.</li>
-</ol>
-<p>The squared function <code>(y-ŷ)²</code> is a smooth convex function everywhere, and its derivative is <code>2(y-ŷ)</code>, which is very simple.<br>The absolute function <code>|y-ŷ|</code> is not differentiable at <code>y=ŷ</code> (it has a “sharp point”). This can cause gradient‑based optimization algorithms like gradient descent to get “stuck” at that point and require special handling.</p>
-<p>An intuitive analogy:<br>Squared error is like a smooth, bowl‑shaped curve—a ball (the optimization process) can roll smoothly down to the bottom of the bowl (the minimum).<br>Absolute error is like a folded V‑shaped piece of paper with a sharp crease—when the ball reaches the tip, it gets stuck and doesn’t know which way to roll.</p>
-<ol start="2">
-<li><p>Statistically: Aligns with the assumption of maximum likelihood estimation<br>When we assume that data errors follow a normal (Gaussian) distribution, maximizing the likelihood function is equivalent to minimizing the mean‑squared error. This is the statistical foundation of many linear models. Since the normal distribution is common in nature, this assumption is often reasonable.</p>
-</li>
-<li><p>In terms of effect: Penalizes large errors more heavily, making it more sensitive to outliers<br>Error² amplifies the impact of large errors.</p>
-</li>
-</ol>
-<ul>
-<li>Advantage: The model will try hard to avoid large prediction mistakes, because the cost grows quadratically with the error. This is usually what we want.</li>
-<li>Disadvantage: If there are outliers in the data, squaring magnifies their influence, which can “pull” the model off course. (In such cases, absolute error or Huber loss can be used to mitigate the issue.)</li>
-</ul>
-<p>Example:<br>Error &#x3D; 1 → squared cost &#x3D; 1<br>Error &#x3D; 2 → squared cost &#x3D; 4 (4 times the cost for 2 times the error)<br>Error &#x3D; 10 → squared cost &#x3D; 100 (100 times the cost for 10 times the error)</p>
-<ul>
-<li>Good mathematical properties (convex function, has unique minimum)</li>
-<li>Heavily penalizes large errors</li>
-<li>Performs well in practical applications</li>
-</ul>
-<h3 id="Intuition-for-the-Cost-Function-I"><a href="#Intuition-for-the-Cost-Function-I" class="headerlink" title="Intuition for the Cost Function (I)"></a>Intuition for the Cost Function (I)<a name="intuition"></a></h3><p>Imagine different lines:</p>
-<ul>
-<li><p>Some are far from the data → large error → large J</p>
-</li>
-<li><p>Some fit the data well → small error → small J</p>
-</li>
-</ul>
-<p>So J tells us:<br>👉 <strong>On average, how badly this line fits the data</strong>.<br><img src="/2025/10/19/CS229-Notes-Part-1-Mathematical-Basics-of-Linear-Regression-%E2%80%94-From-Model-Formulation-to-Gradient-Descent/ml2.6.png" alt="pic"></p>
-<h3 id="Intuition-for-the-Cost-Function-II-Contour-Plots"><a href="#Intuition-for-the-Cost-Function-II-Contour-Plots" class="headerlink" title="Intuition for the Cost Function (II): Contour Plots"></a>Intuition for the Cost Function (II): Contour Plots<a name="plot"></a></h3><p>If we treat <code>θ₀</code> and <code>θ₁</code> as axes, and <code>J(θ₀, θ₁)</code> as height:</p>
-<ul>
-<li>We get a bowl-shaped surface</li>
-<li>The lowest point corresponds to the best parameters<br><img src="/2025/10/19/CS229-Notes-Part-1-Mathematical-Basics-of-Linear-Regression-%E2%80%94-From-Model-Formulation-to-Gradient-Descent/ml2.7.png" alt="pic"></li>
-</ul>
-<p>A contour plot shows: </p>
-<ul>
-<li>Each closed curve has the same J value</li>
-<li>Inner curves mean smaller J</li>
-</ul>
-<p>👉 Learning is like:<br><strong>Going downhill on an error landscape until we reach the bottom.</strong></p>
-<p><img src="/2025/10/19/CS229-Notes-Part-1-Mathematical-Basics-of-Linear-Regression-%E2%80%94-From-Model-Formulation-to-Gradient-Descent/ml2.8.png" alt="pic"></p>
-<h3 id="Gradient-Descent"><a href="#Gradient-Descent" class="headerlink" title="Gradient Descent"></a>Gradient Descent<a name="gd"></a></h3><p>Gradient descent is a general algorithm for minimizing functions.</p>
-<p>Core Idea:</p>
-<blockquote>
-<p>Starting from a random point, take small steps along the steepest downhill direction until reaching the valley bottom</p>
-</blockquote>
-<p>Step:</p>
-<ol>
-<li>Start from some initial point (θ₀, θ₁)</li>
-<li>Take a small step in the direction of steepest decrease of J</li>
-<li>Repeat until convergence<br>Update rule:<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">θⱼ := θⱼ - α * ∂J(θ) / ∂θⱼ</span><br></pre></td></tr></table></figure></li>
-</ol>
-<p><strong>Where</strong>:</p>
-<ul>
-<li>α is the learning rate (step size)</li>
-<li>:&#x3D; Denotes assignment, meaning the value on the right-hand side is computed first to update the parameter on the left-hand side</li>
-</ul>
-<p>👉 Analogy:<br>Walking downhill while blindfolded, always stepping in the steepest direction.<br><img src="/2025/10/19/CS229-Notes-Part-1-Mathematical-Basics-of-Linear-Regression-%E2%80%94-From-Model-Formulation-to-Gradient-Descent/ml2.9.png" alt="pic"></p>
-<h3 id="Gradient-Descent-Intuition"><a href="#Gradient-Descent-Intuition" class="headerlink" title="Gradient Descent Intuition"></a>Gradient Descent Intuition<a name="gdi"></a></h3><p>The core of gradient descent lies in the coordination between the <strong>learning rate</strong> α and the <strong>gradient direction</strong>, which can be intuitively understood using a single-parameter example:</p>
-<ol>
-<li><strong>Role of the Gradient</strong></li>
-</ol>
-<ul>
-<li>When the gradient is <strong>positive</strong>: θⱼ decreases (θⱼ :&#x3D; θⱼ − α × positive number),causing the cost function to decrease</li>
-<li>When the gradient is <strong>negative</strong>: θⱼ increases (θⱼ :&#x3D; θⱼ − α × negative number)causing the cost function to decrease</li>
-<li>When the gradient is <strong>zero</strong>: θⱼ stops updating, indicating that the minimum point has been reached</li>
-</ul>
-<ol start="2">
-<li><strong>Impact of Learning Rate α</strong></li>
-</ol>
-<ul>
-<li>α too small: Small parameter update steps result in slow convergence, requiring numerous iterations to reach the minimum point</li>
-<li>α too large: May overshoot the minimum point, causing the cost function to diverge and fail to converge</li>
-<li><strong>Adaptive Convergence</strong>: As parameters approach the minimum point, the gradient gradually decreases. Even with a fixed α<br>, the magnitude of parameter updates automatically becomes smaller, leading to eventual convergence.</li>
-</ul>
-<h3 id="Gradient-Descent-for-Linear-Regression"><a href="#Gradient-Descent-for-Linear-Regression" class="headerlink" title="Gradient Descent for Linear Regression"></a>Gradient Descent for Linear Regression<a name="gdlr"></a></h3><p>Combining the gradient descent algorithm with the linear regression cost function yields the gradient descent solution for linear regression.</p>
-<h4 id="Calculating-Partial-Derivatives"><a href="#Calculating-Partial-Derivatives" class="headerlink" title="Calculating Partial Derivatives"></a>Calculating Partial Derivatives</h4><p>Compute the partial derivatives of the linear regression cost function $J(\theta_0, \theta_1)$:</p>
-<p>Partial derivative with respect to $\theta_0$:</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">∂/∂θ₀ J(θ₀, θ₁) = (1/m) * Σⁱ₌₁ᵐ (h_θ(x⁽ⁱ⁾) - y⁽ⁱ⁾)</span><br></pre></td></tr></table></figure>
-<p>Partial derivative with respect to $\theta_1$:</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">∂/∂θ₁ J(θ₀, θ₁) = (1/m) * Σⁱ₌₁ᵐ (h_θ(x⁽ⁱ⁾) - y⁽ⁱ⁾) · x⁽ⁱ⁾</span><br></pre></td></tr></table></figure>
-
-<h4 id="Gradient-Descent-Update-Rule-for-Linear-Regression"><a href="#Gradient-Descent-Update-Rule-for-Linear-Regression" class="headerlink" title="Gradient Descent Update Rule for Linear Regression"></a>Gradient Descent Update Rule for Linear Regression</h4><p>Substitute the partial derivatives into the gradient descent formula to obtain:</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">θ₀ := θ₀ - α · (1/m) * Σⁱ₌₁ᵐ (h_θ(x⁽ⁱ⁾) - y⁽ⁱ⁾)</span><br><span class="line"></span><br><span class="line">θ₁ := θ₁ - α · (1/m) * Σⁱ₌₁ᵐ (h_θ(x⁽ⁱ⁾) - y⁽ⁱ⁾) · x⁽ⁱ⁾</span><br></pre></td></tr></table></figure>
-
-<h4 id="Summary-of-the-Algorithm-Process"><a href="#Summary-of-the-Algorithm-Process" class="headerlink" title="Summary of the Algorithm Process"></a>Summary of the Algorithm Process</h4><ol>
-<li>Initialize parameters θ₀ and θ₁ (e.g., set both to 0)</li>
-<li>Compute the prediction errors h_θ(x⁽ⁱ⁾) - y⁽ⁱ⁾ for all training samples</li>
-<li>Substitute into the update rule to simultaneously update θ₀ and θ₁ </li>
-<li>Repeat steps 2-3 until the change in the cost function J(θ₀, θ₁) is smaller than a threshold value (convergence)</li>
-<li>Output the optimal parameters  θ₀ and θ₁ to obtain the final hypothesis function</li>
-</ol>
-<h4 id="Supplement-Batch-Gradient-Descent-vs-Normal-Equation"><a href="#Supplement-Batch-Gradient-Descent-vs-Normal-Equation" class="headerlink" title="Supplement: Batch Gradient Descent vs. Normal Equation"></a>Supplement: Batch Gradient Descent vs. Normal Equation</h4><ul>
-<li><strong>Batch Gradient Descent</strong>: Suitable for large datasets, solves the problem iteratively and requires selecting a learning rate<br>α</li>
-<li><strong>Normal Equation</strong>: Solves for the optimal parameters directly through matrix operations without iteration or learning rate selection. However, it has high computational complexity and is suitable for small datasets</li>
-</ul>
-<link rel="stylesheet" href="/css/folder.css" type="text/css"><script src="/js/folder.js" type="text/javascript" async></script>]]></content>
-      <categories>
-        <category>Machine Learning</category>
-        <category>Stanford CS229 Notes</category>
-      </categories>
-      <tags>
-        <tag>Linear Regression</tag>
-        <tag>Gradient Descent</tag>
-        <tag>Cost Function</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>CSS3 Core Technologies study note</title>
     <url>/2025/10/26/CSS3-Core-Technologies-study-note/</url>
     <content><![CDATA[<ul>
@@ -1343,6 +932,79 @@ or <figure class="highlight css"><table><tr><td class="code"><pre><span class="l
       </tags>
   </entry>
   <entry>
+    <title>Dynamic Programming</title>
+    <url>/2025/03/22/Dynamic-Programming/</url>
+    <content><![CDATA[<ol>
+<li><a href="#core-concepts">Core Concepts</a></li>
+<li><a href="#step-solve">Steps to Solve Problems with Dynamic Programming</a><ul>
+<li><a href="#define">Define the State</a></li>
+<li><a href="#formulate">Formulate the Transition</a></li>
+<li><a href="#boundary-conditions">Initialize the Boundary Conditions</a></li>
+<li><a href="#choose-order">Choose an Order</a></li>
+<li><a href="#final-result">Return the Final Result</a></li>
+</ul>
+</li>
+<li><a href="#classic-examples">Classic Examples</a><ul>
+<li><a href="#fibonacci-sequence">Fibonacci Sequence</a></li>
+<li><a href="#01-knapsack-problem">0&#x2F;1 Knapsack Problem</a></li>
+</ul>
+</li>
+<li><a href="#conclusion">Conclusion</a><span id="more"></span></li>
+</ol>
+<h2 id="Core-concepts"><a href="#Core-concepts" class="headerlink" title="Core concepts"></a>Core concepts</h2><p><strong>Dynamic programming</strong><a name="core-concepts"></a> is both a mathematical optimization method and an algorithmic paradigm. The method was developed by Richard Bellman in the 1950s and has found applications in numerous fields, from aerospace engineering to economics. It is a powerful technique used to solve complex problems by breaking them down into simpler subproblems. It’s widely used in computer science for optimization problems, and once you grasp its core idea, it becomes an invaluable tool in your programming toolkit.</p>
+<p>A DP solution hinges on two properties:</p>
+<ul>
+<li><strong>Overlapping Subproblems</strong>: Means that the problem can be broken down into smaller subproblems, where the solutions to the subproblems are overlapping. Having subproblems that are overlapping means that the solution to one subproblem is part of the solution to another subproblem. I will take <a href="https://en.wikipedia.org/wiki/Fibonacci_sequence">Fibonacci sequence</a> as an example in the coming section.</li>
+<li><strong>Optimal Substructure</strong>: Means that the complete solution to a problem can be constructed from the solutions of its smaller subproblems. So not only must the problem have overlapping subproblems, the substructure must also be optimal so that there is a way to piece the solutions to the subproblems together to form the complete solution. I will take the classical <a href="https://en.wikipedia.org/wiki/Knapsack_problem">The 0&#x2F;1 Knapsack Problem</a> as an example, the optimal solution when the knapsack capacity is <code>W</code> can be derived by considering whether to include an item and combining it with the optimal solution when the knapsack capacity is <code>W - weight[i]</code>.</li>
+</ul>
+<h2 id="Steps-to-Solve-Problems-with-Dynamic-Programming"><a href="#Steps-to-Solve-Problems-with-Dynamic-Programming" class="headerlink" title="Steps to Solve Problems with Dynamic Programming:"></a>Steps to Solve Problems with Dynamic Programming:<a name="step-solve"></a></h2><h3 id="Define-the-State"><a href="#Define-the-State" class="headerlink" title="Define the State:"></a><strong>Define the State</strong>:<a name="define"></a></h3><p>Identify parameters that uniquely describe a subproblem (e.g., indices, capacities). For example, in the 0&#x2F;1 knapsack problem, the state can be defined as <code>dp[i][j]</code>, which represents the maximum value that can be obtained when considering the first i items and a knapsack capacity of j.</p>
+<h3 id="Formulate-the-Transition"><a href="#Formulate-the-Transition" class="headerlink" title="Formulate the Transition:"></a><strong>Formulate the Transition</strong>:<a name="formulate"></a></h3><p>Derive a recurrence relation that expresses the state in terms of smaller states.</p>
+<h3 id="Initialize-the-Boundary-Conditions"><a href="#Initialize-the-Boundary-Conditions" class="headerlink" title="Initialize the Boundary Conditions:"></a><strong>Initialize the Boundary Conditions</strong>:<a name="boundary-conditions"></a></h3><p>Initialize the Boundary Conditions: Determine the initial values of the states, which are usually the base cases of the problem. For example, in the 0&#x2F;1 knapsack problem, <code>dp[0][j]=0</code> (when there are no items, the value is 0 regardless of the knapsack capacity), and <code>dp[i][0]=0</code> (when the knapsack capacity is 0, the value is 0 regardless of the number of items).</p>
+<h3 id="Choose-an-Order"><a href="#Choose-an-Order" class="headerlink" title="Choose an Order:"></a><strong>Choose an Order</strong>:<a name="choose-order"></a></h3><p>Decide whether to solve states top‑down (recursion + memo) or bottom‑up (iteration + table). If using the tabular method(the latter one), fill the state table step-by-step according to the state - transition equation and the initial conditions. This step is usually achieved through nested loops.</p>
+<h3 id="Return-the-Final-Result"><a href="#Return-the-Final-Result" class="headerlink" title="Return the Final Result:"></a><strong>Return the Final Result</strong>:<a name="final-result"></a></h3><p>According to the requirements of the problem, obtain the final solution from the state table. For example, in the 0&#x2F;1 knapsack problem, the final result is dp[n][W], that is, the maximum value when considering all n items and a knapsack capacity of <code>W</code>. </p>
+<h2 id="Classic-Examples"><a href="#Classic-Examples" class="headerlink" title="Classic Examples"></a>Classic Examples</h2><h3 id="Find-The-nth-Fibonacci-Number"><a href="#Find-The-nth-Fibonacci-Number" class="headerlink" title="Find The nth Fibonacci Number"></a>Find The nth Fibonacci Number<a name="fibonacci-sequence"></a></h3><p>Let us say we want an algorithm that finds the nth Fibonacci number. We don’t know how to find the nth Fibonacci number yet, except that we want to use Dynamic Programming to design the algorithm.</p>
+<blockquote>
+<p>The Fibonacci numbers is a sequence of numbers starting with 0 and 1 and the next numbers are created by adding the two previous numbers.<br>The 8 first Fibonacci numbers are: <strong>0, 1, 1, 2, 3, 5, 8, 13</strong><br>And counting from 0, the 4th Fibonacci number <code>F(4)</code> is <strong>3</strong>.<br>In general, this is how a Fibonacci number is created based on the two previous:<br>                    <code>F(n) = F(n-1) + F(n-2)</code></p>
+</blockquote>
+<h4 id="Naive-Recursive-Approach"><a href="#Naive-Recursive-Approach" class="headerlink" title="Naive Recursive Approach"></a>Naive Recursive Approach</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public int Fib2(int n)</span><br><span class="line">&#123;</span><br><span class="line">    if (n &lt; 2) return n;</span><br><span class="line">    return Fib(n - 1) + Fib(n - 2);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>Time  Complexity: <strong>O(2<sup>n</sup>)</strong></li>
+<li>Space Complexity: <strong>O(n)</strong><br>This works, but it is inefficient. For <code>n=40</code>, it takes noticeable time because it recalculates the same Fibonacci numbers repeatedly.</li>
+</ul>
+<h4 id="Bottom-Up-DP-Tabulation"><a href="#Bottom-Up-DP-Tabulation" class="headerlink" title="Bottom-Up DP (Tabulation)"></a>Bottom-Up DP (Tabulation)</h4><p>We can optimize it using memoization, where we store results in an array:</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public int Fib(int n)</span><br><span class="line">&#123;</span><br><span class="line">    if (n &lt; 2) return n;</span><br><span class="line">    int[] dp = new int[n + 1];</span><br><span class="line">    dp[0] = 0;</span><br><span class="line">    dp[1] = 1;</span><br><span class="line">    for(int i = 2; i &lt;= n; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        dp[i] = dp[i - 1] + dp[i - 2];</span><br><span class="line">    &#125;</span><br><span class="line">    return dp[n];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>Time  Complexity: <strong>O(n)</strong></li>
+<li>Space Complexity: <strong>O(n)</strong></li>
+</ul>
+<p>In this version, we fill the <code>dp</code> array from the base cases up to <code>n</code>. It’s still <strong>O(n)</strong> time complexity, but it avoids recursion overhead, making it slightly faster in practice.<br>More efficiently, We only need to maintain two values as we don’t need to record the whole sequence.</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public int Fib(int n)</span><br><span class="line">&#123;</span><br><span class="line">    if (n &lt; 2) return n;</span><br><span class="line">    int[] dp = new int[2] &#123;0,1&#125;;</span><br><span class="line">    for(int i = 2; i &lt;= n; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        int temp = dp[0] + dp[1];</span><br><span class="line">        dp[0] = dp[1];</span><br><span class="line">        dp[1] = temp;</span><br><span class="line">    &#125;</span><br><span class="line">    return dp[1];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>Time  Complexity: <strong>O(n)</strong></li>
+<li>Space Complexity: <strong>O(1)</strong></li>
+</ul>
+<h3 id="The-0-1-Knapsack-Problem"><a href="#The-0-1-Knapsack-Problem" class="headerlink" title="The 0&#x2F;1 Knapsack Problem"></a>The 0&#x2F;1 Knapsack Problem<a name="01-knapsack-problem"></a></h3><p>Given items with weight array weights and value array values, and a knapsack with capacity capacity, find the maximum value that can be carried.<br>Solving the 0&#x2F;1 Knapsack Problem helps businesses decide which projects to fund within a budget, maximizing profit without overspending. It is also used in logistics to optimize the loading of goods into trucks and planes, ensuring the most valuable, or highest prioritized, items are included without exceeding weight limits.</p>
+<p><u>Rules</u>:<br>    - Every item has a weight and value.<br>    - Your knapsack has a weight limit.<br>    - Choose which items you want to bring with you in the knapsack.<br>You can either take an item or not, you cannot take half of an item for example.<br><u>Goal</u>:<br>    - Maximize the total value of the items in the knapsack.</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public int Knapsack01(int[] w, int[] v, int cap)</span><br><span class="line">&#123;</span><br><span class="line">    int n = w.Length;</span><br><span class="line">    int[,] dp = new int[n + 1,cap + 1]; </span><br><span class="line">    for (int j = 0; j &lt;= cap; j++)</span><br><span class="line">    &#123;</span><br><span class="line">        dp[0, j] = 0;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    for (int i = 0; i &lt;= n; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        dp[i, 0] = 0;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    for(int i= 1; i &lt;= n; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        for(int j =1;j&lt;= cap; j++)</span><br><span class="line">        &#123;</span><br><span class="line">            if (j &lt; w[i-1])</span><br><span class="line">            &#123;</span><br><span class="line">                dp[i, j] = dp[i - 1, j];</span><br><span class="line">            &#125;</span><br><span class="line">            else</span><br><span class="line">            &#123;</span><br><span class="line">                dp[i, j] = Math.Max(dp[i - 1, j], v[i - 1] + dp[i - 1, j - w[i - 1]]);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return dp[n, cap];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Below is the optimized version, we use a one-dimensional array dp. By updating the dp array in reverse order, we ensure that each item is considered only once, thus avoiding redundant calculations and overwriting problems.</p>
+<ul>
+<li>Reduces space complexity from O(n×capacity) to O(capacity)</li>
+<li>Reverse iteration prevents value overwrite issues</li>
+<li>More efficient memory usage</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public int Knapsack01(int[] w, int[] v, int cap)</span><br><span class="line">&#123;</span><br><span class="line">    int n = w.Length;</span><br><span class="line">    int[] dp = new int[cap + 1];</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    for (int i = 0; i &lt; n; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        //In order to select the item only once, we need to traverse from back to front </span><br><span class="line">        for (int j = cap; j &gt;= w[i]; j--)</span><br><span class="line">        &#123;</span><br><span class="line">            dp[j] = Math.Max(dp[j], v[i] + dp[j - w[i]]);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return dp[cap];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion "></a>Conclusion <a name="conclusion"></a></h2><p>Dynamic programming transforms inefficient recursive solutions into efficient ones by leveraging memory. Whether you choose memoization or tabulation, the key is to avoid redundant work. Arrays or dictionaries are perfect for storing intermediate results, making DP both practical and elegant.By reasonably defining the state, deriving the state-transition equation, and initializing the boundary conditions, we can efficiently solve complex problems using dynamic programming. In practical applications, pay attention to techniques such as space optimization to improve the efficiency and performance of the algorithm.</p>
+<link rel="stylesheet" href="/css/folder.css" type="text/css"><script src="/js/folder.js" type="text/javascript" async></script>]]></content>
+      <categories>
+        <category>Data Structure and Alogrithm</category>
+      </categories>
+      <tags>
+        <tag>Data Structure and Alogrithm</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Common Binary Tree Problems</title>
     <url>/2025/04/26/Common-Binary-Tree-Problems/</url>
     <content><![CDATA[<ol>
@@ -1449,70 +1111,132 @@ or <figure class="highlight css"><table><tr><td class="code"><pre><span class="l
       </tags>
   </entry>
   <entry>
-    <title>Dynamic Programming</title>
-    <url>/2025/03/22/Dynamic-Programming/</url>
-    <content><![CDATA[<ol>
-<li><a href="#core-concepts">Core Concepts</a></li>
-<li><a href="#step-solve">Steps to Solve Problems with Dynamic Programming</a><ul>
-<li><a href="#define">Define the State</a></li>
-<li><a href="#formulate">Formulate the Transition</a></li>
-<li><a href="#boundary-conditions">Initialize the Boundary Conditions</a></li>
-<li><a href="#choose-order">Choose an Order</a></li>
-<li><a href="#final-result">Return the Final Result</a></li>
+    <title>Binary Tree</title>
+    <url>/2025/03/15/BinaryTree/</url>
+    <content><![CDATA[<h1 id="Binary-Tree"><a href="#Binary-Tree" class="headerlink" title="Binary Tree"></a>Binary Tree</h1><ol>
+<li><a href="#what-is-a-binary-tree">What is a Binary Tree?</a></li>
+<li><a href="#key-components">Key Components and Terms</a></li>
+<li><a href="#types-of-binarytree">Types of Binary Tree On the basis of the completion of levels</a></li>
+<li><a href="#traversal-techniques"> Tree Traversal Techniques</a><ul>
+<li><a href="#dfs">Depth-First Search (DFS)</a></li>
+<li><a href="#bfs">Breadth First Search (BFS)</a></li>
 </ul>
 </li>
-<li><a href="#classic-examples">Classic Examples</a><ul>
-<li><a href="#fibonacci-sequence">Fibonacci Sequence</a></li>
-<li><a href="#01-knapsack-problem">0&#x2F;1 Knapsack Problem</a></li>
+<li><a href="#bst">Binary Search Tree (BST)</a> <ul>
+<li><a href="#bstim">BST Implementation</a></li>
+<li><a href="#deletebst">How to delete Node in a BST</a></li>
 </ul>
 </li>
-<li><a href="#conclusion">Conclusion</a><span id="more"></span></li>
+<li><a href="#depth">Maximum Depth of Binary Tree</a></li>
+<li><a href="#applications">Real-World Applications</a><span id="more"></span></li>
 </ol>
-<h2 id="Core-concepts"><a href="#Core-concepts" class="headerlink" title="Core concepts"></a>Core concepts</h2><p><strong>Dynamic programming</strong><a name="core-concepts"></a> is both a mathematical optimization method and an algorithmic paradigm. The method was developed by Richard Bellman in the 1950s and has found applications in numerous fields, from aerospace engineering to economics. It is a powerful technique used to solve complex problems by breaking them down into simpler subproblems. It’s widely used in computer science for optimization problems, and once you grasp its core idea, it becomes an invaluable tool in your programming toolkit.</p>
-<p>A DP solution hinges on two properties:</p>
-<ul>
-<li><strong>Overlapping Subproblems</strong>: Means that the problem can be broken down into smaller subproblems, where the solutions to the subproblems are overlapping. Having subproblems that are overlapping means that the solution to one subproblem is part of the solution to another subproblem. I will take <a href="https://en.wikipedia.org/wiki/Fibonacci_sequence">Fibonacci sequence</a> as an example in the coming section.</li>
-<li><strong>Optimal Substructure</strong>: Means that the complete solution to a problem can be constructed from the solutions of its smaller subproblems. So not only must the problem have overlapping subproblems, the substructure must also be optimal so that there is a way to piece the solutions to the subproblems together to form the complete solution. I will take the classical <a href="https://en.wikipedia.org/wiki/Knapsack_problem">The 0&#x2F;1 Knapsack Problem</a> as an example, the optimal solution when the knapsack capacity is <code>W</code> can be derived by considering whether to include an item and combining it with the optimal solution when the knapsack capacity is <code>W - weight[i]</code>.</li>
+<h2 id="1-What-is-a-Binary-Tree"><a href="#1-What-is-a-Binary-Tree" class="headerlink" title="1. What is a Binary Tree? "></a>1. What is a Binary Tree? <a name="what-is-a-doubly-linked-list"></a></h2><p>A <strong>binary tree</strong> is a <a href="https://en.wikipedia.org/wiki/Tree_(data_structure)">tree data structure</a> in which each node has at most two children, referred to as the <strong>left child</strong> and the <strong>right child</strong>.The topmost node is the <strong>root</strong>, and nodes without children are called <strong>leaves</strong>.It is commonly used in computer science for efficient storage and retrieval of data, with various operations such as insertion, deletion, and traversal.</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">     A  &lt;- Root</span><br><span class="line">   /   \</span><br><span class="line">  B     C  &lt;- Children</span><br><span class="line"> / \</span><br><span class="line">D   E  &lt;- Leave</span><br></pre></td></tr></table></figure>
+<p>Generic TreeNode class:</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public class TreeNode&lt;T&gt; where T : IComparable&lt;T&gt;</span><br><span class="line">&#123;</span><br><span class="line">    public T Data &#123; get; set; &#125;</span><br><span class="line">    public TreeNode&lt;T&gt;? Left &#123; get; set; &#125;</span><br><span class="line">    public TreeNode&lt;T&gt;? Right &#123; get; set; &#125;</span><br><span class="line"></span><br><span class="line">    public TreeNode(T data)</span><br><span class="line">    &#123;</span><br><span class="line">        Data = data;</span><br><span class="line">        Left = null;</span><br><span class="line">        Right = null;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="2-Key-Components-and-Terms"><a href="#2-Key-Components-and-Terms" class="headerlink" title="2. Key Components and Terms: "></a>2. Key Components and Terms: <a name="key-components"></a></h2><ul>
+<li><strong>Root</strong>: Top node (A in our example)  </li>
+<li><strong>Parent&#x2F;Child</strong>: A is parent of B and C  </li>
+<li><strong>Leaf</strong>: Nodes without children (D, E, C)  </li>
+<li><strong>Subtree</strong>: Any node with its descendants  </li>
+<li><strong>Depth</strong>: Distance from the root to a node (root has default depth 1)</li>
+<li><strong>Height</strong>: Longest path from a node to a leaf</li>
+<li><strong>Level</strong>: All nodes at the same depth</li>
 </ul>
-<h2 id="Steps-to-Solve-Problems-with-Dynamic-Programming"><a href="#Steps-to-Solve-Problems-with-Dynamic-Programming" class="headerlink" title="Steps to Solve Problems with Dynamic Programming:"></a>Steps to Solve Problems with Dynamic Programming:<a name="step-solve"></a></h2><h3 id="Define-the-State"><a href="#Define-the-State" class="headerlink" title="Define the State:"></a><strong>Define the State</strong>:<a name="define"></a></h3><p>Identify parameters that uniquely describe a subproblem (e.g., indices, capacities). For example, in the 0&#x2F;1 knapsack problem, the state can be defined as <code>dp[i][j]</code>, which represents the maximum value that can be obtained when considering the first i items and a knapsack capacity of j.</p>
-<h3 id="Formulate-the-Transition"><a href="#Formulate-the-Transition" class="headerlink" title="Formulate the Transition:"></a><strong>Formulate the Transition</strong>:<a name="formulate"></a></h3><p>Derive a recurrence relation that expresses the state in terms of smaller states.</p>
-<h3 id="Initialize-the-Boundary-Conditions"><a href="#Initialize-the-Boundary-Conditions" class="headerlink" title="Initialize the Boundary Conditions:"></a><strong>Initialize the Boundary Conditions</strong>:<a name="boundary-conditions"></a></h3><p>Initialize the Boundary Conditions: Determine the initial values of the states, which are usually the base cases of the problem. For example, in the 0&#x2F;1 knapsack problem, <code>dp[0][j]=0</code> (when there are no items, the value is 0 regardless of the knapsack capacity), and <code>dp[i][0]=0</code> (when the knapsack capacity is 0, the value is 0 regardless of the number of items).</p>
-<h3 id="Choose-an-Order"><a href="#Choose-an-Order" class="headerlink" title="Choose an Order:"></a><strong>Choose an Order</strong>:<a name="choose-order"></a></h3><p>Decide whether to solve states top‑down (recursion + memo) or bottom‑up (iteration + table). If using the tabular method(the latter one), fill the state table step-by-step according to the state - transition equation and the initial conditions. This step is usually achieved through nested loops.</p>
-<h3 id="Return-the-Final-Result"><a href="#Return-the-Final-Result" class="headerlink" title="Return the Final Result:"></a><strong>Return the Final Result</strong>:<a name="final-result"></a></h3><p>According to the requirements of the problem, obtain the final solution from the state table. For example, in the 0&#x2F;1 knapsack problem, the final result is dp[n][W], that is, the maximum value when considering all n items and a knapsack capacity of <code>W</code>. </p>
-<h2 id="Classic-Examples"><a href="#Classic-Examples" class="headerlink" title="Classic Examples"></a>Classic Examples</h2><h3 id="Find-The-nth-Fibonacci-Number"><a href="#Find-The-nth-Fibonacci-Number" class="headerlink" title="Find The nth Fibonacci Number"></a>Find The nth Fibonacci Number<a name="fibonacci-sequence"></a></h3><p>Let us say we want an algorithm that finds the nth Fibonacci number. We don’t know how to find the nth Fibonacci number yet, except that we want to use Dynamic Programming to design the algorithm.</p>
+<h2 id="3-Types-of-Binary-Tree-On-the-basis-of-the-completion-of-levels"><a href="#3-Types-of-Binary-Tree-On-the-basis-of-the-completion-of-levels" class="headerlink" title="3. Types of Binary Tree On the basis of the completion of levels "></a>3. Types of Binary Tree On the basis of the completion of levels <a name="types-of-binarytree"></a></h2><ul>
+<li>Complete Binary Tree</li>
+<li>Perfect Binary Tree</li>
+<li>Balanced Binary Tree</li>
+</ul>
+<h3 id="Perfect-Binary-Tree"><a href="#Perfect-Binary-Tree" class="headerlink" title="Perfect Binary Tree"></a>Perfect Binary Tree</h3><p>A Binary tree is a Perfect Binary Tree in which all the internal nodes have two children and all leaf nodes are at the same level.<br>A Perfect Binary Tree of height h (where the height of the binary tree is the number of edges in the longest path from the root node to any leaf node in the tree, height of root node is 0) has <strong>2<sup>h+1</sup>-1</strong> node.<br><img src="/images/b1.png" alt="pic"></p>
+<h3 id="Complete-Binary-Tree"><a href="#Complete-Binary-Tree" class="headerlink" title="Complete Binary Tree"></a>Complete Binary Tree</h3><p>A Binary Tree is a Complete Binary Tree if all the levels are completely filled except possibly the last level and the last level has all keys as left as possible.<br>A complete binary tree is just like a full binary tree, but with two major differences:</p>
+<ul>
+<li>Every level except the last level must be completely filled.</li>
+<li>All the leaf elements must lean towards the left.(I think they must be continuous from left to right)</li>
+<li>The last leaf element might not have a right sibling i.e. a complete binary tree doesn’t have to be a full binary tree.<br><img src="/images/b2.png" alt="pic"></li>
+</ul>
+<h3 id="Full-Binary-Tree"><a href="#Full-Binary-Tree" class="headerlink" title="Full Binary Tree"></a>Full Binary Tree</h3><p>A full binary tree is a binary tree with either zero or two child nodes for each node.<br><img src="/images/b3.png" alt="pic"></p>
+<h3 id="Balanced-Binary-Tree"><a href="#Balanced-Binary-Tree" class="headerlink" title="Balanced Binary Tree"></a>Balanced Binary Tree</h3><p>A binary tree is balanced if the height of the tree is O(Log n) where n is the number of nodes. For Example, the AVL tree maintains O(Log n) height by making sure that the difference between the heights of the left and right subtrees is at most <strong>1</strong>(key attribute!). Red-Black trees maintain O(Log n) height by making sure that the number of Black nodes on every root to leaf paths is the same and that there are no adjacent red nodes. Balanced Binary Search trees are performance-wise good as they provide O(log n) time for search, insert and delete.<br><img src="/images/b4.png" alt="pic"></p>
+<h2 id="4-Tree-Traversal-Techniques"><a href="#4-Tree-Traversal-Techniques" class="headerlink" title="4. Tree Traversal Techniques "></a>4. Tree Traversal Techniques <a name="traversal-techniques"></a></h2><p>Tree Traversal refers to the process of visiting or accessing each node of the tree exactly once in a certain order. Tree traversal algorithms help us visit and process all the nodes of the tree. Since a tree is not a linear data structure, there can be multiple choices for the next node to be visited. Hence we have many ways to traverse a tree.</p>
+<ul>
+<li>Depth First Search or DFS<ul>
+<li>Inorder Traversal</li>
+<li>Preorder Traversal</li>
+<li>Postorder Traversal</li>
+</ul>
+</li>
+<li>Level Order Traversal or Breadth First Search or BFS</li>
+</ul>
+<h3 id="Depth-First-Search-DFS"><a href="#Depth-First-Search-DFS" class="headerlink" title="Depth-First Search (DFS) "></a>Depth-First Search (DFS) <a name="dfs"></a></h3><ul>
+<li><p>Inorder Traversal (Left-Root-Right)</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">void Inorder(TreeNode node) &#123;</span><br><span class="line">    if (node == null) return;</span><br><span class="line">    Inorder(node.Left);</span><br><span class="line">    Console.Write(node.Value + &quot; &quot;);</span><br><span class="line">    Inorder(node.Right);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>Output</strong>:<code> D B E A C</code></p>
+</li>
+<li><p>Preorder Traversal (Root-Left-Right)</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">void Preorder(TreeNode node) &#123;</span><br><span class="line">    if (node == null) return;</span><br><span class="line">    Console.Write(node.Value + &quot; &quot;);</span><br><span class="line">    Preorder(node.Left);</span><br><span class="line">    Preorder(node.Right);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>Output</strong>:<code>A B D E C</code></p>
+</li>
+<li><p>Postorder Traversal (Left-Right-Root)</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">void Postorder(TreeNode node) &#123;</span><br><span class="line">    if (node == null) return;</span><br><span class="line">    Postorder(node.Left);</span><br><span class="line">    Postorder(node.Right);</span><br><span class="line">    Console.Write(node.Value + &quot; &quot;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>Output</strong>: <code>D E B C A</code></p>
+</li>
+</ul>
+<h3 id="Level-Order-Traversal-or-Breadth-First-Search-or-BFS"><a href="#Level-Order-Traversal-or-Breadth-First-Search-or-BFS" class="headerlink" title="Level Order Traversal or Breadth First Search or BFS "></a>Level Order Traversal or Breadth First Search or BFS <a name="bfs"></a></h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public IList&lt;IList&lt;int&gt;&gt; LevelOrder(TreeNode root)</span><br><span class="line">&#123;</span><br><span class="line">    var res = new List&lt;IList&lt;int&gt;&gt;();</span><br><span class="line">    var que = new Queue&lt;TreeNode&gt;();</span><br><span class="line">    if (root == null) return res;</span><br><span class="line">    que.Enqueue(root);</span><br><span class="line">    while (que.Count != 0)</span><br><span class="line">    &#123;</span><br><span class="line">        var size = que.Count;</span><br><span class="line">        var vec = new List&lt;int&gt;();</span><br><span class="line">        for (int i = 0; i &lt; size; i++)</span><br><span class="line">        &#123;</span><br><span class="line">            var cur = que.Dequeue();</span><br><span class="line">            vec.Add(cur.val);</span><br><span class="line">            if (cur.left != null) que.Enqueue(cur.left);</span><br><span class="line">            if (cur.right != null) que.Enqueue(cur.right);</span><br><span class="line">        &#125;</span><br><span class="line">        res.Add(vec);</span><br><span class="line">    &#125;</span><br><span class="line">    return res;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>Output</strong>: <code>A B C D E</code></p>
+<h2 id="5-Binary-Search-Tree-BST"><a href="#5-Binary-Search-Tree-BST" class="headerlink" title="5. Binary Search Tree (BST) "></a>5. Binary Search Tree (BST) <a name="bst"></a></h2><p>Accdoring to the <a href="https://en.wikipedia.org/wiki/Binary_search_tree">wikipedia</a>:</p>
 <blockquote>
-<p>The Fibonacci numbers is a sequence of numbers starting with 0 and 1 and the next numbers are created by adding the two previous numbers.<br>The 8 first Fibonacci numbers are: <strong>0, 1, 1, 2, 3, 5, 8, 13</strong><br>And counting from 0, the 4th Fibonacci number <code>F(4)</code> is <strong>3</strong>.<br>In general, this is how a Fibonacci number is created based on the two previous:<br>                    <code>F(n) = F(n-1) + F(n-2)</code></p>
+<p>In computer science, a <strong>binary search tree</strong> (<strong>BST</strong>), also called an <strong>ordered</strong> or <strong>sorted binary tree</strong>, is a rooted binary tree data structure with the key of each internal node being greater than all the keys in the respective node’s left subtree and less than the ones in its right subtree. The time complexity of operations on the binary search tree is linear with respect to the height of the tree.</p>
 </blockquote>
-<h4 id="Naive-Recursive-Approach"><a href="#Naive-Recursive-Approach" class="headerlink" title="Naive Recursive Approach"></a>Naive Recursive Approach</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public int Fib2(int n)</span><br><span class="line">&#123;</span><br><span class="line">    if (n &lt; 2) return n;</span><br><span class="line">    return Fib(n - 1) + Fib(n - 2);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>Time  Complexity: <strong>O(2<sup>n</sup>)</strong></li>
-<li>Space Complexity: <strong>O(n)</strong><br>This works, but it is inefficient. For <code>n=40</code>, it takes noticeable time because it recalculates the same Fibonacci numbers repeatedly.</li>
-</ul>
-<h4 id="Bottom-Up-DP-Tabulation"><a href="#Bottom-Up-DP-Tabulation" class="headerlink" title="Bottom-Up DP (Tabulation)"></a>Bottom-Up DP (Tabulation)</h4><p>We can optimize it using memoization, where we store results in an array:</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public int Fib(int n)</span><br><span class="line">&#123;</span><br><span class="line">    if (n &lt; 2) return n;</span><br><span class="line">    int[] dp = new int[n + 1];</span><br><span class="line">    dp[0] = 0;</span><br><span class="line">    dp[1] = 1;</span><br><span class="line">    for(int i = 2; i &lt;= n; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        dp[i] = dp[i - 1] + dp[i - 2];</span><br><span class="line">    &#125;</span><br><span class="line">    return dp[n];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>Time  Complexity: <strong>O(n)</strong></li>
-<li>Space Complexity: <strong>O(n)</strong></li>
-</ul>
-<p>In this version, we fill the <code>dp</code> array from the base cases up to <code>n</code>. It’s still <strong>O(n)</strong> time complexity, but it avoids recursion overhead, making it slightly faster in practice.<br>More efficiently, We only need to maintain two values as we don’t need to record the whole sequence.</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public int Fib(int n)</span><br><span class="line">&#123;</span><br><span class="line">    if (n &lt; 2) return n;</span><br><span class="line">    int[] dp = new int[2] &#123;0,1&#125;;</span><br><span class="line">    for(int i = 2; i &lt;= n; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        int temp = dp[0] + dp[1];</span><br><span class="line">        dp[0] = dp[1];</span><br><span class="line">        dp[1] = temp;</span><br><span class="line">    &#125;</span><br><span class="line">    return dp[1];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>Time  Complexity: <strong>O(n)</strong></li>
-<li>Space Complexity: <strong>O(1)</strong></li>
-</ul>
-<h3 id="The-0-1-Knapsack-Problem"><a href="#The-0-1-Knapsack-Problem" class="headerlink" title="The 0&#x2F;1 Knapsack Problem"></a>The 0&#x2F;1 Knapsack Problem<a name="01-knapsack-problem"></a></h3><p>Given items with weight array weights and value array values, and a knapsack with capacity capacity, find the maximum value that can be carried.<br>Solving the 0&#x2F;1 Knapsack Problem helps businesses decide which projects to fund within a budget, maximizing profit without overspending. It is also used in logistics to optimize the loading of goods into trucks and planes, ensuring the most valuable, or highest prioritized, items are included without exceeding weight limits.</p>
-<p><u>Rules</u>:<br>    - Every item has a weight and value.<br>    - Your knapsack has a weight limit.<br>    - Choose which items you want to bring with you in the knapsack.<br>You can either take an item or not, you cannot take half of an item for example.<br><u>Goal</u>:<br>    - Maximize the total value of the items in the knapsack.</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public int Knapsack01(int[] w, int[] v, int cap)</span><br><span class="line">&#123;</span><br><span class="line">    int n = w.Length;</span><br><span class="line">    int[,] dp = new int[n + 1,cap + 1]; </span><br><span class="line">    for (int j = 0; j &lt;= cap; j++)</span><br><span class="line">    &#123;</span><br><span class="line">        dp[0, j] = 0;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    for (int i = 0; i &lt;= n; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        dp[i, 0] = 0;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    for(int i= 1; i &lt;= n; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        for(int j =1;j&lt;= cap; j++)</span><br><span class="line">        &#123;</span><br><span class="line">            if (j &lt; w[i-1])</span><br><span class="line">            &#123;</span><br><span class="line">                dp[i, j] = dp[i - 1, j];</span><br><span class="line">            &#125;</span><br><span class="line">            else</span><br><span class="line">            &#123;</span><br><span class="line">                dp[i, j] = Math.Max(dp[i - 1, j], v[i - 1] + dp[i - 1, j - w[i - 1]]);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return dp[n, cap];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong><a href="https://en.wikipedia.org/wiki/Time_complexity">Time complexity</a> in <a href="https://en.wikipedia.org/wiki/Big_O_notation">big O notation</a></strong></p>
+<table>
+<thead>
+<tr>
+<th align="center">Operation</th>
+<th align="center">Average</th>
+<th align="center">Worst case</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">Search</td>
+<td align="center">O(log n)</td>
+<td align="center">O(n)</td>
+</tr>
+<tr>
+<td align="center">Insert</td>
+<td align="center">O(log n)</td>
+<td align="center">O(n)</td>
+</tr>
+<tr>
+<td align="center">Delete</td>
+<td align="center">O(log n)</td>
+<td align="center">O(n)</td>
+</tr>
+</tbody></table>
+<h3 id="BST-Implementation"><a href="#BST-Implementation" class="headerlink" title="BST Implementation "></a>BST Implementation <a name="bstim"></a></h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public class BinarySearchTree&lt;T&gt; where T : IComparable&lt;T&gt;</span><br><span class="line">&#123;</span><br><span class="line">    private TreeNode&lt;T&gt;? _root;</span><br><span class="line"></span><br><span class="line">    public void Insert(T data)</span><br><span class="line">    &#123;</span><br><span class="line">        _root = InsertRec(_root, data);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private TreeNode&lt;T&gt; InsertRec(TreeNode&lt;T&gt;? node, T data)</span><br><span class="line">    &#123;</span><br><span class="line">        if (node == null) return new TreeNode&lt;T&gt;(data);</span><br><span class="line">        </span><br><span class="line">        int comparison = data.CompareTo(node.Data);</span><br><span class="line">        if (comparison &lt; 0)</span><br><span class="line">            node.Left = InsertRec(node.Left, data);</span><br><span class="line">        else if (comparison &gt; 0)</span><br><span class="line">            node.Right = InsertRec(node.Right, data);</span><br><span class="line">            </span><br><span class="line">        return node;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public bool Search(T data)</span><br><span class="line">    &#123;</span><br><span class="line">        return SearchRec(_root, data);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private bool SearchRec(TreeNode&lt;T&gt;? node, T data)</span><br><span class="line">    &#123;</span><br><span class="line">        if (node == null) return false;</span><br><span class="line">        </span><br><span class="line">        int comparison = data.CompareTo(node.Data);</span><br><span class="line">        return comparison == 0 || </span><br><span class="line">               SearchRec(comparison &lt; 0 ? node.Left : node.Right, data);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="How-to-delete-Node-in-a-BST"><a href="#How-to-delete-Node-in-a-BST" class="headerlink" title="How to delete Node in a BST? "></a>How to delete Node in a BST? <a name="deletebst"></a></h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public TreeNode DeleteNode(TreeNode root, int key)</span><br><span class="line">&#123;</span><br><span class="line">    /*</span><br><span class="line">     * 1.Not found the target key </span><br><span class="line">     * </span><br><span class="line">     * 2. Found</span><br><span class="line">     * 2.1 the left and right node is null which mean its a leaf node</span><br><span class="line">     * 2.2 the left is null and  the right is not null</span><br><span class="line">     * 2.3 the left is not null and  the right is null</span><br><span class="line">     * 2.4 Both left and right node is not null</span><br><span class="line">     * </span><br><span class="line">     */</span><br><span class="line">    //not found</span><br><span class="line">    if (root == null) return null;</span><br><span class="line">    //Found</span><br><span class="line">    if(root.val == key)</span><br><span class="line">    &#123;</span><br><span class="line">        if (root.left == null &amp;&amp; root.right == null) return null;</span><br><span class="line">        if (root.left == null &amp;&amp; root.right != null) return root.right;</span><br><span class="line">        if (root.left != null &amp;&amp; root.right == null) return root.left;</span><br><span class="line">        if (root.left != null &amp;&amp; root.right != null)</span><br><span class="line">        &#123;</span><br><span class="line">            TreeNode leftode = root.right;</span><br><span class="line">            while(leftode.left != null)</span><br><span class="line">            &#123;</span><br><span class="line">                leftode = leftode.left;</span><br><span class="line">            &#125;</span><br><span class="line">            leftode.left = root.left;</span><br><span class="line">            return root.right;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    if (root.val &gt; key) root.left = DeleteNode(root.left, key);</span><br><span class="line">    if (root.val &lt; key) root.right = DeleteNode(root.right, key);</span><br><span class="line"></span><br><span class="line">    return root;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>Below is the optimized version, we use a one-dimensional array dp. By updating the dp array in reverse order, we ensure that each item is considered only once, thus avoiding redundant calculations and overwriting problems.</p>
+<h2 id="6-Maximum-Depth-of-Binary-Tree"><a href="#6-Maximum-Depth-of-Binary-Tree" class="headerlink" title="6. Maximum Depth of Binary Tree "></a>6. Maximum Depth of Binary Tree <a name="depth"></a></h2><p>Given a binary tree, the task is to find the maximum depth of the tree. The maximum depth or height of the tree is the number of edges in the tree from the root to the deepest node.</p>
 <ul>
-<li>Reduces space complexity from O(n×capacity) to O(capacity)</li>
-<li>Reverse iteration prevents value overwrite issues</li>
-<li>More efficient memory usage</li>
+<li><p>Approach 1: Using Recursion – O(n) Time and O(h) Space</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public int MaxDepth(TreeNode root) &#123;</span><br><span class="line">    if(root == null) return 0;</span><br><span class="line"></span><br><span class="line">    int leftDepth = MaxDepth(root.left);</span><br><span class="line">    int rightDepth = MaxDepth(root.right);</span><br><span class="line"></span><br><span class="line">    return 1 + Math.Max(leftDepth, rightDepth);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Approach 2: Level Order Traversal without using Null Delimiter – O(n) Time and O(n) Space</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public int MaxDepth(TreeNode root)</span><br><span class="line">&#123;</span><br><span class="line">    int depth = 0;</span><br><span class="line">    Queue&lt;TreeNode&gt; que = new();</span><br><span class="line">    if (root == null) return depth;</span><br><span class="line">    que.Enqueue(root);</span><br><span class="line">    while (que.Count != 0)</span><br><span class="line">    &#123;</span><br><span class="line">        int size = que.Count;</span><br><span class="line">        depth++;</span><br><span class="line">        for (int i = 0; i &lt; size; i++)</span><br><span class="line">        &#123;</span><br><span class="line">            var node = que.Dequeue();</span><br><span class="line">            if (node.left != null) que.Enqueue(node.left);</span><br><span class="line">            if (node.right != null) que.Enqueue(node.right);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return depth;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
 </ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public int Knapsack01(int[] w, int[] v, int cap)</span><br><span class="line">&#123;</span><br><span class="line">    int n = w.Length;</span><br><span class="line">    int[] dp = new int[cap + 1];</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    for (int i = 0; i &lt; n; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        //In order to select the item only once, we need to traverse from back to front </span><br><span class="line">        for (int j = cap; j &gt;= w[i]; j--)</span><br><span class="line">        &#123;</span><br><span class="line">            dp[j] = Math.Max(dp[j], v[i] + dp[j - w[i]]);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return dp[cap];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion "></a>Conclusion <a name="conclusion"></a></h2><p>Dynamic programming transforms inefficient recursive solutions into efficient ones by leveraging memory. Whether you choose memoization or tabulation, the key is to avoid redundant work. Arrays or dictionaries are perfect for storing intermediate results, making DP both practical and elegant.By reasonably defining the state, deriving the state-transition equation, and initializing the boundary conditions, we can efficiently solve complex problems using dynamic programming. In practical applications, pay attention to techniques such as space optimization to improve the efficiency and performance of the algorithm.</p>
+<h2 id="7-Real-World-Applications"><a href="#7-Real-World-Applications" class="headerlink" title="7. Real-World Applications "></a>7. Real-World Applications <a name="applications"></a></h2><ol>
+<li>LINQ Query Optimization<ul>
+<li>Expression trees power LINQ queries</li>
+</ul>
+</li>
+<li>Game Development<ul>
+<li>Unity uses spatial partitioning trees (Octrees&#x2F;BVH)</li>
+</ul>
+</li>
+<li>Database Systems<ul>
+<li>SQL Server uses B-trees for index storage</li>
+</ul>
+</li>
+</ol>
 <link rel="stylesheet" href="/css/folder.css" type="text/css"><script src="/js/folder.js" type="text/javascript" async></script>]]></content>
       <categories>
         <category>Data Structure and Alogrithm</category>
@@ -1640,6 +1364,708 @@ or <figure class="highlight css"><table><tr><td class="code"><pre><span class="l
         <tag>GitHub</tag>
         <tag>CLI</tag>
         <tag>Software Engineering</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>CS229 Notes (Part 1): Mathematical Basics of Linear Regression — From Model Formulation to Gradient Descent</title>
+    <url>/2025/10/19/CS229-Notes-Part-1-Mathematical-Basics-of-Linear-Regression-%E2%80%94-From-Model-Formulation-to-Gradient-Descent/</url>
+    <content><![CDATA[<ul>
+<li><a href="#introduction">1. Introduction:</a><ul>
+<li><a href="#welcome">1.1 Welcome to the world of Machine Learning</a></li>
+<li><a href="#what-is-ml">1.2 What Is Machine Learning?</a></li>
+<li><a href="#sl">1.3 Supervised Learning</a></li>
+<li><a href="#ul">1.4 Unsupervised Learning</a></li>
+</ul>
+</li>
+<li><a href="#lr">2. Linear Regression with One Variable</a><ul>
+<li><a href="#mp">2.1 Model Representation</a></li>
+<li><a href="#cf">2.2 Cost Function</a><ul>
+<li><a href="#dcf">2.2.1 Definition of the Cost Function</a></li>
+</ul>
+</li>
+<li><a href="#intuition">2.3 Intuition for the Cost Function (I)</a></li>
+<li><a href="#plot">2.4 Intuition for the Cost Function (II): Contour Plots</a></li>
+<li><a href="#gd">2.5 Gradient Descent</a></li>
+<li><a href="#gdi">2.6 Gradient Descent Intuition</a></li>
+<li><a href="#gdlr">2.7 Gradient Descent for Linear Regression</a></li>
+</ul>
+</li>
+</ul>
+<span id="more"></span>
+<h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction:"></a>Introduction:<a name="introduction"></a></h2><h3 id="Welcome-to-the-world-of-Machine-Learning"><a href="#Welcome-to-the-world-of-Machine-Learning" class="headerlink" title="Welcome to the world of Machine Learning"></a>Welcome to the world of Machine Learning<a name="welcome"></a></h3><p><a href="https://en.wikipedia.org/wiki/Machine_learning">Machine learning (ML)</a> is one of the most exciting fields in modern computer science.<br>From natural language processing and spam filters to image recognition,computer vision, recommendation systems, self-driving cars, agriculture and medicine, machine learning is everywhere.</p>
+<p>This course will not only cover cutting-edge theories of machine learning but also emphasize hands-on practice. By implementing algorithms yourself, you will gain a deep understanding of their internal mechanisms. This is crucial because merely mastering algorithms and mathematical knowledge is not sufficient to solve practical problems.</p>
+<p>The popularity of machine learning stems from its ability to break the limitations of traditional programming. For complex tasks such as web search and photo tagging, we cannot directly write fixed programs to achieve the desired outcomes. Instead, machine learning <code>enables computers to independently learn solutions from data</code>. Today, machine learning is widely used in numerous fields including database mining, medical record analysis, computational biology, and unmanned helicopter control, with market demand far exceeding the supply of professionals.</p>
+<p>Learning ML is not just about formulas and algorithms, but also about:</p>
+<ul>
+<li>Understanding which problems are suitable for ML</li>
+<li>Knowing how to choose models and methods</li>
+<li>Being able to implement and tune algorithms in practice</li>
+</ul>
+<h3 id="What-Is-Machine-Learning"><a href="#What-Is-Machine-Learning" class="headerlink" title="What Is Machine Learning?"></a>What Is Machine Learning?<a name="what-is-ml"></a></h3><p>Two Classic Definitions:</p>
+<p><strong>1.Arthur Samuel (1950s)</strong>:</p>
+<blockquote>
+<p>The field of study that gives computers the ability to learn without being explicitly programmed.<br>He wrote a chess program that played against itself; through thousands of self-played games, the program surpassed its own creator.</p>
+</blockquote>
+<p><strong>2.Tom Mitchell (Modern)</strong>:</p>
+<blockquote>
+<p>A computer program is said to learn from experience E with respect to some class of tasks T and performance measure P, if its performance at tasks in T, as measured by P, improves with experience E.</p>
+</blockquote>
+<p><strong>Memory formula</strong>: <code>T(E)ₚ</code> - Improving task T’s performance on metric P through experience E</p>
+<p><strong>Example: Spam Filter</strong></p>
+<ul>
+<li>T (Task): Classify emails as spam or not spam</li>
+<li>E (Experience): Samples marked as spam by users</li>
+<li>P (Performance): Probability of correctly identifying spam emails</li>
+</ul>
+<p>In simple terms:<br>👉 <strong>Instead of hard-coding rules, we let machines learn patterns from data.</strong></p>
+<p>Why machine learning?<br>Because for many complex problems:</p>
+<ul>
+<li>❌ It is hard to write explicit rules</li>
+<li>✅ But we often have plenty of data to learn from</li>
+</ul>
+<h3 id="Supervised-Learning"><a href="#Supervised-Learning" class="headerlink" title="Supervised Learning"></a>Supervised Learning<a name="sl"></a></h3><p>Supervised learning means that <strong>each sample in the training dataset is accompanied by a “correct answer” (label)</strong>. The algorithm learns the mapping relationship between sample features and labels to achieve prediction for new samples. </p>
+<p><strong>Characteristics</strong>:</p>
+<ul>
+<li>Training data include inputs <code>x</code> and correct outputs <code>y</code></li>
+<li>The goal is to learn a mapping from <code>x → y</code></li>
+</ul>
+<p>Form:<br><code>(x, y)</code></p>
+<p>Two main types:</p>
+<ol>
+<li><strong>✅ Regression Problems</strong> - Predicting continuous values<br>such as:</li>
+</ol>
+<ul>
+<li>House prices</li>
+<li>Temperature</li>
+<li>Sales<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Example: House price prediction</span><br><span class="line">Input: House area (750 square feet)</span><br><span class="line">Output: Predicted price ($150,000)</span><br><span class="line">Feature: Output is continuous numerical values that can take any real number</span><br></pre></td></tr></table></figure>
+<img src="/2025/10/19/CS229-Notes-Part-1-Mathematical-Basics-of-Linear-Regression-%E2%80%94-From-Model-Formulation-to-Gradient-Descent/ml1.1.png" alt="pic"></li>
+</ul>
+<ol start="2">
+<li><strong>✅ Classification Problems</strong> - Predicting discrete categories</li>
+</ol>
+<p>such as:</p>
+<ul>
+<li>Spam &#x2F; not spam</li>
+<li>Disease &#x2F; healthy</li>
+<li>Image categories<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Example: Tumor diagnosis</span><br><span class="line">Input: Tumor features (size, density, etc.)</span><br><span class="line">Output: Benign(0) / Malignant(1)</span><br><span class="line">Feature: Output is a finite set of discrete values</span><br></pre></td></tr></table></figure>
+<img src="/2025/10/19/CS229-Notes-Part-1-Mathematical-Basics-of-Linear-Regression-%E2%80%94-From-Model-Formulation-to-Gradient-Descent/ml1.2.png" alt="pic"></li>
+</ul>
+<p><img src="/2025/10/19/CS229-Notes-Part-1-Mathematical-Basics-of-Linear-Regression-%E2%80%94-From-Model-Formulation-to-Gradient-Descent/ml1.3.png" alt="pic"></p>
+<p><strong>Essence of supervised learning</strong>:</p>
+<blockquote>
+<p>Learn from labeled data so the model can make predictions on new examples.</p>
+</blockquote>
+<h3 id="Unsupervised-Learning"><a href="#Unsupervised-Learning" class="headerlink" title="Unsupervised Learning"></a>Unsupervised Learning<a name="ul"></a></h3><p>The core difference between unsupervised learning and supervised learning is that <strong>training data has no labels</strong>. The algorithm needs to independently discover potential structures from the data. A typical representative of unsupervised learning is <strong>clustering algorithms</strong>.</p>
+<p><img src="/2025/10/19/CS229-Notes-Part-1-Mathematical-Basics-of-Linear-Regression-%E2%80%94-From-Model-Formulation-to-Gradient-Descent/ml1.4.png" alt="pic"><br><strong>Characteristics</strong>:</p>
+<ul>
+<li>Only input data x</li>
+<li>No labels y</li>
+<li>The goal is to <strong>discover structure</strong> in the data</li>
+</ul>
+<p><strong>Common task: Clustering</strong></p>
+<ol>
+<li>Applications:</li>
+</ol>
+<ul>
+<li>Automatically grouping news (e.g., Google News)</li>
+<li>Customer segmentation</li>
+<li>Gene analysis</li>
+<li>Community detection in social networks</li>
+</ul>
+<ol start="2">
+<li>Cocktail Party Problem:</li>
+</ol>
+<p>matlab:</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">% Audio separation achieved with just one line of code</span><br><span class="line">[W,s,v] = svd((repmat(sum(x.*x,1),size(x,1),1).*x)*x&#x27;);</span><br></pre></td></tr></table></figure>
+<ul>
+<li>Separating different speakers’ audio from mixed sounds</li>
+<li>Demonstrates the importance of using the right tools<br><img src="/2025/10/19/CS229-Notes-Part-1-Mathematical-Basics-of-Linear-Regression-%E2%80%94-From-Model-Formulation-to-Gradient-Descent/ml1.5.png" alt="pic"><br><strong>Intuition</strong>:<blockquote>
+<p>We do not know the categories in advance, but want the algorithm to find similar groups by itself.</p>
+</blockquote>
+</li>
+</ul>
+<p>Comparison:</p>
+<table>
+<thead>
+<tr>
+<th align="center"><strong>Size in feet</strong></th>
+<th align="center"><strong>Labeled?</strong></th>
+<th align="center"><strong>Goal</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">Supervised Learning</td>
+<td align="center">Yes</td>
+<td align="center">Prediction</td>
+</tr>
+<tr>
+<td align="center">Unsupervised Learning</td>
+<td align="center">No</td>
+<td align="center">Discover structure</td>
+</tr>
+</tbody></table>
+<h2 id="Linear-Regression-with-One-Variable"><a href="#Linear-Regression-with-One-Variable" class="headerlink" title="Linear Regression with One Variable "></a>Linear Regression with One Variable <a name="lr"></a></h2><h3 id="Model-Representation"><a href="#Model-Representation" class="headerlink" title="Model Representation"></a>Model Representation<a name="mp"></a></h3><p>Linear regression with one variable is an introductory machine learning algorithm used to solve single-feature regression problems (e.g., predicting house prices using house size).<br>Let’s start with an example: This example is about predicting house prices, and we’ll use a dataset containing housing prices in Portland, Oregon. Here, I’ll plot our dataset based on the prices of houses sold for different house sizes.<br>For instance, if your friend’s house is 1,250 square feet in size, you want to tell them how much it could sell for. One thing you can do is build a model—perhaps a straight line—and from this model, you might tell your friend they could sell the house for about $220,000.<br>This is an example of a supervised learning algorithm.<br><img src="/2025/10/19/CS229-Notes-Part-1-Mathematical-Basics-of-Linear-Regression-%E2%80%94-From-Model-Formulation-to-Gradient-Descent/ml2.1.png" alt="pic"></p>
+<p>Training Set:<br><img src="/2025/10/19/CS229-Notes-Part-1-Mathematical-Basics-of-Linear-Regression-%E2%80%94-From-Model-Formulation-to-Gradient-Descent/ml2.2.png" alt="pic"></p>
+<p>Notation:</p>
+<ul>
+<li>m: number of training examples</li>
+<li>x: feature</li>
+<li>y: target</li>
+<li>(x⁽ⁱ⁾, y⁽ⁱ⁾): The i-th training example</li>
+<li>h(x): hypothesis (model),used to predict the value of y<br>Univariate linear regression model:<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">hθ(x) = θ₀ + θ₁ x</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p>This is a straight line, where:</p>
+<ul>
+<li><code>θ₀</code> is the intercept,the point where the hypothesis function intersects the y-axis</li>
+<li><code>θ₁</code> is the slope,the degree of influence of feature x on target y</li>
+</ul>
+<p>Goal:<br>Find <code>θ₀</code> and <code>θ₁</code> so that the line fits the data as well as possible.</p>
+<p><img src="/2025/10/19/CS229-Notes-Part-1-Mathematical-Basics-of-Linear-Regression-%E2%80%94-From-Model-Formulation-to-Gradient-Descent/ml2.3.png" alt="pic"></p>
+<h3 id="Cost-Function"><a href="#Cost-Function" class="headerlink" title="Cost Function"></a>Cost Function<a name="cf"></a></h3><p>To measure the prediction error of the hypothesis function, we need to define a Cost Function, which primarily calculates the sum of squared errors between predicted values and actual values.</p>
+<h4 id="Definition-of-the-Cost-Function"><a href="#Definition-of-the-Cost-Function" class="headerlink" title="Definition of the Cost Function"></a>Definition of the Cost Function<a name="dcf"></a></h4><p>Linear regression with one variable uses the Mean Squared Error (MSE) as its cost function, defined by the formula:</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">J(θ₀, θ₁) = (1 / 2m) * Σ (hθ(x⁽ⁱ⁾) - y⁽ⁱ⁾)²</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>1&#x2F;2: Included to cancel out the coefficient from the square term during differentiation, simplifying calculations</li>
+<li>Σ (hθ(x⁽ⁱ⁾) - y⁽ⁱ⁾)²:Sum of squared prediction errors for all samples</li>
+<li>J(θ₀, θ₁)： A smaller value of the cost function indicates higher prediction accuracy of the model</li>
+</ul>
+<p><img src="/2025/10/19/CS229-Notes-Part-1-Mathematical-Basics-of-Linear-Regression-%E2%80%94-From-Model-Formulation-to-Gradient-Descent/ml2.5.png" alt="pic"><br>Meaning:<br>Square the errors<br>Average over all training examples<br>The smaller, the better</p>
+<p>👉 Our objective:</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">minimize J(θ₀, θ₁)</span><br></pre></td></tr></table></figure>
+
+<p>Why Choose Squared Error?</p>
+<ol>
+<li>Mathematically: Facilitates differentiation and enables smoother optimization<br>This is the primary reason.</li>
+</ol>
+<p>The squared function <code>(y-ŷ)²</code> is a smooth convex function everywhere, and its derivative is <code>2(y-ŷ)</code>, which is very simple.<br>The absolute function <code>|y-ŷ|</code> is not differentiable at <code>y=ŷ</code> (it has a “sharp point”). This can cause gradient‑based optimization algorithms like gradient descent to get “stuck” at that point and require special handling.</p>
+<p>An intuitive analogy:<br>Squared error is like a smooth, bowl‑shaped curve—a ball (the optimization process) can roll smoothly down to the bottom of the bowl (the minimum).<br>Absolute error is like a folded V‑shaped piece of paper with a sharp crease—when the ball reaches the tip, it gets stuck and doesn’t know which way to roll.</p>
+<ol start="2">
+<li><p>Statistically: Aligns with the assumption of maximum likelihood estimation<br>When we assume that data errors follow a normal (Gaussian) distribution, maximizing the likelihood function is equivalent to minimizing the mean‑squared error. This is the statistical foundation of many linear models. Since the normal distribution is common in nature, this assumption is often reasonable.</p>
+</li>
+<li><p>In terms of effect: Penalizes large errors more heavily, making it more sensitive to outliers<br>Error² amplifies the impact of large errors.</p>
+</li>
+</ol>
+<ul>
+<li>Advantage: The model will try hard to avoid large prediction mistakes, because the cost grows quadratically with the error. This is usually what we want.</li>
+<li>Disadvantage: If there are outliers in the data, squaring magnifies their influence, which can “pull” the model off course. (In such cases, absolute error or Huber loss can be used to mitigate the issue.)</li>
+</ul>
+<p>Example:<br>Error &#x3D; 1 → squared cost &#x3D; 1<br>Error &#x3D; 2 → squared cost &#x3D; 4 (4 times the cost for 2 times the error)<br>Error &#x3D; 10 → squared cost &#x3D; 100 (100 times the cost for 10 times the error)</p>
+<ul>
+<li>Good mathematical properties (convex function, has unique minimum)</li>
+<li>Heavily penalizes large errors</li>
+<li>Performs well in practical applications</li>
+</ul>
+<h3 id="Intuition-for-the-Cost-Function-I"><a href="#Intuition-for-the-Cost-Function-I" class="headerlink" title="Intuition for the Cost Function (I)"></a>Intuition for the Cost Function (I)<a name="intuition"></a></h3><p>Imagine different lines:</p>
+<ul>
+<li><p>Some are far from the data → large error → large J</p>
+</li>
+<li><p>Some fit the data well → small error → small J</p>
+</li>
+</ul>
+<p>So J tells us:<br>👉 <strong>On average, how badly this line fits the data</strong>.<br><img src="/2025/10/19/CS229-Notes-Part-1-Mathematical-Basics-of-Linear-Regression-%E2%80%94-From-Model-Formulation-to-Gradient-Descent/ml2.6.png" alt="pic"></p>
+<h3 id="Intuition-for-the-Cost-Function-II-Contour-Plots"><a href="#Intuition-for-the-Cost-Function-II-Contour-Plots" class="headerlink" title="Intuition for the Cost Function (II): Contour Plots"></a>Intuition for the Cost Function (II): Contour Plots<a name="plot"></a></h3><p>If we treat <code>θ₀</code> and <code>θ₁</code> as axes, and <code>J(θ₀, θ₁)</code> as height:</p>
+<ul>
+<li>We get a bowl-shaped surface</li>
+<li>The lowest point corresponds to the best parameters<br><img src="/2025/10/19/CS229-Notes-Part-1-Mathematical-Basics-of-Linear-Regression-%E2%80%94-From-Model-Formulation-to-Gradient-Descent/ml2.7.png" alt="pic"></li>
+</ul>
+<p>A contour plot shows: </p>
+<ul>
+<li>Each closed curve has the same J value</li>
+<li>Inner curves mean smaller J</li>
+</ul>
+<p>👉 Learning is like:<br><strong>Going downhill on an error landscape until we reach the bottom.</strong></p>
+<p><img src="/2025/10/19/CS229-Notes-Part-1-Mathematical-Basics-of-Linear-Regression-%E2%80%94-From-Model-Formulation-to-Gradient-Descent/ml2.8.png" alt="pic"></p>
+<h3 id="Gradient-Descent"><a href="#Gradient-Descent" class="headerlink" title="Gradient Descent"></a>Gradient Descent<a name="gd"></a></h3><p>Gradient descent is a general algorithm for minimizing functions.</p>
+<p>Core Idea:</p>
+<blockquote>
+<p>Starting from a random point, take small steps along the steepest downhill direction until reaching the valley bottom</p>
+</blockquote>
+<p>Step:</p>
+<ol>
+<li>Start from some initial point (θ₀, θ₁)</li>
+<li>Take a small step in the direction of steepest decrease of J</li>
+<li>Repeat until convergence<br>Update rule:<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">θⱼ := θⱼ - α * ∂J(θ) / ∂θⱼ</span><br></pre></td></tr></table></figure></li>
+</ol>
+<p><strong>Where</strong>:</p>
+<ul>
+<li>α is the learning rate (step size)</li>
+<li>:&#x3D; Denotes assignment, meaning the value on the right-hand side is computed first to update the parameter on the left-hand side</li>
+</ul>
+<p>👉 Analogy:<br>Walking downhill while blindfolded, always stepping in the steepest direction.<br><img src="/2025/10/19/CS229-Notes-Part-1-Mathematical-Basics-of-Linear-Regression-%E2%80%94-From-Model-Formulation-to-Gradient-Descent/ml2.9.png" alt="pic"></p>
+<h3 id="Gradient-Descent-Intuition"><a href="#Gradient-Descent-Intuition" class="headerlink" title="Gradient Descent Intuition"></a>Gradient Descent Intuition<a name="gdi"></a></h3><p>The core of gradient descent lies in the coordination between the <strong>learning rate</strong> α and the <strong>gradient direction</strong>, which can be intuitively understood using a single-parameter example:</p>
+<ol>
+<li><strong>Role of the Gradient</strong></li>
+</ol>
+<ul>
+<li>When the gradient is <strong>positive</strong>: θⱼ decreases (θⱼ :&#x3D; θⱼ − α × positive number),causing the cost function to decrease</li>
+<li>When the gradient is <strong>negative</strong>: θⱼ increases (θⱼ :&#x3D; θⱼ − α × negative number)causing the cost function to decrease</li>
+<li>When the gradient is <strong>zero</strong>: θⱼ stops updating, indicating that the minimum point has been reached</li>
+</ul>
+<ol start="2">
+<li><strong>Impact of Learning Rate α</strong></li>
+</ol>
+<ul>
+<li>α too small: Small parameter update steps result in slow convergence, requiring numerous iterations to reach the minimum point</li>
+<li>α too large: May overshoot the minimum point, causing the cost function to diverge and fail to converge</li>
+<li><strong>Adaptive Convergence</strong>: As parameters approach the minimum point, the gradient gradually decreases. Even with a fixed α<br>, the magnitude of parameter updates automatically becomes smaller, leading to eventual convergence.</li>
+</ul>
+<h3 id="Gradient-Descent-for-Linear-Regression"><a href="#Gradient-Descent-for-Linear-Regression" class="headerlink" title="Gradient Descent for Linear Regression"></a>Gradient Descent for Linear Regression<a name="gdlr"></a></h3><p>Combining the gradient descent algorithm with the linear regression cost function yields the gradient descent solution for linear regression.</p>
+<h4 id="Calculating-Partial-Derivatives"><a href="#Calculating-Partial-Derivatives" class="headerlink" title="Calculating Partial Derivatives"></a>Calculating Partial Derivatives</h4><p>Compute the partial derivatives of the linear regression cost function $J(\theta_0, \theta_1)$:</p>
+<p>Partial derivative with respect to $\theta_0$:</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">∂/∂θ₀ J(θ₀, θ₁) = (1/m) * Σⁱ₌₁ᵐ (h_θ(x⁽ⁱ⁾) - y⁽ⁱ⁾)</span><br></pre></td></tr></table></figure>
+<p>Partial derivative with respect to $\theta_1$:</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">∂/∂θ₁ J(θ₀, θ₁) = (1/m) * Σⁱ₌₁ᵐ (h_θ(x⁽ⁱ⁾) - y⁽ⁱ⁾) · x⁽ⁱ⁾</span><br></pre></td></tr></table></figure>
+
+<h4 id="Gradient-Descent-Update-Rule-for-Linear-Regression"><a href="#Gradient-Descent-Update-Rule-for-Linear-Regression" class="headerlink" title="Gradient Descent Update Rule for Linear Regression"></a>Gradient Descent Update Rule for Linear Regression</h4><p>Substitute the partial derivatives into the gradient descent formula to obtain:</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">θ₀ := θ₀ - α · (1/m) * Σⁱ₌₁ᵐ (h_θ(x⁽ⁱ⁾) - y⁽ⁱ⁾)</span><br><span class="line"></span><br><span class="line">θ₁ := θ₁ - α · (1/m) * Σⁱ₌₁ᵐ (h_θ(x⁽ⁱ⁾) - y⁽ⁱ⁾) · x⁽ⁱ⁾</span><br></pre></td></tr></table></figure>
+
+<h4 id="Summary-of-the-Algorithm-Process"><a href="#Summary-of-the-Algorithm-Process" class="headerlink" title="Summary of the Algorithm Process"></a>Summary of the Algorithm Process</h4><ol>
+<li>Initialize parameters θ₀ and θ₁ (e.g., set both to 0)</li>
+<li>Compute the prediction errors h_θ(x⁽ⁱ⁾) - y⁽ⁱ⁾ for all training samples</li>
+<li>Substitute into the update rule to simultaneously update θ₀ and θ₁ </li>
+<li>Repeat steps 2-3 until the change in the cost function J(θ₀, θ₁) is smaller than a threshold value (convergence)</li>
+<li>Output the optimal parameters  θ₀ and θ₁ to obtain the final hypothesis function</li>
+</ol>
+<h4 id="Supplement-Batch-Gradient-Descent-vs-Normal-Equation"><a href="#Supplement-Batch-Gradient-Descent-vs-Normal-Equation" class="headerlink" title="Supplement: Batch Gradient Descent vs. Normal Equation"></a>Supplement: Batch Gradient Descent vs. Normal Equation</h4><ul>
+<li><strong>Batch Gradient Descent</strong>: Suitable for large datasets, solves the problem iteratively and requires selecting a learning rate<br>α</li>
+<li><strong>Normal Equation</strong>: Solves for the optimal parameters directly through matrix operations without iteration or learning rate selection. However, it has high computational complexity and is suitable for small datasets</li>
+</ul>
+<link rel="stylesheet" href="/css/folder.css" type="text/css"><script src="/js/folder.js" type="text/javascript" async></script>]]></content>
+      <categories>
+        <category>Machine Learning</category>
+        <category>Stanford CS229 Notes</category>
+      </categories>
+      <tags>
+        <tag>Linear Regression</tag>
+        <tag>Gradient Descent</tag>
+        <tag>Cost Function</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Getting Started with Docker</title>
+    <url>/2026/04/19/Getting-Started-with-Docker-A-Practical-Guide-for-Developers/</url>
+    <content><![CDATA[<ul>
+<li><a href="#understanding-docker-technology">Understanding Docker Technology</a><ul>
+<li><a href="#application-scenarios-of-docker">Application Scenarios of Docker</a></li>
+<li><a href="#core-advantages">Core Advantages</a></li>
+<li><a href="#core-concepts">Core Concepts</a></li>
+</ul>
+</li>
+<li><a href="#docker-vs-virtual-machines">Docker vs Virtual Machines</a></li>
+<li><a href="#basic-commands">Basic Commands</a></li>
+<li><a href="#docker-data-volumes">Docker Data Volumes</a><ul>
+<li><a href="#what-is-a-data-volume">What is a Data Volume</a></li>
+<li><a href="#volume-commands">Volume Commands</a></li>
+<li><a href="#mounting-local-directories">Mounting Local Directories</a></li>
+</ul>
+</li>
+<li><a href="#docker-networking">Docker Networking</a><ul>
+<li><a href="#default-networks">Default Networks</a></li>
+<li><a href="#custom-networks">Custom Networks</a></li>
+</ul>
+</li>
+<li><a href="#building-custom-images">Building Custom Images</a><ul>
+<li><a href="#image-structure">Image Structure</a></li>
+<li><a href="#dockerfile-syntax">Dockerfile Syntax</a></li>
+<li><a href="#building-images">Building Images</a></li>
+</ul>
+</li>
+<li><a href="#docker-compose">Docker Compose</a><ul>
+<li><a href="#basic-syntax">Basic Syntax</a></li>
+<li><a href="#common-commands">Common Commands</a></li>
+</ul>
+</li>
+<li><a href="#practical-examples">Practical Examples</a><ul>
+<li><a href="#deploying-mysql">Deploying MySQL</a></li>
+<li><a href="#deploying-a-java-application">Deploying a Java Application</a></li>
+</ul>
+</li>
+<li><a href="#best-practices">Best Practices</a></li>
+<li><a href="#faq">FAQ</a></li>
+<li><a href="#summary">Summary</a></li>
+<li><a href="#references">References</a></li>
+</ul>
+<span id="more"></span>
+
+<h2 id="Understanding-Docker-Technology"><a href="#Understanding-Docker-Technology" class="headerlink" title="Understanding Docker Technology"></a>Understanding Docker Technology</h2><p>Docker is a platform designed to help developers build, share, and run container applications. It handles the tedious setup, so you can focus on the code. Docker is an open-source application container engine, built on the <a href="https://go.dev/">Go</a> programming language and released under the Apache 2.0 license. Docker allows developers to package their applications and dependent packages into a lightweight, portable container, which can then be deployed on any popular Linux machine, and also enables virtualization.</p>
+<p>Containers utilize a sandbox mechanism exclusively, with no interfaces between them (similar to apps on an iPhone). More importantly, the performance overhead of containers is extremely low.</p>
+<h3 id="Application-Scenarios-of-Docker"><a href="#Application-Scenarios-of-Docker" class="headerlink" title="Application Scenarios of Docker"></a>Application Scenarios of Docker</h3><table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Microservices architecture</strong></td>
+<td>Each service is containerized independently, facilitating management and scalability</td>
+</tr>
+<tr>
+<td><strong>CI&#x2F;CD pipeline</strong></td>
+<td>Integrate with Jenkins&#x2F;GitLab CI to achieve automated build and testing</td>
+</tr>
+<tr>
+<td><strong>Development environment standardization</strong></td>
+<td>New members can start a full set of dependent services (such as databases and message queues) with one click</td>
+</tr>
+<tr>
+<td><strong>Cloud-native foundation</strong></td>
+<td>Orchestration tools such as Kubernetes manage container clusters based on Docker</td>
+</tr>
+</tbody></table>
+<h3 id="Core-Advantages"><a href="#Core-Advantages" class="headerlink" title="Core Advantages"></a>Core Advantages</h3><table>
+<thead>
+<tr>
+<th>Advantage</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Cross-platform consistency</strong></td>
+<td>Address the issue of “it works on my machine” and ensure consistency across development, testing, and production environments</td>
+</tr>
+<tr>
+<td><strong>Resource efficiency</strong></td>
+<td>Containers directly share the host kernel, eliminating the need to virtualize the entire operating system, thereby saving memory and CPU resources</td>
+</tr>
+<tr>
+<td><strong>Rapid deployment</strong></td>
+<td>Launch containers in seconds and support automated scaling</td>
+</tr>
+<tr>
+<td><strong>Isolation</strong></td>
+<td>Each container possesses an independent file system, network, and process space</td>
+</tr>
+</tbody></table>
+<h3 id="Core-Concepts"><a href="#Core-Concepts" class="headerlink" title="Core Concepts"></a>Core Concepts</h3><table>
+<thead>
+<tr>
+<th>Concept</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Container</strong></td>
+<td>A lightweight running instance that contains application code, runtime environment, and dependent libraries. It is created based on an image, isolated from other containers, and shares the host operating system kernel (more efficient than virtual machines)</td>
+</tr>
+<tr>
+<td><strong>Image</strong></td>
+<td>A read-only template that defines the runtime environment of a container (such as operating system, software configuration, etc.). It optimizes space and build speed through layered storage</td>
+</tr>
+<tr>
+<td><strong>Dockerfile</strong></td>
+<td>A text file that describes how to automatically build an image (such as specifying the base image, installing software, copying files, etc.)</td>
+</tr>
+<tr>
+<td><strong>Repository&#x2F;Registry</strong></td>
+<td>A platform for storing and distributing images, such as Docker Hub (the official public registry) or private registries (like Harbor)</td>
+</tr>
+</tbody></table>
+<h2 id="Docker-vs-Virtual-Machines"><a href="#Docker-vs-Virtual-Machines" class="headerlink" title="Docker vs Virtual Machines"></a>Docker vs Virtual Machines</h2><table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Virtual Machine</th>
+<th>Docker Container</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Isolation Level</td>
+<td>Hardware-level virtualization</td>
+<td>Operating system-level virtualization</td>
+</tr>
+<tr>
+<td>Operating System</td>
+<td>Each VM requires a complete OS</td>
+<td>Sharing the host OS kernel</td>
+</tr>
+<tr>
+<td>Resource Consumption</td>
+<td>Heavyweight, consuming more resources</td>
+<td>Lightweight, consuming less resources</td>
+</tr>
+<tr>
+<td>Startup Time</td>
+<td>Minutes</td>
+<td>Seconds</td>
+</tr>
+<tr>
+<td>Performance Overhead</td>
+<td>Relatively high</td>
+<td>Close to native performance</td>
+</tr>
+<tr>
+<td>Image Size</td>
+<td>GB level</td>
+<td>MB level</td>
+</tr>
+</tbody></table>
+<p><strong>Architecture Comparison:</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Traditional VMs:                    Docker Containers:</span><br><span class="line">┌─────────────────┐                ┌─────────────────┐</span><br><span class="line">│   App A         │                │   App A         │</span><br><span class="line">│   Bin/Libs      │                │   App B         │</span><br><span class="line">│   Guest OS      │                │   App C         │</span><br><span class="line">├─────────────────┤                ├─────────────────┤</span><br><span class="line">│   Hypervisor    │                │   Docker Engine │</span><br><span class="line">├─────────────────┤                ├─────────────────┤</span><br><span class="line">│   Host OS       │                │   Host OS       │</span><br><span class="line">├─────────────────┤                ├─────────────────┤</span><br><span class="line">│   Infrastructure│                │   Infrastructure│</span><br><span class="line">└─────────────────┘                └─────────────────┘</span><br></pre></td></tr></table></figure>
+
+<h2 id="Basic-Commands"><a href="#Basic-Commands" class="headerlink" title="Basic Commands"></a>Basic Commands</h2><h3 id="Image-Commands"><a href="#Image-Commands" class="headerlink" title="Image Commands"></a>Image Commands</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Pull an image (such as the official Nginx image)</span></span><br><span class="line">docker pull nginx</span><br><span class="line"></span><br><span class="line"><span class="comment"># Pull a specific version</span></span><br><span class="line">docker pull nginx:1.24</span><br><span class="line"></span><br><span class="line"><span class="comment"># View local images</span></span><br><span class="line">docker images</span><br><span class="line"></span><br><span class="line"><span class="comment"># Remove an image</span></span><br><span class="line">docker rmi nginx</span><br><span class="line"></span><br><span class="line"><span class="comment"># Build image from Dockerfile</span></span><br><span class="line">docker build -t my-app:1.0 .</span><br></pre></td></tr></table></figure>
+
+<h3 id="Container-Commands"><a href="#Container-Commands" class="headerlink" title="Container Commands"></a>Container Commands</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Run a container (-d for detached, -p for port mapping)</span></span><br><span class="line">docker run -d -p 80:80 --name my-nginx nginx</span><br><span class="line"></span><br><span class="line"><span class="comment"># View running containers</span></span><br><span class="line">docker ps</span><br><span class="line"></span><br><span class="line"><span class="comment"># View all containers (including stopped)</span></span><br><span class="line">docker ps -a</span><br><span class="line"></span><br><span class="line"><span class="comment"># Start/Stop/Restart containers</span></span><br><span class="line">docker start my-nginx</span><br><span class="line">docker stop my-nginx</span><br><span class="line">docker restart my-nginx</span><br><span class="line"></span><br><span class="line"><span class="comment"># Remove a container</span></span><br><span class="line">docker <span class="built_in">rm</span> my-nginx</span><br><span class="line"></span><br><span class="line"><span class="comment"># Force remove a running container</span></span><br><span class="line">docker <span class="built_in">rm</span> -f my-nginx</span><br><span class="line"></span><br><span class="line"><span class="comment"># Enter a running container</span></span><br><span class="line">docker <span class="built_in">exec</span> -it my-nginx /bin/bash</span><br><span class="line"></span><br><span class="line"><span class="comment"># View container logs</span></span><br><span class="line">docker logs my-nginx</span><br><span class="line"></span><br><span class="line"><span class="comment"># View container details</span></span><br><span class="line">docker inspect my-nginx</span><br></pre></td></tr></table></figure>
+
+<h3 id="System-Commands"><a href="#System-Commands" class="headerlink" title="System Commands"></a>System Commands</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># View Docker system usage</span></span><br><span class="line">docker system <span class="built_in">df</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Clean up unused resources</span></span><br><span class="line">docker system prune</span><br><span class="line"></span><br><span class="line"><span class="comment"># View Docker info</span></span><br><span class="line">docker info</span><br></pre></td></tr></table></figure>
+
+<h2 id="Docker-Data-Volumes"><a href="#Docker-Data-Volumes" class="headerlink" title="Docker Data Volumes"></a>Docker Data Volumes</h2><h3 id="What-is-a-Data-Volume"><a href="#What-is-a-Data-Volume" class="headerlink" title="What is a Data Volume"></a>What is a Data Volume</h3><p><strong>Data Volume</strong> is a virtual directory that acts as a bridge between container directories and host directories. It solves several problems:</p>
+<table>
+<thead>
+<tr>
+<th>Problem</th>
+<th>Solution</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Data persistence</td>
+<td>Data remains when container is removed</td>
+</tr>
+<tr>
+<td>Configuration management</td>
+<td>Easy to modify configuration files</td>
+</tr>
+<tr>
+<td>Static resources</td>
+<td>Serve external static files</td>
+</tr>
+</tbody></table>
+<h3 id="Volume-Commands"><a href="#Volume-Commands" class="headerlink" title="Volume Commands"></a>Volume Commands</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Create a volume</span></span><br><span class="line">docker volume create my-volume</span><br><span class="line"></span><br><span class="line"><span class="comment"># List volumes</span></span><br><span class="line">docker volume <span class="built_in">ls</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Inspect a volume</span></span><br><span class="line">docker volume inspect my-volume</span><br><span class="line"></span><br><span class="line"><span class="comment"># Remove a volume</span></span><br><span class="line">docker volume <span class="built_in">rm</span> my-volume</span><br><span class="line"></span><br><span class="line"><span class="comment"># Mount volume when running container</span></span><br><span class="line">docker run -d --name nginx -p 80:80 -v html:/usr/share/nginx/html nginx</span><br></pre></td></tr></table></figure>
+
+<h3 id="Mounting-Local-Directories"><a href="#Mounting-Local-Directories" class="headerlink" title="Mounting Local Directories"></a>Mounting Local Directories</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Mount local directory (use absolute path or ./)</span></span><br><span class="line">docker run -d \</span><br><span class="line">  --name mysql \</span><br><span class="line">  -p 3306:3306 \</span><br><span class="line">  -e TZ=Asia/Shanghai \</span><br><span class="line">  -e MYSQL_ROOT_PASSWORD=123456 \</span><br><span class="line">  -v ./mysql/data:/var/lib/mysql \</span><br><span class="line">  -v ./mysql/conf:/etc/mysql/conf.d \</span><br><span class="line">  mysql:8.0</span><br></pre></td></tr></table></figure>
+
+<p><strong>Important:</strong> Local directories must start with <code>/</code> or <code>./</code>. Names without these prefixes are treated as volume names.</p>
+<h2 id="Docker-Networking"><a href="#Docker-Networking" class="headerlink" title="Docker Networking"></a>Docker Networking</h2><h3 id="Default-Networks"><a href="#Default-Networks" class="headerlink" title="Default Networks"></a>Default Networks</h3><table>
+<thead>
+<tr>
+<th>Network</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>bridge</code></td>
+<td>Default network for containers; provides isolation</td>
+</tr>
+<tr>
+<td><code>host</code></td>
+<td>Shares host network stack; no isolation</td>
+</tr>
+<tr>
+<td><code>none</code></td>
+<td>No network connectivity</td>
+</tr>
+</tbody></table>
+<h3 id="Custom-Networks"><a href="#Custom-Networks" class="headerlink" title="Custom Networks"></a>Custom Networks</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Create a custom network</span></span><br><span class="line">docker network create my-network</span><br><span class="line"></span><br><span class="line"><span class="comment"># List networks</span></span><br><span class="line">docker network <span class="built_in">ls</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Connect container to network</span></span><br><span class="line">docker network connect my-network my-container</span><br><span class="line"></span><br><span class="line"><span class="comment"># Run container with network</span></span><br><span class="line">docker run -d --name app --network my-network my-image</span><br><span class="line"></span><br><span class="line"><span class="comment"># Inspect network</span></span><br><span class="line">docker network inspect my-network</span><br></pre></td></tr></table></figure>
+
+<p><strong>Key Benefit:</strong> In custom networks, containers can communicate using container names as hostnames:</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># In &#x27;my-network&#x27;, &#x27;mysql&#x27; container can be accessed via &#x27;mysql&#x27; hostname</span></span><br><span class="line">docker run -d --name web --network my-network -e DB_HOST=mysql my-app</span><br></pre></td></tr></table></figure>
+
+<h2 id="Building-Custom-Images"><a href="#Building-Custom-Images" class="headerlink" title="Building Custom Images"></a>Building Custom Images</h2><h3 id="Image-Structure"><a href="#Image-Structure" class="headerlink" title="Image Structure"></a>Image Structure</h3><p>Docker images are built in layers:</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Layer 4: Application Layer    (your jar/code)</span><br><span class="line">Layer 3: Dependencies Layer   (libraries)</span><br><span class="line">Layer 2: Runtime Layer        (JDK/Python/etc)</span><br><span class="line">Layer 1: Base Layer           (OS environment)</span><br></pre></td></tr></table></figure>
+
+<h3 id="Dockerfile-Syntax"><a href="#Dockerfile-Syntax" class="headerlink" title="Dockerfile Syntax"></a>Dockerfile Syntax</h3><p>Common Dockerfile instructions:</p>
+<table>
+<thead>
+<tr>
+<th>Instruction</th>
+<th>Description</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>FROM</code></td>
+<td>Base image</td>
+<td><code>FROM openjdk:11-jre</code></td>
+</tr>
+<tr>
+<td><code>ENV</code></td>
+<td>Environment variables</td>
+<td><code>ENV TZ=Asia/Shanghai</code></td>
+</tr>
+<tr>
+<td><code>COPY</code></td>
+<td>Copy files from host</td>
+<td><code>COPY app.jar /app.jar</code></td>
+</tr>
+<tr>
+<td><code>ADD</code></td>
+<td>Copy and extract archives</td>
+<td><code>ADD config.tar.gz /config</code></td>
+</tr>
+<tr>
+<td><code>RUN</code></td>
+<td>Execute commands</td>
+<td><code>RUN apt-get update</code></td>
+</tr>
+<tr>
+<td><code>EXPOSE</code></td>
+<td>Expose ports</td>
+<td><code>EXPOSE 8080</code></td>
+</tr>
+<tr>
+<td><code>ENTRYPOINT</code></td>
+<td>Container startup command</td>
+<td><code>ENTRYPOINT [&quot;java&quot;, &quot;-jar&quot;, &quot;/app.jar&quot;]</code></td>
+</tr>
+<tr>
+<td><code>CMD</code></td>
+<td>Default command arguments</td>
+<td><code>CMD [&quot;--server.port=8080&quot;]</code></td>
+</tr>
+</tbody></table>
+<h3 id="Building-Images"><a href="#Building-Images" class="headerlink" title="Building Images"></a>Building Images</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Build from Dockerfile in current directory</span></span><br><span class="line">docker build -t my-app:1.0 .</span><br><span class="line"></span><br><span class="line"><span class="comment"># Build with specific Dockerfile</span></span><br><span class="line">docker build -f Dockerfile.prod -t my-app:prod .</span><br><span class="line"></span><br><span class="line"><span class="comment"># Build without cache</span></span><br><span class="line">docker build --no-cache -t my-app:1.0 .</span><br></pre></td></tr></table></figure>
+
+<h2 id="Docker-Compose"><a href="#Docker-Compose" class="headerlink" title="Docker Compose"></a>Docker Compose</h2><p>Docker Compose allows you to define and run multi-container applications using a YAML file.</p>
+<h3 id="Basic-Syntax"><a href="#Basic-Syntax" class="headerlink" title="Basic Syntax"></a>Basic Syntax</h3><figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">version:</span> <span class="string">&quot;3.8&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">mysql:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">mysql:8.0</span></span><br><span class="line">    <span class="attr">container_name:</span> <span class="string">mysql</span></span><br><span class="line">    <span class="attr">ports:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;3306:3306&quot;</span></span><br><span class="line">    <span class="attr">environment:</span></span><br><span class="line">      <span class="attr">MYSQL_ROOT_PASSWORD:</span> <span class="number">123456</span></span><br><span class="line">      <span class="attr">TZ:</span> <span class="string">Asia/Shanghai</span></span><br><span class="line">    <span class="attr">volumes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">./mysql/data:/var/lib/mysql</span></span><br><span class="line">    <span class="attr">networks:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">my-network</span></span><br><span class="line"></span><br><span class="line">  <span class="attr">app:</span></span><br><span class="line">    <span class="attr">build:</span> <span class="string">.</span></span><br><span class="line">    <span class="attr">container_name:</span> <span class="string">my-app</span></span><br><span class="line">    <span class="attr">ports:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;8080:8080&quot;</span></span><br><span class="line">    <span class="attr">depends_on:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">mysql</span></span><br><span class="line">    <span class="attr">networks:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">my-network</span></span><br><span class="line"></span><br><span class="line"><span class="attr">networks:</span></span><br><span class="line">  <span class="attr">my-network:</span></span><br><span class="line">    <span class="attr">driver:</span> <span class="string">bridge</span></span><br><span class="line"></span><br><span class="line"><span class="attr">volumes:</span></span><br><span class="line">  <span class="attr">mysql_data:</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="Common-Commands"><a href="#Common-Commands" class="headerlink" title="Common Commands"></a>Common Commands</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Start all services</span></span><br><span class="line">docker compose up -d</span><br><span class="line"></span><br><span class="line"><span class="comment"># Stop all services</span></span><br><span class="line">docker compose down</span><br><span class="line"></span><br><span class="line"><span class="comment"># View logs</span></span><br><span class="line">docker compose logs -f</span><br><span class="line"></span><br><span class="line"><span class="comment"># Scale specific service</span></span><br><span class="line">docker compose up -d --scale web=3</span><br><span class="line"></span><br><span class="line"><span class="comment"># Build images</span></span><br><span class="line">docker compose build</span><br><span class="line"></span><br><span class="line"><span class="comment"># Pull latest images</span></span><br><span class="line">docker compose pull</span><br></pre></td></tr></table></figure>
+
+<h2 id="Practical-Examples"><a href="#Practical-Examples" class="headerlink" title="Practical Examples"></a>Practical Examples</h2><h3 id="Deploying-MySQL"><a href="#Deploying-MySQL" class="headerlink" title="Deploying MySQL"></a>Deploying MySQL</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker run -d \</span><br><span class="line">  --name mysql \</span><br><span class="line">  -p 3306:3306 \</span><br><span class="line">  -e TZ=Asia/Shanghai \</span><br><span class="line">  -e MYSQL_ROOT_PASSWORD=YourStrongPassword \</span><br><span class="line">  -v ./mysql/data:/var/lib/mysql \</span><br><span class="line">  -v ./mysql/conf:/etc/mysql/conf.d \</span><br><span class="line">  --restart unless-stopped \</span><br><span class="line">  mysql:8.0</span><br></pre></td></tr></table></figure>
+
+<h3 id="Deploying-a-Java-Application"><a href="#Deploying-a-Java-Application" class="headerlink" title="Deploying a Java Application"></a>Deploying a Java Application</h3><p><strong>Dockerfile:</strong></p>
+<figure class="highlight dockerfile"><table><tr><td class="code"><pre><span class="line"><span class="keyword">FROM</span> openjdk:<span class="number">11</span>-jre-slim</span><br><span class="line"></span><br><span class="line"><span class="keyword">ENV</span> TZ=Asia/Shanghai</span><br><span class="line"><span class="keyword">WORKDIR</span><span class="language-bash"> /app</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">COPY</span><span class="language-bash"> target/*.jar app.jar</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">EXPOSE</span> <span class="number">8080</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">ENTRYPOINT</span><span class="language-bash"> [<span class="string">&quot;java&quot;</span>, <span class="string">&quot;-jar&quot;</span>, <span class="string">&quot;app.jar&quot;</span>]</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>Build and Run:</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Build image</span></span><br><span class="line">docker build -t my-java-app:1.0 .</span><br><span class="line"></span><br><span class="line"><span class="comment"># Run container</span></span><br><span class="line">docker run -d \</span><br><span class="line">  --name my-app \</span><br><span class="line">  -p 8080:8080 \</span><br><span class="line">  --network my-network \</span><br><span class="line">  --restart unless-stopped \</span><br><span class="line">  my-java-app:1.0</span><br></pre></td></tr></table></figure>
+
+<h2 id="Best-Practices"><a href="#Best-Practices" class="headerlink" title="Best Practices"></a>Best Practices</h2><h3 id="Security"><a href="#Security" class="headerlink" title="Security"></a>Security</h3><ol>
+<li><strong>Use specific image versions</strong>: Avoid <code>latest</code> tag in production; use explicit version numbers</li>
+<li><strong>Run as non-root user</strong>: Add <code>USER</code> instruction in Dockerfile<figure class="highlight dockerfile"><table><tr><td class="code"><pre><span class="line"><span class="keyword">RUN</span><span class="language-bash"> adduser -D appuser</span></span><br><span class="line"><span class="keyword">USER</span> appuser</span><br></pre></td></tr></table></figure></li>
+<li><strong>Scan images for vulnerabilities</strong>: Use <code>docker scan</code> or integrate with CI&#x2F;CD</li>
+<li><strong>Don’t embed secrets</strong>: Use environment variables, Docker secrets, or external vaults</li>
+</ol>
+<h3 id="Performance"><a href="#Performance" class="headerlink" title="Performance"></a>Performance</h3><ol>
+<li><p><strong>Leverage build cache</strong>: Order Dockerfile instructions from least to most frequently changing</p>
+</li>
+<li><p><strong>Minimize layers</strong>: Combine multiple <code>RUN</code> commands when logical</p>
+</li>
+<li><p><strong>Use multi-stage builds</strong>:</p>
+<figure class="highlight dockerfile"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Build stage</span></span><br><span class="line"><span class="keyword">FROM</span> maven:<span class="number">3.8</span>-openjdk-<span class="number">11</span> AS build</span><br><span class="line"><span class="keyword">COPY</span><span class="language-bash"> . .</span></span><br><span class="line"><span class="keyword">RUN</span><span class="language-bash"> mvn clean package</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Runtime stage</span></span><br><span class="line"><span class="keyword">FROM</span> openjdk:<span class="number">11</span>-jre-slim</span><br><span class="line"><span class="keyword">COPY</span><span class="language-bash"> --from=build /app/target/*.jar app.jar</span></span><br><span class="line"><span class="keyword">ENTRYPOINT</span><span class="language-bash"> [<span class="string">&quot;java&quot;</span>, <span class="string">&quot;-jar&quot;</span>, <span class="string">&quot;app.jar&quot;</span>]</span></span><br></pre></td></tr></table></figure></li>
+</ol>
+<h3 id="Maintenance"><a href="#Maintenance" class="headerlink" title="Maintenance"></a>Maintenance</h3><ol>
+<li><strong>Label your images</strong>:<figure class="highlight dockerfile"><table><tr><td class="code"><pre><span class="line"><span class="keyword">LABEL</span><span class="language-bash"> maintainer=<span class="string">&quot;your-email@example.com&quot;</span></span></span><br><span class="line"><span class="keyword">LABEL</span><span class="language-bash"> version=<span class="string">&quot;1.0&quot;</span></span></span><br><span class="line"><span class="keyword">LABEL</span><span class="language-bash"> description=<span class="string">&quot;My Application&quot;</span></span></span><br></pre></td></tr></table></figure></li>
+<li><strong>Use <code>.dockerignore</code></strong>: Exclude unnecessary files from build context</li>
+<li><strong>Set resource limits</strong>: Prevent containers from consuming all resources</li>
+<li><strong>Implement health checks</strong>:<figure class="highlight dockerfile"><table><tr><td class="code"><pre><span class="line"><span class="keyword">HEALTHCHECK</span><span class="language-bash"> --interval=30s --<span class="built_in">timeout</span>=3s --start-period=5s --retries=3 \</span></span><br><span class="line"><span class="language-bash">  CMD curl -f http://localhost:8080/health || <span class="built_in">exit</span> 1</span></span><br></pre></td></tr></table></figure></li>
+</ol>
+<h3 id="Production-Readiness"><a href="#Production-Readiness" class="headerlink" title="Production Readiness"></a>Production Readiness</h3><table>
+<thead>
+<tr>
+<th>Practice</th>
+<th>Command&#x2F;Config</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Restart policy</td>
+<td><code>docker run --restart unless-stopped</code></td>
+</tr>
+<tr>
+<td>Resource limits</td>
+<td><code>docker run --memory=512m --cpus=1.0</code></td>
+</tr>
+<tr>
+<td>Log rotation</td>
+<td>Configure Docker daemon logging options</td>
+</tr>
+<tr>
+<td>Network isolation</td>
+<td>Use custom networks, not default bridge</td>
+</tr>
+</tbody></table>
+<h2 id="FAQ"><a href="#FAQ" class="headerlink" title="FAQ"></a>FAQ</h2><h3 id="Q-What-is-the-difference-between-COPY-and-ADD-in-Dockerfile"><a href="#Q-What-is-the-difference-between-COPY-and-ADD-in-Dockerfile" class="headerlink" title="Q: What is the difference between COPY and ADD in Dockerfile?"></a>Q: What is the difference between <code>COPY</code> and <code>ADD</code> in Dockerfile?</h3><p><strong>A:</strong> <code>COPY</code> simply copies files from host to container. <code>ADD</code> has additional features:</p>
+<ul>
+<li>Can extract local tar archives automatically</li>
+<li>Can download files from URLs</li>
+</ul>
+<p><strong>Recommendation:</strong> Use <code>COPY</code> for most cases; use <code>ADD</code> only when you need its special features.</p>
+<h3 id="Q-How-do-I-access-a-container-from-another-machine-on-the-same-network"><a href="#Q-How-do-I-access-a-container-from-another-machine-on-the-same-network" class="headerlink" title="Q: How do I access a container from another machine on the same network?"></a>Q: How do I access a container from another machine on the same network?</h3><p><strong>A:</strong> Use the host machine’s IP address with the mapped port. For example, if the host IP is <code>192.168.1.100</code> and you mapped port 8080:</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">http://192.168.1.100:8080</span><br></pre></td></tr></table></figure>
+
+<h3 id="Q-Why-is-my-container-exiting-immediately"><a href="#Q-Why-is-my-container-exiting-immediately" class="headerlink" title="Q: Why is my container exiting immediately?"></a>Q: Why is my container exiting immediately?</h3><p><strong>A:</strong> Common causes:</p>
+<ol>
+<li>The foreground process exited (containers stop when the main process stops)</li>
+<li>Incorrect command or entrypoint</li>
+<li>Application error on startup</li>
+</ol>
+<p><strong>Debug:</strong> Check logs with <code>docker logs &lt;container&gt;</code> or run interactively without <code>-d</code> flag.</p>
+<h3 id="Q-How-do-I-persist-data-when-a-container-is-removed"><a href="#Q-How-do-I-persist-data-when-a-container-is-removed" class="headerlink" title="Q: How do I persist data when a container is removed?"></a>Q: How do I persist data when a container is removed?</h3><p><strong>A:</strong> Use named volumes or bind mounts:</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Named volume</span></span><br><span class="line">docker run -v mydata:/data my-image</span><br><span class="line"></span><br><span class="line"><span class="comment"># Bind mount</span></span><br><span class="line">docker run -v /host/path:/container/path my-image</span><br></pre></td></tr></table></figure>
+
+<h3 id="Q-What-is-the-difference-between-docker-compose-and-docker-compose"><a href="#Q-What-is-the-difference-between-docker-compose-and-docker-compose" class="headerlink" title="Q: What is the difference between docker-compose and docker compose?"></a>Q: What is the difference between <code>docker-compose</code> and <code>docker compose</code>?</h3><p><strong>A:</strong> <code>docker-compose</code> (V1) is the Python-based legacy tool. <code>docker compose</code> (V2) is the Go-based plugin integrated into Docker CLI. V2 is now recommended.</p>
+<h3 id="Q-How-do-I-reduce-Docker-image-size"><a href="#Q-How-do-I-reduce-Docker-image-size" class="headerlink" title="Q: How do I reduce Docker image size?"></a>Q: How do I reduce Docker image size?</h3><p><strong>A:</strong> Strategies:</p>
+<ol>
+<li>Use smaller base images (Alpine, Distroless)</li>
+<li>Use multi-stage builds</li>
+<li>Remove unnecessary dependencies and cache files</li>
+<li>Minimize layer count where appropriate</li>
+</ol>
+<h3 id="Q-Can-I-run-GUI-applications-in-Docker"><a href="#Q-Can-I-run-GUI-applications-in-Docker" class="headerlink" title="Q: Can I run GUI applications in Docker?"></a>Q: Can I run GUI applications in Docker?</h3><p><strong>A:</strong> Yes, but it’s complex. You need to:</p>
+<ul>
+<li>Share X11 socket with the host</li>
+<li>Set appropriate DISPLAY environment variable</li>
+<li>Handle permissions</li>
+</ul>
+<p>Generally not recommended for production, but possible for development.</p>
+<h3 id="Q-How-do-I-troubleshoot-network-connectivity-between-containers"><a href="#Q-How-do-I-troubleshoot-network-connectivity-between-containers" class="headerlink" title="Q: How do I troubleshoot network connectivity between containers?"></a>Q: How do I troubleshoot network connectivity between containers?</h3><p><strong>A:</strong> Steps:</p>
+<ol>
+<li>Ensure containers are on the same network</li>
+<li>Verify using container names for DNS resolution</li>
+<li>Use <code>docker network inspect</code> to check configuration</li>
+<li>Use <code>docker exec</code> to ping from inside containers</li>
+</ol>
+<h2 id="Summary"><a href="#Summary" class="headerlink" title="Summary"></a>Summary</h2><p>Docker revolutionizes application deployment through containerization. Key takeaways:</p>
+<table>
+<thead>
+<tr>
+<th>Concept</th>
+<th>Key Point</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Containers vs VMs</td>
+<td>Containers share host kernel; VMs virtualize hardware</td>
+</tr>
+<tr>
+<td>Images vs Containers</td>
+<td>Images are blueprints; containers are running instances</td>
+</tr>
+<tr>
+<td>Data Persistence</td>
+<td>Use volumes for data that must survive container restarts</td>
+</tr>
+<tr>
+<td>Networking</td>
+<td>Custom networks enable service discovery via container names</td>
+</tr>
+<tr>
+<td>Docker Compose</td>
+<td>Ideal for multi-container application orchestration</td>
+</tr>
+</tbody></table>
+<p>Docker enables developers to build once and run anywhere, solving the “it works on my machine” problem and streamlining the path from development to production.</p>
+<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ol>
+<li><a href="https://docs.docker.com/get-started/">Docker Official Documentation</a></li>
+<li><a href="https://docs.docker.com/engine/reference/commandline/cli/">Docker CLI Reference</a></li>
+<li><a href="https://docs.docker.com/engine/reference/builder/">Dockerfile Reference</a></li>
+<li><a href="https://docs.docker.com/compose/compose-file/">Docker Compose Specification</a></li>
+<li><a href="https://hub.docker.com/">Docker Hub</a></li>
+<li><a href="https://www.runoob.com/docker/docker-tutorial.html">Docker Tutorial - Runoob</a></li>
+</ol>
+<link rel="stylesheet" href="/css/folder.css" type="text/css"><script src="/js/folder.js" type="text/javascript" async></script>]]></content>
+      <categories>
+        <category>Docker</category>
+        <category>Backend Development</category>
+        <category>DevOps</category>
+      </categories>
+      <tags>
+        <tag>Docker Network</tag>
+        <tag>Docker Compose</tag>
+        <tag>Containerization</tag>
+        <tag>MySQL</tag>
+        <tag>Nacos</tag>
+        <tag>Hands-on Tutorial</tag>
+        <tag>Microservices Architecture</tag>
       </tags>
   </entry>
   <entry>
@@ -1961,6 +2387,106 @@ Use Cases:</li>
         <tag>Creational Patterns</tag>
         <tag>Structural Patterns</tag>
         <tag>Behavioral Patterns</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>KMP Algorithm</title>
+    <url>/2025/03/08/KMP-Algorithm/</url>
+    <content><![CDATA[<h1 id="The-KMP-Algorithm"><a href="#The-KMP-Algorithm" class="headerlink" title="The KMP Algorithm"></a>The KMP Algorithm</h1><ol>
+<li><a href="#introduction">Introduction to KMP Algorithm</a> </li>
+<li><a href="#naive">Naive Pattern Searching Algorithm</a></li>
+<li><a href="#core">Core Idea of the KMP Algorithm</a><ul>
+<li><a href="#generate">How to generate the next array(LSP array)</a></li>
+<li><a href="#match">KMP Matching Process</a></li>
+</ul>
+</li>
+<li><a href="#java">Code Implementation using Java</a></li>
+<li><a href="#analyse">Complexity Analysis</a><span id="more"></span></li>
+</ol>
+<h2 id="1-KMP-Algorithm"><a href="#1-KMP-Algorithm" class="headerlink" title="1.KMP Algorithm "></a>1.KMP Algorithm <a name="introduction"></a></h2><p>In computer science,the<strong>Knuth–Morris–Pratt</strong> algorithm(<strong>KMP algorithm</strong>) is a <a href="https://en.wikipedia.org/wiki/String-searching_algorithm">string-searching algorithm</a> that searches for occurrences of a word W within a main text string S by employing the observation that when a mismatch occurs, the word itself embodies sufficient information to determine where the next match could begin, thus bypassing re-examination of previously matched characters.It is an efficient string-matching technique that avoids unnecessary character comparisons by leveraging precomputed pattern data.Unlike the naive approach, KMP achieves <strong>O(n+m)</strong> time complexity, where <code>n=text</code> length and <code>m=pattern</code> length.</p>
+<p>For example:</p>
+<ul>
+<li>Text string S &#x3D; “ABABDABACDABABCABAB”</li>
+<li>Pattern string P &#x3D; “ABABC”<br>We need to find the position where <code>P</code> first appears in <code>S</code>.</li>
+</ul>
+<h2 id="2-Naive-brute-force-Pattern-Searching-Algorithm"><a href="#2-Naive-brute-force-Pattern-Searching-Algorithm" class="headerlink" title="2. Naive(brute force) Pattern Searching Algorithm "></a>2. Naive(brute force) Pattern Searching Algorithm <a name="naive"></a></h2><ul>
+<li>We start at every index in the text and compare it with the first character of the pattern, if they match we move to the next character in both text and pattern.</li>
+<li>If there is a mismatch, we start the same process for the next index of the text.<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">S: A B A B D A B A C D A B A B C A B A B</span><br><span class="line">P: A B A B C</span><br></pre></td></tr></table></figure>
+When a mismatch occurs, the text pointer backtracks to i&#x3D;2, and the pattern pointer backtracks to j&#x3D;0.<br><strong>Disadvantage</strong>: The time complexity is<strong>O(n×m)</strong>(where n is the length of the text and m is the length of the pattern), which is inefficient.</li>
+</ul>
+<h2 id="3-Core-Idea-of-the-KMP-Algorithm"><a href="#3-Core-Idea-of-the-KMP-Algorithm" class="headerlink" title="3. Core Idea of the KMP Algorithm"></a>3. Core Idea of the KMP Algorithm<a name="core"></a></h2><p><strong>Core</strong>: Make use of the matched information to avoid invalid backtracking.<br><strong>Key points</strong>:</p>
+<ul>
+<li>Preprocess the pattern string <code>P</code> to generate the <code>LPS </code> array(here I use next array), which records the length of the longest common prefix and suffix for each position.</li>
+<li>During matching, use the <code>LPS</code> array to quickly find the backtracking position of the pattern string.</li>
+<li><strong>LPS</strong> is the <strong>Longest Proper Prefix</strong> which is also a <strong>Suffix</strong>. A proper prefix is a prefix that does not include whole string.</li>
+</ul>
+<h3 id="How-to-generate-the-next-array-LSP-array"><a href="#How-to-generate-the-next-array-LSP-array" class="headerlink" title="How to generate the next array(LSP array)"></a>How to generate the next array(LSP array)<a name="generate"></a></h3><p>The <code>next[j]</code> represents the length of the longest common prefix and suffix of the first <code>j</code> characters of the pattern string <code>P</code>.<br><strong>Rules</strong>:</p>
+<ul>
+<li><code>Prefix</code>: A continuous substring starting from the first character (excluding the last character).</li>
+<li><code>Suffix</code>: A continuous substring ending with the last character (excluding the first character).</li>
+<li><code>Longest common prefix and suffix</code>: The longest identical prefix and suffix.</li>
+</ul>
+<p>Example: Pattern&#x3D;”ABABC”</p>
+<table>
+<thead>
+<tr>
+<th align="center"><strong>j</strong></th>
+<th align="center">0</th>
+<th align="center">1</th>
+<th align="center">2</th>
+<th align="center">3</th>
+<th align="center">4</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">char</td>
+<td align="center">A</td>
+<td align="center">B</td>
+<td align="center">A</td>
+<td align="center">B</td>
+<td align="center">C</td>
+</tr>
+<tr>
+<td align="center">next[j]</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">1</td>
+<td align="center">2</td>
+<td align="center">0</td>
+</tr>
+</tbody></table>
+<h3 id="KMP-Matching-Process"><a href="#KMP-Matching-Process" class="headerlink" title="KMP Matching Process"></a>KMP Matching Process<a name="match"></a></h3><ul>
+<li>Initialize pointers: Set the text pointer i &#x3D; 0 and the pattern pointer j &#x3D; 0.</li>
+<li>Compare characters one by one:<ul>
+<li>If S[i] &#x3D;&#x3D; P[j], move both i and j to the right.</li>
+<li>If there is a mismatch:<ul>
+<li>If j &gt; 0, set j &#x3D; next[j - 1] (backtrack using the next array).</li>
+<li>If j &#x3D;&#x3D; 0, move i to the right.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Matching success: When j &#x3D;&#x3D; m, return i - m</li>
+</ul>
+<p>The whole Matching process:</p>
+<ol>
+<li>Initially, i &#x3D; 0, j &#x3D; 0 → S[0]&#x3D;A &#x3D;&#x3D; P[0] → i &#x3D; 1, j &#x3D; 1.</li>
+<li>S[1]&#x3D;B &#x3D;&#x3D; P[1] → i &#x3D; 2, j &#x3D; 2.</li>
+<li>S[2]&#x3D;A &#x3D;&#x3D; P[2] → i &#x3D; 3, j &#x3D; 3.</li>
+<li>S[3]&#x3D;B &#x3D;&#x3D; P[3] → i &#x3D; 4, j &#x3D; 4.</li>
+<li>S[4]&#x3D;D ≠ P[4]&#x3D;C → j &#x3D; next[3]&#x3D;2.</li>
+<li>S[4]&#x3D;D ≠ P[2]&#x3D;A → j &#x3D; next[1]&#x3D;0.</li>
+<li>S[4]&#x3D;D ≠ P[0]&#x3D;A → i &#x3D; 5, j &#x3D; 0.</li>
+<li>Continue matching until the position of <code>P</code> is found.</li>
+</ol>
+<h2 id="4-Code-Implementation-using-Java"><a href="#4-Code-Implementation-using-Java" class="headerlink" title="4. Code Implementation using Java "></a>4. Code Implementation using Java <a name="java"></a></h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public class KMPAlgorithm &#123;</span><br><span class="line">    public static int kmpSearch(String s, String p) &#123;</span><br><span class="line">        int n = s.length();</span><br><span class="line">        int m = p.length();</span><br><span class="line">        int[] next = computeNext(p);</span><br><span class="line">        int i = 0;</span><br><span class="line">        int j = 0;</span><br><span class="line">        while (i &lt; n) &#123;</span><br><span class="line">            if (s.charAt(i) == p.charAt(j)) &#123;</span><br><span class="line">                i++;</span><br><span class="line">                j++;</span><br><span class="line">                if (j == m) &#123;</span><br><span class="line">                    return i - m;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; else &#123;</span><br><span class="line">                if (j &gt; 0) &#123;</span><br><span class="line">                    j = next[j - 1];</span><br><span class="line">                &#125; else &#123;</span><br><span class="line">                    i++;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        return -1;</span><br><span class="line">&#125;</span><br><span class="line">public static int[] computeNext(String p) &#123;</span><br><span class="line">    int m = p.length();</span><br><span class="line">    int[] next = new int[m];</span><br><span class="line">    int j = 0;</span><br><span class="line">    for (int i = 1; i &lt; m; i++) &#123;</span><br><span class="line">            while (j &gt; 0 &amp;&amp; p.charAt(i) != p.charAt(j)) &#123;</span><br><span class="line">                j = next[j - 1];</span><br><span class="line">            &#125;</span><br><span class="line">            if (p.charAt(i) == p.charAt(j)) &#123;</span><br><span class="line">                j++;</span><br><span class="line">            &#125;</span><br><span class="line">            next[i] = j;</span><br><span class="line">        &#125;</span><br><span class="line">    return next;</span><br><span class="line">&#125;</span><br><span class="line">public static void main(String[] args) &#123;</span><br><span class="line">        String s = &quot;ABABDABACDABABCABAB&quot;;</span><br><span class="line">        String p = &quot;ABABCABAB&quot;;</span><br><span class="line">        int index = kmpSearch(s, p);</span><br><span class="line">        if (index != -1) &#123;</span><br><span class="line">            System.out.println(&quot;The pattern string first appears at position: &quot; + index);</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            System.out.println(&quot;The pattern string was not found.&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="5-Complexity-Analysis"><a href="#5-Complexity-Analysis" class="headerlink" title="5. Complexity Analysis "></a>5. Complexity Analysis <a name="analyse"></a></h2><p><strong>Time complexity</strong>: Pre - processing the next array takes <code>O(m)</code> time, and the matching process takes <code>O(n)</code> time. So the total time complexity is <strong>O(n+m)</strong>.<br><strong>Space complexity</strong>: Storing the next array requires <strong>O(m)</strong> space.</p>
+<link rel="stylesheet" href="/css/folder.css" type="text/css"><script src="/js/folder.js" type="text/javascript" async></script>]]></content>
+      <categories>
+        <category>Data Structure and Alogrithm</category>
+      </categories>
+      <tags>
+        <tag>Data Structure and Alogrithm</tag>
       </tags>
   </entry>
   <entry>
@@ -2306,106 +2832,6 @@ Use Cases:</li>
         <tag>Git</tag>
         <tag>Hexo</tag>
         <tag>Multi-Device Synchronization</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>KMP Algorithm</title>
-    <url>/2025/03/08/KMP-Algorithm/</url>
-    <content><![CDATA[<h1 id="The-KMP-Algorithm"><a href="#The-KMP-Algorithm" class="headerlink" title="The KMP Algorithm"></a>The KMP Algorithm</h1><ol>
-<li><a href="#introduction">Introduction to KMP Algorithm</a> </li>
-<li><a href="#naive">Naive Pattern Searching Algorithm</a></li>
-<li><a href="#core">Core Idea of the KMP Algorithm</a><ul>
-<li><a href="#generate">How to generate the next array(LSP array)</a></li>
-<li><a href="#match">KMP Matching Process</a></li>
-</ul>
-</li>
-<li><a href="#java">Code Implementation using Java</a></li>
-<li><a href="#analyse">Complexity Analysis</a><span id="more"></span></li>
-</ol>
-<h2 id="1-KMP-Algorithm"><a href="#1-KMP-Algorithm" class="headerlink" title="1.KMP Algorithm "></a>1.KMP Algorithm <a name="introduction"></a></h2><p>In computer science,the<strong>Knuth–Morris–Pratt</strong> algorithm(<strong>KMP algorithm</strong>) is a <a href="https://en.wikipedia.org/wiki/String-searching_algorithm">string-searching algorithm</a> that searches for occurrences of a word W within a main text string S by employing the observation that when a mismatch occurs, the word itself embodies sufficient information to determine where the next match could begin, thus bypassing re-examination of previously matched characters.It is an efficient string-matching technique that avoids unnecessary character comparisons by leveraging precomputed pattern data.Unlike the naive approach, KMP achieves <strong>O(n+m)</strong> time complexity, where <code>n=text</code> length and <code>m=pattern</code> length.</p>
-<p>For example:</p>
-<ul>
-<li>Text string S &#x3D; “ABABDABACDABABCABAB”</li>
-<li>Pattern string P &#x3D; “ABABC”<br>We need to find the position where <code>P</code> first appears in <code>S</code>.</li>
-</ul>
-<h2 id="2-Naive-brute-force-Pattern-Searching-Algorithm"><a href="#2-Naive-brute-force-Pattern-Searching-Algorithm" class="headerlink" title="2. Naive(brute force) Pattern Searching Algorithm "></a>2. Naive(brute force) Pattern Searching Algorithm <a name="naive"></a></h2><ul>
-<li>We start at every index in the text and compare it with the first character of the pattern, if they match we move to the next character in both text and pattern.</li>
-<li>If there is a mismatch, we start the same process for the next index of the text.<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">S: A B A B D A B A C D A B A B C A B A B</span><br><span class="line">P: A B A B C</span><br></pre></td></tr></table></figure>
-When a mismatch occurs, the text pointer backtracks to i&#x3D;2, and the pattern pointer backtracks to j&#x3D;0.<br><strong>Disadvantage</strong>: The time complexity is<strong>O(n×m)</strong>(where n is the length of the text and m is the length of the pattern), which is inefficient.</li>
-</ul>
-<h2 id="3-Core-Idea-of-the-KMP-Algorithm"><a href="#3-Core-Idea-of-the-KMP-Algorithm" class="headerlink" title="3. Core Idea of the KMP Algorithm"></a>3. Core Idea of the KMP Algorithm<a name="core"></a></h2><p><strong>Core</strong>: Make use of the matched information to avoid invalid backtracking.<br><strong>Key points</strong>:</p>
-<ul>
-<li>Preprocess the pattern string <code>P</code> to generate the <code>LPS </code> array(here I use next array), which records the length of the longest common prefix and suffix for each position.</li>
-<li>During matching, use the <code>LPS</code> array to quickly find the backtracking position of the pattern string.</li>
-<li><strong>LPS</strong> is the <strong>Longest Proper Prefix</strong> which is also a <strong>Suffix</strong>. A proper prefix is a prefix that does not include whole string.</li>
-</ul>
-<h3 id="How-to-generate-the-next-array-LSP-array"><a href="#How-to-generate-the-next-array-LSP-array" class="headerlink" title="How to generate the next array(LSP array)"></a>How to generate the next array(LSP array)<a name="generate"></a></h3><p>The <code>next[j]</code> represents the length of the longest common prefix and suffix of the first <code>j</code> characters of the pattern string <code>P</code>.<br><strong>Rules</strong>:</p>
-<ul>
-<li><code>Prefix</code>: A continuous substring starting from the first character (excluding the last character).</li>
-<li><code>Suffix</code>: A continuous substring ending with the last character (excluding the first character).</li>
-<li><code>Longest common prefix and suffix</code>: The longest identical prefix and suffix.</li>
-</ul>
-<p>Example: Pattern&#x3D;”ABABC”</p>
-<table>
-<thead>
-<tr>
-<th align="center"><strong>j</strong></th>
-<th align="center">0</th>
-<th align="center">1</th>
-<th align="center">2</th>
-<th align="center">3</th>
-<th align="center">4</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">char</td>
-<td align="center">A</td>
-<td align="center">B</td>
-<td align="center">A</td>
-<td align="center">B</td>
-<td align="center">C</td>
-</tr>
-<tr>
-<td align="center">next[j]</td>
-<td align="center">0</td>
-<td align="center">0</td>
-<td align="center">1</td>
-<td align="center">2</td>
-<td align="center">0</td>
-</tr>
-</tbody></table>
-<h3 id="KMP-Matching-Process"><a href="#KMP-Matching-Process" class="headerlink" title="KMP Matching Process"></a>KMP Matching Process<a name="match"></a></h3><ul>
-<li>Initialize pointers: Set the text pointer i &#x3D; 0 and the pattern pointer j &#x3D; 0.</li>
-<li>Compare characters one by one:<ul>
-<li>If S[i] &#x3D;&#x3D; P[j], move both i and j to the right.</li>
-<li>If there is a mismatch:<ul>
-<li>If j &gt; 0, set j &#x3D; next[j - 1] (backtrack using the next array).</li>
-<li>If j &#x3D;&#x3D; 0, move i to the right.</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>Matching success: When j &#x3D;&#x3D; m, return i - m</li>
-</ul>
-<p>The whole Matching process:</p>
-<ol>
-<li>Initially, i &#x3D; 0, j &#x3D; 0 → S[0]&#x3D;A &#x3D;&#x3D; P[0] → i &#x3D; 1, j &#x3D; 1.</li>
-<li>S[1]&#x3D;B &#x3D;&#x3D; P[1] → i &#x3D; 2, j &#x3D; 2.</li>
-<li>S[2]&#x3D;A &#x3D;&#x3D; P[2] → i &#x3D; 3, j &#x3D; 3.</li>
-<li>S[3]&#x3D;B &#x3D;&#x3D; P[3] → i &#x3D; 4, j &#x3D; 4.</li>
-<li>S[4]&#x3D;D ≠ P[4]&#x3D;C → j &#x3D; next[3]&#x3D;2.</li>
-<li>S[4]&#x3D;D ≠ P[2]&#x3D;A → j &#x3D; next[1]&#x3D;0.</li>
-<li>S[4]&#x3D;D ≠ P[0]&#x3D;A → i &#x3D; 5, j &#x3D; 0.</li>
-<li>Continue matching until the position of <code>P</code> is found.</li>
-</ol>
-<h2 id="4-Code-Implementation-using-Java"><a href="#4-Code-Implementation-using-Java" class="headerlink" title="4. Code Implementation using Java "></a>4. Code Implementation using Java <a name="java"></a></h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public class KMPAlgorithm &#123;</span><br><span class="line">    public static int kmpSearch(String s, String p) &#123;</span><br><span class="line">        int n = s.length();</span><br><span class="line">        int m = p.length();</span><br><span class="line">        int[] next = computeNext(p);</span><br><span class="line">        int i = 0;</span><br><span class="line">        int j = 0;</span><br><span class="line">        while (i &lt; n) &#123;</span><br><span class="line">            if (s.charAt(i) == p.charAt(j)) &#123;</span><br><span class="line">                i++;</span><br><span class="line">                j++;</span><br><span class="line">                if (j == m) &#123;</span><br><span class="line">                    return i - m;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; else &#123;</span><br><span class="line">                if (j &gt; 0) &#123;</span><br><span class="line">                    j = next[j - 1];</span><br><span class="line">                &#125; else &#123;</span><br><span class="line">                    i++;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        return -1;</span><br><span class="line">&#125;</span><br><span class="line">public static int[] computeNext(String p) &#123;</span><br><span class="line">    int m = p.length();</span><br><span class="line">    int[] next = new int[m];</span><br><span class="line">    int j = 0;</span><br><span class="line">    for (int i = 1; i &lt; m; i++) &#123;</span><br><span class="line">            while (j &gt; 0 &amp;&amp; p.charAt(i) != p.charAt(j)) &#123;</span><br><span class="line">                j = next[j - 1];</span><br><span class="line">            &#125;</span><br><span class="line">            if (p.charAt(i) == p.charAt(j)) &#123;</span><br><span class="line">                j++;</span><br><span class="line">            &#125;</span><br><span class="line">            next[i] = j;</span><br><span class="line">        &#125;</span><br><span class="line">    return next;</span><br><span class="line">&#125;</span><br><span class="line">public static void main(String[] args) &#123;</span><br><span class="line">        String s = &quot;ABABDABACDABABCABAB&quot;;</span><br><span class="line">        String p = &quot;ABABCABAB&quot;;</span><br><span class="line">        int index = kmpSearch(s, p);</span><br><span class="line">        if (index != -1) &#123;</span><br><span class="line">            System.out.println(&quot;The pattern string first appears at position: &quot; + index);</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            System.out.println(&quot;The pattern string was not found.&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="5-Complexity-Analysis"><a href="#5-Complexity-Analysis" class="headerlink" title="5. Complexity Analysis "></a>5. Complexity Analysis <a name="analyse"></a></h2><p><strong>Time complexity</strong>: Pre - processing the next array takes <code>O(m)</code> time, and the matching process takes <code>O(n)</code> time. So the total time complexity is <strong>O(n+m)</strong>.<br><strong>Space complexity</strong>: Storing the next array requires <strong>O(m)</strong> space.</p>
-<link rel="stylesheet" href="/css/folder.css" type="text/css"><script src="/js/folder.js" type="text/javascript" async></script>]]></content>
-      <categories>
-        <category>Data Structure and Alogrithm</category>
-      </categories>
-      <tags>
-        <tag>Data Structure and Alogrithm</tag>
       </tags>
   </entry>
   <entry>
@@ -3395,12 +3821,6 @@ When a mismatch occurs, the text pointer backtracks to i&#x3D;2, and the pattern
       </tags>
   </entry>
   <entry>
-    <title>The Complete Guide to Modern CSS Layouts: From Flexbox to Grid and Beyond</title>
-    <url>/2025/11/03/The-Complete-Guide-to-Modern-CSS-Layouts-From-Flexbox-to-Grid-and-Beyond/</url>
-    <content><![CDATA[<p><a href="/HTML/p2/index.html" target="_blank">project demo1</a><br><a href="/HTML/p3/index.html" target="_blank">project demo2</a></p>
-<link rel="stylesheet" href="/css/folder.css" type="text/css"><script src="/js/folder.js" type="text/javascript" async></script>]]></content>
-  </entry>
-  <entry>
     <title>TLias Spring Boot Practice Guide</title>
     <url>/2026/02/18/TLias-Spring-Boot-Practice-Guide/</url>
     <content><![CDATA[<ul>
@@ -3889,6 +4309,12 @@ When a mismatch occurs, the text pointer backtracks to i&#x3D;2, and the pattern
         <tag>AOP</tag>
         <tag>RESTful API</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>The Complete Guide to Modern CSS Layouts: From Flexbox to Grid and Beyond</title>
+    <url>/2025/11/03/The-Complete-Guide-to-Modern-CSS-Layouts-From-Flexbox-to-Grid-and-Beyond/</url>
+    <content><![CDATA[<p><a href="/HTML/p2/index.html" target="_blank">project demo1</a><br><a href="/HTML/p3/index.html" target="_blank">project demo2</a></p>
+<link rel="stylesheet" href="/css/folder.css" type="text/css"><script src="/js/folder.js" type="text/javascript" async></script>]]></content>
   </entry>
   <entry>
     <title>Workflow Orchestration</title>
