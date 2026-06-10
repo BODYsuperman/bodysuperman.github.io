@@ -13,8 +13,6 @@ categories:
   - Backend Development
 ---
 
-## Table of Contents
-
 1. [Introduction: Why We Need Message Middleware](#introduction-why-we-need-message-middleware)
 2. [Message Queue Comparison](#message-queue-comparison)
 3. [RabbitMQ Core Concepts](#rabbitmq-core-concepts)

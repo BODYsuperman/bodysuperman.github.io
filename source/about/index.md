@@ -89,11 +89,27 @@ date: 2025-02-18 11:29:25
 
 ---
 
+### 🤖 AI & LLM (LangChain4J)
+
+![LangChain4J](https://img.shields.io/badge/LangChain4J-1C3C3C?style=flat-square&logo=chainlink&logoColor=white)
+
+![RAG](https://img.shields.io/badge/RAG-FF6F00?style=flat-square)
+
+![Vector DB](https://img.shields.io/badge/Vector%20Database-00C4CC?style=flat-square)
+
+![OpenAI](https://img.shields.io/badge/OpenAI-412991?style=flat-square&logo=openai&logoColor=white)
+
+![Embedding](https://img.shields.io/badge/Embedding%20Models-8A2BE2?style=flat-square)
+
+---
+
 ### 🗄️ Databases
 
 ![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=flat-square&logo=mysql&logoColor=white)
 
 ![SQL Server](https://img.shields.io/badge/Microsoft%20SQL%20Server-CC2927?style=flat-square&logo=microsoft-sql-server&logoColor=white)
+
+![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=flat-square&logo=mongodb&logoColor=white)
 
 ---
 
