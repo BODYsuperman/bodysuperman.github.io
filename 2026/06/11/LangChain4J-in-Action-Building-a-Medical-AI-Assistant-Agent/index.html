@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/logo-180.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/logo-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/logo-16.png">
+  <link rel="mask-icon" href="/images/logo-512.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|monospace:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"bodysuperman.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null,"use":"Gitalk","text":true},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="1. What is LangChain4J? 1.1 The Problem LangChain4J Solves 1.2 Core Concepts   2. Project Setup 2.1 Dependencies 2.2 Configuration   3. Your First LLM Integration 3.1 Direct API Call 3.2 Spring Boot">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LangChain4J in Action: Building a Medical AI Assistant Agent">
+<meta property="og:url" content="https://bodysuperman.github.io/2026/06/11/LangChain4J-in-Action-Building-a-Medical-AI-Assistant-Agent/index.html">
+<meta property="og:site_name" content="AI with Alex&#39;s Blog">
+<meta property="og:description" content="1. What is LangChain4J? 1.1 The Problem LangChain4J Solves 1.2 Core Concepts   2. Project Setup 2.1 Dependencies 2.2 Configuration   3. Your First LLM Integration 3.1 Direct API Call 3.2 Spring Boot">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://bodysuperman.github.io/2026/06/11/LangChain4J-in-Action-Building-a-Medical-AI-Assistant-Agent/rag-1.png">
+<meta property="og:image" content="https://bodysuperman.github.io/2026/06/11/LangChain4J-in-Action-Building-a-Medical-AI-Assistant-Agent/res-2.png">
+<meta property="article:published_time" content="2026-06-11T01:00:46.000Z">
+<meta property="article:modified_time" content="2026-06-11T01:37:02.692Z">
+<meta property="article:author" content="AI with Alex">
+<meta property="article:tag" content="LangChain4J">
+<meta property="article:tag" content="OpenAI">
+<meta property="article:tag" content="RAG">
+<meta property="article:tag" content="Function Calling">
+<meta property="article:tag" content="LLM">
+<meta property="article:tag" content="Spring Boot">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://bodysuperman.github.io/2026/06/11/LangChain4J-in-Action-Building-a-Medical-AI-Assistant-Agent/rag-1.png">
+
+<link rel="canonical" href="https://bodysuperman.github.io/2026/06/11/LangChain4J-in-Action-Building-a-Medical-AI-Assistant-Agent/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>LangChain4J in Action: Building a Medical AI Assistant Agent | AI with Alex's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+
+
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">AI with Alex's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+   
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://bodysuperman.github.io/2026/06/11/LangChain4J-in-Action-Building-a-Medical-AI-Assistant-Agent/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+      <meta itemprop="name" content="AI with Alex">
+      <meta itemprop="description" content="Attention Is All You Need">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="AI with Alex's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          LangChain4J in Action: Building a Medical AI Assistant Agent
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2026-06-11 09:00:46 / Modified: 09:37:02" itemprop="dateCreated datePublished" datetime="2026-06-11T09:00:46+08:00">2026-06-11</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java/AI/" itemprop="url" rel="index"><span itemprop="name">AI</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java/AI/Spring-Boot/" itemprop="url" rel="index"><span itemprop="name">Spring Boot</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>19k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>17 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <ul>
+<li><a href="#1-what-is-langchain4j">1. What is LangChain4J?</a><ul>
+<li><a href="#11-the-problem-langchain4j-solves">1.1 The Problem LangChain4J Solves</a></li>
+<li><a href="#12-core-concepts">1.2 Core Concepts</a></li>
+</ul>
+</li>
+<li><a href="#2-project-setup">2. Project Setup</a><ul>
+<li><a href="#21-dependencies">2.1 Dependencies</a></li>
+<li><a href="#22-configuration">2.2 Configuration</a></li>
+</ul>
+</li>
+<li><a href="#3-your-first-llm-integration">3. Your First LLM Integration</a><ul>
+<li><a href="#31-direct-api-call">3.1 Direct API Call</a></li>
+<li><a href="#32-spring-boot-auto-configuration">3.2 Spring Boot Auto-Configuration</a></li>
+</ul>
+</li>
+<li><a href="#4-building-the-ai-service">4. Building the AI Service</a><ul>
+<li><a href="#41-the-assistant-interface">4.1 The Assistant Interface</a></li>
+<li><a href="#42-system-messages">4.2 System Messages</a></li>
+</ul>
+</li>
+<li><a href="#5-adding-chat-memory">5. Adding Chat Memory</a><ul>
+<li><a href="#51-why-memory-matters">5.1 Why Memory Matters</a></li>
+<li><a href="#52-implementing-memory">5.2 Implementing Memory</a></li>
+<li><a href="#53-memory-isolation">5.3 Memory Isolation</a></li>
+<li><a href="#54-persistent-storage-with-mongodb">5.4 Persistent Storage with MongoDB</a><span id="more"></span></li>
+</ul>
+</li>
+<li><a href="#6-function-calling">6. Function Calling</a><ul>
+<li><a href="#61-what-is-function-calling">6.1 What is Function Calling?</a></li>
+<li><a href="#62-creating-tools">6.2 Creating Tools</a></li>
+<li><a href="#63-appointment-booking-tool">6.3 Appointment Booking Tool</a></li>
+</ul>
+</li>
+<li><a href="#7-rag---retrieval-augmented-generation">7. RAG - Retrieval-Augmented Generation</a><ul>
+<li><a href="#71-why-rag">7.1 Why RAG?</a></li>
+<li><a href="#72-vector-search-explained">7.2 Vector Search Explained</a></li>
+<li><a href="#73-document-processing-pipeline">7.3 Document Processing Pipeline</a></li>
+<li><a href="#74-implementing-rag">7.4 Implementing RAG</a></li>
+</ul>
+</li>
+<li><a href="#8-putting-it-all-together">8. Putting It All Together</a><ul>
+<li><a href="#81-complete-agent-configuration">8.1 Complete Agent Configuration</a></li>
+<li><a href="#82-controller-layer">8.2 Controller Layer</a></li>
+</ul>
+</li>
+<li><a href="#9-best-practices">9. Best Practices</a></li>
+<li><a href="#10-faq">10. FAQ</a></li>
+<li><a href="#11-summary">11. Summary</a></li>
+</ul>
+<hr>
+<h2 id="1-What-is-LangChain4J"><a href="#1-What-is-LangChain4J" class="headerlink" title="1. What is LangChain4J? "></a>1. What is LangChain4J? <a name="1-what-is-langchain4j"></a></h2><h3 id="1-1-The-Problem-LangChain4J-Solves"><a href="#1-1-The-Problem-LangChain4J-Solves" class="headerlink" title="1.1 The Problem LangChain4J Solves "></a>1.1 The Problem LangChain4J Solves <a name="11-the-problem-langchain4j-solves"></a></h3><p>Building AI applications involves more than just calling an LLM API. You need to:</p>
+<ul>
+<li>Manage conversation context (chat memory)</li>
+<li>Connect to external data sources (RAG)</li>
+<li>Execute business logic (function calling)</li>
+<li>Handle different LLM providers</li>
+</ul>
+<p><strong>LangChain4J</strong> is a Java library that simplifies integrating Large Language Models (LLMs) into Java applications. It provides:</p>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Unified API</td>
+<td>Switch between OpenAI, DeepSeek, Qwen without changing code</td>
+</tr>
+<tr>
+<td>Chat Memory</td>
+<td>Maintain conversation context across multiple turns</td>
+</tr>
+<tr>
+<td>Function Calling</td>
+<td>Let LLM call your Java methods</td>
+</tr>
+<tr>
+<td>RAG</td>
+<td>Connect LLM to your knowledge base</td>
+</tr>
+<tr>
+<td>Spring Boot Integration</td>
+<td>Auto-configuration and dependency injection</td>
+</tr>
+</tbody></table>
+<h3 id="1-2-Core-Concepts"><a href="#1-2-Core-Concepts" class="headerlink" title="1.2 Core Concepts "></a>1.2 Core Concepts <a name="12-core-concepts"></a></h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">User Input → AIService → LLM → Response</span><br><span class="line">                ↓</span><br><span class="line">         [Chat Memory]</span><br><span class="line">         [Tools/Functions]</span><br><span class="line">         [Knowledge Base]</span><br></pre></td></tr></table></figure>
+
+<p><strong>Key Components:</strong></p>
+<ul>
+<li><strong>ChatModel</strong>: Interface to LLM providers (OpenAI, DeepSeek, etc.)</li>
+<li><strong>AIService</strong>: High-level abstraction that orchestrates components</li>
+<li><strong>ChatMemory</strong>: Stores conversation history</li>
+<li><strong>Tools</strong>: Java methods the LLM can invoke</li>
+<li><strong>ContentRetriever</strong>: Fetches relevant documents for RAG</li>
+</ul>
+<hr>
+<h2 id="2-Project-Setup"><a href="#2-Project-Setup" class="headerlink" title="2. Project Setup "></a>2. Project Setup <a name="2-project-setup"></a></h2><h3 id="2-1-Dependencies"><a href="#2-1-Dependencies" class="headerlink" title="2.1 Dependencies "></a>2.1 Dependencies <a name="21-dependencies"></a></h3><p>Create a Spring Boot project with these dependencies:</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">properties</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">java.version</span>&gt;</span>17<span class="tag">&lt;/<span class="name">java.version</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">spring-boot.version</span>&gt;</span>3.2.6<span class="tag">&lt;/<span class="name">spring-boot.version</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">langchain4j.version</span>&gt;</span>1.0.0-beta3<span class="tag">&lt;/<span class="name">langchain4j.version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">properties</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- Spring Boot Web --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-web<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">&lt;!-- LangChain4J OpenAI (supports OpenAI, DeepSeek, etc.) --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>dev.langchain4j<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>langchain4j-open-ai-spring-boot-starter<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">&lt;!-- LangChain4J Core --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>dev.langchain4j<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>langchain4j-spring-boot-starter<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">&lt;!-- For RAG --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>dev.langchain4j<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>langchain4j-easy-rag<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">dependencyManagement</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>dev.langchain4j<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>langchain4j-bom<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;langchain4j.version&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">type</span>&gt;</span>pom<span class="tag">&lt;/<span class="name">type</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">scope</span>&gt;</span>import<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependencyManagement</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="2-2-Configuration"><a href="#2-2-Configuration" class="headerlink" title="2.2 Configuration "></a>2.2 Configuration <a name="22-configuration"></a></h3><p><strong>application.properties:</strong></p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Server</span></span><br><span class="line"><span class="attr">server.port</span>=<span class="string">8080</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"># OpenAI / DeepSeek Configuration</span></span><br><span class="line"><span class="attr">langchain4j.open-ai.chat-model.base-url</span>=<span class="string">https://api.deepseek.com</span></span><br><span class="line"><span class="attr">langchain4j.open-ai.chat-model.api-key</span>=<span class="string">$&#123;DEEP_SEEK_API_KEY&#125;</span></span><br><span class="line"><span class="attr">langchain4j.open-ai.chat-model.model-name</span>=<span class="string">deepseek-chat</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"># Logging</span></span><br><span class="line"><span class="attr">langchain4j.open-ai.chat-model.log-requests</span>=<span class="string">true</span></span><br><span class="line"><span class="attr">langchain4j.open-ai.chat-model.log-responses</span>=<span class="string">true</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>Note:</strong> Store API keys in environment variables, never in code.</p>
+<hr>
+<h2 id="3-Your-First-LLM-Integration"><a href="#3-Your-First-LLM-Integration" class="headerlink" title="3. Your First LLM Integration "></a>3. Your First LLM Integration <a name="3-your-first-llm-integration"></a></h2><h3 id="3-1-Direct-API-Call"><a href="#3-1-Direct-API-Call" class="headerlink" title="3.1 Direct API Call "></a>3.1 Direct API Call <a name="31-direct-api-call"></a></h3><p>Test the connection directly:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@SpringBootTest</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">LLMTest</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">testDirectCall</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="comment">// Build model manually</span></span><br><span class="line">        <span class="type">OpenAiChatModel</span> <span class="variable">model</span> <span class="operator">=</span> OpenAiChatModel.builder()</span><br><span class="line">                .apiKey(<span class="string">&quot;demo&quot;</span>) <span class="comment">// Use demo key for testing</span></span><br><span class="line">                .modelName(<span class="string">&quot;gpt-4o-mini&quot;</span>)</span><br><span class="line">                .build();</span><br><span class="line"></span><br><span class="line">        <span class="type">String</span> <span class="variable">answer</span> <span class="operator">=</span> model.chat(<span class="string">&quot;Hello, what is LangChain4J?&quot;</span>);</span><br><span class="line">        System.out.println(answer);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-2-Spring-Boot-Auto-Configuration"><a href="#3-2-Spring-Boot-Auto-Configuration" class="headerlink" title="3.2 Spring Boot Auto-Configuration "></a>3.2 Spring Boot Auto-Configuration <a name="32-spring-boot-auto-configuration"></a></h3><p>With Spring Boot starter, the model is auto-configured:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@SpringBootTest</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">LLMTest</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> OpenAiChatModel chatModel;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">testAutoConfig</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="type">String</span> <span class="variable">answer</span> <span class="operator">=</span> chatModel.chat(<span class="string">&quot;Explain RAG in simple terms&quot;</span>);</span><br><span class="line">        System.out.println(answer);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="4-Building-the-AI-Service"><a href="#4-Building-the-AI-Service" class="headerlink" title="4. Building the AI Service "></a>4. Building the AI Service <a name="4-building-the-ai-service"></a></h2><h3 id="4-1-The-Assistant-Interface"><a href="#4-1-The-Assistant-Interface" class="headerlink" title="4.1 The Assistant Interface "></a>4.1 The Assistant Interface <a name="41-the-assistant-interface"></a></h3><p>LangChain4J uses interfaces and dynamic proxies. Define what your AI can do:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.example.assistant;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> dev.langchain4j.service.spring.AiService;</span><br><span class="line"><span class="keyword">import</span> <span class="keyword">static</span> dev.langchain4j.service.spring.AiServiceWiringMode.EXPLICIT;</span><br><span class="line"></span><br><span class="line"><span class="meta">@AiService(</span></span><br><span class="line"><span class="meta">    wiringMode = EXPLICIT,</span></span><br><span class="line"><span class="meta">    chatModel = &quot;openAiChatModel&quot;</span></span><br><span class="line"><span class="meta">)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">MedicalAssistant</span> &#123;</span><br><span class="line"></span><br><span class="line">    String <span class="title function_">chat</span><span class="params">(String userMessage)</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>How it works:</strong></p>
+<ol>
+<li>Define an interface with methods</li>
+<li>Annotate with <code>@AiService</code></li>
+<li>LangChain4J creates a proxy implementation</li>
+<li>The proxy handles input&#x2F;output conversion</li>
+</ol>
+<h3 id="4-2-System-Messages"><a href="#4-2-System-Messages" class="headerlink" title="4.2 System Messages "></a>4.2 System Messages <a name="42-system-messages"></a></h3><p>Define the AI’s role using <code>@SystemMessage</code>:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">MedicalAssistant</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@SystemMessage(&quot;&quot;&quot;</span></span><br><span class="line"><span class="meta">        You are &quot;MediBot&quot;, an AI medical assistant for Peking Union Medical College Hospital.</span></span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">        Your responsibilities:</span></span><br><span class="line"><span class="meta">        1. Provide general medical information and guidance</span></span><br><span class="line"><span class="meta">        2. Help patients understand symptoms and treatment options</span></span><br><span class="line"><span class="meta">        3. Assist with appointment scheduling when asked</span></span><br><span class="line"><span class="meta">        4. Answer questions about hospital departments and doctors</span></span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">        Rules:</span></span><br><span class="line"><span class="meta">        - Always be polite and professional</span></span><br><span class="line"><span class="meta">        - Include appropriate medical disclaimers</span></span><br><span class="line"><span class="meta">        - Never provide definitive diagnoses</span></span><br><span class="line"><span class="meta">        - Recommend seeing a doctor for serious concerns</span></span><br><span class="line"><span class="meta">        &quot;&quot;&quot;)</span></span><br><span class="line">    String <span class="title function_">chat</span><span class="params">(String userMessage)</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>System Message</strong> is sent once at the start to set the AI’s behavior context.</p>
+<hr>
+<h2 id="5-Adding-Chat-Memory"><a href="#5-Adding-Chat-Memory" class="headerlink" title="5. Adding Chat Memory "></a>5. Adding Chat Memory <a name="5-adding-chat-memory"></a></h2><h3 id="5-1-Why-Memory-Matters"><a href="#5-1-Why-Memory-Matters" class="headerlink" title="5.1 Why Memory Matters "></a>5.1 Why Memory Matters <a name="51-why-memory-matters"></a></h3><p>Without memory, each message is independent:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">User: My name is John</span><br><span class="line">AI: Nice to meet you, John!</span><br><span class="line"></span><br><span class="line">User: What&#x27;s my name?</span><br><span class="line">AI: I don&#x27;t know your name.  ← Problem!</span><br></pre></td></tr></table></figure>
+
+<h3 id="5-2-Implementing-Memory"><a href="#5-2-Implementing-Memory" class="headerlink" title="5.2 Implementing Memory "></a>5.2 Implementing Memory <a name="52-implementing-memory"></a></h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@AiService(</span></span><br><span class="line"><span class="meta">    wiringMode = EXPLICIT,</span></span><br><span class="line"><span class="meta">    chatModel = &quot;openAiChatModel&quot;,</span></span><br><span class="line"><span class="meta">    chatMemory = &quot;chatMemory&quot;  // Reference to ChatMemory bean</span></span><br><span class="line"><span class="meta">)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">MedicalAssistant</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@SystemMessage(&quot;You are a helpful medical assistant.&quot;)</span></span><br><span class="line">    String <span class="title function_">chat</span><span class="params">(String userMessage)</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Configuration:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">AssistantConfig</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    ChatMemory <span class="title function_">chatMemory</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="comment">// Keep last 10 messages</span></span><br><span class="line">        <span class="keyword">return</span> MessageWindowChatMemory.withMaxMessages(<span class="number">10</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="5-3-Memory-Isolation"><a href="#5-3-Memory-Isolation" class="headerlink" title="5.3 Memory Isolation "></a>5.3 Memory Isolation <a name="53-memory-isolation"></a></h3><p>For multi-user scenarios, isolate conversations by <code>memoryId</code>:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@AiService(</span></span><br><span class="line"><span class="meta">    wiringMode = EXPLICIT,</span></span><br><span class="line"><span class="meta">    chatModel = &quot;openAiChatModel&quot;,</span></span><br><span class="line"><span class="meta">    chatMemoryProvider = &quot;chatMemoryProvider&quot;</span></span><br><span class="line"><span class="meta">)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">MedicalAssistant</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@SystemMessage(&quot;You are a helpful medical assistant.&quot;)</span></span><br><span class="line">    String <span class="title function_">chat</span><span class="params">(</span></span><br><span class="line"><span class="params">        <span class="meta">@MemoryId</span> Long conversationId,  // Unique per conversation</span></span><br><span class="line"><span class="params">        <span class="meta">@UserMessage</span> String message</span></span><br><span class="line"><span class="params">    )</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Configuration:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Bean</span></span><br><span class="line">ChatMemoryProvider <span class="title function_">chatMemoryProvider</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> memoryId -&gt; MessageWindowChatMemory.builder()</span><br><span class="line">            .id(memoryId)</span><br><span class="line">            .maxMessages(<span class="number">10</span>)</span><br><span class="line">            .build();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="5-4-Persistent-Storage-with-MongoDB"><a href="#5-4-Persistent-Storage-with-MongoDB" class="headerlink" title="5.4 Persistent Storage with MongoDB "></a>5.4 Persistent Storage with MongoDB <a name="54-persistent-storage-with-mongodb"></a></h3><p>Store conversations in MongoDB:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MongoChatMemoryStore</span> <span class="keyword">implements</span> <span class="title class_">ChatMemoryStore</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> MongoTemplate mongoTemplate;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> List&lt;ChatMessage&gt; <span class="title function_">getMessages</span><span class="params">(Object memoryId)</span> &#123;</span><br><span class="line">        <span class="type">ChatMessages</span> <span class="variable">stored</span> <span class="operator">=</span> mongoTemplate.findOne(</span><br><span class="line">            Query.query(Criteria.where(<span class="string">&quot;memoryId&quot;</span>).is(memoryId)),</span><br><span class="line">            ChatMessages.class</span><br><span class="line">        );</span><br><span class="line">        <span class="keyword">return</span> stored == <span class="literal">null</span></span><br><span class="line">            ? <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;()</span><br><span class="line">            : ChatMessageDeserializer.messagesFromJson(stored.getContent());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">updateMessages</span><span class="params">(Object memoryId, List&lt;ChatMessage&gt; messages)</span> &#123;</span><br><span class="line">        <span class="type">Query</span> <span class="variable">query</span> <span class="operator">=</span> Query.query(Criteria.where(<span class="string">&quot;memoryId&quot;</span>).is(memoryId));</span><br><span class="line">        <span class="type">Update</span> <span class="variable">update</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Update</span>().set(<span class="string">&quot;content&quot;</span>,</span><br><span class="line">            ChatMessageSerializer.messagesToJson(messages));</span><br><span class="line">        mongoTemplate.upsert(query, update, ChatMessages.class);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Update configuration:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Bean</span></span><br><span class="line">ChatMemoryProvider <span class="title function_">chatMemoryProvider</span><span class="params">(MongoChatMemoryStore store)</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> memoryId -&gt; MessageWindowChatMemory.builder()</span><br><span class="line">            .id(memoryId)</span><br><span class="line">            .maxMessages(<span class="number">20</span>)</span><br><span class="line">            .chatMemoryStore(store)  <span class="comment">// Persistent storage</span></span><br><span class="line">            .build();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="6-Function-Calling"><a href="#6-Function-Calling" class="headerlink" title="6. Function Calling "></a>6. Function Calling <a name="6-function-calling"></a></h2><h3 id="6-1-What-is-Function-Calling"><a href="#6-1-What-is-Function-Calling" class="headerlink" title="6.1 What is Function Calling? "></a>6.1 What is Function Calling? <a name="61-what-is-function-calling"></a></h3><p>Function calling allows the LLM to invoke your Java methods. The LLM:</p>
+<ol>
+<li>Analyzes the user’s request</li>
+<li>Decides if a tool is needed</li>
+<li>Extracts parameters</li>
+<li>Calls your method</li>
+<li>Uses the result in its response</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">User: Book an appointment with Dr. Wang tomorrow at 2pm</span><br><span class="line"></span><br><span class="line">LLM → Detects &quot;book appointment&quot; intent</span><br><span class="line">    → Calls bookAppointment(doctor=&quot;Dr. Wang&quot;, date=&quot;2025-06-12&quot;, time=&quot;14:00&quot;)</span><br><span class="line">    ← Returns &quot;Appointment confirmed&quot;</span><br><span class="line">    → Responds: &quot;Your appointment with Dr. Wang is confirmed for tomorrow at 2pm.&quot;</span><br></pre></td></tr></table></figure>
+
+<h3 id="6-2-Creating-Tools"><a href="#6-2-Creating-Tools" class="headerlink" title="6.2 Creating Tools "></a>6.2 Creating Tools <a name="62-creating-tools"></a></h3><p>Annotate methods with <code>@Tool</code>:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">CalculatorTools</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Tool(name = &quot;sum&quot;, value = &quot;Add two numbers&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">double</span> <span class="title function_">sum</span><span class="params">(</span></span><br><span class="line"><span class="params">            <span class="meta">@P(value = &quot;First number&quot;)</span> <span class="type">double</span> a,</span></span><br><span class="line"><span class="params">            <span class="meta">@P(value = &quot;Second number&quot;)</span> <span class="type">double</span> b)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> a + b;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Tool(name = &quot;squareRoot&quot;, value = &quot;Calculate square root&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">double</span> <span class="title function_">squareRoot</span><span class="params">(<span class="meta">@P(value = &quot;Number&quot;)</span> <span class="type">double</span> x)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> Math.sqrt(x);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Register tools in AIService:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@AiService(</span></span><br><span class="line"><span class="meta">    wiringMode = EXPLICIT,</span></span><br><span class="line"><span class="meta">    chatModel = &quot;openAiChatModel&quot;,</span></span><br><span class="line"><span class="meta">    chatMemoryProvider = &quot;chatMemoryProvider&quot;,</span></span><br><span class="line"><span class="meta">    tools = &quot;calculatorTools&quot;  // Tool bean name</span></span><br><span class="line"><span class="meta">)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">MedicalAssistant</span> &#123;</span><br><span class="line">    String <span class="title function_">chat</span><span class="params">(<span class="meta">@MemoryId</span> Long id, <span class="meta">@UserMessage</span> String message)</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="6-3-Appointment-Booking-Tool"><a href="#6-3-Appointment-Booking-Tool" class="headerlink" title="6.3 Appointment Booking Tool "></a>6.3 Appointment Booking Tool <a name="63-appointment-booking-tool"></a></h3><p>Real-world example for medical appointments:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">AppointmentTools</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> AppointmentService appointmentService;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Tool(name = &quot;checkAvailability&quot;,</span></span><br><span class="line"><span class="meta">          value = &quot;Check if a doctor has available slots&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">checkAvailability</span><span class="params">(</span></span><br><span class="line"><span class="params">            <span class="meta">@P(value = &quot;Department name&quot;)</span> String department,</span></span><br><span class="line"><span class="params">            <span class="meta">@P(value = &quot;Date in YYYY-MM-DD format&quot;)</span> String date,</span></span><br><span class="line"><span class="params">            <span class="meta">@P(value = &quot;Time slot: morning or afternoon&quot;)</span> String time,</span></span><br><span class="line"><span class="params">            <span class="meta">@P(value = &quot;Doctor name (optional)&quot;, required = false)</span> String doctorName)</span> &#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> appointmentService.hasAvailability(department, date, time, doctorName);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Tool(name = &quot;bookAppointment&quot;,</span></span><br><span class="line"><span class="meta">          value = &quot;Book a medical appointment. Confirm details with user first.&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">bookAppointment</span><span class="params">(</span></span><br><span class="line"><span class="params">            <span class="meta">@P(value = &quot;Patient name&quot;)</span> String patientName,</span></span><br><span class="line"><span class="params">            <span class="meta">@P(value = &quot;Patient ID card number&quot;)</span> String idCard,</span></span><br><span class="line"><span class="params">            <span class="meta">@P(value = &quot;Department&quot;)</span> String department,</span></span><br><span class="line"><span class="params">            <span class="meta">@P(value = &quot;Date in YYYY-MM-DD&quot;)</span> String date,</span></span><br><span class="line"><span class="params">            <span class="meta">@P(value = &quot;Time: morning or afternoon&quot;)</span> String time,</span></span><br><span class="line"><span class="params">            <span class="meta">@P(value = &quot;Doctor name (optional)&quot;, required = false)</span> String doctorName)</span> &#123;</span><br><span class="line"></span><br><span class="line">        <span class="type">Appointment</span> <span class="variable">appointment</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Appointment</span>();</span><br><span class="line">        appointment.setPatientName(patientName);</span><br><span class="line">        appointment.setIdCard(idCard);</span><br><span class="line">        appointment.setDepartment(department);</span><br><span class="line">        appointment.setDate(date);</span><br><span class="line">        appointment.setTime(time);</span><br><span class="line">        appointment.setDoctorName(doctorName);</span><br><span class="line"></span><br><span class="line">        <span class="type">boolean</span> <span class="variable">success</span> <span class="operator">=</span> appointmentService.save(appointment);</span><br><span class="line">        <span class="keyword">return</span> success ? <span class="string">&quot;Appointment booked successfully&quot;</span> : <span class="string">&quot;Failed to book appointment&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Tool(name = &quot;cancelAppointment&quot;,</span></span><br><span class="line"><span class="meta">          value = &quot;Cancel an existing appointment&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">cancelAppointment</span><span class="params">(</span></span><br><span class="line"><span class="params">            <span class="meta">@P(value = &quot;Patient name&quot;)</span> String patientName,</span></span><br><span class="line"><span class="params">            <span class="meta">@P(value = &quot;ID card number&quot;)</span> String idCard,</span></span><br><span class="line"><span class="params">            <span class="meta">@P(value = &quot;Department&quot;)</span> String department,</span></span><br><span class="line"><span class="params">            <span class="meta">@P(value = &quot;Date in YYYY-MM-DD&quot;)</span> String date)</span> &#123;</span><br><span class="line"></span><br><span class="line">        <span class="type">boolean</span> <span class="variable">success</span> <span class="operator">=</span> appointmentService.cancel(patientName, idCard, department, date);</span><br><span class="line">        <span class="keyword">return</span> success ? <span class="string">&quot;Appointment cancelled successfully&quot;</span> : <span class="string">&quot;No matching appointment found&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="7-RAG-Retrieval-Augmented-Generation"><a href="#7-RAG-Retrieval-Augmented-Generation" class="headerlink" title="7. RAG - Retrieval-Augmented Generation "></a>7. RAG - Retrieval-Augmented Generation <a name="7-rag---retrieval-augmented-generation"></a></h2><h3 id="7-1-Why-RAG"><a href="#7-1-Why-RAG" class="headerlink" title="7.1 Why RAG? "></a>7.1 Why RAG? <a name="71-why-rag"></a></h3><p><img src="/2026/06/11/LangChain4J-in-Action-Building-a-Medical-AI-Assistant-Agent/rag-1.png" alt="pic"><br>LLMs have knowledge cutoff dates. They don’t know:</p>
+<ul>
+<li>Your hospital’s specific departments</li>
+<li>Doctor schedules and specialties</li>
+<li>Latest hospital policies</li>
+<li>Internal procedures</li>
+</ul>
+<p><strong>RAG</strong> retrieves relevant documents and provides them as context:</p>
+<table>
+<thead>
+<tr>
+<th>Approach</th>
+<th>Pros</th>
+<th>Cons</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Fine-tuning</td>
+<td>Fast inference, high accuracy</td>
+<td>Expensive, slow to update, requires expertise</td>
+</tr>
+<tr>
+<td>RAG</td>
+<td>Easy to update, cost-effective, no training</td>
+<td>Requires two queries (retrieval + generation)</td>
+</tr>
+</tbody></table>
+<h3 id="7-2-Vector-Search-Explained"><a href="#7-2-Vector-Search-Explained" class="headerlink" title="7.2 Vector Search Explained "></a>7.2 Vector Search Explained <a name="72-vector-search-explained"></a></h3><p><strong>Vectors</strong> are numerical representations of text. Similar texts have similar vectors.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&quot;Cardiology department&quot;  → [0.1, 0.3, -0.2, ...] (1024 dimensions)</span><br><span class="line">&quot;Heart specialist&quot;       → [0.12, 0.28, -0.19, ...] (similar vector)</span><br><span class="line">&quot;Dentistry&quot;              → [-0.5, 0.1, 0.8, ...]   (different vector)</span><br></pre></td></tr></table></figure>
+
+<p><strong>Similarity Calculation:</strong></p>
+<ul>
+<li><strong>Cosine Similarity</strong>: Measures angle between vectors</li>
+<li><strong>Euclidean Distance</strong>: Measures straight-line distance</li>
+</ul>
+<p>Higher similarity &#x3D; more relevant content.</p>
+<h3 id="7-3-Document-Processing-Pipeline"><a href="#7-3-Document-Processing-Pipeline" class="headerlink" title="7.3 Document Processing Pipeline "></a>7.3 Document Processing Pipeline <a name="73-document-processing-pipeline"></a></h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Document → Parse → Split → Embed → Store</span><br><span class="line">(PDF/MD)       (Chunks) (Vectors) (Vector DB)</span><br></pre></td></tr></table></figure>
+
+<p><strong>Why split documents?</strong></p>
+<ul>
+<li>LLM context windows are limited</li>
+<li>Smaller chunks &#x3D; more precise retrieval</li>
+<li>Reduces noise from irrelevant content</li>
+</ul>
+<h3 id="7-4-Implementing-RAG"><a href="#7-4-Implementing-RAG" class="headerlink" title="7.4 Implementing RAG "></a>7.4 Implementing RAG <a name="74-implementing-rag"></a></h3><p><strong>Step 1: Load and Process Documents</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Load hospital information documents</span></span><br><span class="line"><span class="type">Document</span> <span class="variable">hospitalDoc</span> <span class="operator">=</span> FileSystemDocumentLoader.loadDocument(</span><br><span class="line">    <span class="string">&quot;knowledge/hospital-info.md&quot;</span>);</span><br><span class="line"><span class="type">Document</span> <span class="variable">deptDoc</span> <span class="operator">=</span> FileSystemDocumentLoader.loadDocument(</span><br><span class="line">    <span class="string">&quot;knowledge/departments.md&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+<p><strong>Step 2: Create Vector Store</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Bean</span></span><br><span class="line">ContentRetriever <span class="title function_">contentRetriever</span><span class="params">(EmbeddingModel embeddingModel)</span> &#123;</span><br><span class="line">    <span class="comment">// Load documents</span></span><br><span class="line">    List&lt;Document&gt; documents = Arrays.asList(</span><br><span class="line">        FileSystemDocumentLoader.loadDocument(<span class="string">&quot;knowledge/hospital-info.md&quot;</span>),</span><br><span class="line">        FileSystemDocumentLoader.loadDocument(<span class="string">&quot;knowledge/departments.md&quot;</span>),</span><br><span class="line">        FileSystemDocumentLoader.loadDocument(<span class="string">&quot;knowledge/doctors.md&quot;</span>)</span><br><span class="line">    );</span><br><span class="line"></span><br><span class="line">    <span class="comment">// In-memory store (use Pinecone/Milvus for production)</span></span><br><span class="line">    InMemoryEmbeddingStore&lt;TextSegment&gt; store = <span class="keyword">new</span> <span class="title class_">InMemoryEmbeddingStore</span>&lt;&gt;();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Process and store</span></span><br><span class="line">    EmbeddingStoreIngestor.ingest(documents, store);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Create retriever</span></span><br><span class="line">    <span class="keyword">return</span> EmbeddingStoreContentRetriever.from(store);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>Step 3: Configure AIService with RAG</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@AiService(</span></span><br><span class="line"><span class="meta">    wiringMode = EXPLICIT,</span></span><br><span class="line"><span class="meta">    chatModel = &quot;openAiChatModel&quot;,</span></span><br><span class="line"><span class="meta">    chatMemoryProvider = &quot;chatMemoryProvider&quot;,</span></span><br><span class="line"><span class="meta">    tools = &quot;appointmentTools&quot;,</span></span><br><span class="line"><span class="meta">    contentRetriever = &quot;contentRetriever&quot;  // RAG component</span></span><br><span class="line"><span class="meta">)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">MedicalAssistant</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@SystemMessage(fromResource = &quot;medical-assistant-prompt.txt&quot;)</span></span><br><span class="line">    String <span class="title function_">chat</span><span class="params">(<span class="meta">@MemoryId</span> Long id, <span class="meta">@UserMessage</span> String message)</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>Production Vector Database - Pinecone:</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Bean</span></span><br><span class="line">EmbeddingStore&lt;TextSegment&gt; <span class="title function_">embeddingStore</span><span class="params">(EmbeddingModel model)</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> PineconeEmbeddingStore.builder()</span><br><span class="line">            .apiKey(System.getenv(<span class="string">&quot;PINECONE_API_KEY&quot;</span>))</span><br><span class="line">            .index(<span class="string">&quot;medical-kb&quot;</span>)</span><br><span class="line">            .nameSpace(<span class="string">&quot;hospital-info&quot;</span>)</span><br><span class="line">            .createIndex(PineconeServerlessIndexConfig.builder()</span><br><span class="line">                    .cloud(<span class="string">&quot;AWS&quot;</span>)</span><br><span class="line">                    .region(<span class="string">&quot;us-east-1&quot;</span>)</span><br><span class="line">                    .dimension(model.dimension())  <span class="comment">// 1024 for text-embedding-v3</span></span><br><span class="line">                    .build())</span><br><span class="line">            .build();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="8-Putting-It-All-Together"><a href="#8-Putting-It-All-Together" class="headerlink" title="8. Putting It All Together "></a>8. Putting It All Together <a name="8-putting-it-all-together"></a></h2><h3 id="8-1-Complete-Agent-Configuration"><a href="#8-1-Complete-Agent-Configuration" class="headerlink" title="8.1 Complete Agent Configuration "></a>8.1 Complete Agent Configuration <a name="81-complete-agent-configuration"></a></h3><p><strong>MedicalAssistant.java:</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.example.assistant;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> dev.langchain4j.service.*;</span><br><span class="line"><span class="keyword">import</span> dev.langchain4j.service.spring.AiService;</span><br><span class="line"><span class="keyword">import</span> <span class="keyword">static</span> dev.langchain4j.service.spring.AiServiceWiringMode.EXPLICIT;</span><br><span class="line"></span><br><span class="line"><span class="meta">@AiService(</span></span><br><span class="line"><span class="meta">    wiringMode = EXPLICIT,</span></span><br><span class="line"><span class="meta">    chatModel = &quot;openAiChatModel&quot;,</span></span><br><span class="line"><span class="meta">    chatMemoryProvider = &quot;chatMemoryProvider&quot;,</span></span><br><span class="line"><span class="meta">    tools = &quot;appointmentTools&quot;,</span></span><br><span class="line"><span class="meta">    contentRetriever = &quot;contentRetriever&quot;</span></span><br><span class="line"><span class="meta">)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">MedicalAssistant</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@SystemMessage(fromResource = &quot;medical-assistant-prompt.txt&quot;)</span></span><br><span class="line">    String <span class="title function_">chat</span><span class="params">(</span></span><br><span class="line"><span class="params">        <span class="meta">@MemoryId</span> Long conversationId,</span></span><br><span class="line"><span class="params">        <span class="meta">@UserMessage</span> String userMessage</span></span><br><span class="line"><span class="params">    )</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>medical-assistant-prompt.txt:</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">You are &quot;MediBot&quot;, an AI assistant for Peking Union Medical College Hospital.</span><br><span class="line"></span><br><span class="line">Your capabilities:</span><br><span class="line">1. Medical consultation - provide general health information</span><br><span class="line">2. Department guidance - help patients find the right department</span><br><span class="line">3. Doctor information - answer questions about our doctors</span><br><span class="line">4. Appointment management - book and cancel appointments</span><br><span class="line"></span><br><span class="line">Rules:</span><br><span class="line">- Always verify patient identity (name + ID card) before appointments</span><br><span class="line">- Confirm appointment details before booking</span><br><span class="line">- Use the knowledge base for hospital-specific information</span><br><span class="line">- Be professional yet friendly</span><br><span class="line">- Add appropriate emoji to make responses warm</span><br><span class="line"></span><br><span class="line">Today is &#123;&#123;current_date&#125;&#125;.</span><br></pre></td></tr></table></figure>
+
+<h3 id="8-2-Controller-Layer"><a href="#8-2-Controller-Layer" class="headerlink" title="8.2 Controller Layer "></a>8.2 Controller Layer <a name="82-controller-layer"></a></h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="meta">@RequestMapping(&quot;/api/medical&quot;)</span></span><br><span class="line"><span class="meta">@Tag(name = &quot;Medical AI Assistant&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MedicalController</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> MedicalAssistant assistant;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@PostMapping(&quot;/chat&quot;)</span></span><br><span class="line">    <span class="meta">@Operation(summary = &quot;Chat with medical assistant&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">chat</span><span class="params">(<span class="meta">@RequestBody</span> ChatRequest request)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> assistant.chat(request.getConversationId(), request.getMessage());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Data</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ChatRequest</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> Long conversationId;  <span class="comment">// Unique per user session</span></span><br><span class="line">    <span class="keyword">private</span> String message;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="9-Best-Practices"><a href="#9-Best-Practices" class="headerlink" title="9. Best Practices "></a>9. Best Practices <a name="9-best-practices"></a></h2><h3 id="System-Design"><a href="#System-Design" class="headerlink" title="System Design"></a>System Design</h3><table>
+<thead>
+<tr>
+<th>Practice</th>
+<th>Why It Matters</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Use <code>@MemoryId</code> for multi-user</td>
+<td>Prevents conversation bleeding between users</td>
+</tr>
+<tr>
+<td>Persistent chat memory</td>
+<td>Don’t lose context on server restart</td>
+</tr>
+<tr>
+<td>Tool descriptions</td>
+<td>Clear descriptions help LLM choose correctly</td>
+</tr>
+<tr>
+<td>Document chunking</td>
+<td>Smaller chunks improve retrieval precision</td>
+</tr>
+<tr>
+<td>Min score threshold</td>
+<td>Filters low-relevance results</td>
+</tr>
+</tbody></table>
+<h3 id="Security"><a href="#Security" class="headerlink" title="Security"></a>Security</h3><figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Never commit API keys</span></span><br><span class="line"><span class="attr">langchain4j.open-ai.chat-model.api-key</span>=<span class="string">$&#123;OPENAI_API_KEY&#125;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="Performance"><a href="#Performance" class="headerlink" title="Performance"></a>Performance</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Limit chat memory to control token usage</span></span><br><span class="line">MessageWindowChatMemory.withMaxMessages(<span class="number">10</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">// Set minScore to filter irrelevant documents</span></span><br><span class="line">EmbeddingStoreContentRetriever.builder()</span><br><span class="line">    .minScore(<span class="number">0.8</span>)</span><br><span class="line">    .maxResults(<span class="number">3</span>)</span><br><span class="line">    .build()</span><br></pre></td></tr></table></figure>
+
+<h3 id="Common-Pitfalls"><a href="#Common-Pitfalls" class="headerlink" title="Common Pitfalls"></a>Common Pitfalls</h3><table>
+<thead>
+<tr>
+<th>Pitfall</th>
+<th>Solution</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>LLM doesn’t use tools</td>
+<td>Improve tool descriptions</td>
+</tr>
+<tr>
+<td>Wrong tool parameters</td>
+<td>Use <code>@P</code> annotations with clear descriptions</td>
+</tr>
+<tr>
+<td>Out-of-scope responses</td>
+<td>Refine system message</td>
+</tr>
+<tr>
+<td>Slow responses</td>
+<td>Use streaming output for real-time feedback</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="10-FAQ"><a href="#10-FAQ" class="headerlink" title="10. FAQ "></a>10. FAQ <a name="10-faq"></a></h2><p><strong>Q: Can I switch from OpenAI to DeepSeek without code changes?</strong></p>
+<p>A: Yes. Just change the configuration:</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># From OpenAI</span></span><br><span class="line"><span class="attr">langchain4j.open-ai.chat-model.base-url</span>=<span class="string">https://api.openai.com/v1</span></span><br><span class="line"><span class="attr">langchain4j.open-ai.chat-model.api-key</span>=<span class="string">$&#123;OPENAI_KEY&#125;</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"># To DeepSeek</span></span><br><span class="line"><span class="attr">langchain4j.open-ai.chat-model.base-url</span>=<span class="string">https://api.deepseek.com</span></span><br><span class="line"><span class="attr">langchain4j.open-ai.chat-model.api-key</span>=<span class="string">$&#123;DEEPSEEK_KEY&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>Q: How do I handle sensitive medical data?</strong></p>
+<p>A:</p>
+<ul>
+<li>Use local LLMs via Ollama for sensitive data</li>
+<li>Implement data anonymization before sending to external APIs</li>
+<li>Store chat history encrypted</li>
+<li>Follow HIPAA&#x2F;GDPR compliance requirements</li>
+</ul>
+<p><strong>Q: What’s the difference between ChatMemory and ChatMemoryProvider?</strong></p>
+<p>A:</p>
+<ul>
+<li><code>ChatMemory</code>: Single shared memory instance</li>
+<li><code>ChatMemoryProvider</code>: Factory that creates isolated memory per <code>memoryId</code></li>
+</ul>
+<p><strong>Q: How do I update the knowledge base?</strong></p>
+<p>A: Simply add new documents and re-ingest:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// New document</span></span><br><span class="line"><span class="type">Document</span> <span class="variable">newDoc</span> <span class="operator">=</span> FileSystemDocumentLoader.loadDocument(<span class="string">&quot;new-policy.md&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// Add to existing store</span></span><br><span class="line">EmbeddingStoreIngestor.ingest(newDoc, embeddingStore);</span><br></pre></td></tr></table></figure>
+
+<p><strong>Q: Can the LLM call multiple tools in one conversation?</strong></p>
+<p>A: Yes. The LLM can chain tool calls:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">User: &quot;Book Dr. Wang and check if Dr. Li is available next week&quot;</span><br><span class="line"></span><br><span class="line">LLM → Calls bookAppointment(...)</span><br><span class="line">    → Calls checkAvailability(...)</span><br><span class="line">    → Responds with both results</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="11-Summary"><a href="#11-Summary" class="headerlink" title="11. Summary "></a>11. Summary <a name="11-summary"></a></h2><p>We built a medical AI assistant using LangChain4J with:</p>
+<ol>
+<li><strong>Spring Boot Integration</strong> - Auto-configuration and dependency injection</li>
+<li><strong>LLM Integration</strong> - Unified API for OpenAI, DeepSeek, and others</li>
+<li><strong>Chat Memory</strong> - Persistent conversation context</li>
+<li><strong>Function Calling</strong> - Java methods callable by the LLM</li>
+<li><strong>RAG</strong> - Knowledge retrieval from documents</li>
+</ol>
+<p><strong>Key Takeaways:</strong></p>
+<ul>
+<li>LangChain4J abstracts LLM complexity behind simple interfaces</li>
+<li>AIService pattern keeps code clean and testable</li>
+<li>Chat memory enables natural multi-turn conversations</li>
+<li>Function calling bridges LLM reasoning with business logic</li>
+<li>RAG grounds the LLM in your specific domain knowledge</li>
+</ul>
+<p><strong>Next Steps:</strong></p>
+<ul>
+<li>Add streaming responses for better UX</li>
+<li>Implement multi-modal support (images)</li>
+<li>Add evaluation framework for response quality</li>
+<li>Deploy with Docker and Kubernetes</li>
+</ul>
+<p><strong>Project Link:</strong></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/BODYsuperman/SmartMed-LangChain4j-RAG">SmartMed-LangChain4j-RAG</a><br>Please give stat ✨✨✨ it :)</p>
+<p><strong>Demo:</strong></p>
+<p><img src="/2026/06/11/LangChain4J-in-Action-Building-a-Medical-AI-Assistant-Agent/res-2.png" alt="pic"></p>
+<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://docs.langchain4j.dev/">LangChain4J Official Documentation</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/langchain4j/langchain4j">LangChain4J GitHub</a></li>
+<li><a target="_blank" rel="noopener" href="https://platform.openai.com/docs">OpenAI API Documentation</a></li>
+<li><a target="_blank" rel="noopener" href="https://api-docs.deepseek.com/">DeepSeek API Documentation</a></li>
+</ul>
+<link rel="stylesheet" href="/css/folder.css" type="text/css"><script src="/js/folder.js" type="text/javascript" async></script>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/LangChain4J/" rel="tag"># LangChain4J</a>
+              <a href="/tags/OpenAI/" rel="tag"># OpenAI</a>
+              <a href="/tags/RAG/" rel="tag"># RAG</a>
+              <a href="/tags/Function-Calling/" rel="tag"># Function Calling</a>
+              <a href="/tags/LLM/" rel="tag"># LLM</a>
+              <a href="/tags/Spring-Boot/" rel="tag"># Spring Boot</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2026/04/26/Message-Middleware-Selection-Guide-RabbitMQ/" rel="prev" title="Message Middleware Selection Guide: RabbitMQ">
+      <i class="fa fa-chevron-left"></i> Message Middleware Selection Guide: RabbitMQ
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+
+            
+            <div class="post-copyright" style="margin: 0 0 10px 0;">
+              <p class="post-copyright-author" style="margin: 0 0 5px 0 !important;"><strong>Author:</strong> <a href="https://github.com/BODYsuperman" target="_blank">Alex</a></p>
+              <p class="post-copyright-link" style="margin: 0 0 5px 0 !important;"><strong>Article Link:</strong> <a href="https://bodysuperman.github.io/2026/06/11/LangChain4J-in-Action-Building-a-Medical-AI-Assistant-Agent/" target="_blank">https://bodysuperman.github.io/2026/06/11/LangChain4J-in-Action-Building-a-Medical-AI-Assistant-Agent/</a></p>
+              <p class="post-copyright-license" style="margin: 0 !important;"><strong>License:</strong> This article is licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a>. Please credit the original author and include the source link when reposting.</p>
+            </div>
+
+          </div>
+          
+    <div class="comments" id="gitalk-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-What-is-LangChain4J"><span class="nav-number">1.</span> <span class="nav-text">1. What is LangChain4J? </span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-The-Problem-LangChain4J-Solves"><span class="nav-number">1.1.</span> <span class="nav-text">1.1 The Problem LangChain4J Solves </span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-Core-Concepts"><span class="nav-number">1.2.</span> <span class="nav-text">1.2 Core Concepts </span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-Project-Setup"><span class="nav-number">2.</span> <span class="nav-text">2. Project Setup </span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-Dependencies"><span class="nav-number">2.1.</span> <span class="nav-text">2.1 Dependencies </span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-Configuration"><span class="nav-number">2.2.</span> <span class="nav-text">2.2 Configuration </span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-Your-First-LLM-Integration"><span class="nav-number">3.</span> <span class="nav-text">3. Your First LLM Integration </span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-Direct-API-Call"><span class="nav-number">3.1.</span> <span class="nav-text">3.1 Direct API Call </span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-Spring-Boot-Auto-Configuration"><span class="nav-number">3.2.</span> <span class="nav-text">3.2 Spring Boot Auto-Configuration </span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-Building-the-AI-Service"><span class="nav-number">4.</span> <span class="nav-text">4. Building the AI Service </span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-The-Assistant-Interface"><span class="nav-number">4.1.</span> <span class="nav-text">4.1 The Assistant Interface </span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-System-Messages"><span class="nav-number">4.2.</span> <span class="nav-text">4.2 System Messages </span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-Adding-Chat-Memory"><span class="nav-number">5.</span> <span class="nav-text">5. Adding Chat Memory </span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#5-1-Why-Memory-Matters"><span class="nav-number">5.1.</span> <span class="nav-text">5.1 Why Memory Matters </span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-2-Implementing-Memory"><span class="nav-number">5.2.</span> <span class="nav-text">5.2 Implementing Memory </span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-3-Memory-Isolation"><span class="nav-number">5.3.</span> <span class="nav-text">5.3 Memory Isolation </span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-4-Persistent-Storage-with-MongoDB"><span class="nav-number">5.4.</span> <span class="nav-text">5.4 Persistent Storage with MongoDB </span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-Function-Calling"><span class="nav-number">6.</span> <span class="nav-text">6. Function Calling </span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#6-1-What-is-Function-Calling"><span class="nav-number">6.1.</span> <span class="nav-text">6.1 What is Function Calling? </span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-2-Creating-Tools"><span class="nav-number">6.2.</span> <span class="nav-text">6.2 Creating Tools </span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-3-Appointment-Booking-Tool"><span class="nav-number">6.3.</span> <span class="nav-text">6.3 Appointment Booking Tool </span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-RAG-Retrieval-Augmented-Generation"><span class="nav-number">7.</span> <span class="nav-text">7. RAG - Retrieval-Augmented Generation </span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#7-1-Why-RAG"><span class="nav-number">7.1.</span> <span class="nav-text">7.1 Why RAG? </span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-2-Vector-Search-Explained"><span class="nav-number">7.2.</span> <span class="nav-text">7.2 Vector Search Explained </span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-3-Document-Processing-Pipeline"><span class="nav-number">7.3.</span> <span class="nav-text">7.3 Document Processing Pipeline </span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-4-Implementing-RAG"><span class="nav-number">7.4.</span> <span class="nav-text">7.4 Implementing RAG </span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#8-Putting-It-All-Together"><span class="nav-number">8.</span> <span class="nav-text">8. Putting It All Together </span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#8-1-Complete-Agent-Configuration"><span class="nav-number">8.1.</span> <span class="nav-text">8.1 Complete Agent Configuration </span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-2-Controller-Layer"><span class="nav-number">8.2.</span> <span class="nav-text">8.2 Controller Layer </span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#9-Best-Practices"><span class="nav-number">9.</span> <span class="nav-text">9. Best Practices </span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#System-Design"><span class="nav-number">9.1.</span> <span class="nav-text">System Design</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Security"><span class="nav-number">9.2.</span> <span class="nav-text">Security</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Performance"><span class="nav-number">9.3.</span> <span class="nav-text">Performance</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Common-Pitfalls"><span class="nav-number">9.4.</span> <span class="nav-text">Common Pitfalls</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#10-FAQ"><span class="nav-number">10.</span> <span class="nav-text">10. FAQ </span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#11-Summary"><span class="nav-number">11.</span> <span class="nav-text">11. Summary </span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#References"><span class="nav-number">12.</span> <span class="nav-text">References</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="AI with Alex"
+      src="/uploads/avatar.jpg">
+  <p class="site-author-name" itemprop="name">AI with Alex</p>
+  <div class="site-description" itemprop="description">Attention Is All You Need</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">22</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">29</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">61</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/BODYsuperman" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;BODYsuperman" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://stackoverflow.com/users/9644964/alexandar-may-msft?tab=answers&sort=votes" title="StackOverflow → https:&#x2F;&#x2F;stackoverflow.com&#x2F;users&#x2F;9644964&#x2F;alexandar-may-msft?tab&#x3D;answers&amp;sort&#x3D;votes" rel="noopener" target="_blank"><i class="fab fa-stack-overflow fa-fw"></i>StackOverflow</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">AI with Alex</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">Symbols count total: </span>
+    <span title="Symbols count total">264k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">Reading time total &asymp;</span>
+    <span title="Reading time total">4:01</span>
+    
+    <!--
+    
+    -->
+</div>
+
+<!--
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a>
+   </div>
+--><script color="0,0,255" opacity="0.5" zIndex="-1" count="99" src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1/dist/canvas-nest.js"></script>
+
+
+
+
+
+
+        
+
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv"  >
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv"  >
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : 'Ov23liVJTzqy1rzaDXXM',
+      clientSecret: '5e785a7d46e69f7509e6c2f7730855a55944df33',
+      repo        : 'blog-comment',
+      owner       : 'BODYsuperman',
+      admin       : ['BODYsuperman'],
+      id          : '773207b02fe9a896172885f7a065a93b',
+        language: '',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+
+</body>
+</html>
