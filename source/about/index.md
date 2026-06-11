@@ -113,17 +113,6 @@ date: 2025-02-18 11:29:25
 
 ---
 
-### 🔧 Development Tools
-
-| Tool          | Purpose                       |
-| ------------- | ----------------------------- |
-| IntelliJ IDEA | Java Backend Development      |
-| Visual Studio | C#/.NET Development           |
-| VS Code       | Frontend & Cross-platform Dev |
-| Git           | Version Control               |
-| Postman       | API Testing                   |
-| SSMS          | SQL Server Management         |
-
 </div>
 
 <div style="clear: both;"></div>
