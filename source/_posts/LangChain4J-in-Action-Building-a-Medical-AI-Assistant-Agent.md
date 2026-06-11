@@ -838,7 +838,7 @@ We built a medical AI assistant using LangChain4J with:
 **Project Link:**
 
 [SmartMed-LangChain4j-RAG](https://github.com/BODYsuperman/SmartMed-LangChain4j-RAG)
-Please give stat ✨✨✨ it :)
+If you find this repo useful, a star would be much appreciated. ⭐⭐⭐
 
 **Demo:**
 
