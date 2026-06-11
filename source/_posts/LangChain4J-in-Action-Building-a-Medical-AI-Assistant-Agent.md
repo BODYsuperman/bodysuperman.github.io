@@ -1,6 +1,8 @@
 ---
 title: "LangChain4J in Action: Building a Medical AI Assistant Agent"
-date: 2026-06-11 09:00:46
+date: 2026-04-27 12:48:28
+updated: 2026-06-06 00:00:00
+comments: true
 categories:
   - Java
   - AI
