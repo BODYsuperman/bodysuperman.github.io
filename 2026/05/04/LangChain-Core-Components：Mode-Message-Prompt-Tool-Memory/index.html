@@ -1,0 +1,1169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/logo-180.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/logo-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/logo-16.png">
+  <link rel="mask-icon" href="/images/logo-512.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|monospace:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"bodysuperman.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null,"use":"Gitalk","text":true},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="What is LangChain? The Platform What is an Agent? LLM vs Agent: The Difference   Models — The Brain Initializing a Model Custom Models and Parameters Using Model Classes Calling the Model: invoke vs">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LangChain Core Components: Model, Message, Prompt, Tool, Memory">
+<meta property="og:url" content="https://bodysuperman.github.io/2026/05/04/LangChain-Core-Components%EF%BC%9AMode-Message-Prompt-Tool-Memory/index.html">
+<meta property="og:site_name" content="AI with Alex&#39;s Blog">
+<meta property="og:description" content="What is LangChain? The Platform What is an Agent? LLM vs Agent: The Difference   Models — The Brain Initializing a Model Custom Models and Parameters Using Model Classes Calling the Model: invoke vs">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2026-05-04T04:48:28.000Z">
+<meta property="article:modified_time" content="2026-06-05T16:00:00.000Z">
+<meta property="article:author" content="AI with Alex">
+<meta property="article:tag" content="LLM">
+<meta property="article:tag" content="LangChain">
+<meta property="article:tag" content="LangSmith">
+<meta property="article:tag" content="AI Agent">
+<meta property="article:tag" content="MultiModal">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://bodysuperman.github.io/2026/05/04/LangChain-Core-Components%EF%BC%9AMode-Message-Prompt-Tool-Memory/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>LangChain Core Components: Model, Message, Prompt, Tool, Memory | AI with Alex's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+
+
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">AI with Alex's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+   
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://bodysuperman.github.io/2026/05/04/LangChain-Core-Components%EF%BC%9AMode-Message-Prompt-Tool-Memory/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+      <meta itemprop="name" content="AI with Alex">
+      <meta itemprop="description" content="Attention Is All You Need">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="AI with Alex's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          LangChain Core Components: Model, Message, Prompt, Tool, Memory
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2026-05-04 12:48:28" itemprop="dateCreated datePublished" datetime="2026-05-04T12:48:28+08:00">2026-05-04</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2026-06-06 00:00:00" itemprop="dateModified" datetime="2026-06-06T00:00:00+08:00">2026-06-06</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Python/AI/" itemprop="url" rel="index"><span itemprop="name">AI</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>26k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>24 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <ul>
+<li><a href="#what-is-langchain">What is LangChain?</a><ul>
+<li><a href="#the-platform">The Platform</a></li>
+<li><a href="#what-is-an-agent">What is an Agent?</a></li>
+<li><a href="#llm-vs-agent-the-difference">LLM vs Agent: The Difference</a></li>
+</ul>
+</li>
+<li><a href="#models--the-brain">Models — The Brain</a><ul>
+<li><a href="#initializing-a-model">Initializing a Model</a></li>
+<li><a href="#custom-models-and-parameters">Custom Models and Parameters</a></li>
+<li><a href="#using-model-classes">Using Model Classes</a></li>
+<li><a href="#calling-the-model-invoke-vs-stream">Calling the Model: invoke vs stream</a></li>
+<li><a href="#using-models-in-an-agent">Using Models in an Agent</a></li>
+</ul>
+</li>
+<li><a href="#messages--the-building-blocks-of-conversation">Messages — The Building Blocks of Conversation</a><ul>
+<li><a href="#message-types">Message Types</a></li>
+<li><a href="#multimodal-messages">Multimodal Messages</a></li>
+</ul>
+</li>
+<li><a href="#prompts--steering-the-output">Prompts — Steering the Output</a><ul>
+<li><a href="#system-prompts">System Prompts</a></li>
+<li><a href="#prompt-engineering">Prompt Engineering</a></li>
+<li><a href="#structured-output">Structured Output</a></li>
+</ul>
+</li>
+<li><a href="#tools--the-hands">Tools — The Hands</a><ul>
+<li><a href="#defining-tools">Defining Tools</a></li>
+<li><a href="#custom-tools">Custom Tools</a></li>
+<li><a href="#predefined-tools-tavily-search">Predefined Tools: Tavily Search</a></li>
+<li><a href="#combining-tools-with-an-agent">Combining Tools with an Agent</a></li>
+</ul>
+</li>
+<li><a href="#memory--making-the-agent-remember">Memory — Making the Agent Remember</a><ul>
+<li><a href="#short-term-vs-long-term-memory">Short-Term vs Long-Term Memory</a></li>
+<li><a href="#short-term-memory-with-inmemorysaver">Short-Term Memory with InMemorySaver</a></li>
+<li><a href="#persistent-memory-optional">Persistent Memory (Optional)</a></li>
+<li><a href="#memory-management-strategies">Memory Management Strategies</a><span id="more"></span></li>
+</ul>
+</li>
+<li><a href="#putting-it-all-together">Putting It All Together</a></li>
+<li><a href="#best-practices">Best Practices</a></li>
+<li><a href="#faq">FAQ</a></li>
+<li><a href="#summary">Summary</a></li>
+</ul>
+<hr>
+<h2 id="What-is-LangChain"><a href="#What-is-LangChain" class="headerlink" title="What is LangChain? "></a>What is LangChain? <a name="what-is-langchain"></a></h2><h3 id="The-Platform"><a href="#The-Platform" class="headerlink" title="The Platform "></a>The Platform <a name="the-platform"></a></h3><p>LangChain was created by Harrison Chase in October 2022. It’s a platform for <strong>Agent Engineering</strong> — building AI agents that can reason, plan, and act.</p>
+<p>LangChain is not just one framework. It’s a full platform with multiple components:</p>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>LangChain</td>
+<td>Build agents quickly, compatible with any model provider</td>
+</tr>
+<tr>
+<td>LangGraph</td>
+<td>Low-level agent control: Memory, Human-in-the-Loop</td>
+</tr>
+<tr>
+<td>Deep Agents</td>
+<td>Complex, multi-step task agents</td>
+</tr>
+<tr>
+<td>LangSmith</td>
+<td>Test, observe, evaluate, and deploy agents</td>
+</tr>
+</tbody></table>
+<p>Official site: <a target="_blank" rel="noopener" href="https://www.langchain.com/">https://www.langchain.com</a></p>
+<h3 id="What-is-an-Agent"><a href="#What-is-an-Agent" class="headerlink" title="What is an Agent? "></a>What is an Agent? <a name="what-is-an-agent"></a></h3><p>There’s no single standard answer. But LangChain’s founder Harrison Chase gives a technical definition:</p>
+<blockquote>
+<p>An AI agent is a system that uses an LLM to decide the control flow of an application.</p>
+</blockquote>
+<p>In simpler terms: an <strong>Agent</strong> is an intelligent system that can <strong>perceive its environment, reason, make autonomous decisions, and take action</strong> to achieve a goal.</p>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Traditional LLM</th>
+<th>AI Agent</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Interaction</td>
+<td>Passive: ask one, answer one</td>
+<td>Active: goal-driven planning</td>
+</tr>
+<tr>
+<td>Execution</td>
+<td>Text generation only</td>
+<td>Operate software, send emails, analyze data</td>
+</tr>
+<tr>
+<td>Autonomy</td>
+<td>Needs explicit step-by-step instructions</td>
+<td>Given a goal, finds its own path</td>
+</tr>
+</tbody></table>
+<p><strong>LLM &#x3D; Brain. Agent &#x3D; Brain + Hands + Logic.</strong></p>
+<h3 id="LLM-vs-Agent-The-Difference"><a href="#LLM-vs-Agent-The-Difference" class="headerlink" title="LLM vs Agent: The Difference "></a>LLM vs Agent: The Difference <a name="llm-vs-agent-the-difference"></a></h3><p>Imagine building an <strong>AI Travel Assistant</strong>.</p>
+<p><strong>Traditional LLM approach:</strong></p>
+<ol>
+<li>User: “Plan a 5-day Beijing trip, budget 8000 RMB, I love history.”</li>
+<li>LLM generates a simple plan from training data — no real-time prices, weather, or availability.</li>
+</ol>
+<p><strong>Agent approach:</strong></p>
+<ol>
+<li>Same user request.</li>
+<li>Agent breaks it down:<ul>
+<li>Calls flight&#x2F;hotel APIs for real prices</li>
+<li>Calls weather API for forecast</li>
+<li>Searches attraction APIs for opening hours</li>
+<li>Adjusts plan dynamically (“The Forbidden City is closed Monday, moved to Tuesday”)</li>
+</ul>
+</li>
+<li>Returns a concrete, executable plan within budget.</li>
+</ol>
+<hr>
+<h2 id="Models-—-The-Brain"><a href="#Models-—-The-Brain" class="headerlink" title="Models — The Brain "></a>Models — The Brain <a name="models--the-brain"></a></h2><p>Models (LLMs) understand human language and generate content, translate, summarize, and answer questions.</p>
+<p>Modern LLMs also have special capabilities:</p>
+<table>
+<thead>
+<tr>
+<th>Capability</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Tool Calling</td>
+<td>Call external tools (APIs, databases) and use results in responses</td>
+</tr>
+<tr>
+<td>Structured Output</td>
+<td>Constrain responses to a defined format (e.g., JSON)</td>
+</tr>
+<tr>
+<td>Multimodality</td>
+<td>Process and return non-text data: images, audio, video</td>
+</tr>
+<tr>
+<td>Reasoning</td>
+<td>Execute multi-step reasoning to reach conclusions</td>
+</tr>
+</tbody></table>
+<p>LangChain supports most LLMs with a <strong>unified API</strong>, making it easy to switch providers.</p>
+<h3 id="Initializing-a-Model"><a href="#Initializing-a-Model" class="headerlink" title="Initializing a Model "></a>Initializing a Model <a name="initializing-a-model"></a></h3><p>The simplest way is <code>init_chat_model</code>:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> langchain.chat_models <span class="keyword">import</span> init_chat_model</span><br><span class="line"><span class="keyword">from</span> dotenv <span class="keyword">import</span> load_dotenv</span><br><span class="line"></span><br><span class="line">load_dotenv()</span><br><span class="line"></span><br><span class="line"><span class="comment"># LangChain auto-detects provider, base_url, and api_key</span></span><br><span class="line">model = init_chat_model(model=<span class="string">&quot;deepseek-chat&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>Test it:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">print</span>(<span class="built_in">type</span>(model))  <span class="comment"># &lt;class &#x27;langchain_deepseek.chat_models.ChatDeepSeek&#x27;&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>Switching models? Just change the name — no other code changes needed.</p>
+<h3 id="Custom-Models-and-Parameters"><a href="#Custom-Models-and-Parameters" class="headerlink" title="Custom Models and Parameters "></a>Custom Models and Parameters <a name="custom-models-and-parameters"></a></h3><p>For providers not natively supported (like Alibaba’s Qwen via DashScope), you must specify parameters manually:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">from</span> langchain.chat_models <span class="keyword">import</span> init_chat_model</span><br><span class="line"></span><br><span class="line">model = init_chat_model(</span><br><span class="line">    model=<span class="string">&quot;qwen-max&quot;</span>,</span><br><span class="line">    model_provider=<span class="string">&quot;openai&quot;</span>,       <span class="comment"># DashScope is OpenAI-compatible</span></span><br><span class="line">    base_url=os.getenv(<span class="string">&quot;DASHSCOPE_BASE_URL&quot;</span>),</span><br><span class="line">    api_key=os.getenv(<span class="string">&quot;DASHSCOPE_API_KEY&quot;</span>),</span><br><span class="line">    temperature=<span class="number">1.5</span>,               <span class="comment"># Higher = more creative</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p>Common model parameters:</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>What It Controls</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>temperature</code></td>
+<td>Randomness: low &#x3D; deterministic, high &#x3D; creative</td>
+</tr>
+<tr>
+<td><code>max_tokens</code></td>
+<td>Maximum response length</td>
+</tr>
+<tr>
+<td><code>top_p</code></td>
+<td>Diversity of output</td>
+</tr>
+<tr>
+<td><code>timeout</code></td>
+<td>Request timeout</td>
+</tr>
+<tr>
+<td><code>max_retries</code></td>
+<td>Maximum retry attempts</td>
+</tr>
+</tbody></table>
+<h3 id="Using-Model-Classes"><a href="#Using-Model-Classes" class="headerlink" title="Using Model Classes "></a>Using Model Classes <a name="using-model-classes"></a></h3><p>For community-supported models, use the specific Model class:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">uv add langchain-community dashscope</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> langchain_community.chat_models.tongyi <span class="keyword">import</span> ChatTongyi</span><br><span class="line"></span><br><span class="line">model = ChatTongyi(model=<span class="string">&quot;qwen-plus&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<h3 id="Calling-the-Model-invoke-vs-stream"><a href="#Calling-the-Model-invoke-vs-stream" class="headerlink" title="Calling the Model: invoke vs stream "></a>Calling the Model: invoke vs stream <a name="calling-the-model-invoke-vs-stream"></a></h3><p><strong>Blocking call</strong> — wait for the full response:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">response = model.invoke(<span class="string">&quot;What is the capital of the moon?&quot;</span>)</span><br><span class="line"><span class="built_in">print</span>(response)</span><br></pre></td></tr></table></figure>
+
+<p><strong>Streaming call</strong> — see tokens in real time:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">stream = model.stream(<span class="string">&quot;What is the capital of the moon?&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> chunk <span class="keyword">in</span> stream:</span><br><span class="line">    <span class="built_in">print</span>(chunk.content, end=<span class="string">&quot;&quot;</span>, flush=<span class="literal">True</span>)</span><br></pre></td></tr></table></figure>
+
+<h3 id="Using-Models-in-an-Agent"><a href="#Using-Models-in-an-Agent" class="headerlink" title="Using Models in an Agent "></a>Using Models in an Agent <a name="using-models-in-an-agent"></a></h3><p>Pass a model name (auto-init) or a model object:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> langchain.agents <span class="keyword">import</span> create_agent</span><br><span class="line"></span><br><span class="line"><span class="comment"># Option A: By model name</span></span><br><span class="line">agent = create_agent(model=<span class="string">&quot;deepseek-chat&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Option B: With a pre-built model</span></span><br><span class="line"><span class="keyword">from</span> langchain_community.chat_models.tongyi <span class="keyword">import</span> ChatTongyi</span><br><span class="line">model = ChatTongyi(model=<span class="string">&quot;qwen-plus&quot;</span>)</span><br><span class="line">agent = create_agent(model=model)</span><br></pre></td></tr></table></figure>
+
+<p>Agent also supports <code>invoke</code> and <code>stream</code>:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Blocking</span></span><br><span class="line">response = agent.invoke(&#123;</span><br><span class="line">    <span class="string">&quot;messages&quot;</span>: [&#123;<span class="string">&quot;role&quot;</span>: <span class="string">&quot;user&quot;</span>, <span class="string">&quot;content&quot;</span>: <span class="string">&quot;Hello&quot;</span>&#125;]</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Streaming</span></span><br><span class="line"><span class="keyword">for</span> token, metadata <span class="keyword">in</span> agent.stream(</span><br><span class="line">    &#123;<span class="string">&quot;messages&quot;</span>: [&#123;<span class="string">&quot;role&quot;</span>: <span class="string">&quot;user&quot;</span>, <span class="string">&quot;content&quot;</span>: <span class="string">&quot;Hello&quot;</span>&#125;]&#125;,</span><br><span class="line">    stream_mode=<span class="string">&quot;messages&quot;</span></span><br><span class="line">):</span><br><span class="line">    <span class="keyword">if</span> token.content:</span><br><span class="line">        <span class="built_in">print</span>(token.content, end=<span class="string">&quot;&quot;</span>, flush=<span class="literal">True</span>)</span><br></pre></td></tr></table></figure>
+
+<p>Stream modes for Agent:</p>
+<table>
+<thead>
+<tr>
+<th>Mode</th>
+<th>Returns</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>messages</code></td>
+<td>Each LLM token (for real-time output)</td>
+</tr>
+<tr>
+<td><code>updates</code></td>
+<td>Every Agent event (LLM calls, tool calls)</td>
+</tr>
+<tr>
+<td><code>custom</code></td>
+<td>Custom stream writer output</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="Messages-—-The-Building-Blocks-of-Conversation"><a href="#Messages-—-The-Building-Blocks-of-Conversation" class="headerlink" title="Messages — The Building Blocks of Conversation "></a>Messages — The Building Blocks of Conversation <a name="messages--the-building-blocks-of-conversation"></a></h2><p>Every message sent to or from the LLM contains:</p>
+<ul>
+<li><strong>role</strong>: who sent this message (system, user, assistant, tool)</li>
+<li><strong>content</strong>: the message body</li>
+<li><strong>metadata</strong> (optional): ID, token usage, etc.</li>
+</ul>
+<h3 id="Message-Types"><a href="#Message-Types" class="headerlink" title="Message Types "></a>Message Types <a name="message-types"></a></h3><p>LangChain wraps messages into <code>BaseMessage</code> subclasses based on role:</p>
+<table>
+<thead>
+<tr>
+<th>Class</th>
+<th>Role</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>SystemMessage</code></td>
+<td><code>system</code></td>
+<td>Set model behavior and context</td>
+</tr>
+<tr>
+<td><code>HumanMessage</code></td>
+<td><code>user</code></td>
+<td>User input</td>
+</tr>
+<tr>
+<td><code>AIMessage</code></td>
+<td><code>assistant</code></td>
+<td>LLM response (text, tool calls, metadata)</td>
+</tr>
+<tr>
+<td><code>ToolMessage</code></td>
+<td><code>tool</code></td>
+<td>Result of a tool execution</td>
+</tr>
+</tbody></table>
+<p>Example:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> langchain.messages <span class="keyword">import</span> HumanMessage, AIMessage, SystemMessage</span><br><span class="line"><span class="keyword">from</span> langchain.agents <span class="keyword">import</span> create_agent</span><br><span class="line"></span><br><span class="line">agent = create_agent(model=<span class="string">&quot;deepseek-chat&quot;</span>)</span><br><span class="line"></span><br><span class="line">response = agent.invoke(&#123;</span><br><span class="line">    <span class="string">&quot;messages&quot;</span>: [</span><br><span class="line">        SystemMessage(content=<span class="string">&quot;You are a helpful travel guide.&quot;</span>),</span><br><span class="line">        HumanMessage(content=<span class="string">&quot;Hi, I&#x27;m Alex&quot;</span>),</span><br><span class="line">        AIMessage(content=<span class="string">&quot;Hi Alex! Where would you like to go?&quot;</span>),</span><br><span class="line">        HumanMessage(content=<span class="string">&quot;What&#x27;s my name?&quot;</span>)</span><br><span class="line">    ]</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> message <span class="keyword">in</span> response[<span class="string">&#x27;messages&#x27;</span>]:</span><br><span class="line">    message.pretty_print()</span><br></pre></td></tr></table></figure>
+
+<p>Output:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">================================ System Message ================================</span><br><span class="line">You are a helpful travel guide.</span><br><span class="line">================================ Human Message ================================</span><br><span class="line">Hi, I&#x27;m Alex</span><br><span class="line">================================== Ai Message =================================</span><br><span class="line">Hi Alex! Where would you like to go?</span><br><span class="line">================================ Human Message ================================</span><br><span class="line">What&#x27;s my name?</span><br><span class="line">================================== Ai Message =================================</span><br><span class="line">You said your name is Alex! How can I help you plan your trip today?</span><br></pre></td></tr></table></figure>
+
+<p><strong>Tip</strong>: Manually passing message history gives the LLM “memory.” But this is tedious — we’ll learn automatic memory management in the Memory section.</p>
+<h3 id="Multimodal-Messages"><a href="#Multimodal-Messages" class="headerlink" title="Multimodal Messages "></a>Multimodal Messages <a name="multimodal-messages"></a></h3><p>LangChain supports sending images, audio, and video to multimodal models (e.g., <code>qwen3.5-plus</code>, <code>gpt-5-nano</code>).</p>
+<p><strong>Online image (via URL):</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> langchain.chat_models <span class="keyword">import</span> init_chat_model</span><br><span class="line"><span class="keyword">from</span> langchain.messages <span class="keyword">import</span> HumanMessage</span><br><span class="line"><span class="keyword">from</span> langchain.agents <span class="keyword">import</span> create_agent</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"></span><br><span class="line">model = init_chat_model(</span><br><span class="line">    model=<span class="string">&quot;qwen3.5-plus&quot;</span>,</span><br><span class="line">    model_provider=<span class="string">&quot;openai&quot;</span>,</span><br><span class="line">    base_url=os.getenv(<span class="string">&quot;DASHSCOPE_BASE_URL&quot;</span>),</span><br><span class="line">    api_key=os.getenv(<span class="string">&quot;DASHSCOPE_API_KEY&quot;</span>)</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">agent = create_agent(model=model)</span><br><span class="line"></span><br><span class="line">multimodal_message = HumanMessage(content=[</span><br><span class="line">    &#123;<span class="string">&quot;type&quot;</span>: <span class="string">&quot;image&quot;</span>,</span><br><span class="line">     <span class="string">&quot;url&quot;</span>: <span class="string">&quot;https://help-static-aliyun-doc.aliyuncs.com/file-manage-files/zh-CN/20241022/emyrja/dog_and_girl.jpeg&quot;</span>&#125;,</span><br><span class="line">    &#123;<span class="string">&quot;type&quot;</span>: <span class="string">&quot;text&quot;</span>, <span class="string">&quot;text&quot;</span>: <span class="string">&quot;What does this image depict?&quot;</span>&#125;</span><br><span class="line">])</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> token, metadata <span class="keyword">in</span> agent.stream(</span><br><span class="line">    &#123;<span class="string">&quot;messages&quot;</span>: [multimodal_message]&#125;,</span><br><span class="line">    stream_mode=<span class="string">&quot;messages&quot;</span></span><br><span class="line">):</span><br><span class="line">    <span class="keyword">if</span> token.content:</span><br><span class="line">        <span class="built_in">print</span>(token.content, end=<span class="string">&quot;&quot;</span>, flush=<span class="literal">True</span>)</span><br></pre></td></tr></table></figure>
+
+<p><strong>Local image (via base64):</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> base64</span><br><span class="line"></span><br><span class="line"><span class="comment"># Suppose img_bytes is your uploaded image data</span></span><br><span class="line">img_b64 = base64.b64encode(img_bytes).decode(<span class="string">&quot;utf-8&quot;</span>)</span><br><span class="line"></span><br><span class="line">multimodal_message = HumanMessage(content=[</span><br><span class="line">    &#123;<span class="string">&quot;type&quot;</span>: <span class="string">&quot;image&quot;</span>, <span class="string">&quot;base64&quot;</span>: img_b64, <span class="string">&quot;mime_type&quot;</span>: <span class="string">&quot;image/jpeg&quot;</span>&#125;,</span><br><span class="line">    &#123;<span class="string">&quot;type&quot;</span>: <span class="string">&quot;text&quot;</span>, <span class="string">&quot;text&quot;</span>: <span class="string">&quot;Tell me about this city&quot;</span>&#125;</span><br><span class="line">])</span><br><span class="line"></span><br><span class="line">response = agent.invoke(&#123;<span class="string">&quot;messages&quot;</span>: [multimodal_message]&#125;)</span><br><span class="line"><span class="built_in">print</span>(response[<span class="string">&#x27;messages&#x27;</span>][-<span class="number">1</span>].content)</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="Prompts-—-Steering-the-Output"><a href="#Prompts-—-Steering-the-Output" class="headerlink" title="Prompts — Steering the Output "></a>Prompts — Steering the Output <a name="prompts--steering-the-output"></a></h2><p>Everything sent to the LLM can be called a <strong>Prompt</strong>. The <strong>System Prompt</strong> (<code>SystemMessage</code>) is the most important — it sets the AI’s role, rules, and context.</p>
+<h3 id="System-Prompts"><a href="#System-Prompts" class="headerlink" title="System Prompts "></a>System Prompts <a name="system-prompts"></a></h3><p>Set it once when creating the agent:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> langchain.agents <span class="keyword">import</span> create_agent</span><br><span class="line"><span class="keyword">from</span> langchain.messages <span class="keyword">import</span> HumanMessage</span><br><span class="line"></span><br><span class="line">agent = create_agent(</span><br><span class="line">    model=<span class="string">&quot;deepseek-chat&quot;</span>,</span><br><span class="line">    system_prompt=<span class="string">&quot;Speak like a pirate.&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> token, metadata <span class="keyword">in</span> agent.stream(</span><br><span class="line">    &#123;<span class="string">&quot;messages&quot;</span>: [HumanMessage(content=<span class="string">&quot;Who are you?&quot;</span>)]&#125;,</span><br><span class="line">    stream_mode=<span class="string">&quot;messages&quot;</span></span><br><span class="line">):</span><br><span class="line">    <span class="built_in">print</span>(token.content, end=<span class="string">&quot;&quot;</span>, flush=<span class="literal">True</span>)</span><br></pre></td></tr></table></figure>
+
+<p>Without a system prompt, the AI uses its default persona. With <code>Speak like a pirate</code>, the output changes dramatically:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Ahoy! I be yer parrot, an AI assistant sailing the digital seas! Want to chat about treasure, sailing, or tales of the seven seas? Bring it on, matey!</span><br></pre></td></tr></table></figure>
+
+<h3 id="Prompt-Engineering"><a href="#Prompt-Engineering" class="headerlink" title="Prompt Engineering "></a>Prompt Engineering <a name="prompt-engineering"></a></h3><p><strong>Prompt Engineering</strong> is the iterative process of optimizing the System Prompt for better outputs.</p>
+<p>A well-structured prompt typically includes:</p>
+<table>
+<thead>
+<tr>
+<th>Section</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Identity</strong></td>
+<td>Who is the AI? Communication style, overall goal</td>
+</tr>
+<tr>
+<td><strong>Instructions</strong></td>
+<td>Rules to follow. What to do and what NOT to do</td>
+</tr>
+<tr>
+<td><strong>Examples</strong></td>
+<td>Input&#x2F;output pairs showing the desired format</td>
+</tr>
+<tr>
+<td><strong>Context</strong></td>
+<td>Extra information (RAG data, reference documents)</td>
+</tr>
+</tbody></table>
+<p>Use <strong>Markdown</strong> for structure and <strong>XML tags</strong> to mark boundaries:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">system_prompt = <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string"># Identity</span></span><br><span class="line"><span class="string">You are a labeling assistant that classifies product reviews</span></span><br><span class="line"><span class="string">as Positive, Negative, or Neutral.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"># Instructions</span></span><br><span class="line"><span class="string">- Output only a single word: Positive, Negative, or Neutral</span></span><br><span class="line"><span class="string">- No additional formatting or commentary</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"># Examples</span></span><br><span class="line"><span class="string">&lt;product_review id=&quot;1&quot;&gt;</span></span><br><span class="line"><span class="string">I absolutely love these headphones — sound quality is amazing!</span></span><br><span class="line"><span class="string">&lt;/product_review&gt;</span></span><br><span class="line"><span class="string">&lt;assistant_response id=&quot;1&quot;&gt;</span></span><br><span class="line"><span class="string">Positive</span></span><br><span class="line"><span class="string">&lt;/assistant_response&gt;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">&lt;product_review id=&quot;2&quot;&gt;</span></span><br><span class="line"><span class="string">Battery life is okay, but the ear pads feel cheap.</span></span><br><span class="line"><span class="string">&lt;/product_review&gt;</span></span><br><span class="line"><span class="string">&lt;assistant_response id=&quot;2&quot;&gt;</span></span><br><span class="line"><span class="string">Neutral</span></span><br><span class="line"><span class="string">&lt;/assistant_response&gt;</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="Few-Shot-Examples"><a href="#Few-Shot-Examples" class="headerlink" title="Few-Shot Examples"></a>Few-Shot Examples</h4><p>When the desired style is hard to describe, show examples instead:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">system_prompt = <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string"># Identity</span></span><br><span class="line"><span class="string">You are a sci-fi writer creating space capitals.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"># Examples</span></span><br><span class="line"><span class="string">user: What is the capital of the Moon?</span></span><br><span class="line"><span class="string">assistant: Lunara — a crystal-domed city nestled in the Sea of Tranquility crater, powered by a tidal energy tower.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">user: What is the capital of Mars?</span></span><br><span class="line"><span class="string">assistant: Aresia — a hive city embedded in Olympus Mons lava tubes, with spiral spires of Martian clay above ground.</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;</span></span><br><span class="line"></span><br><span class="line">agent = create_agent(model=<span class="string">&quot;deepseek-chat&quot;</span>, system_prompt=system_prompt)</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> token, metadata <span class="keyword">in</span> agent.stream(</span><br><span class="line">    &#123;<span class="string">&quot;messages&quot;</span>: [HumanMessage(content=<span class="string">&quot;What is the capital of Venus?&quot;</span>)]&#125;,</span><br><span class="line">    stream_mode=<span class="string">&quot;messages&quot;</span></span><br><span class="line">):</span><br><span class="line">    <span class="built_in">print</span>(token.content, end=<span class="string">&quot;&quot;</span>, flush=<span class="literal">True</span>)</span><br></pre></td></tr></table></figure>
+
+<p>Output：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Aurum — a magnificent floating city above the sulfuric clouds, forged from reflective alloy, eternally refracting the dim yellow sunlight.</span><br></pre></td></tr></table></figure>
+
+<h3 id="Structured-Output"><a href="#Structured-Output" class="headerlink" title="Structured Output "></a>Structured Output <a name="structured-output"></a></h3><p>Instead of parsing raw text, constrain the model to output structured data.</p>
+<p><strong>Step 1</strong>: Define a Pydantic model:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pydantic <span class="keyword">import</span> BaseModel, Field</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">CapitalInfo</span>(<span class="title class_ inherited__">BaseModel</span>):</span><br><span class="line">    name: <span class="built_in">str</span></span><br><span class="line">    location: <span class="built_in">str</span></span><br><span class="line">    vibe: <span class="built_in">str</span></span><br><span class="line">    economy: <span class="built_in">str</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>Step 2</strong>: Pass it as <code>response_format</code>:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">agent = create_agent(</span><br><span class="line">    model=<span class="string">&quot;deepseek-chat&quot;</span>,</span><br><span class="line">    system_prompt=<span class="string">&quot;You are a sci-fi writer creating space capitals.&quot;</span>,</span><br><span class="line">    response_format=CapitalInfo</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">response = agent.invoke(</span><br><span class="line">    &#123;<span class="string">&quot;messages&quot;</span>: [HumanMessage(content=<span class="string">&quot;What is the capital of the Moon?&quot;</span>)]&#125;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">city = response[<span class="string">&#x27;structured_response&#x27;</span>]</span><br><span class="line"><span class="built_in">print</span>(<span class="string">f&quot;<span class="subst">&#123;city.name&#125;</span> is located <span class="subst">&#123;city.location&#125;</span>. Vibe: <span class="subst">&#123;city.vibe&#125;</span>. Economy: <span class="subst">&#123;city.economy&#125;</span>.&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>Output：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Lunara is located at the edge of the Aitken Basin on the lunar south pole. Vibe: A serene city blending high-tech with classical Eastern aesthetics, featuring transparent domed gardens and floating architecture. Economy: Helium-3 mining, quantum computing centers, space tourism, lunar agriculture and scientific research.</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="Tools-—-The-Hands"><a href="#Tools-—-The-Hands" class="headerlink" title="Tools — The Hands "></a>Tools — The Hands <a name="tools--the-hands"></a></h2><p>An agent needs at least two parts:</p>
+<ul>
+<li><strong>Model</strong>: The brain (reasoning, planning)</li>
+<li><strong>Tools</strong>: The hands (executing tasks, interacting with the outside world)</li>
+</ul>
+<h3 id="Defining-Tools"><a href="#Defining-Tools" class="headerlink" title="Defining Tools "></a>Defining Tools <a name="defining-tools"></a></h3><p>Use the <code>@tool</code> decorator:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> langchain.tools <span class="keyword">import</span> tool</span><br><span class="line"><span class="keyword">from</span> langchain.agents <span class="keyword">import</span> create_agent</span><br><span class="line"><span class="keyword">from</span> langchain.messages <span class="keyword">import</span> HumanMessage</span><br><span class="line"></span><br><span class="line"><span class="meta">@tool</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">get_weather</span>(<span class="params">location: <span class="built_in">str</span></span>) -&gt; <span class="built_in">str</span>:</span><br><span class="line">    <span class="string">&quot;&quot;&quot;Get the weather in a given location.</span></span><br><span class="line"><span class="string">    Args:</span></span><br><span class="line"><span class="string">        location: city name or coordinates</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">return</span> <span class="string">f&quot;Current weather in <span class="subst">&#123;location&#125;</span> is sunny&quot;</span></span><br><span class="line"></span><br><span class="line">agent = create_agent(model=<span class="string">&quot;deepseek-chat&quot;</span>, tools=[get_weather])</span><br><span class="line"></span><br><span class="line">response = agent.invoke(</span><br><span class="line">    &#123;<span class="string">&quot;messages&quot;</span>: [HumanMessage(content=<span class="string">&quot;How&#x27;s the weather in Hangzhou today?&quot;</span>)]&#125;,</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> message <span class="keyword">in</span> response[<span class="string">&#x27;messages&#x27;</span>]:</span><br><span class="line">    message.pretty_print()</span><br></pre></td></tr></table></figure>
+
+<p>Output：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">================================ Human Message =================================</span><br><span class="line">How&#x27;s the weather in Hangzhou today?</span><br><span class="line">================================== Ai Message ==================================</span><br><span class="line">Let me check the weather in Hangzhou for you.</span><br><span class="line">Tool Calls:</span><br><span class="line">  get_weather (call_00_FETE4MIR9p1Gr6uszgjcko6m)</span><br><span class="line"> Call ID: call_00_FETE4MIR9p1Gr6uszgjcko6m</span><br><span class="line">  Args:</span><br><span class="line">    location: 杭州</span><br><span class="line">================================= Tool Message =================================</span><br><span class="line">Name: get_weather</span><br><span class="line"></span><br><span class="line">Current weather in 杭州 is sunny</span><br><span class="line">================================== Ai Message ==================================</span><br><span class="line"></span><br><span class="line">Based on the query result, the weather in Hangzhou today is sunny. Great weather for outdoor activities!</span><br></pre></td></tr></table></figure>
+
+<p><strong>How it works:</strong></p>
+<ol>
+<li>User asks a question</li>
+<li>LLM analyzes: “I don’t know the weather, I need the <code>get_weather</code> tool”</li>
+<li>LLM returns a JSON with the tool name and arguments</li>
+<li>LangChain parses it and calls the function</li>
+<li>Result goes back to the LLM</li>
+<li>LLM generates the final answer</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">User Question → LLM Reasoning → Tool Call → Tool Result → LLM Final Answer</span><br></pre></td></tr></table></figure>
+
+<h3 id="Custom-Tools"><a href="#Custom-Tools" class="headerlink" title="Custom Tools "></a>Custom Tools <a name="custom-tools"></a></h3><p>By default, tool metadata comes from:</p>
+<table>
+<thead>
+<tr>
+<th>Info</th>
+<th>Source</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Tool name</td>
+<td>Function name</td>
+</tr>
+<tr>
+<td>Tool input</td>
+<td>Function parameters</td>
+</tr>
+<tr>
+<td>Tool description</td>
+<td>Docstring</td>
+</tr>
+</tbody></table>
+<p>Override with the decorator:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@tool(<span class="params"><span class="string">&quot;square_root&quot;</span>, description=<span class="string">&quot;Calculate the square root of a number&quot;</span></span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">tool1</span>(<span class="params">x: <span class="built_in">float</span></span>) -&gt; <span class="built_in">float</span>:</span><br><span class="line">    <span class="keyword">return</span> x ** <span class="number">0.5</span></span><br></pre></td></tr></table></figure>
+
+<p>For detailed parameter constraints, use Pydantic:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pydantic <span class="keyword">import</span> BaseModel, Field</span><br><span class="line"><span class="keyword">from</span> typing <span class="keyword">import</span> <span class="type">Literal</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">WeatherInput</span>(<span class="title class_ inherited__">BaseModel</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;Input parameters for weather query.&quot;&quot;&quot;</span></span><br><span class="line">    location: <span class="built_in">str</span> = Field(description=<span class="string">&quot;City name or coordinates&quot;</span>)</span><br><span class="line">    units: <span class="type">Literal</span>[<span class="string">&quot;celsius&quot;</span>, <span class="string">&quot;fahrenheit&quot;</span>] = Field(</span><br><span class="line">        default=<span class="string">&quot;celsius&quot;</span>,</span><br><span class="line">        description=<span class="string">&quot;Temperature unit preference&quot;</span></span><br><span class="line">    )</span><br><span class="line">    include_forecast: <span class="built_in">bool</span> = Field(</span><br><span class="line">        default=<span class="literal">False</span>,</span><br><span class="line">        description=<span class="string">&quot;Include 5-day forecast&quot;</span></span><br><span class="line">    )</span><br><span class="line"></span><br><span class="line"><span class="meta">@tool(<span class="params">args_schema=WeatherInput</span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">get_weather</span>(<span class="params">location: <span class="built_in">str</span>, units: <span class="built_in">str</span> = <span class="string">&quot;celsius&quot;</span>,</span></span><br><span class="line"><span class="params">                include_forecast: <span class="built_in">bool</span> = <span class="literal">False</span></span>) -&gt; <span class="built_in">str</span>:</span><br><span class="line">    <span class="string">&quot;&quot;&quot;Get current weather and optional forecast.&quot;&quot;&quot;</span></span><br><span class="line">    temp = <span class="number">22</span> <span class="keyword">if</span> units == <span class="string">&quot;celsius&quot;</span> <span class="keyword">else</span> <span class="number">72</span></span><br><span class="line">    result = <span class="string">f&quot;Current weather in <span class="subst">&#123;location&#125;</span>: <span class="subst">&#123;temp&#125;</span>° <span class="subst">&#123;units[<span class="number">0</span>].upper()&#125;</span>&quot;</span></span><br><span class="line">    <span class="keyword">if</span> include_forecast:</span><br><span class="line">        result += <span class="string">&quot;\nNext 5 days: Sunny&quot;</span></span><br><span class="line">    <span class="keyword">return</span> result</span><br></pre></td></tr></table></figure>
+
+<p><strong>Important</strong>: Two parameter names are reserved in LangChain tools — <code>config</code> and <code>runtime</code>. Don’t use them as custom parameter names.</p>
+<h3 id="Predefined-Tools-Tavily-Search"><a href="#Predefined-Tools-Tavily-Search" class="headerlink" title="Predefined Tools: Tavily Search "></a>Predefined Tools: Tavily Search <a name="predefined-tools-tavily-search"></a></h3><p>LangChain includes many pre-built tools. A popular one is <strong>Tavily</strong> for web search.</p>
+<p><strong>Step 1</strong>: Register at <a target="_blank" rel="noopener" href="https://www.tavily.com/">https://www.tavily.com</a>, get your API key.</p>
+<p><strong>Step 2</strong>: Add to <code>.env</code>:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">TAVILY_API_KEY=your_key_here</span><br></pre></td></tr></table></figure>
+
+<p><strong>Step 3</strong>: Install dependency:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">uv add langchain-tavily</span><br></pre></td></tr></table></figure>
+
+<p><strong>Step 4</strong>: Use it:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> langchain_tavily <span class="keyword">import</span> TavilySearch</span><br><span class="line"></span><br><span class="line">tool = TavilySearch(max_results=<span class="number">5</span>, topic=<span class="string">&quot;general&quot;</span>)</span><br><span class="line">result = tool.invoke(<span class="string">&quot;What&#x27;s the weather in Beijing today?&quot;</span>)</span><br><span class="line"><span class="built_in">print</span>(result)</span><br></pre></td></tr></table></figure>
+
+<h3 id="Combining-Tools-with-an-Agent"><a href="#Combining-Tools-with-an-Agent" class="headerlink" title="Combining Tools with an Agent "></a>Combining Tools with an Agent <a name="combining-tools-with-an-agent"></a></h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> langchain.agents <span class="keyword">import</span> create_agent</span><br><span class="line"><span class="keyword">from</span> langchain.messages <span class="keyword">import</span> HumanMessage</span><br><span class="line"><span class="keyword">from</span> langchain_tavily <span class="keyword">import</span> TavilySearch</span><br><span class="line"></span><br><span class="line">tavily = TavilySearch(max_results=<span class="number">5</span>, topic=<span class="string">&quot;general&quot;</span>)</span><br><span class="line"></span><br><span class="line">agent = create_agent(</span><br><span class="line">    model=<span class="string">&quot;deepseek-chat&quot;</span>,</span><br><span class="line">    tools=[tavily],</span><br><span class="line">    system_prompt=<span class="string">&quot;You are a helpful assistant. Use tools to answer questions.&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">response = agent.invoke(</span><br><span class="line">    &#123;<span class="string">&quot;messages&quot;</span>: [HumanMessage(content=<span class="string">&quot;What&#x27;s the weather forecast for Beijing for the next 5 days?&quot;</span>)]&#125;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> message <span class="keyword">in</span> response[<span class="string">&#x27;messages&#x27;</span>]:</span><br><span class="line">    message.pretty_print()</span><br></pre></td></tr></table></figure>
+
+<p>With <code>stream_mode=&quot;updates&quot;</code>, you can see each step:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> chunk <span class="keyword">in</span> agent.stream(</span><br><span class="line">    &#123;<span class="string">&quot;messages&quot;</span>: [HumanMessage(content=<span class="string">&quot;Calculate the square root of 467 and 529&quot;</span>)]&#125;,</span><br><span class="line">    stream_mode=<span class="string">&quot;updates&quot;</span></span><br><span class="line">):</span><br><span class="line">    <span class="keyword">for</span> step, data <span class="keyword">in</span> chunk.items():</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f&quot;step: <span class="subst">&#123;step&#125;</span>&quot;</span>)</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f&quot;content: <span class="subst">&#123;data[<span class="string">&#x27;messages&#x27;</span>][-<span class="number">1</span>].content_blocks&#125;</span>&quot;</span>)</span><br><span class="line">        <span class="built_in">print</span>()</span><br></pre></td></tr></table></figure>
+
+<p>Output：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">step: model</span><br><span class="line">content: [&#123;&#x27;type&#x27;: &#x27;text&#x27;, &#x27;text&#x27;: &#x27;Let me calculate both square roots.&#x27;&#125;,</span><br><span class="line">          &#123;&#x27;type&#x27;: &#x27;tool_call&#x27;, &#x27;name&#x27;: &#x27;square_root&#x27;, &#x27;args&#x27;: &#123;&#x27;x&#x27;: 467&#125;&#125;,</span><br><span class="line">          &#123;&#x27;type&#x27;: &#x27;tool_call&#x27;, &#x27;name&#x27;: &#x27;square_root&#x27;, &#x27;args&#x27;: &#123;&#x27;x&#x27;: 529&#125;&#125;]</span><br><span class="line"></span><br><span class="line">step: tools</span><br><span class="line">content: [&#123;&#x27;type&#x27;: &#x27;text&#x27;, &#x27;text&#x27;: &#x27;21.61018278497431&#x27;&#125;]</span><br><span class="line"></span><br><span class="line">step: tools</span><br><span class="line">content: [&#123;&#x27;type&#x27;: &#x27;text&#x27;, &#x27;text&#x27;: &#x27;23.0&#x27;&#125;]</span><br><span class="line"></span><br><span class="line">step: model</span><br><span class="line">content: [&#123;&#x27;type&#x27;: &#x27;text&#x27;, &#x27;text&#x27;: &#x27;Results:\n- √467 ≈ 21.6102\n- √529 = 23.0&#x27;&#125;]</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="Memory-—-Making-the-Agent-Remember"><a href="#Memory-—-Making-the-Agent-Remember" class="headerlink" title="Memory — Making the Agent Remember "></a>Memory — Making the Agent Remember <a name="memory--making-the-agent-remember"></a></h2><p>Models have no memory by default. Each call is independent.</p>
+<h3 id="Short-Term-vs-Long-Term-Memory"><a href="#Short-Term-vs-Long-Term-Memory" class="headerlink" title="Short-Term vs Long-Term Memory "></a>Short-Term vs Long-Term Memory <a name="short-term-vs-long-term-memory"></a></h3><p><strong>Don’t confuse the names!</strong> Short-term ≠ temporary, Long-term ≠ permanent.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Short-Term Memory</th>
+<th>Long-Term Memory</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Lifecycle</td>
+<td>Current session</td>
+<td>Across sessions&#x2F;tasks</td>
+</tr>
+<tr>
+<td>Content</td>
+<td>Current task state</td>
+<td>Knowledge, experience, preferences</td>
+</tr>
+<tr>
+<td>Cross-task</td>
+<td>❌</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>Storage</td>
+<td>Redis &#x2F; In-memory</td>
+<td>DB &#x2F; Vector DB</td>
+</tr>
+</tbody></table>
+<p><strong>Short-term memory</strong> &#x3D; working context for the current conversation.</p>
+<p><strong>Long-term memory</strong> &#x3D; accumulated experience and knowledge across conversations.</p>
+<h3 id="Short-Term-Memory-with-InMemorySaver"><a href="#Short-Term-Memory-with-InMemorySaver" class="headerlink" title="Short-Term Memory with InMemorySaver "></a>Short-Term Memory with InMemorySaver <a name="short-term-memory-with-inmemorysaver"></a></h3><p>LangChain automatically manages conversation history via <strong>Checkpointer</strong> objects.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> langchain.agents <span class="keyword">import</span> create_agent</span><br><span class="line"><span class="keyword">from</span> langchain.messages <span class="keyword">import</span> HumanMessage</span><br><span class="line"><span class="keyword">from</span> langgraph.checkpoint.memory <span class="keyword">import</span> InMemorySaver</span><br><span class="line"></span><br><span class="line"><span class="comment"># 1. Create checkpointer</span></span><br><span class="line">checkpointer = InMemorySaver()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 2. Create agent with checkpointer</span></span><br><span class="line">agent = create_agent(</span><br><span class="line">    model=<span class="string">&quot;deepseek-chat&quot;</span>,</span><br><span class="line">    checkpointer=checkpointer</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 3. Define thread_id to identify the conversation</span></span><br><span class="line">config = &#123;<span class="string">&quot;configurable&quot;</span>: &#123;<span class="string">&quot;thread_id&quot;</span>: <span class="string">&quot;thread_1&quot;</span>&#125;&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 4. First call — tell the AI something</span></span><br><span class="line">response = agent.invoke(</span><br><span class="line">    &#123;<span class="string">&quot;messages&quot;</span>: [HumanMessage(content=<span class="string">&quot;Hi, I&#x27;m Alex. I love cats.&quot;</span>)]&#125;,</span><br><span class="line">    config</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 5. Second call — ask about previous context</span></span><br><span class="line">response = agent.invoke(</span><br><span class="line">    &#123;<span class="string">&quot;messages&quot;</span>: [HumanMessage(content=<span class="string">&quot;What&#x27;s my favorite animal?&quot;</span>)]&#125;,</span><br><span class="line">    config  <span class="comment"># Same thread_id = same conversation</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> message <span class="keyword">in</span> response[<span class="string">&quot;messages&quot;</span>]:</span><br><span class="line">    message.pretty_print()</span><br></pre></td></tr></table></figure>
+
+<p>Output：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">================================ Human Message =================================</span><br><span class="line">Hi, I&#x27;m Alex. I love cats.</span><br><span class="line">================================== Ai Message ==================================</span><br><span class="line">Hi Alex! Nice to meet you! 🐱 People who love cats have gentle hearts~</span><br><span class="line">================================ Human Message =================================</span><br><span class="line">What&#x27;s my favorite animal?</span><br><span class="line">================================== Ai Message ==================================</span><br><span class="line">You mentioned you love cats, so your favorite animal is **cats**! 🐱</span><br></pre></td></tr></table></figure>
+
+<p><strong>Key point</strong>: Same <code>thread_id</code> &#x3D; same conversation. Different <code>thread_id</code> &#x3D; isolated conversations.</p>
+<h3 id="Persistent-Memory-Optional"><a href="#Persistent-Memory-Optional" class="headerlink" title="Persistent Memory (Optional) "></a>Persistent Memory (Optional) <a name="persistent-memory-optional"></a></h3><p><code>InMemorySaver</code> loses data on restart. For production, use a persistent checkpointer.</p>
+<p><strong>SQLite example:</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">uv add langgraph-checkpoint-sqlite</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> sqlite3</span><br><span class="line"><span class="keyword">from</span> langgraph.checkpoint.sqlite <span class="keyword">import</span> SqliteSaver</span><br><span class="line"></span><br><span class="line">checkpointer = SqliteSaver(</span><br><span class="line">    sqlite3.connect(<span class="string">&quot;checkpoint.db&quot;</span>, check_same_thread=<span class="literal">False</span>)</span><br><span class="line">)</span><br><span class="line">checkpointer.setup()</span><br><span class="line"></span><br><span class="line">agent = create_agent(</span><br><span class="line">    model=<span class="string">&quot;deepseek-chat&quot;</span>,</span><br><span class="line">    checkpointer=checkpointer,</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p>Other options: <code>PostgresSaver</code>, <code>CosmosDBSaver</code>.</p>
+<h3 id="Memory-Management-Strategies"><a href="#Memory-Management-Strategies" class="headerlink" title="Memory Management Strategies "></a>Memory Management Strategies <a name="memory-management-strategies"></a></h3><p>As conversations grow, message history can exceed the LLM’s context window (e.g., 128K for DeepSeek). This causes:</p>
+<ul>
+<li>Context loss (forgotten earlier messages)</li>
+<li>Reduced response quality (“attention dilution”)</li>
+<li>Slower responses</li>
+</ul>
+<p>Three strategies:</p>
+<table>
+<thead>
+<tr>
+<th>Strategy</th>
+<th>How It Works</th>
+<th>Pros</th>
+<th>Cons</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Trim messages</strong></td>
+<td>Only send recent messages to the LLM</td>
+<td>Simple, fast</td>
+<td>Loses older context</td>
+</tr>
+<tr>
+<td><strong>Delete messages</strong></td>
+<td>Remove old messages from state entirely</td>
+<td>Frees storage permanently</td>
+<td>Irreversible</td>
+</tr>
+<tr>
+<td><strong>Summarize messages</strong></td>
+<td>Summarize old messages, keep recent ones raw</td>
+<td>Preserves context + fits window</td>
+<td>Extra LLM call for summarization</td>
+</tr>
+</tbody></table>
+<h4 id="SummarizationMiddleware"><a href="#SummarizationMiddleware" class="headerlink" title="SummarizationMiddleware"></a>SummarizationMiddleware</h4><p>LangChain’s built-in solution:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> langchain.agents <span class="keyword">import</span> create_agent</span><br><span class="line"><span class="keyword">from</span> langchain.agents.middleware <span class="keyword">import</span> SummarizationMiddleware</span><br><span class="line"><span class="keyword">from</span> langgraph.checkpoint.memory <span class="keyword">import</span> InMemorySaver</span><br><span class="line"><span class="keyword">from</span> langchain_core.runnables <span class="keyword">import</span> RunnableConfig</span><br><span class="line"></span><br><span class="line">checkpointer = InMemorySaver()</span><br><span class="line"></span><br><span class="line">middleware = SummarizationMiddleware(</span><br><span class="line">    model=<span class="string">&quot;deepseek-chat&quot;</span>,</span><br><span class="line">    trigger=(<span class="string">&quot;messages&quot;</span>, <span class="number">3</span>),   <span class="comment"># Summarize when messages &gt; 3</span></span><br><span class="line">    keep=(<span class="string">&quot;messages&quot;</span>, <span class="number">1</span>),      <span class="comment"># Keep 1 recent message after summarization</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">agent = create_agent(</span><br><span class="line">    model=<span class="string">&quot;deepseek-chat&quot;</span>,</span><br><span class="line">    middleware=[middleware],</span><br><span class="line">    checkpointer=checkpointer,</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">config: RunnableConfig = &#123;<span class="string">&quot;configurable&quot;</span>: &#123;<span class="string">&quot;thread_id&quot;</span>: <span class="string">&quot;1&quot;</span>&#125;&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># Build up conversation history</span></span><br><span class="line">agent.invoke(&#123;<span class="string">&quot;messages&quot;</span>: <span class="string">&quot;Hi, I&#x27;m Alex.&quot;</span>&#125;, config)</span><br><span class="line">agent.invoke(&#123;<span class="string">&quot;messages&quot;</span>: <span class="string">&quot;My favorite sport is ping pong.&quot;</span>&#125;, config)</span><br><span class="line">agent.invoke(&#123;<span class="string">&quot;messages&quot;</span>: <span class="string">&quot;My favorite animal is cats.&quot;</span>&#125;, config)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Test memory with summarization</span></span><br><span class="line">final_response = agent.invoke(&#123;<span class="string">&quot;messages&quot;</span>: <span class="string">&quot;Do you remember me?&quot;</span>&#125;, config)</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> message <span class="keyword">in</span> final_response[<span class="string">&quot;messages&quot;</span>]:</span><br><span class="line">    message.pretty_print()</span><br></pre></td></tr></table></figure>
+
+<p>Output：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">================================ Human Message =================================</span><br><span class="line">Here is a summary of the conversation to date:</span><br><span class="line">User&#x27;s name is Alex. Favorite sport is ping pong. Favorite animal is cats.</span><br><span class="line">================================ Human Message =================================</span><br><span class="line">Do you remember me?</span><br><span class="line">================================== Ai Message ==================================</span><br><span class="line">Of course, Alex! You love ping pong and cats. We were chatting about your</span><br><span class="line">favorite sport and pets. Want to continue? 😄</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="Putting-It-All-Together"><a href="#Putting-It-All-Together" class="headerlink" title="Putting It All Together "></a>Putting It All Together <a name="putting-it-all-together"></a></h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> langchain.agents <span class="keyword">import</span> create_agent</span><br><span class="line"><span class="keyword">from</span> langchain.messages <span class="keyword">import</span> HumanMessage</span><br><span class="line"><span class="keyword">from</span> langchain.agents.middleware <span class="keyword">import</span> SummarizationMiddleware</span><br><span class="line"><span class="keyword">from</span> langgraph.checkpoint.memory <span class="keyword">import</span> InMemorySaver</span><br><span class="line"><span class="keyword">from</span> langchain_tavily <span class="keyword">import</span> TavilySearch</span><br><span class="line"><span class="keyword">from</span> pydantic <span class="keyword">import</span> BaseModel, Field</span><br><span class="line"><span class="keyword">from</span> langchain.tools <span class="keyword">import</span> tool</span><br><span class="line"></span><br><span class="line"><span class="comment"># --- Tools ---</span></span><br><span class="line">tavily = TavilySearch(max_results=<span class="number">3</span>, topic=<span class="string">&quot;general&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="meta">@tool</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">calculate</span>(<span class="params">expression: <span class="built_in">str</span></span>) -&gt; <span class="built_in">str</span>:</span><br><span class="line">    <span class="string">&quot;&quot;&quot;Evaluate a math expression. Example: &#x27;2 + 3 * 4&#x27;.&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">str</span>(<span class="built_in">eval</span>(expression))</span><br><span class="line"></span><br><span class="line"><span class="comment"># --- Structured Output ---</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">TravelPlan</span>(<span class="title class_ inherited__">BaseModel</span>):</span><br><span class="line">    destination: <span class="built_in">str</span> = Field(description=<span class="string">&quot;Travel destination&quot;</span>)</span><br><span class="line">    budget: <span class="built_in">str</span> = Field(description=<span class="string">&quot;Estimated budget&quot;</span>)</span><br><span class="line">    activities: <span class="built_in">list</span>[<span class="built_in">str</span>] = Field(description=<span class="string">&quot;List of recommended activities&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># --- Memory ---</span></span><br><span class="line">checkpointer = InMemorySaver()</span><br><span class="line">middleware = SummarizationMiddleware(</span><br><span class="line">    model=<span class="string">&quot;deepseek-chat&quot;</span>,</span><br><span class="line">    trigger=(<span class="string">&quot;messages&quot;</span>, <span class="number">10</span>),</span><br><span class="line">    keep=(<span class="string">&quot;messages&quot;</span>, <span class="number">4</span>),</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment"># --- Agent ---</span></span><br><span class="line">agent = create_agent(</span><br><span class="line">    model=<span class="string">&quot;deepseek-chat&quot;</span>,</span><br><span class="line">    tools=[tavily, calculate],</span><br><span class="line">    system_prompt=<span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    # Identity</span></span><br><span class="line"><span class="string">    You are a travel planning assistant.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    # Instructions</span></span><br><span class="line"><span class="string">    - Use tools to find real-time information</span></span><br><span class="line"><span class="string">    - Provide budget estimates when asked</span></span><br><span class="line"><span class="string">    - Be concise and friendly</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span>,</span><br><span class="line">    response_format=TravelPlan,</span><br><span class="line">    middleware=[middleware],</span><br><span class="line">    checkpointer=checkpointer,</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment"># --- Run ---</span></span><br><span class="line">config = &#123;<span class="string">&quot;configurable&quot;</span>: &#123;<span class="string">&quot;thread_id&quot;</span>: <span class="string">&quot;trip_1&quot;</span>&#125;&#125;</span><br><span class="line"></span><br><span class="line">response = agent.invoke(</span><br><span class="line">    &#123;<span class="string">&quot;messages&quot;</span>: [HumanMessage(content=<span class="string">&quot;Plan a 3-day Tokyo trip under $1500&quot;</span>)]&#125;,</span><br><span class="line">    config</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">plan = response[<span class="string">&#x27;structured_response&#x27;</span>]</span><br><span class="line"><span class="built_in">print</span>(<span class="string">f&quot;Destination: <span class="subst">&#123;plan.destination&#125;</span>&quot;</span>)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">f&quot;Budget: <span class="subst">&#123;plan.budget&#125;</span>&quot;</span>)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">f&quot;Activities: <span class="subst">&#123;<span class="string">&#x27;, &#x27;</span>.join(plan.activities)&#125;</span>&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="Best-Practices"><a href="#Best-Practices" class="headerlink" title="Best Practices "></a>Best Practices <a name="best-practices"></a></h2><table>
+<thead>
+<tr>
+<th>Practice</th>
+<th>Why It Matters</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Use <code>thread_id</code> per conversation</td>
+<td>Prevents memory leaking across users</td>
+</tr>
+<tr>
+<td>Persist checkpointer in production</td>
+<td>Don’t lose conversations on restart</td>
+</tr>
+<tr>
+<td>Write clear tool docstrings</td>
+<td>LLM relies on descriptions to choose tools</td>
+</tr>
+<tr>
+<td>Use structured output</td>
+<td>Eliminates fragile text parsing</td>
+</tr>
+<tr>
+<td>Set <code>temperature=0</code> for factual tasks</td>
+<td>More deterministic, less hallucination</td>
+</tr>
+<tr>
+<td>Use summarization for long conversations</td>
+<td>Avoids context window overflow</td>
+</tr>
+<tr>
+<td>Keep system prompts in Markdown + XML</td>
+<td>Easier for LLM to parse boundaries</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="FAQ"><a href="#FAQ" class="headerlink" title="FAQ "></a>FAQ <a name="faq"></a></h2><p><strong>Q: Can I switch models without changing code?</strong></p>
+<p>A: Yes, just change the model name. LangChain handles the rest.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># DeepSeek</span></span><br><span class="line">model = init_chat_model(model=<span class="string">&quot;deepseek-chat&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Qwen</span></span><br><span class="line">model = init_chat_model(</span><br><span class="line">    model=<span class="string">&quot;qwen-max&quot;</span>,</span><br><span class="line">    model_provider=<span class="string">&quot;openai&quot;</span>,</span><br><span class="line">    base_url=os.getenv(<span class="string">&quot;DASHSCOPE_BASE_URL&quot;</span>),</span><br><span class="line">    api_key=os.getenv(<span class="string">&quot;DASHSCOPE_API_KEY&quot;</span>)</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p><strong>Q: What’s the difference between <code>ChatModel</code> and <code>LLM</code>?</strong></p>
+<p>A: <code>ChatModel</code> takes a list of messages and returns a message. <code>LLM</code> takes a string and returns a string. Most modern models use the Chat interface.</p>
+<p><strong>Q: Can an agent call multiple tools in one turn?</strong></p>
+<p>A: Yes. The LLM can return multiple tool calls simultaneously:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># LLM may return both:</span></span><br><span class="line"><span class="comment"># tool_call: square_root(x=467)</span></span><br><span class="line"><span class="comment"># tool_call: square_root(x=529)</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>Q: What happens if a tool fails?</strong></p>
+<p>A: The exception is caught and passed back to the LLM as a <code>ToolMessage</code> with the error. The LLM can then decide how to handle it (retry, report error, etc.).</p>
+<p><strong>Q: InMemorySaver vs persistent checkpointer?</strong></p>
+<p>A: <code>InMemorySaver</code> is for development. Use <code>SqliteSaver</code>, <code>PostgresSaver</code>, etc. for production where data must survive restarts.</p>
+<hr>
+<h2 id="Summary"><a href="#Summary" class="headerlink" title="Summary "></a>Summary <a name="summary"></a></h2><p>We covered the five core components of LangChain:</p>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Role</th>
+<th>Key Takeaway</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Model</strong></td>
+<td>The brain</td>
+<td>Unified API, switch providers easily</td>
+</tr>
+<tr>
+<td><strong>Message</strong></td>
+<td>Conversation units</td>
+<td>System&#x2F;Human&#x2F;AI&#x2F;Tool types, supports multimodal</td>
+</tr>
+<tr>
+<td><strong>Prompt</strong></td>
+<td>Control output</td>
+<td>System prompts + engineering + structured output</td>
+</tr>
+<tr>
+<td><strong>Tool</strong></td>
+<td>The hands</td>
+<td><code>@tool</code> decorator, custom + predefined, powers Agent action</td>
+</tr>
+<tr>
+<td><strong>Memory</strong></td>
+<td>Remember context</td>
+<td>Short-term (checkpointer) + Long-term (cross-session)</td>
+</tr>
+</tbody></table>
+<p><strong>The Agent formula:</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Agent = Model + Tools + Memory + Prompts</span><br></pre></td></tr></table></figure>
+
+<p><strong>Next steps:</strong></p>
+<ul>
+<li>Learn LangGraph for fine-grained Agent control</li>
+<li>Build multi-agent systems (MAS)</li>
+<li>Add RAG for domain-specific knowledge</li>
+<li>Deploy with LangSmith for monitoring</li>
+</ul>
+<hr>
+<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://docs.langchain.com/">LangChain Official Documentation</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/langchain-ai/langchain">LangChain GitHub</a></li>
+<li><a target="_blank" rel="noopener" href="https://langchain-ai.github.io/langgraph">LangGraph Documentation</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.tavily.com/">Tavily Search API</a></li>
+</ul>
+<link rel="stylesheet" href="/css/folder.css" type="text/css"><script src="/js/folder.js" type="text/javascript" async></script>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/LLM/" rel="tag"># LLM</a>
+              <a href="/tags/LangChain/" rel="tag"># LangChain</a>
+              <a href="/tags/LangSmith/" rel="tag"># LangSmith</a>
+              <a href="/tags/AI-Agent/" rel="tag"># AI Agent</a>
+              <a href="/tags/MultiModal/" rel="tag"># MultiModal</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2026/04/27/LangChain4J-in-Action-Building-a-Medical-AI-Assistant-Agent/" rel="prev" title="LangChain4J in Action: Building a Medical AI Assistant Agent">
+      <i class="fa fa-chevron-left"></i> LangChain4J in Action: Building a Medical AI Assistant Agent
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+
+            
+            <div class="post-copyright" style="margin: 0 0 10px 0;">
+              <p class="post-copyright-author" style="margin: 0 0 5px 0 !important;"><strong>Author:</strong> <a href="https://github.com/BODYsuperman" target="_blank">Alex</a></p>
+              <p class="post-copyright-link" style="margin: 0 0 5px 0 !important;"><strong>Article Link:</strong> <a href="https://bodysuperman.github.io/2026/05/04/LangChain-Core-Components%EF%BC%9AMode-Message-Prompt-Tool-Memory/" target="_blank">https://bodysuperman.github.io/2026/05/04/LangChain-Core-Components%EF%BC%9AMode-Message-Prompt-Tool-Memory/</a></p>
+              <p class="post-copyright-license" style="margin: 0 !important;"><strong>License:</strong> This article is licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a>. Please credit the original author and include the source link when reposting.</p>
+            </div>
+
+          </div>
+          
+    <div class="comments" id="gitalk-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#What-is-LangChain"><span class="nav-number">1.</span> <span class="nav-text">What is LangChain? </span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#The-Platform"><span class="nav-number">1.1.</span> <span class="nav-text">The Platform </span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#What-is-an-Agent"><span class="nav-number">1.2.</span> <span class="nav-text">What is an Agent? </span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#LLM-vs-Agent-The-Difference"><span class="nav-number">1.3.</span> <span class="nav-text">LLM vs Agent: The Difference </span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Models-%E2%80%94-The-Brain"><span class="nav-number">2.</span> <span class="nav-text">Models — The Brain </span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Initializing-a-Model"><span class="nav-number">2.1.</span> <span class="nav-text">Initializing a Model </span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Custom-Models-and-Parameters"><span class="nav-number">2.2.</span> <span class="nav-text">Custom Models and Parameters </span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Using-Model-Classes"><span class="nav-number">2.3.</span> <span class="nav-text">Using Model Classes </span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Calling-the-Model-invoke-vs-stream"><span class="nav-number">2.4.</span> <span class="nav-text">Calling the Model: invoke vs stream </span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Using-Models-in-an-Agent"><span class="nav-number">2.5.</span> <span class="nav-text">Using Models in an Agent </span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Messages-%E2%80%94-The-Building-Blocks-of-Conversation"><span class="nav-number">3.</span> <span class="nav-text">Messages — The Building Blocks of Conversation </span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Message-Types"><span class="nav-number">3.1.</span> <span class="nav-text">Message Types </span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Multimodal-Messages"><span class="nav-number">3.2.</span> <span class="nav-text">Multimodal Messages </span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Prompts-%E2%80%94-Steering-the-Output"><span class="nav-number">4.</span> <span class="nav-text">Prompts — Steering the Output </span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#System-Prompts"><span class="nav-number">4.1.</span> <span class="nav-text">System Prompts </span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Prompt-Engineering"><span class="nav-number">4.2.</span> <span class="nav-text">Prompt Engineering </span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Few-Shot-Examples"><span class="nav-number">4.2.1.</span> <span class="nav-text">Few-Shot Examples</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Structured-Output"><span class="nav-number">4.3.</span> <span class="nav-text">Structured Output </span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Tools-%E2%80%94-The-Hands"><span class="nav-number">5.</span> <span class="nav-text">Tools — The Hands </span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Defining-Tools"><span class="nav-number">5.1.</span> <span class="nav-text">Defining Tools </span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Custom-Tools"><span class="nav-number">5.2.</span> <span class="nav-text">Custom Tools </span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Predefined-Tools-Tavily-Search"><span class="nav-number">5.3.</span> <span class="nav-text">Predefined Tools: Tavily Search </span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Combining-Tools-with-an-Agent"><span class="nav-number">5.4.</span> <span class="nav-text">Combining Tools with an Agent </span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Memory-%E2%80%94-Making-the-Agent-Remember"><span class="nav-number">6.</span> <span class="nav-text">Memory — Making the Agent Remember </span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Short-Term-vs-Long-Term-Memory"><span class="nav-number">6.1.</span> <span class="nav-text">Short-Term vs Long-Term Memory </span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Short-Term-Memory-with-InMemorySaver"><span class="nav-number">6.2.</span> <span class="nav-text">Short-Term Memory with InMemorySaver </span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Persistent-Memory-Optional"><span class="nav-number">6.3.</span> <span class="nav-text">Persistent Memory (Optional) </span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Memory-Management-Strategies"><span class="nav-number">6.4.</span> <span class="nav-text">Memory Management Strategies </span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#SummarizationMiddleware"><span class="nav-number">6.4.1.</span> <span class="nav-text">SummarizationMiddleware</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Putting-It-All-Together"><span class="nav-number">7.</span> <span class="nav-text">Putting It All Together </span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Best-Practices"><span class="nav-number">8.</span> <span class="nav-text">Best Practices </span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#FAQ"><span class="nav-number">9.</span> <span class="nav-text">FAQ </span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Summary"><span class="nav-number">10.</span> <span class="nav-text">Summary </span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#References"><span class="nav-number">11.</span> <span class="nav-text">References</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="AI with Alex"
+      src="/uploads/avatar.jpg">
+  <p class="site-author-name" itemprop="name">AI with Alex</p>
+  <div class="site-description" itemprop="description">Attention Is All You Need</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">23</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">31</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">64</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/BODYsuperman" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;BODYsuperman" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://stackoverflow.com/users/9644964/alexandar-may-msft?tab=answers&sort=votes" title="StackOverflow → https:&#x2F;&#x2F;stackoverflow.com&#x2F;users&#x2F;9644964&#x2F;alexandar-may-msft?tab&#x3D;answers&amp;sort&#x3D;votes" rel="noopener" target="_blank"><i class="fab fa-stack-overflow fa-fw"></i>StackOverflow</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">AI with Alex</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">Symbols count total: </span>
+    <span title="Symbols count total">290k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">Reading time total &asymp;</span>
+    <span title="Reading time total">4:23</span>
+    
+    <!--
+    
+    -->
+</div>
+
+<!--
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a>
+   </div>
+--><script color="0,0,255" opacity="0.5" zIndex="-1" count="99" src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1/dist/canvas-nest.js"></script>
+
+
+
+
+
+
+        
+
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv"  >
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv"  >
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : 'Ov23liVJTzqy1rzaDXXM',
+      clientSecret: '5e785a7d46e69f7509e6c2f7730855a55944df33',
+      repo        : 'blog-comment',
+      owner       : 'BODYsuperman',
+      admin       : ['BODYsuperman'],
+      id          : 'e08dea071213a2da73b662eb737dd2e9',
+        language: '',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+
+</body>
+</html>

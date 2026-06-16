@@ -194,6 +194,142 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://bodysuperman.github.io/2026/05/04/LangChain-Core-Components%EF%BC%9AMode-Message-Prompt-Tool-Memory/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+      <meta itemprop="name" content="AI with Alex">
+      <meta itemprop="description" content="Attention Is All You Need">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="AI with Alex's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2026/05/04/LangChain-Core-Components%EF%BC%9AMode-Message-Prompt-Tool-Memory/" class="post-title-link" itemprop="url">LangChain Core Components: Model, Message, Prompt, Tool, Memory</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2026-05-04 12:48:28" itemprop="dateCreated datePublished" datetime="2026-05-04T12:48:28+08:00">2026-05-04</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2026-06-06 00:00:00" itemprop="dateModified" datetime="2026-06-06T00:00:00+08:00">2026-06-06</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Python/AI/" itemprop="url" rel="index"><span itemprop="name">AI</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>26k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>24 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <ul>
+<li><a href="#what-is-langchain">What is LangChain?</a><ul>
+<li><a href="#the-platform">The Platform</a></li>
+<li><a href="#what-is-an-agent">What is an Agent?</a></li>
+<li><a href="#llm-vs-agent-the-difference">LLM vs Agent: The Difference</a></li>
+</ul>
+</li>
+<li><a href="#models--the-brain">Models — The Brain</a><ul>
+<li><a href="#initializing-a-model">Initializing a Model</a></li>
+<li><a href="#custom-models-and-parameters">Custom Models and Parameters</a></li>
+<li><a href="#using-model-classes">Using Model Classes</a></li>
+<li><a href="#calling-the-model-invoke-vs-stream">Calling the Model: invoke vs stream</a></li>
+<li><a href="#using-models-in-an-agent">Using Models in an Agent</a></li>
+</ul>
+</li>
+<li><a href="#messages--the-building-blocks-of-conversation">Messages — The Building Blocks of Conversation</a><ul>
+<li><a href="#message-types">Message Types</a></li>
+<li><a href="#multimodal-messages">Multimodal Messages</a></li>
+</ul>
+</li>
+<li><a href="#prompts--steering-the-output">Prompts — Steering the Output</a><ul>
+<li><a href="#system-prompts">System Prompts</a></li>
+<li><a href="#prompt-engineering">Prompt Engineering</a></li>
+<li><a href="#structured-output">Structured Output</a></li>
+</ul>
+</li>
+<li><a href="#tools--the-hands">Tools — The Hands</a><ul>
+<li><a href="#defining-tools">Defining Tools</a></li>
+<li><a href="#custom-tools">Custom Tools</a></li>
+<li><a href="#predefined-tools-tavily-search">Predefined Tools: Tavily Search</a></li>
+<li><a href="#combining-tools-with-an-agent">Combining Tools with an Agent</a></li>
+</ul>
+</li>
+<li><a href="#memory--making-the-agent-remember">Memory — Making the Agent Remember</a><ul>
+<li><a href="#short-term-vs-long-term-memory">Short-Term vs Long-Term Memory</a></li>
+<li><a href="#short-term-memory-with-inmemorysaver">Short-Term Memory with InMemorySaver</a></li>
+<li><a href="#persistent-memory-optional">Persistent Memory (Optional)</a></li>
+<li><a href="#memory-management-strategies">Memory Management Strategies</a>
+        
+      
+    </div>
+
+    
+    
+    
+      <!--noindex-->
+      <div class="post-button">
+        <a class="btn" href="/2026/05/04/LangChain-Core-Components%EF%BC%9AMode-Message-Prompt-Tool-Memory/#more" rel="contents">
+          Read more &raquo;
+        </a>
+      </div>
+      <!--/noindex-->
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="https://bodysuperman.github.io/2026/04/27/LangChain4J-in-Action-Building-a-Medical-AI-Assistant-Agent/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -805,107 +941,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://bodysuperman.github.io/2026/02/19/Workflow-Orchestration/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/uploads/avatar.jpg">
-      <meta itemprop="name" content="AI with Alex">
-      <meta itemprop="description" content="Attention Is All You Need">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="AI with Alex's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2026/02/19/Workflow-Orchestration/" class="post-title-link" itemprop="url">Workflow Orchestration</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2026-02-19 13:53:06 / Modified: 19:04:19" itemprop="dateCreated datePublished" datetime="2026-02-19T13:53:06+08:00">2026-02-19</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/AI/" itemprop="url" rel="index"><span itemprop="name">AI</span></a>
-                </span>
-                  , 
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/AI/Vibe-Coding/" itemprop="url" rel="index"><span itemprop="name">Vibe Coding</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="Symbols count in article">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>1.5k</span>
-            </span>
-            <span class="post-meta-item" title="Reading time">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>1 mins.</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="Workflow-Orchestration"><a href="#Workflow-Orchestration" class="headerlink" title="Workflow Orchestration"></a>Workflow Orchestration</h2><h3 id="1-Plan-Node-Default"><a href="#1-Plan-Node-Default" class="headerlink" title="1. Plan Node Default"></a>1. Plan Node Default</h3><ul>
-<li>Enter plan mode for ANY non-trivial task (3+ steps or architectural decisions)</li>
-<li>If something goes sideways, STOP and re-plan immediately – don’t keep pushing</li>
-<li>Write detailed specs upfront to reduce ambiguity</li>
-</ul>
-<h3 id="2-Subagent-Strategy"><a href="#2-Subagent-Strategy" class="headerlink" title="2. Subagent Strategy"></a>2. Subagent Strategy</h3><ul>
-<li>Use subagents liberally to keep main context window clean</li>
-<li>Offload research, exploration, and parallel analysis to subagents</li>
-<li>One tack per subagent for focused execution
-        
-      
-    </div>
-
-    
-    
-    
-      <!--noindex-->
-      <div class="post-button">
-        <a class="btn" href="/2026/02/19/Workflow-Orchestration/#more" rel="contents">
-          Read more &raquo;
-        </a>
-      </div>
-      <!--/noindex-->
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -980,20 +1015,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">22</span>
+          <span class="site-state-item-count">23</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">29</span>
+        <span class="site-state-item-count">31</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">61</span>
+        <span class="site-state-item-count">64</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -1038,13 +1073,13 @@
       <i class="fa fa-chart-area"></i>
     </span>
       <span class="post-meta-item-text">Symbols count total: </span>
-    <span title="Symbols count total">264k</span>
+    <span title="Symbols count total">290k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">Reading time total &asymp;</span>
-    <span title="Reading time total">4:01</span>
+    <span title="Reading time total">4:23</span>
     
     <!--
     
