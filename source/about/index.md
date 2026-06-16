@@ -6,7 +6,7 @@ date: 2025-02-18 11:29:25
 
 # 🌟 About Me
 
-👋 Hi! I am **Alex**, a **Developer** passionate about **AI & continuous learning**.Currently exploring **LLMs, RAG, and Agent systems**.
+👋 Hi! I am **Alex**, a **Developer** passionate about **AI & continuous learning**.Currently exploring **LLMs, RAG, Agent systems,Deepl Learning and Machine Learning**.
 
 📫 Email: meijiaping6@gmail.com  
 🔗 [MyGithub](https://github.com/BODYsuperman)
