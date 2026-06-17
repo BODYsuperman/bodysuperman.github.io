@@ -1,7 +1,7 @@
 ---
 title: "A Multimodal AI Agent Application: AI Private Chef"
-date: 2026-06-17 13:12:47
-updated: 2026-06-17 13:12:47
+date: 2026-05-11 12:48:28
+updated: 2026-06-10 00:00:00
 comments: true
 categories:
   - Python
