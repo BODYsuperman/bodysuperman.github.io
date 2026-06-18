@@ -793,7 +793,26 @@ Visit `http://localhost:8001`. You should be able to:
 
 Please see below how it works like:
 
-![pic1](img1.png)
+<!--
+![pic1](img1.png) -->
+
+<!-- <video controls width="100%" preload="metadata" poster="/A-Multimodal-AI-Agent-Application-AI-Private-Chef/img1.png">
+  <source src="/A-Multimodal-AI-Agent-Application-AI-Private-Chef/aichief.mp4" type="video/mp4">
+  你的浏览器不支持 MP4 播放
+</video> -->
+
+<!-- <video
+  controls
+  preload="metadata"
+  poster="/videos/img1.png"
+  width="100%">
+
+  <source src="/videos/aichief.mp4" type="video/mp4">
+</video> -->
+
+<video controls style="width:100%;" preload="metadata">
+<source src="/videos/aichief.mp4" type="video/mp4">
+</video>
 
 ## Best Practices
 
