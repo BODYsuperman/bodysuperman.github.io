@@ -5,7 +5,7 @@
 # Site
 title: AI with Alex's Blog
 subtitle: ""
-description: "Attention Is All You Need"
+description: "Attention(Q,K,V)=softmax(QK^T/sqrt(d_k))V"
 keywords:
 author: AI with Alex
 language: en
