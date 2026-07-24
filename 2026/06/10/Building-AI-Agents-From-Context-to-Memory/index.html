@@ -23,12 +23,12 @@
   <meta name="description" content="Introduction What Is an AI Agent The Core Formula: LLM + Context + Tools The ReAct Loop: How Agents Actually Work   Context Engineering: The Ceiling of Agent Capability Context at the API Level: Stat">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Building AI Agents: From Context to Memory">
-<meta property="og:url" content="https://bodysuperman.github.io/2026/07/24/Building-AI-Agents-From-Context-to-Memory/index.html">
+<meta property="og:url" content="https://bodysuperman.github.io/2026/06/10/Building-AI-Agents-From-Context-to-Memory/index.html">
 <meta property="og:site_name" content="AI with Alex&#39;s Blog">
 <meta property="og:description" content="Introduction What Is an AI Agent The Core Formula: LLM + Context + Tools The ReAct Loop: How Agents Actually Work   Context Engineering: The Ceiling of Agent Capability Context at the API Level: Stat">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2026-07-24T07:09:38.000Z">
-<meta property="article:modified_time" content="2026-07-24T07:09:38.000Z">
+<meta property="article:published_time" content="2026-06-10T07:09:38.000Z">
+<meta property="article:modified_time" content="2026-07-23T07:09:38.000Z">
 <meta property="article:author" content="AI with Alex">
 <meta property="article:tag" content="AI Agent">
 <meta property="article:tag" content="LLM">
@@ -37,7 +37,7 @@
 <meta property="article:tag" content="Memory">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="https://bodysuperman.github.io/2026/07/24/Building-AI-Agents-From-Context-to-Memory/">
+<link rel="canonical" href="https://bodysuperman.github.io/2026/06/10/Building-AI-Agents-From-Context-to-Memory/">
 
 
 <script id="page-configurations">
@@ -202,7 +202,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://bodysuperman.github.io/2026/07/24/Building-AI-Agents-From-Context-to-Memory/">
+    <link itemprop="mainEntityOfPage" href="https://bodysuperman.github.io/2026/06/10/Building-AI-Agents-From-Context-to-Memory/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/uploads/avatar.jpg">
@@ -225,8 +225,15 @@
               </span>
               <span class="post-meta-item-text">Posted on</span>
 
-              <time title="Created: 2026-07-24 15:09:38" itemprop="dateCreated datePublished" datetime="2026-07-24T15:09:38+08:00">2026-07-24</time>
+              <time title="Created: 2026-06-10 15:09:38" itemprop="dateCreated datePublished" datetime="2026-06-10T15:09:38+08:00">2026-06-10</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2026-07-23 15:09:38" itemprop="dateModified" datetime="2026-07-23T15:09:38+08:00">2026-07-23</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -598,7 +605,7 @@
 </tr>
 </tbody></table>
 <h3 id="Four-Storage-Formats-From-Simple-Notes-to-Advanced-JSON-Cards"><a href="#Four-Storage-Formats-From-Simple-Notes-to-Advanced-JSON-Cards" class="headerlink" title="Four Storage Formats: From Simple Notes to Advanced JSON Cards"></a>Four Storage Formats: From Simple Notes to Advanced JSON Cards</h3><p>The same piece of user information can be represented with different granularities:</p>
-<p><strong>Simple Notes</strong> — Each memory is a minimal, indivisible fact (“User email: <a href="mailto:&#x6a;&#x6f;&#x68;&#x6e;&#64;&#101;&#x78;&#97;&#109;&#x70;&#108;&#101;&#46;&#99;&#111;&#109;">&#x6a;&#x6f;&#x68;&#x6e;&#64;&#101;&#x78;&#97;&#109;&#x70;&#108;&#101;&#46;&#99;&#111;&#109;</a>“). Minimal overhead, but associations between facts are lost entirely. “Works as Senior Engineer at TechCorp on recommendation systems” becomes three disconnected fragments.</p>
+<p><strong>Simple Notes</strong> — Each memory is a minimal, indivisible fact (“User email: <a href="mailto:&#106;&#111;&#x68;&#110;&#64;&#101;&#120;&#97;&#x6d;&#112;&#x6c;&#x65;&#46;&#99;&#x6f;&#109;">&#106;&#111;&#x68;&#110;&#64;&#101;&#120;&#97;&#x6d;&#112;&#x6c;&#x65;&#46;&#99;&#x6f;&#109;</a>“). Minimal overhead, but associations between facts are lost entirely. “Works as Senior Engineer at TechCorp on recommendation systems” becomes three disconnected fragments.</p>
 <p><strong>Enhanced Notes</strong> — Each memory is a paragraph with complete context. Preserves narrative structure, but suffers from storage redundancy, update complexity, and paragraphs too long for accurate retrieval.</p>
 <p><strong>JSON Cards</strong> — A three-level nested structure (Category → Subcategory → Key-Value), mimicking how humans categorize. Supports partial updates, but forces information into single categories.</p>
 <p><strong>Advanced JSON Cards</strong> — Each card records facts plus narrative context (backstory), subject identity (person), and relationship. Solves disambiguation: “Dr. Zhang” could be the user’s dentist or the user’s father’s cardiologist.</p>
@@ -877,7 +884,7 @@
             
             <div class="post-copyright" style="margin: 0 0 10px 0;">
               <p class="post-copyright-author" style="margin: 0 0 5px 0 !important;"><strong>Author:</strong> <a href="https://github.com/BODYsuperman" target="_blank">Alex</a></p>
-              <p class="post-copyright-link" style="margin: 0 0 5px 0 !important;"><strong>Article Link:</strong> <a href="https://bodysuperman.github.io/2026/07/24/Building-AI-Agents-From-Context-to-Memory/" target="_blank">https://bodysuperman.github.io/2026/07/24/Building-AI-Agents-From-Context-to-Memory/</a></p>
+              <p class="post-copyright-link" style="margin: 0 0 5px 0 !important;"><strong>Article Link:</strong> <a href="https://bodysuperman.github.io/2026/06/10/Building-AI-Agents-From-Context-to-Memory/" target="_blank">https://bodysuperman.github.io/2026/06/10/Building-AI-Agents-From-Context-to-Memory/</a></p>
               <p class="post-copyright-license" style="margin: 0 !important;"><strong>License:</strong> This article is licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a>. Please credit the original author and include the source link when reposting.</p>
             </div>
 
@@ -1115,7 +1122,7 @@ NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
       repo        : 'blog-comment',
       owner       : 'BODYsuperman',
       admin       : ['BODYsuperman'],
-      id          : '17e9c647664622f24314b238e4086bbb',
+      id          : '804c705e6390f9bbeb161df773b1ee81',
         language: '',
       distractionFreeMode: true
     });
