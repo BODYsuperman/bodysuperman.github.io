@@ -1,0 +1,1129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/logo-180.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/logo-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/logo-16.png">
+  <link rel="mask-icon" href="/images/logo-512.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|monospace:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"bodysuperman.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null,"use":"Gitalk","text":true},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="Introduction What Is an AI Agent The Core Formula: LLM + Context + Tools The ReAct Loop: How Agents Actually Work   Context Engineering: The Ceiling of Agent Capability Context at the API Level: Stat">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Building AI Agents: From Context to Memory">
+<meta property="og:url" content="https://bodysuperman.github.io/2026/07/24/Building-AI-Agents-From-Context-to-Memory/index.html">
+<meta property="og:site_name" content="AI with Alex&#39;s Blog">
+<meta property="og:description" content="Introduction What Is an AI Agent The Core Formula: LLM + Context + Tools The ReAct Loop: How Agents Actually Work   Context Engineering: The Ceiling of Agent Capability Context at the API Level: Stat">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2026-07-24T07:09:38.000Z">
+<meta property="article:modified_time" content="2026-07-24T07:09:38.000Z">
+<meta property="article:author" content="AI with Alex">
+<meta property="article:tag" content="AI Agent">
+<meta property="article:tag" content="LLM">
+<meta property="article:tag" content="Context Engineering">
+<meta property="article:tag" content="RAG">
+<meta property="article:tag" content="Memory">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://bodysuperman.github.io/2026/07/24/Building-AI-Agents-From-Context-to-Memory/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>Building AI Agents: From Context to Memory | AI with Alex's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+
+
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">AI with Alex's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+   
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://bodysuperman.github.io/2026/07/24/Building-AI-Agents-From-Context-to-Memory/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+      <meta itemprop="name" content="AI with Alex">
+      <meta itemprop="description" content="Attention(Q,K,V)=softmax(QK^T/sqrt(d_k))V">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="AI with Alex's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Building AI Agents: From Context to Memory
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2026-07-24 15:09:38" itemprop="dateCreated datePublished" datetime="2026-07-24T15:09:38+08:00">2026-07-24</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/AI/" itemprop="url" rel="index"><span itemprop="name">AI</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/AI/AI-Agent/" itemprop="url" rel="index"><span itemprop="name">AI Agent</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>35k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>32 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <ul>
+<li><a href="#introduction">Introduction</a></li>
+<li><a href="#what-is-an-ai-agent">What Is an AI Agent</a><ul>
+<li><a href="#the-core-formula-llm-context-tools">The Core Formula: LLM + Context + Tools</a></li>
+<li><a href="#the-react-loop-how-agents-actually-work">The ReAct Loop: How Agents Actually Work</a></li>
+</ul>
+</li>
+<li><a href="#context-engineering-the-ceiling-of-agent-capability">Context Engineering: The Ceiling of Agent Capability</a><ul>
+<li><a href="#context-at-the-api-level-static-prefix-dynamic-trajectory">Context at the API Level: Static Prefix + Dynamic Trajectory</a></li>
+<li><a href="#kv-cache-why-prefix-stability-matters">KV Cache: Why Prefix Stability Matters</a></li>
+<li><a href="#prompt-engineering-writing-the-agents-operating-manual">Prompt Engineering: Writing the Agent’s Operating Manual</a></li>
+<li><a href="#agent-skills-load-knowledge-on-demand">Agent Skills: Load Knowledge On Demand</a></li>
+<li><a href="#agent-status-bar-from-implicit-state-to-explicit-knowledge">Agent Status Bar: From Implicit State to Explicit Knowledge</a></li>
+<li><a href="#context-compression-when-less-is-more">Context Compression: When Less Is More</a></li>
+</ul>
+</li>
+<li><a href="#from-context-to-memory-making-agents-remember">From Context to Memory: Making Agents Remember</a><ul>
+<li><a href="#user-memory-building-a-model-of-the-user">User Memory: Building a Model of the User</a></li>
+<li><a href="#four-storage-formats-from-simple-notes-to-advanced-json-cards">Four Storage Formats: From Simple Notes to Advanced JSON Cards</a></li>
+<li><a href="#rag-giving-agents-a-knowledge-base">RAG: Giving Agents a Knowledge Base</a></li>
+<li><a href="#beyond-flat-text-structured-indexing-and-agentic-rag">Beyond Flat Text: Structured Indexing and Agentic RAG</a></li>
+<li><a href="#contextual-retrieval-fixing-chunking-at-the-root">Contextual Retrieval: Fixing Chunking at the Root</a></li>
+<li><a href="#the-two-tier-memory-architecture">The Two-Tier Memory Architecture</a></li>
+</ul>
+</li>
+<li><a href="#harness-engineering-reliability-beyond-the-demo">Harness Engineering: Reliability Beyond the Demo</a><ul>
+<li><a href="#constrain-verify-correct-the-three-safety-layers">Constrain, Verify, Correct: The Three Safety Layers</a></li>
+<li><a href="#workflow-vs-autonomous-choosing-the-right-pattern">Workflow vs. Autonomous: Choosing the Right Pattern</a></li>
+</ul>
+</li>
+<li><a href="#best-practices">Best Practices</a></li>
+<li><a href="#faq">FAQ</a></li>
+<li><a href="#summary">Summary</a></li>
+</ul>
+<span id="more"></span>
+
+<h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h2><p>If you have used Cursor to write code and watched it search your codebase, edit multiple files, and rerun tests until they pass, you have already used an AI Agent. The same is true if you have used Deep Research to investigate a topic through repeated searching and reading, or had Manus control a browser to finish online tasks.</p>
+<p>These products take many forms, but they share a common trait: they are no longer passive “you ask, it answers” conversations. They plan their own execution steps, call the tools each task requires, and adjust their strategy as results come in.</p>
+<p>This article walks through the core ideas behind modern AI Agents, from the foundational formula, to context engineering within a single session, to persistent memory across sessions. The goal is to give you a mental model you can use to build your own agents.</p>
+<h2 id="What-Is-an-AI-Agent"><a href="#What-Is-an-AI-Agent" class="headerlink" title="What Is an AI Agent"></a>What Is an AI Agent</h2><h3 id="The-Core-Formula-LLM-Context-Tools"><a href="#The-Core-Formula-LLM-Context-Tools" class="headerlink" title="The Core Formula: LLM + Context + Tools"></a>The Core Formula: LLM + Context + Tools</h3><p>The essence of a modern Agent system fits into one concise formula:</p>
+<p><strong>Agent &#x3D; LLM + Context + Tools</strong></p>
+<p>Each term is broader than it first appears:</p>
+<ul>
+<li><strong>The LLM is the reasoning engine.</strong> It is the decision-making core, responsible for understanding intent, reasoning, planning, and judgment. Its capabilities come from world knowledge acquired during pre-training, plus decision-making strategies encoded through post-training.</li>
+<li><strong>Context is the working set of information.</strong> Not just the text fed into the model, but everything available at each decision point—the environment, user memory, domain knowledge, the agent’s own state, and task progress.</li>
+<li><strong>Tools are the action interfaces.</strong> The full set of ways the agent can act—from predefined tool calls to skills loaded on demand, from generating code to delegating work to sub-agents.</li>
+</ul>
+<p>Put more intuitively: <strong>Agent &#x3D; Reasoning Engine + Working Context + Action Interfaces</strong>. The model reasons and decides, the context provides the information those decisions depend on, and the tools provide the interfaces through which decisions affect the outside world.</p>
+<p>Different kinds of agents compare across these three dimensions:</p>
+<table>
+<thead>
+<tr>
+<th>Agent Product</th>
+<th>Working Context</th>
+<th>Action Interfaces</th>
+<th>Strategy</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Coding Agents (Cursor)</td>
+<td>Requirements, codebase, terminal</td>
+<td>Code search, file read&#x2F;write, command execution</td>
+<td>Understand → search → edit → test → debug</td>
+</tr>
+<tr>
+<td>Search Agents (Deep Research)</td>
+<td>Web resources, databases</td>
+<td>Search queries, web reading, summary generation</td>
+<td>Iterative deepening based on existing information</td>
+</tr>
+<tr>
+<td>Computer Control (Manus)</td>
+<td>Screen, browser, file system</td>
+<td>Clicking, typing, scrolling, screenshots</td>
+<td>Visual perception + operation</td>
+</tr>
+<tr>
+<td>Phone Assistants (Doubao)</td>
+<td>Phone screen, installed apps</td>
+<td>Clicking, swiping, opening apps</td>
+<td>Intent understanding + app control</td>
+</tr>
+<tr>
+<td>Task Agents (Pine AI)</td>
+<td>Account info, historical bills</td>
+<td>Making calls, sending emails, filling forms</td>
+<td>Multi-step task execution</td>
+</tr>
+</tbody></table>
+<p>These systems share three features: an <strong>open-ended action space</strong> (generating arbitrary natural language and code, not picking from fixed buttons), <strong>internal reasoning</strong> (planning before acting), and <strong>continuous interaction</strong> (adjusting strategy based on feedback).</p>
+<h3 id="The-ReAct-Loop-How-Agents-Actually-Work"><a href="#The-ReAct-Loop-How-Agents-Actually-Work" class="headerlink" title="The ReAct Loop: How Agents Actually Work"></a>The ReAct Loop: How Agents Actually Work</h3><p>The core execution pattern is called <strong>ReAct</strong> (Reasoning + Acting). Despite the name mentioning only reasoning and acting, the actual loop has three stages: the model first <strong>reasons</strong> about what to do next, then calls a tool to <strong>act</strong>, then <strong>observes</strong> the tool’s result and reasons about the subsequent step.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Reason → Act → Observe → Reason → Act → Observe → ... (until task is done)</span><br></pre></td></tr></table></figure>
+
+<p>Consider aggregating revenue across multiple currencies. The user asks: “Based on the company’s quarterly revenue: Q1 2.5M USD, Q2 2.1M EUR, Q3 1.8M GBP, Q4 380M JPY, calculate total annual revenue.”</p>
+<p>The agent’s <strong>trajectory</strong>—the message history that accumulates as it works—looks like this:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">trajectory = [</span><br><span class="line">  &#123;role: &quot;user&quot;, content: &quot;Based on quarterly revenue...calculate total&quot;&#125;,</span><br><span class="line"></span><br><span class="line">  # Iteration 1: LLM reasons and calls conversion tools in parallel</span><br><span class="line">  &#123;role: &quot;assistant&quot;,</span><br><span class="line">   reasoning: &quot;Need to convert all currencies to USD...&quot;,</span><br><span class="line">   tool_calls: [</span><br><span class="line">     &#123;name: &quot;convert_currency&quot;, args: &#123;amount: 2100000, from: &quot;EUR&quot;, to: &quot;USD&quot;&#125;&#125;,</span><br><span class="line">     &#123;name: &quot;convert_currency&quot;, args: &#123;amount: 1800000, from: &quot;GBP&quot;, to: &quot;USD&quot;&#125;&#125;,</span><br><span class="line">     &#123;name: &quot;convert_currency&quot;, args: &#123;amount: 380000000, from: &quot;JPY&quot;, to: &quot;USD&quot;&#125;&#125;</span><br><span class="line">   ]&#125;,</span><br><span class="line"></span><br><span class="line">  # Framework executes tools, adds results to trajectory</span><br><span class="line">  &#123;role: &quot;tool&quot;, content: &quot;EUR-&gt;USD: 2282608.7&quot;&#125;,</span><br><span class="line">  &#123;role: &quot;tool&quot;, content: &quot;GBP-&gt;USD: 2278481.01&quot;&#125;,</span><br><span class="line">  &#123;role: &quot;tool&quot;, content: &quot;JPY-&gt;USD: 2541806.02&quot;&#125;,</span><br><span class="line"></span><br><span class="line">  # Iteration 2: LLM aggregates with code interpreter</span><br><span class="line">  &#123;role: &quot;assistant&quot;,</span><br><span class="line">   reasoning: &quot;Conversion results obtained, now aggregate...&quot;,</span><br><span class="line">   tool_calls: [&#123;name: &quot;code_interpreter&quot;, args: &#123;code: &quot;total = 2500000 + ...&quot;&#125;&#125;]&#125;,</span><br><span class="line"></span><br><span class="line">  &#123;role: &quot;tool&quot;, content: &quot;Total: $9,602,895.73, Average: $2,400,723.93&quot;&#125;,</span><br><span class="line"></span><br><span class="line">  # Iteration 3: LLM produces final answer</span><br><span class="line">  &#123;role: &quot;assistant&quot;,</span><br><span class="line">   reasoning: &quot;All calculations complete, summarizing...&quot;,</span><br><span class="line">   content: &quot;FINAL ANSWER: Total revenue $9,602,895.73...&quot;&#125;</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+<p>A complex multi-step task was completed in 3 iterations and 4 tool calls. The elegance lies in the <strong>cumulative nature of the context</strong>: every LLM call receives the complete trajectory, so the model knows which stage it is in, what was tried before, and what the outcome was.</p>
+<p>The key insight: <strong>Agent context &#x3D; static prefix + trajectory</strong>. The static prefix (system prompt + tool definitions) stays fixed; the trajectory (user messages + assistant messages + tool results) grows with each interaction.</p>
+<h2 id="Context-Engineering-The-Ceiling-of-Agent-Capability"><a href="#Context-Engineering-The-Ceiling-of-Agent-Capability" class="headerlink" title="Context Engineering: The Ceiling of Agent Capability"></a>Context Engineering: The Ceiling of Agent Capability</h2><p>Large language models achieve strong results on benchmarks, but often underperform in real-world settings. The reason is straightforward: model capabilities are general-purpose, while concrete tasks depend on local knowledge—product architecture, business rules, operational constraints. This information is absent from the model’s parameters.</p>
+<p>Consider a Coding Agent given the instruction “Help me fix this bug.” The quality of the context it receives determines whether it can complete the task:</p>
+<ul>
+<li><strong>Code context</strong>: codebase structure, module responsibilities, coding standards. Without this, the agent may produce syntactically correct code that violates the project’s architecture.</li>
+<li><strong>Process requirements</strong>: Git branching strategy, commit conventions, CI&#x2F;CD requirements. Without this, the agent may commit untested code directly to main.</li>
+<li><strong>Environment configuration</strong>: dev setup, test database connection strings, API key management. Without this, a fix that works locally fails in test.</li>
+</ul>
+<p>The model’s inherent capability is only the foundation; <strong>context sets the ceiling</strong>. A moderately capable model with well-organized context can often outperform a stronger model operating with insufficient context.</p>
+<h3 id="Context-at-the-API-Level-Static-Prefix-Dynamic-Trajectory"><a href="#Context-at-the-API-Level-Static-Prefix-Dynamic-Trajectory" class="headerlink" title="Context at the API Level: Static Prefix + Dynamic Trajectory"></a>Context at the API Level: Static Prefix + Dynamic Trajectory</h3><p>At the API level, the context of each LLM call consists of five parts:</p>
+<ul>
+<li><strong>System Prompt</strong>: Developer-written instructions defining the agent’s identity, permissions, and rules of conduct. Stays fixed for the whole conversation.</li>
+<li><strong>Tool Definitions</strong>: Declares the names, descriptions, and parameter formats of available tools. Without them, the agent cannot recognize or call any tools.</li>
+<li><strong>User Messages</strong>: Input from the user, possibly containing external knowledge retrieved via RAG.</li>
+<li><strong>Assistant Messages</strong>: Previous model outputs, including <code>reasoning</code>, <code>content</code>, and <code>tool_calls</code>.</li>
+<li><strong>Tool Results</strong>: Output returned after the framework executes a tool.</li>
+</ul>
+<p>The first two form the <strong>static prefix</strong>; the last three form the <strong>dynamic trajectory</strong> that grows with every interaction.</p>
+<p>An ablation study reveals what happens when each component is removed:</p>
+<table>
+<thead>
+<tr>
+<th>Removed Component</th>
+<th>Effect on Agent</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Tool Definitions</td>
+<td>Agent cannot recognize or call any tools—completely incapable of action</td>
+</tr>
+<tr>
+<td>Tool Results</td>
+<td>Agent receives no execution feedback, calls the same tool repeatedly in an infinite loop</td>
+</tr>
+<tr>
+<td>Reasoning in assistant messages</td>
+<td>Consecutive decisions start contradicting each other</td>
+</tr>
+<tr>
+<td>Message history</td>
+<td>Agent loses task continuity, restarts from the beginning, repeats done steps</td>
+</tr>
+</tbody></table>
+<p>The core insight: <strong>context determines what information the agent has at decision time, and the agent can only decide based on that information</strong>.</p>
+<h3 id="KV-Cache-Why-Prefix-Stability-Matters"><a href="#KV-Cache-Why-Prefix-Stability-Matters" class="headerlink" title="KV Cache: Why Prefix Stability Matters"></a>KV Cache: Why Prefix Stability Matters</h3><p>Every time the model generates a token, it refers back to intermediate computation results of preceding tokens. Recomputing those from scratch on every round would be expensive. <strong>KV Cache</strong> stores the key-value states so later computation can reuse them. The prerequisite: <strong>the prefix must stay completely unchanged</strong>.</p>
+<p>A production incident illustrates the stakes. A team’s customer service agent handled 100,000 conversations a day. An engineer added a line <code>Current time: &#123;&#123;now&#125;&#125;</code> to the system prompt so the agent would know the current time. The next day, monitoring alerts fired: time-to-first-token increased from 0.5 seconds to 3–5 seconds, and the monthly inference bill nearly doubled.</p>
+<p>That one timestamp line invalidated the KV Cache on every request. The system prompt was now different each time, forcing the model to recompute the key-value pairs for the prefix from scratch.</p>
+<p>Three practical principles follow:</p>
+<ol>
+<li><strong>Once the system prompt and tool definitions are finalized, do not change them.</strong> Any modification invalidates the entire cache.</li>
+<li><strong>Always append dynamic information to the end.</strong> Timestamps and user status should be new messages at the end of the conversation, not modifications to the system prompt.</li>
+<li><strong>Use the standard API format; do not manually concatenate messages.</strong> Structured messages are translated by the Chat Template into a fixed token sequence the model saw during training.</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">┌─────────────────────────────────────────────────────────┐</span><br><span class="line">│                    API Request                          │</span><br><span class="line">│                                                         │</span><br><span class="line">│  ┌─────────────────────────────────┐  ← Static prefix   │</span><br><span class="line">│  │ system prompt + tool definitions│    (KV Cache hits) │</span><br><span class="line">│  └─────────────────────────────────┘                    │</span><br><span class="line">│  ┌─────────────────────────────────┐  ← Dynamic part    │</span><br><span class="line">│  │     user / assistant / tool     │    (grows each     │</span><br><span class="line">│  │         messages (trajectory)   │     turn)          │</span><br><span class="line">│  └─────────────────────────────────┘                    │</span><br><span class="line">│  ┌─────────────────────────────────┐  ← Append-only     │</span><br><span class="line">│  │   new dynamic info (status bar) │    (cache-safe)    │</span><br><span class="line">│  └─────────────────────────────────┘                    │</span><br><span class="line">└─────────────────────────────────────────────────────────┘</span><br></pre></td></tr></table></figure>
+
+<h3 id="Prompt-Engineering-Writing-the-Agent’s-Operating-Manual"><a href="#Prompt-Engineering-Writing-the-Agent’s-Operating-Manual" class="headerlink" title="Prompt Engineering: Writing the Agent’s Operating Manual"></a>Prompt Engineering: Writing the Agent’s Operating Manual</h3><p>A practical litmus test: an LLM is like a highly capable new team member who is completely unfamiliar with your specific workflows. If such a person, after reading your system prompt, still does not know what to do, neither will the agent.</p>
+<p>Several dimensions matter:</p>
+<p><strong>Tone and style</strong> shape the user experience. Uppercase words like “NEVER do X” increase instruction salience, but overuse dilutes the effect—reserve them for truly critical constraints.</p>
+<p><strong>Structured prompts</strong> work because models are trained on structured data. XML tags carry semantic information (<code>&lt;working_directory&gt;</code> is immediately clear), and Markdown organizes content for both human and machine readers.</p>
+<p><strong>Process-driven prompts</strong> beat rule stacking. Imagine giving a new team member a manual with hundreds of scattered rules and no flowcharts. A process-driven prompt provides a clear Standard Operating Procedure:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">File Processing SOP:</span><br><span class="line"></span><br><span class="line">Step 1: Validation</span><br><span class="line">   Check if file exists and is accessible</span><br><span class="line">   - If not found → log error and stop</span><br><span class="line">   ↓</span><br><span class="line">Step 2: Classification</span><br><span class="line">   Determine file type based on extension and content</span><br><span class="line">   ↓</span><br><span class="line">Step 3: Preprocessing</span><br><span class="line">   Config files → create backup</span><br><span class="line">   Large files (&gt;1MB) → stream processing</span><br><span class="line">   ↓</span><br><span class="line">Step 4: Execution</span><br><span class="line">   Execute core processing logic based on file type</span><br></pre></td></tr></table></figure>
+
+<p><strong>Business rule refinement</strong> is the most critical—and most overlooked—piece. Vague rules like “choose the appropriate billing type based on the task situation” lead to unstable agent behavior. Rules must be defined to the point where they are executable: “NEVER use percentage-based billing for refunds. Use fixed_fee instead.”</p>
+<p>An ablation study on prompt engineering found that removing structure from the system prompt (keeping all the rule content but converting the ordered process into an unstructured collection) dropped the task success rate by over 30%.</p>
+<h3 id="Agent-Skills-Load-Knowledge-On-Demand"><a href="#Agent-Skills-Load-Knowledge-On-Demand" class="headerlink" title="Agent Skills: Load Knowledge On Demand"></a>Agent Skills: Load Knowledge On Demand</h3><p>As an agent handles more scenarios, the system prompt tends to grow: refund rules, coding standards, formatting requirements. Placing everything into a single prompt creates two problems: <strong>wasted tokens</strong> (most content is irrelevant to the current task) and <strong>diluted attention</strong> (irrelevant information drowns out key content).</p>
+<p>Agent Skills solve this through <strong>Progressive Disclosure</strong>: instead of loading all knowledge at once, let the agent load knowledge on demand. Each Skill is a modular knowledge package with three layers:</p>
+<ul>
+<li><strong>Layer 1 (Metadata)</strong>: A <code>SKILL.md</code> file with <code>name</code> and <code>description</code> fields, injected into context at startup. Usually only a few hundred tokens.</li>
+<li><strong>Layer 2 (Core Workflow)</strong>: When the agent determines a skill is needed, it loads the full <code>SKILL.md</code> via a dedicated tool. The content appears as a tool result.</li>
+<li><strong>Layer 3 (Details)</strong>: File references allow deeper navigation into sub-documents as needed.</li>
+</ul>
+<p>The production implementation (used by Claude Code) injects the metadata list as a <strong>user-role meta message at the end of the context</strong>, wrapped in <code>&lt;system-reminder&gt;</code> tags. This does not modify the system prompt, so the KV Cache prefix remains stable. Full content is then loaded on demand via a dedicated tool.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">Trajectory with Skills:</span><br><span class="line">┌──────────────────────────────────────┐</span><br><span class="line">│ system prompt + tool definitions     │ ← Cached prefix</span><br><span class="line">├──────────────────────────────────────┤</span><br><span class="line">│ user: &quot;convert this PDF to PPTX&quot;     │</span><br><span class="line">│ assistant: tool_calls: [Skill(&quot;pdf&quot;)]│ ← Agent decides</span><br><span class="line">│ tool: &lt;full SKILL.md content&gt;        │ ← Loaded on demand</span><br><span class="line">│ assistant: tool_calls:[Skill(&quot;pptx&quot;)]│</span><br><span class="line">│ tool: &lt;full SKILL.md content&gt;        │</span><br><span class="line">│ ...                                  │</span><br><span class="line">│ user: &lt;system-reminder&gt;              │ ← End-of-context</span><br><span class="line">│   Available skills: [pdf, pptx, ...] │   meta message</span><br><span class="line">│ &lt;/system-reminder&gt;                   │</span><br><span class="line">└──────────────────────────────────────┘</span><br></pre></td></tr></table></figure>
+
+<h3 id="Agent-Status-Bar-From-Implicit-State-to-Explicit-Knowledge"><a href="#Agent-Status-Bar-From-Implicit-State-to-Explicit-Knowledge" class="headerlink" title="Agent Status Bar: From Implicit State to Explicit Knowledge"></a>Agent Status Bar: From Implicit State to Explicit Knowledge</h3><p>The prompt engineering section solved “what static instructions to give the model.” But during execution, the agent also needs to track its own state dynamically. The <strong>Agent Status Bar</strong> addresses this.</p>
+<p>The closest analogy is the status bar of an operating system. On a phone, the top of the screen displays time, battery level, and signal strength—giving users immediate access to device state. The Agent Status Bar serves a similar purpose for the model: it is a <strong>state summary</strong> injected at the end of the context.</p>
+<p>Why is this needed? The theoretical basis is a fundamental property of attention: <strong>in-context learning is more retrieval-like than reasoning-like</strong>. The model is good at finding information that already exists in the context, but less reliable at actively summarizing and deriving aggregate state during a single forward pass.</p>
+<p>Consider a phone-calling agent that must call each merchant no more than three times. After three calls, it often miscounts and makes a fourth. The problem: “How many times have I called?” is not automatically distilled into an explicit fact. It remains scattered across raw call records.</p>
+<p>When we directly include the call count in each tool result:</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">agent_status</span>&gt;</span></span><br><span class="line">Current State:</span><br><span class="line">- Tool call summary: &#x27;phone_call&#x27; invoked 3 times (Xfinity: 3/3)</span><br><span class="line">- Constraint check: Maximum calls reached (3/3)</span><br><span class="line">- TODO: [1] Cancel plan (in_progress)</span><br><span class="line"><span class="tag">&lt;/<span class="name">agent_status</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>The model can immediately recognize the limit is reached and stop. Experiments showed that for weak models, a precomputed status bar recovered accuracy by 40–54 percentage points; for strong models, it reduced reasoning tokens by 80–90% or more.</p>
+<p>Three actionable lessons emerged:</p>
+<ol>
+<li><strong>Maintain the status bar with code, not with an LLM.</strong> A 20-line regex function achieved ground-truth accuracy; a frontier model summarizing the full history produced many incorrect entries.</li>
+<li><strong>Before deleting original context, confirm the status bar covers all questions.</strong> The status bar is a lossy projection. If a question asks for information it wasn’t designed to capture, accuracy can collapse.</li>
+<li><strong>Monitor status bar accuracy as a first-line production metric.</strong> The model almost unconditionally trusts the status bar—if it says “called 3 times,” the model accepts that value without checking.</li>
+</ol>
+<h3 id="Context-Compression-When-Less-Is-More"><a href="#Context-Compression-When-Less-Is-More" class="headerlink" title="Context Compression: When Less Is More"></a>Context Compression: When Less Is More</h3><p>As multi-turn interactions deepen, the context keeps expanding. Compression has two distinct motivations:</p>
+<ol>
+<li><strong>Addressing length and cost constraints.</strong> The context window is limited, and a few rounds of tool calls can fill it.</li>
+<li><strong>Improving reasoning quality.</strong> Summarized knowledge is more useful to the model than raw information.</li>
+</ol>
+<p>The second motivation is deeper and easier to overlook. Suppose an agent accumulates information through 10 web searches. The raw results are scattered across tens of thousands of tokens. When the agent must make a final decision, its attention becomes diffuse.</p>
+<p>After the 10th search, a single LLM call could produce a structured summary: “Currently known: A is…, B is…, information on C is still missing.” The model can then use this refined knowledge without re-extracting from raw data.</p>
+<p>A phenomenon called <strong>Context Rot</strong> makes this critical. Context rot is different from context overflow: overflow means “cannot fit any more,” while rot means “it fits but cannot be found.” The agent appears to be working normally while decision quality quietly deteriorates.</p>
+<p>Six compression strategies were compared in a research task (tracking OpenAI co-founders’ employment status):</p>
+<table>
+<thead>
+<tr>
+<th>Strategy</th>
+<th>Compression Ratio</th>
+<th>Tokens</th>
+<th>Iterations</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>No Compression</td>
+<td>N&#x2F;A</td>
+<td>overflow</td>
+<td>5</td>
+<td>Fails at 128K limit</td>
+</tr>
+<tr>
+<td>Individual Summarization</td>
+<td>10.9%</td>
+<td>276,608</td>
+<td>12</td>
+<td>Information fragmentation</td>
+</tr>
+<tr>
+<td>Combined Summarization</td>
+<td>4.3%</td>
+<td>93,449</td>
+<td>10</td>
+<td>May lose info at end</td>
+</tr>
+<tr>
+<td>Context-Aware</td>
+<td>3.0%</td>
+<td>40,157</td>
+<td>7</td>
+<td>Best efficiency</td>
+</tr>
+<tr>
+<td>Context-Aware + Citations</td>
+<td>4.1%</td>
+<td>222,992</td>
+<td>—</td>
+<td>Verifiable</td>
+</tr>
+<tr>
+<td>Adaptive Windowing</td>
+<td>varies</td>
+<td>174,601</td>
+<td>—</td>
+<td>Compresses only near limit</td>
+</tr>
+</tbody></table>
+<p>Context-aware compression—incorporating current query intent into the compression decision—reduced token usage by over 75% compared to naive approaches.</p>
+<p>Production-grade systems like Claude Code use a <strong>hierarchical compression mechanism</strong> with five layers, applied in order of increasing cost:</p>
+<ol>
+<li><strong>Tool result budget control</strong>: Large outputs stored on disk; model sees only a preview.</li>
+<li><strong>Direct noise deletion</strong>: Low-value content removed without summarization.</li>
+<li><strong>API-level micro-compression</strong>: Server removes specific tool results from prefix.</li>
+<li><strong>Archival summarization</strong>: Structured round-by-round summarization (like <code>git log</code>).</li>
+<li><strong>Full compression</strong>: LLM-driven complete compression, as a last resort with a circuit breaker.</li>
+</ol>
+<p>What compression most easily loses is not the details themselves, but <strong>early architectural decisions, the reasoning behind constraints, and failed paths</strong>. Explicit retention priorities prevent this loss.</p>
+<h2 id="From-Context-to-Memory-Making-Agents-Remember"><a href="#From-Context-to-Memory-Making-Agents-Remember" class="headerlink" title="From Context to Memory: Making Agents Remember"></a>From Context to Memory: Making Agents Remember</h2><p>The previous section addressed context management within a single session. But how do you enable an agent to remember users and retain knowledge even after a conversation ends?</p>
+<p>This persistent memory system operates at two scales:</p>
+<ul>
+<li><strong>User Memory</strong> is personalized memory for an individual—the agent gradually learns each user’s preferences, habits, and needs.</li>
+<li><strong>Knowledge Base</strong> is collective knowledge shared across all users—industry regulations, company procedures, specialized documentation.</li>
+</ul>
+<h3 id="User-Memory-Building-a-Model-of-the-User"><a href="#User-Memory-Building-a-Model-of-the-User" class="headerlink" title="User Memory: Building a Model of the User"></a>User Memory: Building a Model of the User</h3><p>Memory is not a transcript of everything a user says. We don’t remember the raw content of every conversation with a friend; through repeated interaction we form a mental model of them.</p>
+<p>After a conversation about booking a flight to Tokyo, the agent framework calls a dedicated LLM to extract information worth remembering:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Extracted memories:</span><br><span class="line">- User prefers window seats (preference)</span><br><span class="line">- User is vegetarian, needs special meals (dietary restriction)</span><br><span class="line">- User&#x27;s United MileagePlus number: 12345678 (loyalty program)</span><br><span class="line">- User has travel plans to Tokyo (recent activity)</span><br></pre></td></tr></table></figure>
+
+<p>Key characteristics: <strong>Selectivity</strong> (transient info is forgotten), <strong>Abstraction</strong> (specific instances become general preferences), and <strong>Structure</strong> (each memory is tagged with a type).</p>
+<p>A three-level evaluation framework measures memory capabilities:</p>
+<table>
+<thead>
+<tr>
+<th>Level</th>
+<th>Capability</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Level 1: Basic Recall</td>
+<td>Store and retrieve directly-provided info</td>
+<td>“My membership number is 12345”</td>
+</tr>
+<tr>
+<td>Level 2: Multi-Session Retrieval</td>
+<td>Reason over info spanning different sessions</td>
+<td>User with two cars asks to “schedule maintenance”—agent finds both</td>
+</tr>
+<tr>
+<td>Level 3: Proactive Service</td>
+<td>Synthesize across sessions to offer predictive help</td>
+<td>Booking international flight → surface expiring passport</td>
+</tr>
+</tbody></table>
+<p>Memory is divided into hierarchical levels, mirroring human cognition:</p>
+<ul>
+<li><strong>Trajectory</strong>: Complete history of a single session, append-only, never rewritten.</li>
+<li><strong>User Long-Term Memory</strong>: Persistent storage across sessions, repeatedly rewritten, merged, and pruned.</li>
+</ul>
+<p>From a cognitive science perspective, long-term memory has three types, each with an agent counterpart:</p>
+<table>
+<thead>
+<tr>
+<th>Cognitive Type</th>
+<th>Human Example</th>
+<th>Agent Counterpart</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Episodic Memory</td>
+<td>“Great dinner with colleagues last Wednesday”</td>
+<td>“User booked ANA flight to Tokyo next Friday”</td>
+</tr>
+<tr>
+<td>Semantic Memory</td>
+<td>“Capital of Italy is Rome”</td>
+<td>“User is vegetarian, prefers window seats”</td>
+</tr>
+<tr>
+<td>Procedural Memory</td>
+<td>Ability to ride a bicycle</td>
+<td>“First search direct flights → confirm seat → use FF number”</td>
+</tr>
+</tbody></table>
+<h3 id="Four-Storage-Formats-From-Simple-Notes-to-Advanced-JSON-Cards"><a href="#Four-Storage-Formats-From-Simple-Notes-to-Advanced-JSON-Cards" class="headerlink" title="Four Storage Formats: From Simple Notes to Advanced JSON Cards"></a>Four Storage Formats: From Simple Notes to Advanced JSON Cards</h3><p>The same piece of user information can be represented with different granularities:</p>
+<p><strong>Simple Notes</strong> — Each memory is a minimal, indivisible fact (“User email: <a href="mailto:&#x6a;&#x6f;&#x68;&#x6e;&#64;&#101;&#x78;&#97;&#109;&#x70;&#108;&#101;&#46;&#99;&#111;&#109;">&#x6a;&#x6f;&#x68;&#x6e;&#64;&#101;&#x78;&#97;&#109;&#x70;&#108;&#101;&#46;&#99;&#111;&#109;</a>“). Minimal overhead, but associations between facts are lost entirely. “Works as Senior Engineer at TechCorp on recommendation systems” becomes three disconnected fragments.</p>
+<p><strong>Enhanced Notes</strong> — Each memory is a paragraph with complete context. Preserves narrative structure, but suffers from storage redundancy, update complexity, and paragraphs too long for accurate retrieval.</p>
+<p><strong>JSON Cards</strong> — A three-level nested structure (Category → Subcategory → Key-Value), mimicking how humans categorize. Supports partial updates, but forces information into single categories.</p>
+<p><strong>Advanced JSON Cards</strong> — Each card records facts plus narrative context (backstory), subject identity (person), and relationship. Solves disambiguation: “Dr. Zhang” could be the user’s dentist or the user’s father’s cardiologist.</p>
+<table>
+<thead>
+<tr>
+<th>Format</th>
+<th>Strength</th>
+<th>Weakness</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Simple Notes</td>
+<td>O(1) operations, minimal overhead</td>
+<td>Associations lost</td>
+</tr>
+<tr>
+<td>Enhanced Notes</td>
+<td>Semantically complete</td>
+<td>Redundancy, hard to update</td>
+</tr>
+<tr>
+<td>JSON Cards</td>
+<td>Structured, partial updates</td>
+<td>Forces single categorization</td>
+</tr>
+<tr>
+<td>Advanced JSON Cards</td>
+<td>Disambiguation, rich context</td>
+<td>High maintenance cost</td>
+</tr>
+</tbody></table>
+<p>A hybrid approach works best in practice: Advanced JSON Cards for <strong>critical, low-volume</strong> data; Simple Notes for <strong>large volumes of non-critical</strong> facts.</p>
+<h3 id="RAG-Giving-Agents-a-Knowledge-Base"><a href="#RAG-Giving-Agents-a-Knowledge-Base" class="headerlink" title="RAG: Giving Agents a Knowledge Base"></a>RAG: Giving Agents a Knowledge Base</h3><p>The core technology for building a shared knowledge base is <strong>Retrieval-Augmented Generation (RAG)</strong>. The central idea: combine the LLM’s reasoning with the breadth and timeliness of an external knowledge base.</p>
+<p>A typical RAG system has two parts: a <strong>retriever</strong> (finds relevant fragments) and a <strong>generator</strong> (uses fragments as context to generate an answer).</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 1. User query</span></span><br><span class="line">query = <span class="string">&quot;What is quantum entanglement?&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 2. Retrieval: Find relevant fragments</span></span><br><span class="line">results = retriever.search(query, top_k=<span class="number">3</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 3. Generation: LLM uses retrieved results as context</span></span><br><span class="line">answer = llm.generate(</span><br><span class="line">    system=<span class="string">&quot;Answer based on the following reference materials.&quot;</span>,</span><br><span class="line">    context=results,</span><br><span class="line">    question=query</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p>The quality of the retriever directly determines RAG’s effectiveness. Two main retrieval approaches complement each other:</p>
+<p><strong>Dense Embeddings</strong> map text into a vector space where semantically similar content has close vector distances. They understand that “kitty” and “cat” are related, but may miss exact keyword matches.</p>
+<p><strong>Sparse Embeddings</strong> (like BM25) are rooted in traditional keyword matching. A sparse vector has most dimensions zero—only dimensions for words in the document are non-zero. BM25 improves on TF-IDF by introducing term frequency saturation and document length normalization.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Query: &quot;model distillation&quot;</span><br><span class="line">Word &quot;model&quot;  → appears in 60/100 docs → low IDF → low discriminative power</span><br><span class="line">Word &quot;distillation&quot; → appears in 3/100 docs → high IDF → high discriminative power</span><br><span class="line"></span><br><span class="line">BM25 ranking weights &quot;distillation&quot; much more heavily than &quot;model&quot;</span><br></pre></td></tr></table></figure>
+
+<p><strong>Hybrid retrieval</strong> combines both: run both engines in parallel, merge results using Reciprocal Rank Fusion (RRF), then apply a neural reranker for the final ordering.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">┌──────────┐     ┌──────────┐</span><br><span class="line">│  Dense   │     │  Sparse  │</span><br><span class="line">│ Retrieval│     │ Retrieval│</span><br><span class="line">└────┬─────┘     └────┬─────┘</span><br><span class="line">     │                │</span><br><span class="line">     └───────┬────────┘</span><br><span class="line">             ↓</span><br><span class="line">     ┌───────────────┐</span><br><span class="line">     │  Result Fusion│  (RRF: score = Σ 1/(k + rank))</span><br><span class="line">     └───────┬───────┘</span><br><span class="line">             ↓</span><br><span class="line">     ┌───────────────┐</span><br><span class="line">     │Neural Reranker│  (Cross-Encoder, deep matching)</span><br><span class="line">     └───────┬───────┘</span><br><span class="line">             ↓</span><br><span class="line">        Final ranking</span><br></pre></td></tr></table></figure>
+
+<h3 id="Beyond-Flat-Text-Structured-Indexing-and-Agentic-RAG"><a href="#Beyond-Flat-Text-Structured-Indexing-and-Agentic-RAG" class="headerlink" title="Beyond Flat Text: Structured Indexing and Agentic RAG"></a>Beyond Flat Text: Structured Indexing and Agentic RAG</h3><p>Simple chunking has a fundamental limitation: it flattens knowledge, ignoring structure and cross-document relationships. Two cases illustrate this:</p>
+<p><strong>The Black Cat Counting Problem</strong>: If a knowledge base has 100 case documents (90 black cats, 10 white cats) and the user asks “What is the ratio?”, top-k retrieval returns only a sample. The model sees 15 black cats and 3 white cats and draws incorrect conclusions. A pre-generated summary (“Total: 90 black, 10 white”) solves this instantly.</p>
+<p><strong>The Xfinity Discount Problem</strong>: Three isolated cases—Veteran John got a discount, Doctor Sarah got a discount, Teacher Mike was ineligible. When a nurse inquires, the retriever prioritizes Sarah’s case (semantic similarity between “nurse” and “doctor”) and misses Mike’s case, leading to an incorrect inference that nurses are eligible.</p>
+<p>Both cases point to the same conclusion: <strong>naive RAG is not enough</strong>. The model’s attention is a similarity-based soft retrieval system, not a thinking engine that actively summarizes. Compute must be invested at the indexing stage.</p>
+<p><strong>RAPTOR</strong> builds a tree hierarchy: cluster similar leaf nodes, generate parent summaries, and recurse upward. Retrieval can work at any abstraction level.</p>
+<p><strong>GraphRAG</strong> models knowledge as an entity-relationship graph. Its irreplaceable capability is <strong>multi-hop reasoning</strong>: “What is the address of my doctor’s hospital?” requires traversing user → doctor → hospital → address.</p>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Structure</th>
+<th>Best For</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>RAPTOR</td>
+<td>Tree hierarchy</td>
+<td>Drilling down from concept to details</td>
+</tr>
+<tr>
+<td>GraphRAG</td>
+<td>Entity-relationship graph</td>
+<td>“How does A relate to B?” queries</td>
+</tr>
+</tbody></table>
+<p><strong>Agentic RAG</strong> turns retrieval from a fixed pipeline into a dynamic, iterative exploration. The knowledge base becomes a tool the agent calls at any time, following the ReAct loop:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">Think: &quot;Need sentencing standards for negligent injury + intoxication + prior theft&quot;</span><br><span class="line">  ↓</span><br><span class="line">Act: Search for each sub-question in parallel</span><br><span class="line">  ↓</span><br><span class="line">Observe: Found basic provisions but missing link between prior theft and current offense</span><br><span class="line">  ↓</span><br><span class="line">Think: &quot;Need to search for recidivism rules across charges&quot;</span><br><span class="line">  ↓</span><br><span class="line">Act: Search for &quot;recidivism&quot; + &quot;negligent injury&quot;</span><br><span class="line">  ↓</span><br><span class="line">Observe: Found judicial interpretations</span><br><span class="line">  ↓</span><br><span class="line">Generate final answer with complete legal basis</span><br></pre></td></tr></table></figure>
+
+<h3 id="Contextual-Retrieval-Fixing-Chunking-at-the-Root"><a href="#Contextual-Retrieval-Fixing-Chunking-at-the-Root" class="headerlink" title="Contextual Retrieval: Fixing Chunking at the Root"></a>Contextual Retrieval: Fixing Chunking at the Root</h3><p>Even with agentic RAG, traditional chunking remains a bottleneck. An isolated fragment like “The company’s second-quarter revenue grew by 3%” is ambiguous—Which company? When? Which product line?</p>
+<p><strong>Contextual Retrieval</strong> fixes this at the source: before indexing, use an LLM to generate a short context prefix for each chunk, then concatenate it with the original text.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Original chunk: &quot;Revenue grew by 3%&quot;</span><br><span class="line"></span><br><span class="line">With context prefix:</span><br><span class="line">&quot;[Excerpted from &#x27;Key Performance Indicators&#x27; section of ACME Corp 2025 Q2 Financial Report]</span><br><span class="line"> Revenue grew by 3%&quot;</span><br></pre></td></tr></table></figure>
+
+<p>This strengthens both retrieval modes: BM25 gets rich matchable keywords (“ACME”, “2025 Q2”), and dense embeddings get accurate semantic background. According to Anthropic research, combining this with BM25 reduces the retrieval failure rate by 49%, and by 67% when combined with a reranker.</p>
+<h3 id="The-Two-Tier-Memory-Architecture"><a href="#The-Two-Tier-Memory-Architecture" class="headerlink" title="The Two-Tier Memory Architecture"></a>The Two-Tier Memory Architecture</h3><p>The highest level of user memory—<strong>Proactive Service</strong>—demands both a global overview and precise details at once. Resident context alone loses details to capacity limits; retrieval alone misses hidden cross-session connections.</p>
+<p>The solution is a <strong>two-tier memory architecture</strong>:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">┌─────────────────────────────────────────────┐</span><br><span class="line">│              Tier 1: Overview               │</span><br><span class="line">│  Advanced JSON Cards, resident in context   │</span><br><span class="line">│  ┌─────────┐ ┌─────────┐ ┌─────────┐        │</span><br><span class="line">│  │Passport │ │ Trips   │ │ Family  │        │</span><br><span class="line">│  │expires  │ │ Tokyo   │ │ members │        │</span><br><span class="line">│  │2025-02  │ │ 2025-01 │ │ ...     │        │</span><br><span class="line">│  └─────────┘ └─────────┘ └─────────┘        │</span><br><span class="line">├─────────────────────────────────────────────┤</span><br><span class="line">│              Tier 2: Details                │</span><br><span class="line">│  Contextual Retrieval, on-demand access     │</span><br><span class="line">│  ┌─────────────────────────────────────┐    │</span><br><span class="line">│  │ Original conversation chunks with   │    │</span><br><span class="line">│  │ context prefixes, fetched via RAG   │    │</span><br><span class="line">│  │ when details are needed             │    │</span><br><span class="line">│  └─────────────────────────────────────┘    │</span><br><span class="line">└─────────────────────────────────────────────┘</span><br></pre></td></tr></table></figure>
+
+<p>When the user books an international flight:</p>
+<ol>
+<li><strong>Fact Review</strong>: Agent reviews JSON Cards, identifies “Tokyo trip” and “passport info”</li>
+<li><strong>Association Reasoning</strong>: Flight date (January) is close to passport expiry (February)</li>
+<li><strong>Detail Verification</strong>: Uses Contextual Retrieval to find original conversations about passport and flights</li>
+<li><strong>Proactive Service</strong>: “Your passport is about to expire; I recommend expedited renewal.”</li>
+</ol>
+<h2 id="Harness-Engineering-Reliability-Beyond-the-Demo"><a href="#Harness-Engineering-Reliability-Beyond-the-Demo" class="headerlink" title="Harness Engineering: Reliability Beyond the Demo"></a>Harness Engineering: Reliability Beyond the Demo</h2><p>The core formula describes the agent’s internal composition. But between a working demo and a reliable product lies a substantial gap. <strong>Harness Engineering</strong> is the implementation-level view: treat the LLM as one core component (the Model), and call all supporting code the Harness.</p>
+<p>The expanded production-grade composition:</p>
+<blockquote>
+<p><strong>Agent &#x3D; LLM + [Context + Tools + Constrain + Verify + Correct] &#x3D; Model + Harness</strong></p>
+</blockquote>
+<p>A concrete example shows the value. Suppose you ask an agent to refund a user’s order placed 3 days ago:</p>
+<table>
+<thead>
+<tr>
+<th>Without Harness</th>
+<th>With Harness</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>No refund policy received (no context)</td>
+<td>System prompt specifies 7-day refund policy</td>
+</tr>
+<tr>
+<td>Doesn’t know which API to call (no tools)</td>
+<td>Calls <code>query_order</code> and <code>process_refund</code> tools</td>
+</tr>
+<tr>
+<td>Fabricates refund result (no verification)</td>
+<td>Framework checks refund doesn’t exceed order total</td>
+</tr>
+<tr>
+<td>User discovers refund never happened (no correction)</td>
+<td>Confirms against database; auto-retries on timeout</td>
+</tr>
+</tbody></table>
+<h3 id="Constrain-Verify-Correct-The-Three-Safety-Layers"><a href="#Constrain-Verify-Correct-The-Three-Safety-Layers" class="headerlink" title="Constrain, Verify, Correct: The Three Safety Layers"></a>Constrain, Verify, Correct: The Three Safety Layers</h3><table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Core Principle</th>
+<th>Practical Example</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Context</strong></td>
+<td>Information Sufficiency</td>
+<td>System prompts, knowledge bases</td>
+</tr>
+<tr>
+<td><strong>Tools</strong></td>
+<td>Clear Interface</td>
+<td>Tool names are intuitive, parameters have examples</td>
+</tr>
+<tr>
+<td><strong>Constrain</strong></td>
+<td>Fail-Safe Defaults</td>
+<td>Every tool requires user authorization by default</td>
+</tr>
+<tr>
+<td><strong>Verify</strong></td>
+<td>Input Isolation</td>
+<td>Security checks only look at structured data, not free-form text</td>
+</tr>
+<tr>
+<td><strong>Correct</strong></td>
+<td>Hide intermediate states until failure confirmed</td>
+<td>Silent retries, circuit breaker on consecutive failures</td>
+</tr>
+</tbody></table>
+<p>Guardrails implement the constrain&#x2F;verify&#x2F;correct layer as defense in depth:</p>
+<ul>
+<li><strong>Input-side</strong>: Relevance classifiers, safety classifiers, content moderation, rule-based protections</li>
+<li><strong>Execution-side</strong>: Tool risk rating (low&#x2F;medium&#x2F;high), with high-risk operations requiring human confirmation</li>
+<li><strong>Output-side</strong>: PII filters, output validation against brand values</li>
+</ul>
+<h3 id="Workflow-vs-Autonomous-Choosing-the-Right-Pattern"><a href="#Workflow-vs-Autonomous-Choosing-the-Right-Pattern" class="headerlink" title="Workflow vs. Autonomous: Choosing the Right Pattern"></a>Workflow vs. Autonomous: Choosing the Right Pattern</h3><p><strong>Workflows</strong> orchestrate LLMs through predefined code paths. The execution path is deterministic—critical steps are never skipped. A flight-booking workflow has four fixed nodes: Verify Identity → Search Flights → Complete Payment → Confirm Booking. The system won’t book before payment is completed.</p>
+<p><strong>Autonomous Agents</strong> determine their execution path at runtime based on environmental feedback. The user says “Book me a flight to Shanghai next Wednesday” and the agent dynamically searches, verifies identity, adjusts criteria based on layovers, etc.</p>
+<table>
+<thead>
+<tr>
+<th>Pattern</th>
+<th>Advantage</th>
+<th>Limitation</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Workflow</td>
+<td>Strict process control, security</td>
+<td>Lack of flexibility</td>
+</tr>
+<tr>
+<td>Autonomous Agent</td>
+<td>Flexible, adapts to unexpected events</td>
+<td>Higher cost, errors compound</td>
+</tr>
+</tbody></table>
+<p>In practice, they are not mutually exclusive: critical processes with compliance requirements run as workflows, while flexible decisions switch to autonomous mode.</p>
+<p>Three core principles for building effective agents:</p>
+<ol>
+<li><strong>Keep it simple.</strong> Start with the simplest solution and add complexity only when necessary.</li>
+<li><strong>Keep it transparent.</strong> Show the agent’s planning steps, execution logs, and decision trajectory.</li>
+<li><strong>Design a well-structured tool interface (ACI).</strong> Tool names should be intuitive; the design should prevent likely mistakes (Poka-yoke).</li>
+</ol>
+<h2 id="Best-Practices"><a href="#Best-Practices" class="headerlink" title="Best Practices"></a>Best Practices</h2><p>Based on the concepts above, here are practical guidelines for building agents:</p>
+<p><strong>Context Design</strong></p>
+<ul>
+<li>Keep the system prompt and tool definitions stable once finalized—any change invalidates the KV Cache.</li>
+<li>Append dynamic information (timestamps, status) at the end of the context, never in the system prompt.</li>
+<li>Use structured formats (XML tags, Markdown) for instructions; provide process-driven SOPs, not scattered rules.</li>
+<li>Define business rules to executable precision: “NEVER use percentage-based billing for refunds.”</li>
+</ul>
+<p><strong>Memory Design</strong></p>
+<ul>
+<li>Use a hybrid memory approach: Advanced JSON Cards for critical low-volume data, Simple Notes for large-volume non-critical facts.</li>
+<li>Maintain the Agent Status Bar with code (regex functions), not with LLM summarization.</li>
+<li>Monitor status bar accuracy as a first-line production metric—the model unconditionally trusts it.</li>
+</ul>
+<p><strong>Retrieval Design</strong></p>
+<ul>
+<li>Combine dense and sparse retrieval, then apply a neural reranker for production-grade RAG.</li>
+<li>Apply Contextual Retrieval at the indexing phase—generate context prefixes for chunks before embedding.</li>
+<li>Use Agentic RAG for complex questions requiring multi-hop reasoning; use simple RAG for clear, narrow queries.</li>
+</ul>
+<p><strong>Compression Design</strong></p>
+<ul>
+<li>Compress in batches when approaching the context limit, not every round.</li>
+<li>Preserve architectural decisions, key constraints, verification status, and unresolved TODOs during compression.</li>
+<li>Keep exact identifiers (UUIDs, hashes, URLs, filenames)—changing one digit breaks subsequent tool calls.</li>
+</ul>
+<p><strong>Safety Design</strong></p>
+<ul>
+<li>Tag external content with source markers to prevent prompt injection.</li>
+<li>Implement tool risk ratings with human confirmation for high-risk operations.</li>
+<li>Set failure thresholds and circuit breakers to prevent infinite loops.</li>
+<li>Use sub-agent context isolation to keep bulky intermediate content out of the main context.</li>
+</ul>
+<h2 id="FAQ"><a href="#FAQ" class="headerlink" title="FAQ"></a>FAQ</h2><p><strong>Q: If models keep getting stronger, will context engineering still matter?</strong></p>
+<p>Directionally, models will internalize parts of the Harness—tool calling and long-horizon planning were once external orchestration and are now native capabilities. But in practice, this internalization is much slower than intuition suggests. Training takes months, and a model cannot internalize all constraints and preferences of real businesses in one pass. The model’s current capability boundary is exactly where the Harness creates value.</p>
+<p><strong>Q: What’s the difference between in-context learning and true memory?</strong></p>
+<p>In-context learning is fast but transient—it disappears when the session ends. Its mechanism is closer to pattern matching than true learning; it lets the model apply patterns it has already seen but cannot discover entirely new rules. User memory (persistent, reviewable storage) and externalized learning (knowledge bases, tool code) provide the reliability and longevity that in-context learning cannot.</p>
+<p><strong>Q: When should I use a workflow vs. an autonomous agent?</strong></p>
+<p>Start with a single LLM call. If better prompts solve the problem, don’t build an agent. When multiple steps are needed and the task decomposes into fixed sub-tasks, use a workflow. Use an autonomous agent only when you need dynamic decisions and a flexible execution path. Agent systems typically trade latency and cost for better task performance—evaluate whether that trade is worth it.</p>
+<p><strong>Q: How do I prevent prompt injection in my agent?</strong></p>
+<p>No single defense is sufficient—use layered defense. At the context level: tag external content with source markers (<code>&lt;external_content source=&quot;webpage&quot;&gt;</code>), use structured roles strictly, and sanitize suspicious patterns. At the execution level: implement tool risk ratings, require authorization for high-risk operations, and prevent retrieved content from directly triggering irreversible actions. Context-level defenses reduce the attack success rate but cannot guarantee complete security.</p>
+<p><strong>Q: Which retrieval strategy should I choose for my knowledge base?</strong></p>
+<p>If queries are primarily “find the document fragment containing this information,” hybrid retrieval (dense + sparse + reranking) is sufficient. If queries require cross-document synthesis or multi-level navigation, invest in structured indexing (RAPTOR or GraphRAG). Its cost is a large jump in LLM calls at index-construction time, so upgrade only when simpler options fall short.</p>
+<p><strong>Q: How often should I compress the context?</strong></p>
+<p>Compress in batches when the context approaches the threshold (e.g., 80% of window size), not every round. Frequent compression repeatedly breaks the cache. Use a hierarchical approach: tool result budget control first, then noise deletion, then API-level micro-compression, then archival summarization, and finally full compression as a last resort with a circuit breaker.</p>
+<h2 id="Summary"><a href="#Summary" class="headerlink" title="Summary"></a>Summary</h2><p>This article walked through the core ideas behind modern AI Agents along three layers:</p>
+<p><strong>The Core Formula</strong>: Agent &#x3D; LLM + Context + Tools. The LLM provides reasoning, context supplies the working set of information at decision time, and tools provide action interfaces. The ReAct loop—reason, act, observe, repeat—connects them into a working system.</p>
+<p><strong>Context Engineering</strong>: Context sets the ceiling of agent capability. At the API level, context is a static prefix (system prompt + tool definitions) plus a dynamic trajectory (message history). KV Cache requires prefix stability. Prompt engineering writes the agent’s operating manual. Agent Skills load knowledge on demand. The Agent Status Bar converts implicit state into explicit knowledge. Context compression controls length and improves reasoning quality—not just by managing length, but by actively summarizing raw data into high-density structured knowledge.</p>
+<p><strong>From Context to Memory</strong>: User memory builds a model of the individual across sessions; the knowledge base provides shared domain expertise. Four storage formats trade off simplicity against expressiveness. RAG combines dense and sparse retrieval with neural reranking. Structured indexing (RAPTOR, GraphRAG) and Agentic RAG move beyond flat text. Contextual Retrieval fixes chunking at the root. The two-tier memory architecture—resident JSON Cards for overview, on-demand Contextual Retrieval for details—makes proactive service feasible.</p>
+<p><strong>Harness Engineering</strong>: Model capability is commoditizing; the real differentiator is the Harness—constrain, verify, and correct mechanisms built around context and tools. As models converge in capability, competitive advantage shifts to the engineering outside the model.</p>
+<p>The common thread: <strong>do not let the model passively search through vast amounts of information; proactively provide refined, structured knowledge.</strong> This principle runs from prompt design through compression to the two-tier memory architecture—and it is the practice of the Bitter Lesson on an engineering timescale.</p>
+<link rel="stylesheet" href="/css/folder.css" type="text/css"><script src="/js/folder.js" type="text/javascript" async></script>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/AI-Agent/" rel="tag"># AI Agent</a>
+              <a href="/tags/LLM/" rel="tag"># LLM</a>
+              <a href="/tags/Context-Engineering/" rel="tag"># Context Engineering</a>
+              <a href="/tags/RAG/" rel="tag"># RAG</a>
+              <a href="/tags/Memory/" rel="tag"># Memory</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2026/05/18/LangChain-Runtime-Middleware-Core-Principles-and-more/" rel="prev" title="LangChain Runtime & Middleware: Core Principles and Practical Guide">
+      <i class="fa fa-chevron-left"></i> LangChain Runtime & Middleware: Core Principles and Practical Guide
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+
+            
+            <div class="post-copyright" style="margin: 0 0 10px 0;">
+              <p class="post-copyright-author" style="margin: 0 0 5px 0 !important;"><strong>Author:</strong> <a href="https://github.com/BODYsuperman" target="_blank">Alex</a></p>
+              <p class="post-copyright-link" style="margin: 0 0 5px 0 !important;"><strong>Article Link:</strong> <a href="https://bodysuperman.github.io/2026/07/24/Building-AI-Agents-From-Context-to-Memory/" target="_blank">https://bodysuperman.github.io/2026/07/24/Building-AI-Agents-From-Context-to-Memory/</a></p>
+              <p class="post-copyright-license" style="margin: 0 !important;"><strong>License:</strong> This article is licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a>. Please credit the original author and include the source link when reposting.</p>
+            </div>
+
+          </div>
+          
+    <div class="comments" id="gitalk-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Introduction"><span class="nav-number">1.</span> <span class="nav-text">Introduction</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#What-Is-an-AI-Agent"><span class="nav-number">2.</span> <span class="nav-text">What Is an AI Agent</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#The-Core-Formula-LLM-Context-Tools"><span class="nav-number">2.1.</span> <span class="nav-text">The Core Formula: LLM + Context + Tools</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#The-ReAct-Loop-How-Agents-Actually-Work"><span class="nav-number">2.2.</span> <span class="nav-text">The ReAct Loop: How Agents Actually Work</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Context-Engineering-The-Ceiling-of-Agent-Capability"><span class="nav-number">3.</span> <span class="nav-text">Context Engineering: The Ceiling of Agent Capability</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Context-at-the-API-Level-Static-Prefix-Dynamic-Trajectory"><span class="nav-number">3.1.</span> <span class="nav-text">Context at the API Level: Static Prefix + Dynamic Trajectory</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#KV-Cache-Why-Prefix-Stability-Matters"><span class="nav-number">3.2.</span> <span class="nav-text">KV Cache: Why Prefix Stability Matters</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Prompt-Engineering-Writing-the-Agent%E2%80%99s-Operating-Manual"><span class="nav-number">3.3.</span> <span class="nav-text">Prompt Engineering: Writing the Agent’s Operating Manual</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Agent-Skills-Load-Knowledge-On-Demand"><span class="nav-number">3.4.</span> <span class="nav-text">Agent Skills: Load Knowledge On Demand</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Agent-Status-Bar-From-Implicit-State-to-Explicit-Knowledge"><span class="nav-number">3.5.</span> <span class="nav-text">Agent Status Bar: From Implicit State to Explicit Knowledge</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Context-Compression-When-Less-Is-More"><span class="nav-number">3.6.</span> <span class="nav-text">Context Compression: When Less Is More</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#From-Context-to-Memory-Making-Agents-Remember"><span class="nav-number">4.</span> <span class="nav-text">From Context to Memory: Making Agents Remember</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#User-Memory-Building-a-Model-of-the-User"><span class="nav-number">4.1.</span> <span class="nav-text">User Memory: Building a Model of the User</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Four-Storage-Formats-From-Simple-Notes-to-Advanced-JSON-Cards"><span class="nav-number">4.2.</span> <span class="nav-text">Four Storage Formats: From Simple Notes to Advanced JSON Cards</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#RAG-Giving-Agents-a-Knowledge-Base"><span class="nav-number">4.3.</span> <span class="nav-text">RAG: Giving Agents a Knowledge Base</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Beyond-Flat-Text-Structured-Indexing-and-Agentic-RAG"><span class="nav-number">4.4.</span> <span class="nav-text">Beyond Flat Text: Structured Indexing and Agentic RAG</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Contextual-Retrieval-Fixing-Chunking-at-the-Root"><span class="nav-number">4.5.</span> <span class="nav-text">Contextual Retrieval: Fixing Chunking at the Root</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#The-Two-Tier-Memory-Architecture"><span class="nav-number">4.6.</span> <span class="nav-text">The Two-Tier Memory Architecture</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Harness-Engineering-Reliability-Beyond-the-Demo"><span class="nav-number">5.</span> <span class="nav-text">Harness Engineering: Reliability Beyond the Demo</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Constrain-Verify-Correct-The-Three-Safety-Layers"><span class="nav-number">5.1.</span> <span class="nav-text">Constrain, Verify, Correct: The Three Safety Layers</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Workflow-vs-Autonomous-Choosing-the-Right-Pattern"><span class="nav-number">5.2.</span> <span class="nav-text">Workflow vs. Autonomous: Choosing the Right Pattern</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Best-Practices"><span class="nav-number">6.</span> <span class="nav-text">Best Practices</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#FAQ"><span class="nav-number">7.</span> <span class="nav-text">FAQ</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Summary"><span class="nav-number">8.</span> <span class="nav-text">Summary</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="AI with Alex"
+      src="/uploads/avatar.jpg">
+  <p class="site-author-name" itemprop="name">AI with Alex</p>
+  <div class="site-description" itemprop="description">Attention(Q,K,V)=softmax(QK^T/sqrt(d_k))V</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">26</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">32</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">71</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/BODYsuperman" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;BODYsuperman" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://stackoverflow.com/users/9644964/alexandar-may-msft?tab=answers&sort=votes" title="StackOverflow → https:&#x2F;&#x2F;stackoverflow.com&#x2F;users&#x2F;9644964&#x2F;alexandar-may-msft?tab&#x3D;answers&amp;sort&#x3D;votes" rel="noopener" target="_blank"><i class="fab fa-stack-overflow fa-fw"></i>StackOverflow</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">AI with Alex</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">Symbols count total: </span>
+    <span title="Symbols count total">380k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">Reading time total &asymp;</span>
+    <span title="Reading time total">5:45</span>
+    
+    <!--
+    
+    -->
+</div>
+
+<!--
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a>
+   </div>
+--><script color="0,0,255" opacity="0.5" zIndex="-1" count="99" src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1/dist/canvas-nest.js"></script>
+
+
+
+
+
+
+        
+
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv"  >
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv"  >
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : 'Ov23liVJTzqy1rzaDXXM',
+      clientSecret: '5e785a7d46e69f7509e6c2f7730855a55944df33',
+      repo        : 'blog-comment',
+      owner       : 'BODYsuperman',
+      admin       : ['BODYsuperman'],
+      id          : '17e9c647664622f24314b238e4086bbb',
+        language: '',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+
+</body>
+</html>
