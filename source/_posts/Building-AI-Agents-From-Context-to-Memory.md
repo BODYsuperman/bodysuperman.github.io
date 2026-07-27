@@ -41,6 +41,8 @@ tags:
 
 <!--more-->
 
+<a name="introduction"></a>
+
 ## Introduction
 
 If you have used Cursor to write code and watched it search your codebase, edit multiple files, and rerun tests until they pass, you have already used an AI Agent. The same is true if you have used Deep Research to investigate a topic through repeated searching and reading, or had Manus control a browser to finish online tasks.
@@ -49,7 +51,11 @@ These products take many forms, but they share a common trait: they are no longe
 
 This article walks through the core ideas behind modern AI Agents, from the foundational formula, to context engineering within a single session, to persistent memory across sessions. The goal is to give you a mental model you can use to build your own agents.
 
+<a name="what-is-an-ai-agent"></a>
+
 ## What Is an AI Agent
+
+<a name="the-core-formula-llm-context-tools"></a>
 
 ### The Core Formula: LLM + Context + Tools
 
@@ -76,6 +82,8 @@ Different kinds of agents compare across these three dimensions:
 | Task Agents (Pine AI) | Account info, historical bills | Making calls, sending emails, filling forms | Multi-step task execution |
 
 These systems share three features: an **open-ended action space** (generating arbitrary natural language and code, not picking from fixed buttons), **internal reasoning** (planning before acting), and **continuous interaction** (adjusting strategy based on feedback).
+
+<a name="the-react-loop-how-agents-actually-work"></a>
 
 ### The ReAct Loop: How Agents Actually Work
 
@@ -125,6 +133,8 @@ A complex multi-step task was completed in 3 iterations and 4 tool calls. The el
 
 The key insight: **Agent context = static prefix + trajectory**. The static prefix (system prompt + tool definitions) stays fixed; the trajectory (user messages + assistant messages + tool results) grows with each interaction.
 
+<a name="context-engineering-the-ceiling-of-agent-capability"></a>
+
 ## Context Engineering: The Ceiling of Agent Capability
 
 Large language models achieve strong results on benchmarks, but often underperform in real-world settings. The reason is straightforward: model capabilities are general-purpose, while concrete tasks depend on local knowledge—product architecture, business rules, operational constraints. This information is absent from the model's parameters.
@@ -136,6 +146,8 @@ Consider a Coding Agent given the instruction "Help me fix this bug." The qualit
 - **Environment configuration**: dev setup, test database connection strings, API key management. Without this, a fix that works locally fails in test.
 
 The model's inherent capability is only the foundation; **context sets the ceiling**. A moderately capable model with well-organized context can often outperform a stronger model operating with insufficient context.
+
+<a name="context-at-the-api-level-static-prefix-dynamic-trajectory"></a>
 
 ### Context at the API Level: Static Prefix + Dynamic Trajectory
 
@@ -159,6 +171,8 @@ An ablation study reveals what happens when each component is removed:
 | Message history | Agent loses task continuity, restarts from the beginning, repeats done steps |
 
 The core insight: **context determines what information the agent has at decision time, and the agent can only decide based on that information**.
+
+<a name="kv-cache-why-prefix-stability-matters"></a>
 
 ### KV Cache: Why Prefix Stability Matters
 
@@ -190,6 +204,8 @@ Three practical principles follow:
 │  └─────────────────────────────────┘                    │
 └─────────────────────────────────────────────────────────┘
 ```
+
+<a name="prompt-engineering-writing-the-agents-operating-manual"></a>
 
 ### Prompt Engineering: Writing the Agent's Operating Manual
 
@@ -225,6 +241,8 @@ Step 4: Execution
 
 An ablation study on prompt engineering found that removing structure from the system prompt (keeping all the rule content but converting the ordered process into an unstructured collection) dropped the task success rate by over 30%.
 
+<a name="agent-skills-load-knowledge-on-demand"></a>
+
 ### Agent Skills: Load Knowledge On Demand
 
 As an agent handles more scenarios, the system prompt tends to grow: refund rules, coding standards, formatting requirements. Placing everything into a single prompt creates two problems: **wasted tokens** (most content is irrelevant to the current task) and **diluted attention** (irrelevant information drowns out key content).
@@ -254,6 +272,8 @@ Trajectory with Skills:
 └──────────────────────────────────────┘
 ```
 
+<a name="agent-status-bar-from-implicit-state-to-explicit-knowledge"></a>
+
 ### Agent Status Bar: From Implicit State to Explicit Knowledge
 
 The prompt engineering section solved "what static instructions to give the model." But during execution, the agent also needs to track its own state dynamically. The **Agent Status Bar** addresses this.
@@ -282,6 +302,8 @@ Three actionable lessons emerged:
 1. **Maintain the status bar with code, not with an LLM.** A 20-line regex function achieved ground-truth accuracy; a frontier model summarizing the full history produced many incorrect entries.
 2. **Before deleting original context, confirm the status bar covers all questions.** The status bar is a lossy projection. If a question asks for information it wasn't designed to capture, accuracy can collapse.
 3. **Monitor status bar accuracy as a first-line production metric.** The model almost unconditionally trusts the status bar—if it says "called 3 times," the model accepts that value without checking.
+
+<a name="context-compression-when-less-is-more"></a>
 
 ### Context Compression: When Less Is More
 
@@ -319,6 +341,8 @@ Production-grade systems like Claude Code use a **hierarchical compression mecha
 
 What compression most easily loses is not the details themselves, but **early architectural decisions, the reasoning behind constraints, and failed paths**. Explicit retention priorities prevent this loss.
 
+<a name="from-context-to-memory-making-agents-remember"></a>
+
 ## From Context to Memory: Making Agents Remember
 
 The previous section addressed context management within a single session. But how do you enable an agent to remember users and retain knowledge even after a conversation ends?
@@ -327,6 +351,8 @@ This persistent memory system operates at two scales:
 
 - **User Memory** is personalized memory for an individual—the agent gradually learns each user's preferences, habits, and needs.
 - **Knowledge Base** is collective knowledge shared across all users—industry regulations, company procedures, specialized documentation.
+
+<a name="user-memory-building-a-model-of-the-user"></a>
 
 ### User Memory: Building a Model of the User
 
@@ -365,6 +391,8 @@ From a cognitive science perspective, long-term memory has three types, each wit
 | Semantic Memory | "Capital of Italy is Rome" | "User is vegetarian, prefers window seats" |
 | Procedural Memory | Ability to ride a bicycle | "First search direct flights → confirm seat → use FF number" |
 
+<a name="four-storage-formats-from-simple-notes-to-advanced-json-cards"></a>
+
 ### Four Storage Formats: From Simple Notes to Advanced JSON Cards
 
 The same piece of user information can be represented with different granularities:
@@ -385,6 +413,8 @@ The same piece of user information can be represented with different granulariti
 | Advanced JSON Cards | Disambiguation, rich context | High maintenance cost |
 
 A hybrid approach works best in practice: Advanced JSON Cards for **critical, low-volume** data; Simple Notes for **large volumes of non-critical** facts.
+
+<a name="rag-giving-agents-a-knowledge-base"></a>
 
 ### RAG: Giving Agents a Knowledge Base
 
@@ -442,6 +472,8 @@ BM25 ranking weights "distillation" much more heavily than "model"
         Final ranking
 ```
 
+<a name="beyond-flat-text-structured-indexing-and-agentic-rag"></a>
+
 ### Beyond Flat Text: Structured Indexing and Agentic RAG
 
 Simple chunking has a fundamental limitation: it flattens knowledge, ignoring structure and cross-document relationships. Two cases illustrate this:
@@ -479,6 +511,8 @@ Observe: Found judicial interpretations
 Generate final answer with complete legal basis
 ```
 
+<a name="contextual-retrieval-fixing-chunking-at-the-root"></a>
+
 ### Contextual Retrieval: Fixing Chunking at the Root
 
 Even with agentic RAG, traditional chunking remains a bottleneck. An isolated fragment like "The company's second-quarter revenue grew by 3%" is ambiguous—Which company? When? Which product line?
@@ -494,6 +528,8 @@ With context prefix:
 ```
 
 This strengthens both retrieval modes: BM25 gets rich matchable keywords ("ACME", "2025 Q2"), and dense embeddings get accurate semantic background. According to Anthropic research, combining this with BM25 reduces the retrieval failure rate by 49%, and by 67% when combined with a reranker.
+
+<a name="the-two-tier-memory-architecture"></a>
 
 ### The Two-Tier Memory Architecture
 
@@ -528,6 +564,8 @@ When the user books an international flight:
 3. **Detail Verification**: Uses Contextual Retrieval to find original conversations about passport and flights
 4. **Proactive Service**: "Your passport is about to expire; I recommend expedited renewal."
 
+<a name="harness-engineering-reliability-beyond-the-demo"></a>
+
 ## Harness Engineering: Reliability Beyond the Demo
 
 The core formula describes the agent's internal composition. But between a working demo and a reliable product lies a substantial gap. **Harness Engineering** is the implementation-level view: treat the LLM as one core component (the Model), and call all supporting code the Harness.
@@ -545,6 +583,8 @@ A concrete example shows the value. Suppose you ask an agent to refund a user's 
 | Fabricates refund result (no verification) | Framework checks refund doesn't exceed order total |
 | User discovers refund never happened (no correction) | Confirms against database; auto-retries on timeout |
 
+<a name="constrain-verify-correct-the-three-safety-layers"></a>
+
 ### Constrain, Verify, Correct: The Three Safety Layers
 
 | Function | Core Principle | Practical Example |
@@ -560,6 +600,8 @@ Guardrails implement the constrain/verify/correct layer as defense in depth:
 - **Input-side**: Relevance classifiers, safety classifiers, content moderation, rule-based protections
 - **Execution-side**: Tool risk rating (low/medium/high), with high-risk operations requiring human confirmation
 - **Output-side**: PII filters, output validation against brand values
+
+<a name="workflow-vs-autonomous-choosing-the-right-pattern"></a>
 
 ### Workflow vs. Autonomous: Choosing the Right Pattern
 
@@ -579,6 +621,8 @@ Three core principles for building effective agents:
 1. **Keep it simple.** Start with the simplest solution and add complexity only when necessary.
 2. **Keep it transparent.** Show the agent's planning steps, execution logs, and decision trajectory.
 3. **Design a well-structured tool interface (ACI).** Tool names should be intuitive; the design should prevent likely mistakes (Poka-yoke).
+
+<a name="best-practices"></a>
 
 ## Best Practices
 
@@ -611,6 +655,8 @@ Based on the concepts above, here are practical guidelines for building agents:
 - Set failure thresholds and circuit breakers to prevent infinite loops.
 - Use sub-agent context isolation to keep bulky intermediate content out of the main context.
 
+<a name="faq"></a>
+
 ## FAQ
 
 **Q: If models keep getting stronger, will context engineering still matter?**
@@ -636,6 +682,8 @@ If queries are primarily "find the document fragment containing this information
 **Q: How often should I compress the context?**
 
 Compress in batches when the context approaches the threshold (e.g., 80% of window size), not every round. Frequent compression repeatedly breaks the cache. Use a hierarchical approach: tool result budget control first, then noise deletion, then API-level micro-compression, then archival summarization, and finally full compression as a last resort with a circuit breaker.
+
+<a name="summary"></a>
 
 ## Summary
 
