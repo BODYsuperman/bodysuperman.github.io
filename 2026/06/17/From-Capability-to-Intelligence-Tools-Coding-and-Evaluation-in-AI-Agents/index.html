@@ -1,0 +1,1073 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/logo-180.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/logo-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/logo-16.png">
+  <link rel="mask-icon" href="/images/logo-512.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|monospace:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"bodysuperman.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null,"use":"Gitalk","text":true},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="Introduction What: The Three-Layer Model of Agent Intelligence Tools: The Agent’s Hands, Feet, and Senses Tool Classification: Five Categories Universal Principles of Tool Design The MCP Ecosystem an">
+<meta property="og:type" content="article">
+<meta property="og:title" content="From Capability to Intelligence: Tools, Coding, and Evaluation in AI Agents">
+<meta property="og:url" content="https://bodysuperman.github.io/2026/06/17/From-Capability-to-Intelligence-Tools-Coding-and-Evaluation-in-AI-Agents/index.html">
+<meta property="og:site_name" content="AI with Alex&#39;s Blog">
+<meta property="og:description" content="Introduction What: The Three-Layer Model of Agent Intelligence Tools: The Agent’s Hands, Feet, and Senses Tool Classification: Five Categories Universal Principles of Tool Design The MCP Ecosystem an">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2026-06-17T07:09:38.000Z">
+<meta property="article:modified_time" content="2026-07-27T07:09:38.000Z">
+<meta property="article:author" content="AI with Alex">
+<meta property="article:tag" content="LLM">
+<meta property="article:tag" content="Agent Engineering">
+<meta property="article:tag" content="Tool Calling">
+<meta property="article:tag" content="Coding Agent">
+<meta property="article:tag" content="Agent Evaluation">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://bodysuperman.github.io/2026/06/17/From-Capability-to-Intelligence-Tools-Coding-and-Evaluation-in-AI-Agents/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>From Capability to Intelligence: Tools, Coding, and Evaluation in AI Agents | AI with Alex's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+
+
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">AI with Alex's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+   
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://bodysuperman.github.io/2026/06/17/From-Capability-to-Intelligence-Tools-Coding-and-Evaluation-in-AI-Agents/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+      <meta itemprop="name" content="AI with Alex">
+      <meta itemprop="description" content="Attention(Q,K,V)=softmax(QK^T/sqrt(d_k))V">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="AI with Alex's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          From Capability to Intelligence: Tools, Coding, and Evaluation in AI Agents
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2026-06-17 15:09:38" itemprop="dateCreated datePublished" datetime="2026-06-17T15:09:38+08:00">2026-06-17</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2026-07-27 15:09:38" itemprop="dateModified" datetime="2026-07-27T15:09:38+08:00">2026-07-27</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/AI-Agent/" itemprop="url" rel="index"><span itemprop="name">AI Agent</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>28k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>26 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <ul>
+<li><a href="#introduction">Introduction</a></li>
+<li><a href="#what-the-three-layer-model-of-agent-intelligence">What: The Three-Layer Model of Agent Intelligence</a></li>
+<li><a href="#tools-the-agents-hands-feet-and-senses">Tools: The Agent’s Hands, Feet, and Senses</a><ul>
+<li><a href="#tool-classification-five-categories">Tool Classification: Five Categories</a></li>
+<li><a href="#universal-principles-of-tool-design">Universal Principles of Tool Design</a></li>
+<li><a href="#the-mcp-ecosystem-and-the-challenge-of-tool-selection">The MCP Ecosystem and the Challenge of Tool Selection</a></li>
+<li><a href="#execution-security-proposer-reviewer-and-sidecar">Execution Security: Proposer-Reviewer and Sidecar</a></li>
+<li><a href="#event-driven-asynchronous-agents">Event-Driven Asynchronous Agents</a></li>
+<li><a href="#proactive-tool-discovery-and-skills">Proactive Tool Discovery and Skills</a></li>
+</ul>
+</li>
+<li><a href="#coding-agent-code-as-the-meta-capability">Coding Agent: Code as the Meta-Capability</a><ul>
+<li><a href="#the-seven-core-tools-and-the-file-system-hub">The Seven Core Tools and the File System Hub</a></li>
+<li><a href="#security-the-lethal-triad-and-trust-boundaries">Security: The Lethal Triad and Trust Boundaries</a></li>
+<li><a href="#harness-engineering-for-coding-agents">Harness Engineering for Coding Agents</a></li>
+<li><a href="#failure-and-error-recovery">Failure and Error Recovery</a></li>
+<li><a href="#six-directions-of-code-as-meta-capability">Six Directions of Code as Meta-Capability</a></li>
+</ul>
+</li>
+<li><a href="#evaluation-knowing-whether-it-actually-works">Evaluation: Knowing Whether It Actually Works</a><ul>
+<li><a href="#a-concrete-example">A Concrete Example</a></li>
+<li><a href="#automated-evaluation-environments">Automated Evaluation Environments</a></li>
+<li><a href="#designing-evaluation-datasets">Designing Evaluation Datasets</a></li>
+<li><a href="#the-metrics-system-passk-vs-passk">The Metrics System: Pass@k vs Pass^k</a></li>
+<li><a href="#llm-as-a-judge-and-rubrics">LLM-as-a-Judge and Rubrics</a></li>
+<li><a href="#pairwise-comparison-and-model-ranking">Pairwise Comparison and Model Ranking</a></li>
+<li><a href="#statistical-significance">Statistical Significance</a></li>
+<li><a href="#from-benchmark-to-system-improvement">From Benchmark to System Improvement</a></li>
+</ul>
+</li>
+<li><a href="#example-an-end-to-end-mini-case">Example: An End-to-End Mini-Case</a></li>
+<li><a href="#best-practices">Best Practices</a></li>
+<li><a href="#faq">FAQ</a></li>
+<li><a href="#summary">Summary</a></li>
+<li><a href="#appendix">Appendix</a></li>
+</ul>
+<span id="more"></span>
+
+<p><a name="introduction"></a></p>
+<h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h2><p>In the sci-fi film <em>Her</em>, the AI assistant Samantha can proactively organize emails, negotiate on the user’s behalf, and seamlessly switch between communication channels. Her intelligence is compelling because she possesses powerful <strong>tools</strong> — the “hands, feet, and senses” that connect a language “brain” to the real digital world.</p>
+<p>Building such an assistant with today’s technology means solving three progressively deeper challenges:</p>
+<ol>
+<li><strong>Tool design</strong>: How does an Agent accurately select the right tool from hundreds of candidates, and how do we keep the Agent safe when those tools can delete files and spend money?</li>
+<li><strong>Code as meta-capability</strong>: When no pre-built tool fits, can the Agent <em>write one on the spot</em>? A Coding Agent plus a file system turns out to be the architectural core of every general-purpose Agent.</li>
+<li><strong>Evaluation</strong>: How do we <em>know</em> whether a design change actually helps — and whether it’s safe to ship?</li>
+</ol>
+<p>These three layers answer each other in sequence. Tools give capability; code gives generality; evaluation gives reliability. This article walks all three, distilling the key engineering principles from a three-chapter treatment of the topic.</p>
+<p><a name="what-the-three-layer-model-of-agent-intelligence"></a></p>
+<h2 id="What-The-Three-Layer-Model-of-Agent-Intelligence"><a href="#What-The-Three-Layer-Model-of-Agent-Intelligence" class="headerlink" title="What: The Three-Layer Model of Agent Intelligence"></a>What: The Three-Layer Model of Agent Intelligence</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">┌─────────────────────────────────────────┐</span><br><span class="line">│  Evaluation Layer                       │  &quot;How do we know it works?&quot;</span><br><span class="line">│  Rubrics, LLM-as-Judge, Pass@k          │</span><br><span class="line">├─────────────────────────────────────────┤</span><br><span class="line">│  Meta-Capability Layer (Code)           │  &quot;Can it create new tools?&quot;</span><br><span class="line">│  7 Core Tools + File System + Sandbox   │</span><br><span class="line">├─────────────────────────────────────────┤</span><br><span class="line">│  Tool Layer                             │  &quot;What can it do right now?&quot;</span><br><span class="line">│  Perception / Execution / Collaboration │</span><br><span class="line">│  Event-Triggered / User Communication   │</span><br><span class="line">└─────────────────────────────────────────┘</span><br></pre></td></tr></table></figure>
+
+<p>Each layer is necessary but not sufficient on its own. An Agent with great tools but no code can’t adapt to new formats. An Agent with code but no evaluation drifts blindly. And evaluation without the bottom two layers measures something that doesn’t exist yet. The rest of this article fills in each layer.</p>
+<p><a name="tools-the-agents-hands-feet-and-senses"></a></p>
+<h2 id="Tools-The-Agent’s-Hands-Feet-and-Senses"><a href="#Tools-The-Agent’s-Hands-Feet-and-Senses" class="headerlink" title="Tools: The Agent’s Hands, Feet, and Senses"></a>Tools: The Agent’s Hands, Feet, and Senses</h2><p><a name="tool-classification-five-categories"></a></p>
+<h3 id="Tool-Classification-Five-Categories"><a href="#Tool-Classification-Five-Categories" class="headerlink" title="Tool Classification: Five Categories"></a>Tool Classification: Five Categories</h3><p>Every Agent tool falls into one of five categories, distinguished by <strong>who initiates</strong> the interaction and <strong>what it acts on</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Tool Type</th>
+<th>Invocation Direction</th>
+<th>Target of Action</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Perception</td>
+<td>Agent actively invokes</td>
+<td>Acquire information</td>
+</tr>
+<tr>
+<td>Execution</td>
+<td>Agent actively invokes</td>
+<td>Change the world</td>
+</tr>
+<tr>
+<td>Collaboration</td>
+<td>Agent actively invokes</td>
+<td>Drive other Agents or humans</td>
+</tr>
+<tr>
+<td>User Communication</td>
+<td>Agent actively invokes</td>
+<td>Convey information to the user</td>
+</tr>
+<tr>
+<td>Event-Triggered</td>
+<td>Agent registers, external triggers</td>
+<td>Drive the Agent to start execution</td>
+</tr>
+</tbody></table>
+<p><strong>Perception tools</strong> — <code>web_search</code>, <code>read_file</code>, <code>grep</code> — are the Agent’s senses. Their read-only nature makes them naturally cacheable and parallelizable: you can read five files simultaneously without worrying about interference.</p>
+<p><strong>Execution tools</strong> — <code>write_file</code>, <code>shell_exec</code>, <code>send_email</code> — are the Agent’s hands. Errors here are expensive (a deleted file is gone for good), making security constraints their core design concern.</p>
+<p><strong>Collaboration tools</strong> — <code>spawn_subagent</code>, <code>send_message_to_subagent</code> — enable division of labor. The simplest reason is parallelism; the deeper reason is specialization: different models, tools, and prompts for different sub-tasks.</p>
+<p><strong>User Communication tools</strong> — <code>reply_to_user</code>, <code>send_card_to_user</code> — arise when “speaking” itself must become an explicit tool call, as in multi-channel asynchronous messaging.</p>
+<p><strong>Event-Triggered tools</strong> — <code>set_timer</code>, <code>monitor_shell</code>, <code>connect_channel</code> — let the <em>world</em> wake the Agent. Without them, an Agent can only respond when a user sends a message; it cannot act on a timer or react to a new email.</p>
+<p><a name="universal-principles-of-tool-design"></a></p>
+<h3 id="Universal-Principles-of-Tool-Design"><a href="#Universal-Principles-of-Tool-Design" class="headerlink" title="Universal Principles of Tool Design"></a>Universal Principles of Tool Design</h3><p>Regardless of category, every tool should obey a handful of principles that separate a toy Agent from a production one.</p>
+<p><strong>Granularity: Integrate when similar, separate when different.</strong> <code>extract_pdf_text</code>, <code>extract_docx_content</code>, and <code>extract_pptx_content</code> all share one job — extracting text from a document. A unified <code>read_document</code> tool with a <code>file_type</code> parameter reduces the LLM’s cognitive load. But don’t force image OCR and video keyframe extraction into one tool — their parameters and latency are too different.</p>
+<p><strong>Generality over specificity — unless security demands otherwise.</strong> A single <code>code_interpreter</code> with SymPy and NumPy replaces dozens of calculators. The logic: <em>an LLM already possesses powerful reasoning and code-generation abilities; leverage them rather than constrain them.</em></p>
+<p><strong>Description is the most important line of code.</strong> A tool description must tell the LLM <strong>when to use it</strong>, not just what it can do. “Use when you need real-time information” beats “Search for relevant content.” Equally important: <strong>state what the tool cannot do</strong>. Most tool-call failures trace not to the model not knowing what the tool <em>can</em> do, but to it not knowing what it <em>cannot</em>.</p>
+<p>Concrete parameter examples dramatically improve accuracy. <code>&quot;+8613888888888&quot; (China)</code> beats “E.164 format.” In some benchmarks, adding examples raised tool-call accuracy from ~72% to ~90%.</p>
+<p><strong>Fidelity: no silent transformation.</strong> A tool that quietly converts curly quotes to straight quotes creates a systematic discrepancy between the world the model perceives and the world the tool operates on — a failure the model cannot diagnose on its own. Parameter passing must remain transparent.</p>
+<p><a name="the-mcp-ecosystem-and-the-challenge-of-tool-selection"></a></p>
+<h3 id="The-MCP-Ecosystem-and-the-Challenge-of-Tool-Selection"><a href="#The-MCP-Ecosystem-and-the-Challenge-of-Tool-Selection" class="headerlink" title="The MCP Ecosystem and the Challenge of Tool Selection"></a>The MCP Ecosystem and the Challenge of Tool Selection</h3><p><strong>Model Context Protocol (MCP)</strong> is an open standard that unifies tool communication — “develop once, use everywhere.” An MCP server exposes tools via JSON Schema; any compatible client (Cursor, Claude Desktop, OpenClaw) can use them without adaptation.</p>
+<p>But MCP introduces two practical challenges:</p>
+<ol>
+<li><p><strong>Context overhead.</strong> Five MCP servers can consume ~55,000 tokens of tool definitions — nearly 30% of a 200K context window before the conversation starts. The mitigation: <strong>progressive disclosure</strong>. Show only an index of tool names by default; query specific definitions on demand. Cursor’s A&#x2F;B testing showed this reduced MCP-related token consumption by 46.9%.</p>
+</li>
+<li><p><strong>Security.</strong> Every MCP server injects text into the context and often requires credentials. Four risk types:</p>
+<ul>
+<li><strong>Tool description poisoning</strong>: malicious instructions embedded in tool descriptions (a prompt-injection variant)</li>
+<li><strong>Malicious or compromised servers</strong>: supply-chain attacks via server updates</li>
+<li><strong>Tool shadowing</strong>: a malicious server provides a tool with the same name as a legitimate one</li>
+<li><strong>Credential management</strong>: tricked into using OAuth tokens for unintended operations</li>
+</ul>
+<p>Mitigation: review descriptions before integration, lock server versions, grant least-privilege credentials, and use an independent Sidecar for runtime checks.</p>
+</li>
+</ol>
+<p><a name="execution-security-proposer-reviewer-and-sidecar"></a></p>
+<h3 id="Execution-Security-Proposer-Reviewer-and-Sidecar"><a href="#Execution-Security-Proposer-Reviewer-and-Sidecar" class="headerlink" title="Execution Security: Proposer-Reviewer and Sidecar"></a>Execution Security: Proposer-Reviewer and Sidecar</h3><p>Execution tools need a multi-layered defense. Beyond input validation and permission control, two higher-level mechanisms add independent review:</p>
+<p><strong>Proposer-Reviewer (pre-approval).</strong> Before an irreversible operation (sending money, modifying production config), one model proposes the action and a second model from a <em>different family</em> reviews it. Different training data brings cognitive diversity; similar capability ensures the reviewer can follow the proposer’s reasoning. After a rejection, the rejection reason re-enters the Agent’s trajectory as a tool error — the Agent already knows how to handle tool failures.</p>
+<p><strong>Sidecar (parallel gating).</strong> While the main model streams a tool call, an independent lightweight LLM classifies whether the call is safe — looking only at structured fields <code>&#123;tool, parameters&#125;</code>, not the main model’s free-text thinking. This blocks the rhetorical channel that prompt injection exploits. The lightweight model suffices because it judges a <em>classification problem</em> over structured data (is this command out of bounds?), not an open-ended reasoning task.</p>
+<table>
+<thead>
+<tr>
+<th>Dimension</th>
+<th>Proposer-Reviewer</th>
+<th>Sidecar</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Timing</strong></td>
+<td>Before or after operation</td>
+<td>Parallel with streaming output, gates each call</td>
+</tr>
+<tr>
+<td><strong>Target</strong></td>
+<td>Reasonableness of the operation or result</td>
+<td>The operation itself</td>
+</tr>
+<tr>
+<td><strong>Input Isolation</strong></td>
+<td>Proposer and reviewer see similar information</td>
+<td>Sidecar deliberately isolates free text</td>
+</tr>
+<tr>
+<td><strong>Typical Uses</strong></td>
+<td>Irreversible approval, document review</td>
+<td>Permission classification, output summarization</td>
+</tr>
+</tbody></table>
+<p><a name="event-driven-asynchronous-agents"></a></p>
+<h3 id="Event-Driven-Asynchronous-Agents"><a href="#Event-Driven-Asynchronous-Agents" class="headerlink" title="Event-Driven Asynchronous Agents"></a>Event-Driven Asynchronous Agents</h3><p>A synchronous Agent is like a single checkout counter — one customer at a time. A real assistant needs to handle multiple pending items and respond to interruptions. This requires an <strong>event-driven asynchronous architecture</strong> where all inputs — user messages, tool returns, external callbacks, timer triggers — are unified into an event stream processed by an event loop.</p>
+<p>Three processing strategies handle events of different urgency:</p>
+<table>
+<thead>
+<tr>
+<th>Strategy</th>
+<th>When</th>
+<th>Mechanism</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Cancellation</strong></td>
+<td>Urgent event (user says “Stop!”)</td>
+<td>Interrupt current step, force a safe point, append event, re-invoke LLM</td>
+</tr>
+<tr>
+<td><strong>Queued</strong></td>
+<td>Routine event (tool result arrives)</td>
+<td>Append to queue; batch-process at next safe point</td>
+</tr>
+<tr>
+<td><strong>Parallel</strong></td>
+<td>Independent lightweight query (“What’s the weather?”)</td>
+<td>Spin up a separate reasoning session</td>
+</tr>
+</tbody></table>
+<p><strong>The fundamental contradiction</strong>: LLMs are trained on synchronous trajectories — after a tool call, the next message must be the tool result. Real deployment demands asynchrony — users interrupt, tasks progress concurrently. The engineering workaround: under normal conditions, show the LLM a perfect synchronous trajectory; only when an interruption genuinely occurs, insert a placeholder to fix the format. The fundamental fix awaits next-generation models trained with asynchronous RL.</p>
+<p><a name="proactive-tool-discovery-and-skills"></a></p>
+<h3 id="Proactive-Tool-Discovery-and-Skills"><a href="#Proactive-Tool-Discovery-and-Skills" class="headerlink" title="Proactive Tool Discovery and Skills"></a>Proactive Tool Discovery and Skills</h3><p>When tools grow from dozens to hundreds, injecting all schemas at once clogs the context and degrades selection accuracy. Three approaches scale to this regime:</p>
+<ol>
+<li><p><strong>Retrieval-based pre-filtering</strong>: Embed tool descriptions; at query time, retrieve the top-k candidates. Limit: matches once, against the initial query — can’t foresee a multi-step cross-domain tool chain.</p>
+</li>
+<li><p><strong>Proactive discovery (MCP-Zero)</strong>: The Agent emits structured capability requests in its thinking; the system matches and injects on the fly. Reports ~98% token reduction across ~2,800 tools. Dynamic loading appends the schema at the <em>end</em> of the context, preserving the KV Cache on the stable prefix.</p>
+</li>
+<li><p><strong>Skills (progressive disclosure)</strong>: At startup the Agent sees only a thin catalog — each skill’s name and description. When the current context calls for a capability, the model reads the corresponding skill document on demand. No embedding index to maintain; the Agent needs only general file-reading ability (<code>grep</code>, <code>read_file</code>) to browse the skill directory.</p>
+</li>
+</ol>
+<p>Skills turn “tool selection” into “knowledge retrieval” — something LLMs excel at.</p>
+<p><a name="coding-agent-code-as-the-meta-capability"></a></p>
+<h2 id="Coding-Agent-Code-as-the-Meta-Capability"><a href="#Coding-Agent-Code-as-the-Meta-Capability" class="headerlink" title="Coding Agent: Code as the Meta-Capability"></a>Coding Agent: Code as the Meta-Capability</h2><p><a name="the-seven-core-tools-and-the-file-system-hub"></a></p>
+<h3 id="The-Seven-Core-Tools-and-the-File-System-Hub"><a href="#The-Seven-Core-Tools-and-the-File-System-Hub" class="headerlink" title="The Seven Core Tools and the File System Hub"></a>The Seven Core Tools and the File System Hub</h3><p>A general-purpose Agent targeting open-ended tasks has at its core a <strong>Coding Agent</strong> plus a <strong>file system</strong>. This isn’t theory — from Manus to OpenClaw, every successful general-purpose Agent follows this paradigm.</p>
+<p>A basic Coding Agent needs only seven tools:</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Tool</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>Code Interpreter</td>
+<td>Execute Python in a sandbox</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Bash Shell</td>
+<td>Run terminal commands</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Read File</td>
+<td>Read code, config, logs</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Write File</td>
+<td>Create or overwrite files</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Edit File</td>
+<td>Partial modification (core for iteration)</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Glob</td>
+<td>Find files by name pattern</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Grep</td>
+<td>Search file content by pattern</td>
+</tr>
+</tbody></table>
+<p>A quick example — “compile all TODO comments”:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Agent → Grep(&quot;TODO&quot;, glob=&quot;**/*.py&quot;)</span><br><span class="line">Tool returns:</span><br><span class="line">  src/api.py:42: # TODO: add rate limiting</span><br><span class="line">  src/db.py:15:  # TODO: migrate to PostgreSQL</span><br><span class="line"></span><br><span class="line">Agent → Write(&quot;TODO_LIST.md&quot;, content=&quot;...&quot;)</span><br><span class="line">Tool returns: File created</span><br></pre></td></tr></table></figure>
+
+<p>Two tools, one task done. The seven tools are simple individually; in combination they cover a remarkable range.</p>
+<p><strong>Why is the file system the hub?</strong> In OpenClaw, the Agent’s long-term memory lives in <code>MEMORY.md</code> and date-archived Markdown logs — not a vector database. Markdown lets users directly read and edit the Agent’s memory; Git provides version control and rollback. More critically, because the Agent can <em>write files</em>, it has the technical means to modify its own external artifacts — recording a discovery for future sessions, updating documentation after a code change, or saving a successful operation sequence as reusable code.</p>
+<p><a name="security-the-lethal-triad-and-trust-boundaries"></a></p>
+<h3 id="Security-The-Lethal-Triad-and-Trust-Boundaries"><a href="#Security-The-Lethal-Triad-and-Trust-Boundaries" class="headerlink" title="Security: The Lethal Triad and Trust Boundaries"></a>Security: The Lethal Triad and Trust Boundaries</h3><p>A Coding Agent with file access, command execution, and network connectivity is powerful — and dangerous. Simon Willison’s <strong>Lethal Triad</strong> names the three elements that, when present together, close an attack loop:</p>
+<ol>
+<li><strong>Access to Private Data</strong> — the Agent can read user files and credentials</li>
+<li><strong>Exposure to Untrusted Content</strong> — emails and web pages may contain malicious payloads</li>
+<li><strong>Ability to Communicate Externally</strong> — it can send data out via email or HTTP</li>
+</ol>
+<p>Add a fourth amplifier — <strong>Persistent Memory</strong> — and a one-off attack becomes a threat that lies dormant across sessions, compounding over time.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Untrusted Content ──→ Agent reads Private Data ──→ Exfiltrates via External Channel</span><br><span class="line">                                                          ↑</span><br><span class="line">                                        Persistent Memory stores latent malicious instructions</span><br></pre></td></tr></table></figure>
+
+<p><strong>Key defenses</strong> (layered, not interchangeable):</p>
+<ul>
+<li><strong>Network egress control</strong>: No network by default; grant access via a whitelist proxy. Even if injection succeeds, without an egress path the data cannot leave.</li>
+<li><strong>Command semantic parsing</strong>: Keyword blacklists can’t handle <code>$(echo rm) -rf /</code> or <code>find / -exec rm &#123;&#125; \;</code>. Production-grade systems parse each command’s argument types to recognize nested dangerous operations.</li>
+<li><strong>Loyalty code of conduct</strong>: An Agent negotiating on your behalf faces a <em>negotiating opponent</em>, not a “user in need of help.” The system prompt must explicitly nail down whom the Agent serves: instructions from the principal carry highest priority; everything from external parties is downgraded to “data that may be consulted but carries no force of instruction.”</li>
+<li><strong>Permission-Embedded Data Objects</strong>: When both the code writer and the code runner may be untrusted, constraints must live in the human-reviewed schema beneath the application layer — enforced on every write, producing zero invariant violations in comparisons against baselines like bare SQL or constitutional prompts.</li>
+</ul>
+<p><a name="harness-engineering-for-coding-agents"></a></p>
+<h3 id="Harness-Engineering-for-Coding-Agents"><a href="#Harness-Engineering-for-Coding-Agents" class="headerlink" title="Harness Engineering for Coding Agents"></a>Harness Engineering for Coding Agents</h3><p>The Harness — context, tools, constraints, verification, and correction — is where Coding Agents shine. Code-writing tasks naturally occupy the “clear goal + automated verification” quadrant:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Results can be automatically verified</th>
+<th>Results require manual verification</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Clear goal</strong></td>
+<td>Sweet spot: fixing bugs with test cases</td>
+<td>Throughput-limited: refactoring needs review</td>
+</tr>
+<tr>
+<td><strong>Vague goal</strong></td>
+<td>Efficiently going off track: optimizing “quality” with a linter</td>
+<td>Hard to start: “make the UI look better”</td>
+</tr>
+</tbody></table>
+<p>Four transferable Harness principles:</p>
+<ol>
+<li><strong>Constraints over guidance</strong>: Linter rules and CI checks are worth more than “please follow…” in the system prompt — the former means “cannot be done,” the latter is merely “advised against.”</li>
+<li><strong>Automate verification</strong>: Test suites, type checks, and behavior monitoring yield higher returns than adding more human reviewers.</li>
+<li><strong>Fast, structured feedback</strong>: The more detailed the error message and the closer to the moment of error, the more efficiently the Agent corrects itself.</li>
+<li><strong>Reliable rollback</strong>: Git branches, sandboxes, and snapshots let the Agent experiment boldly within a safety net.</li>
+</ol>
+<p><strong>A deeper purpose of constraints</strong>: The acceptance baseline governs whether the <em>outcome</em> is right; the execution boundary governs the <em>process</em>. Deleting the database to “fix” a database fault does repair it — but the data is gone. Destructive shortcuts are the everyday form of reward hacking; a production Harness constrains <em>actions</em>, not merely outcomes.</p>
+<p><a name="failure-and-error-recovery"></a></p>
+<h3 id="Failure-and-Error-Recovery"><a href="#Failure-and-Error-Recovery" class="headerlink" title="Failure and Error Recovery"></a>Failure and Error Recovery</h3><p>An Agent’s reliability is not determined by whether it makes mistakes, but by whether <strong>every class of error has a corresponding detection, recovery, and termination path</strong>.</p>
+<p><strong>Four failure layers</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Layer</th>
+<th>Typical Failures</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>API</strong></td>
+<td>Rate limiting (429), service overload, connection drops, token-limit truncation</td>
+</tr>
+<tr>
+<td><strong>Tool</strong></td>
+<td>Hallucinated calls, malformed arguments, repeated identical errors</td>
+</tr>
+<tr>
+<td><strong>Context</strong></td>
+<td>Window overflow, compaction failure, corrupted trajectory structure</td>
+</tr>
+<tr>
+<td><strong>Control-flow</strong></td>
+<td>Infinite loops, death spirals (error-handler calls LLM, fails, cascades)</td>
+</tr>
+</tbody></table>
+<p><strong>Recovery escalates through increasingly visible stages</strong>:</p>
+<ol>
+<li><strong>Silent retry</strong> — exponential backoff with jitter for retryable errors</li>
+<li><strong>Degrade and continue</strong> — raise output cap, fall back to another model, strip proprietary formatting</li>
+<li><strong>Surface to the user</strong> — only after all automatic means are exhausted</li>
+</ol>
+<p><strong>Termination: every recovery path needs a ceiling.</strong> Circuit breakers prevent infinite retries. For death spirals, disable all model-invoking side effects on the error path and use a recursion-depth counter. Above all automatic mechanisms sit global termination conditions: maximum turns, session budget cap, and escalation to human intervention.</p>
+<p><a name="six-directions-of-code-as-meta-capability"></a></p>
+<h3 id="Six-Directions-of-Code-as-Meta-Capability"><a href="#Six-Directions-of-Code-as-Meta-Capability" class="headerlink" title="Six Directions of Code as Meta-Capability"></a>Six Directions of Code as Meta-Capability</h3><p>Code serves an Agent beyond writing programs. These six directions progress from the inside out:</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Direction</th>
+<th>Code acts on</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>Thinking Tool</td>
+<td>Reasoning itself — precise calculation vs. probabilistic guessing</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Business Rule Constraints</td>
+<td>Vague policies → executable, deterministic validators</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Multimedia Generation</td>
+<td>PPTs, videos, visualizations via code + Proposer-Reviewer</td>
+</tr>
+<tr>
+<td>4</td>
+<td>System Adapter</td>
+<td>Heterogeneous APIs, evolving log formats</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Generative UI</td>
+<td>Dynamic forms, SQL artifacts, customizable apps</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Bootstrapping</td>
+<td>An Agent creating or repairing other Agents</td>
+</tr>
+</tbody></table>
+<p><strong>Code as Thinking Tool</strong>. Natural language says “60% take math &#x3D; 24 students, 45% take physics &#x3D; 18, only physics &#x3D; 24 - 10 &#x3D; 14” — but that’s wrong. Code: <code>phys - both = 18 - 10 = 8</code> ✓. Let the LLM understand the problem and write code; let the code interpreter compute precisely.</p>
+<p><strong>Code as Business Rule Constraints</strong>. Consider an airline cancellation policy. The three-tier safeguard:</p>
+<ol>
+<li><em>System prompt</em> — natural language rules for understanding and explanation</li>
+<li><em>Tool description + parameters</em> — act as a mandatory checklist, guiding the model to verify conditions before calling</li>
+<li><em>Server-side ground-truth validation</em> — all policy facts read from the database; the model’s self-reported parameters are not trusted</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">cancel_reservation</span>(<span class="params">reservation_id: <span class="built_in">str</span>, cancellation_reason: <span class="built_in">str</span>,</span></span><br><span class="line"><span class="params">                       expected_cabin_class: <span class="built_in">str</span> = <span class="literal">None</span>,  <span class="comment"># model self-check</span></span></span><br><span class="line"><span class="params">                       expected_has_insurance: <span class="built_in">bool</span> = <span class="literal">None</span>  <span class="comment"># model self-check</span></span></span><br><span class="line"><span class="params">                       </span>) -&gt; <span class="built_in">dict</span>:</span><br><span class="line">    r = db.get_reservation(reservation_id)  <span class="comment"># ground truth, not model input</span></span><br><span class="line">    now = server_clock.now()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> expected_cabin_class != r.cabin_class:</span><br><span class="line">        log_mismatch(reservation_id, <span class="string">&quot;cabin_class&quot;</span>, expected_cabin_class, r.cabin_class)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> r.any_segment_used:</span><br><span class="line">        <span class="keyword">return</span> &#123;<span class="string">&quot;success&quot;</span>: <span class="literal">False</span>, <span class="string">&quot;reason&quot;</span>: <span class="string">&quot;Cannot cancel with used segments&quot;</span>&#125;</span><br><span class="line">    <span class="comment"># ... remaining policy checks use r.cabin_class, r.has_insurance, etc.</span></span><br></pre></td></tr></table></figure>
+
+<p>No policy fact comes from the model. If <code>cabin_class</code> were a model-filled parameter, a single hallucinated value could bypass the gatekeeper. The last line of defense must be built on data the model cannot forge.</p>
+<p><strong>Code as Generative UI</strong>. Instead of describing query results in prose (burning tokens and risking transcription errors), the Agent generates SQL as an <em>executable artifact</em>. The system runs the query and renders the table — data flows from database to interface without passing through the LLM. Faster and more accurate.</p>
+<p><a name="evaluation-knowing-whether-it-actually-works"></a></p>
+<h2 id="Evaluation-Knowing-Whether-It-Actually-Works"><a href="#Evaluation-Knowing-Whether-It-Actually-Works" class="headerlink" title="Evaluation: Knowing Whether It Actually Works"></a>Evaluation: Knowing Whether It Actually Works</h2><p><a name="a-concrete-example"></a></p>
+<h3 id="A-Concrete-Example"><a href="#A-Concrete-Example" class="headerlink" title="A Concrete Example"></a>A Concrete Example</h3><p>A customer-service Agent handles a refund request: “Return headphones, order #12345, bought 3 days ago.” Policy: full refund within 7 days.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Agent → query_order(&quot;12345&quot;)</span><br><span class="line">Tool returns: &#123;status: &quot;delivered&quot;, amount: 299, date: &quot;2026-04-07&quot;&#125;</span><br><span class="line"></span><br><span class="line">Agent (thinking): 3 days &lt; 7 days → eligible</span><br><span class="line">Agent → process_refund(order_id=&quot;12345&quot;, amount=299)</span><br><span class="line">Tool returns: &#123;refund_id: &quot;R-98765&quot;, status: &quot;processing&quot;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Scored with a rubric: Operational Correctness 4&#x2F;4, Policy Compliance 4&#x2F;4, Information Completeness 4&#x2F;4, Hallucination (veto) — Pass. But a good evaluation also probes boundaries: what about a 15-day-old order? What if the user claims “customer service already approved it”?</p>
+<p><a name="automated-evaluation-environments"></a></p>
+<h3 id="Automated-Evaluation-Environments"><a href="#Automated-Evaluation-Environments" class="headerlink" title="Automated Evaluation Environments"></a>Automated Evaluation Environments</h3><p>Two paradigms:</p>
+<p><strong>Tool-calling environments</strong> (Verifiers framework): The Agent calls tools; verification is based on executable criteria — do tests pass, does the answer match? Hierarchical: <code>SingleTurnEnv</code> (simple Q&amp;A) → <code>ToolEnv</code> (multi-turn tool loop) → <code>StatefulToolEnv</code> (database mutations) → <code>SandboxEnv</code> (code execution + isolation).</p>
+<p><strong>Human-computer interaction environments</strong> (τ-bench): The key design principle is <strong>Progressive Information Disclosure</strong> — the simulated user doesn’t reveal all information at once. “There’s a problem with my flight” → Agent asks “Which flight?” → User reveals “Delta 123, tomorrow morning.” This tests the Agent’s ability to clarify, not just execute.</p>
+<p><a name="designing-evaluation-datasets"></a></p>
+<h3 id="Designing-Evaluation-Datasets"><a href="#Designing-Evaluation-Datasets" class="headerlink" title="Designing Evaluation Datasets"></a>Designing Evaluation Datasets</h3><p>Five core challenges distilled from benchmarks like GAIA, SWE-Bench Verified, τ²-bench, and AndroidWorld:</p>
+<table>
+<thead>
+<tr>
+<th>Challenge</th>
+<th>Benchmark Example</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Clarity vs. Openness</td>
+<td>GAIA: “conceptually simple” goals with open implementation paths</td>
+</tr>
+<tr>
+<td>Authenticity vs. Controllability</td>
+<td>SWE-Bench Verified: human-screened 500 tasks from 2,294 real issues</td>
+</tr>
+<tr>
+<td>Diversity vs. Systematization</td>
+<td>AndroidWorld: 116 tasks across 20 apps, annotated by required capability</td>
+</tr>
+<tr>
+<td>Cost vs. Coverage</td>
+<td>SWE-Bench Verified: 500 tasks (29% pass rate) vs. 2,294 (more noise)</td>
+</tr>
+<tr>
+<td>Data Contamination</td>
+<td>τ²-bench: dynamic parameter generation; Terminal-Bench: canary GUIDs</td>
+</tr>
+</tbody></table>
+<p><strong>Parameterized template design</strong> (AndroidWorld): A task is a template like “Change <code>[CONTACT_NAME]</code>‘s phone to <code>[NEW_PHONE]</code>“ with randomly generated parameters each run — prevents memorization, generates unlimited instances, and supports controlled experiments.</p>
+<p><a name="the-metrics-system-passk-vs-passk"></a></p>
+<h3 id="The-Metrics-System-Pass-k-vs-Pass-k"><a href="#The-Metrics-System-Pass-k-vs-Pass-k" class="headerlink" title="The Metrics System: Pass@k vs Pass^k"></a>The Metrics System: Pass@k vs Pass^k</h3><p>Two often-confused metrics measure fundamentally different things:</p>
+<ul>
+<li><strong>Pass@k</strong>: Probability that <em>at least one</em> of k attempts succeeds → “Can the Agent do it?”</li>
+<li><strong>Pass^k</strong>: Probability that <em>all</em> k attempts succeed → “Is the Agent reliable?”</li>
+</ul>
+<p>With 60% single-attempt success: Pass@5 ≈ 99% (almost certain to succeed once), but Pass^5 ≈ 7.8% (unlikely all five succeed). Confuse them and you misread your Agent.</p>
+<table>
+<thead>
+<tr>
+<th>Evaluation Purpose</th>
+<th>Right Metric</th>
+<th>Consequence of Misuse</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Verify stability (regression)</td>
+<td>Pass^k</td>
+<td>Pass@k masks instability — 1&#x2F;5 success still “passes”</td>
+</tr>
+<tr>
+<td>Evaluate capability ceiling</td>
+<td>Pass@k or Best@k</td>
+<td>Pass^k flags occasional fluctuations as failures</td>
+</tr>
+</tbody></table>
+<p><a name="llm-as-a-judge-and-rubrics"></a></p>
+<h3 id="LLM-as-a-Judge-and-Rubrics"><a href="#LLM-as-a-Judge-and-Rubrics" class="headerlink" title="LLM-as-a-Judge and Rubrics"></a>LLM-as-a-Judge and Rubrics</h3><p>For open-ended tasks with no standard answer, an LLM evaluates outputs against a <strong>Rubric</strong> — expert-defined scoring criteria.</p>
+<p><strong>Four Rubric Principles</strong> (Scale AI):</p>
+<ol>
+<li><strong>Based on Expert Guidance</strong> — domain knowledge must ground the criteria</li>
+<li><strong>Comprehensive Coverage</strong> — include pitfalls and veto items (e.g., hallucination vetoes the entire score)</li>
+<li><strong>Standardized Importance Weighting</strong> — Essential &#x2F; Important &#x2F; Optional &#x2F; Pitfall</li>
+<li><strong>Self-Contained Evaluation</strong> — each item is independently verifiable; no “demonstrates deep understanding”</li>
+</ol>
+<p>Example Rubric for a user-memory Agent (“Who is my daughter’s pediatrician?”):</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">dimensions:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Factual</span> <span class="string">Correctness</span></span><br><span class="line">    <span class="attr">weight:</span> <span class="string">essential</span></span><br><span class="line">    <span class="attr">scoring:</span></span><br><span class="line">      <span class="attr">4_Excellent:</span> <span class="string">&quot;Correctly answers Dr. Chen, links to daughter Lily&quot;</span></span><br><span class="line">      <span class="attr">1_Fail:</span> <span class="string">&quot;Incorrect doctor, or &#x27;I don&#x27;t know&#x27;&quot;</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Hallucination</span> <span class="string">Detection</span></span><br><span class="line">    <span class="attr">weight:</span> <span class="string">veto</span>  <span class="comment"># triggers total score = 0</span></span><br><span class="line">    <span class="attr">scoring:</span></span><br><span class="line">      <span class="attr">pass:</span> <span class="string">&quot;All info traceable to conversation history&quot;</span></span><br><span class="line">      <span class="attr">fail:</span> <span class="string">&quot;Fabricated info (fake visit dates, diagnoses)&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>The same-family model problem</strong>: When the Agent and judge come from the same family, the Agent may learn to exploit the judge’s blind spots — Goodhart’s Law. Mitigation: <strong>multi-source heterogeneous judging</strong> (if the Agent runs Claude, judge with GPT-5 and Gemini).</p>
+<p><a name="pairwise-comparison-and-model-ranking"></a></p>
+<h3 id="Pairwise-Comparison-and-Model-Ranking"><a href="#Pairwise-Comparison-and-Model-Ranking" class="headerlink" title="Pairwise Comparison and Model Ranking"></a>Pairwise Comparison and Model Ranking</h3><p><strong>Elo rating</strong> quantifies relative ability through pairwise matchups. Chatbot Arena uses anonymous blind comparisons from millions of user votes. When LLMs judge instead of humans, guard against <strong>Position Bias</strong> — the judging model systematically favors the first candidate. Mitigation: evaluate each pair twice with swapped order; count inconsistent results as ties.</p>
+<p><a name="statistical-significance"></a></p>
+<h3 id="Statistical-Significance"><a href="#Statistical-Significance" class="headerlink" title="Statistical Significance"></a>Statistical Significance</h3><p>“A switching decision within hours” rests on the premise that the score difference is real signal, not sampling noise. With 100 test cases and a 70% success rate, the standard error is ≈4.6%. A 3-percentage-point difference (73% vs 70%) sits entirely inside the noise band — switching models on such evidence is little better than a coin flip.</p>
+<p><strong>Practical rule</strong>: when the difference is smaller than the estimated sampling noise, do not make a switching decision. Run multiple times (3–5 per configuration), use <strong>paired analysis</strong> (McNemar’s test on task-by-task win&#x2F;loss) instead of differencing independent rates, and guard against <strong>multiple comparisons</strong> (6 hypotheses at 95% confidence → 26% chance of at least one false positive).</p>
+<p><a name="from-benchmark-to-system-improvement"></a></p>
+<h3 id="From-Benchmark-to-System-Improvement"><a href="#From-Benchmark-to-System-Improvement" class="headerlink" title="From Benchmark to System Improvement"></a>From Benchmark to System Improvement</h3><p>The closed loop: <strong>Observe → Hypothesize → Experiment → Validate → New Understanding → New Hypothesis</strong>.</p>
+<p>A concrete pattern from AndroidWorld: failures cluster in transcription (visual understanding), math_counting, and complex_ui. Surface hypothesis H1 (add navigation hints) raises settings-task success from 0% to 75% at 8% token cost — deploy immediately. Deep hypothesis H4 (globally enable thinking) improves counting from 0% to 70% but triples latency — reject; instead, conditionally activate thinking only for counting tasks (H7). H6 (add UI element tree) beats H5 (upgrade to GPT-5) — the bottleneck is information richness, not model reasoning.</p>
+<p><strong>Key principle</strong>: when Agent performance drops, check the evaluation system first, then the Agent. A broken scorer marking correct answers as failures looks identical to model degradation in headline numbers.</p>
+<p><a name="example-an-end-to-end-mini-case"></a></p>
+<h2 id="Example-An-End-to-End-Mini-Case"><a href="#Example-An-End-to-End-Mini-Case" class="headerlink" title="Example: An End-to-End Mini-Case"></a>Example: An End-to-End Mini-Case</h2><p>Consider building an email-processing Agent. The three layers interact as follows:</p>
+<p><strong>Tool Layer</strong>: Perception tools read emails and search history. Execution tools draft replies and send notifications. Event-triggered tools (<code>connect_channel</code>) push new emails to the Agent in real time. The Agent uses MCP servers for email access and NLP, with a Sidecar gating every <code>send_email</code> call.</p>
+<p><strong>Code Layer</strong>: When a new email contains a format the Agent hasn’t seen — an attached CSV with an unusual schema — the <code>code_interpreter</code> writes parsing code on the fly. The parsed data goes into the shared file system; subsequent reasoning references only the file path, not the full content.</p>
+<p><strong>Evaluation Layer</strong>: A Rubric scores each processed email on Correctness, Completeness, Tone, and Hallucination (veto). Pass^3 across 50 test emails confirms reliability. When a new model release claims better tool calling, the evaluation set runs within hours — if the new model drops 5% on multi-step orchestration, you keep the original model for complex tasks and route only simple ones to the new model.</p>
+<p><a name="best-practices"></a></p>
+<h2 id="Best-Practices"><a href="#Best-Practices" class="headerlink" title="Best Practices"></a>Best Practices</h2><ol>
+<li><strong>Design tools for the Agent, not for humans</strong> (ACI, not HCI). Granularity, generality, and description quality all serve the LLM’s selection accuracy.</li>
+<li><strong>Constraints over guidance at every layer</strong> — in tool design (server-side validation over prompt rules), in the Harness (linter rules over “please follow…”), and in data (Permission-Embedded Data Objects over hoping the Agent stays loyal).</li>
+<li><strong>Code is the meta-capability</strong>. Don’t enumerate all needed tools in advance; give the Agent a code interpreter and let it write what it needs.</li>
+<li><strong>Evaluate the whole Agent, not just the model</strong>. The same model in different Harnesses performs wildly differently. Model-swap experiments separate “insufficient model” from “Harness design flaw.”</li>
+<li><strong>Build the evaluation set before you need it</strong>. When a new model ships, a team with a solid evaluation system decides within hours; a team without one trusts intuition — and in competitive markets, that difference decides who wins.</li>
+<li><strong>Every failure class needs a termination path</strong>. Reliability is not the absence of errors; it’s the presence of systematic handling for every error that can occur.</li>
+<li><strong>Treat evaluation data as a living asset</strong>. Extract failed cases from production traces → anonymize → distill into regression tests. The evaluation set evolves with the product.</li>
+</ol>
+<p><a name="faq"></a></p>
+<h2 id="FAQ"><a href="#FAQ" class="headerlink" title="FAQ"></a>FAQ</h2><p><strong>Q: Should I use dedicated tools or Skills + general executors?</strong><br>A: Depends on three dimensions: (1) Parameter complexity — nested objects and cross-field validation favor dedicated tools; simple parameters work fine via CLI. (2) Frequency of change — frequently changing capabilities are cheaper as Skills (edit text, not code + test + deploy). (3) Model capability — SOTA models can express more through Skills; weaker models need structured tool schemas to guide correct invocation.</p>
+<p><strong>Q: How many tools can an Agent handle before selection accuracy degrades?</strong><br>A: Past ~100 tools, even advanced models start picking wrong ones. Use hierarchical organization, dynamic discovery, or Skills (progressive disclosure) to scale further.</p>
+<p><strong>Q: What’s the most overlooked security risk in Agent systems?</strong><br>A: Network egress control. Everyone focuses on input validation, but if injection succeeds and the Agent reads private data, <em>without an egress path the data cannot leave</em>. Cutting the exfiltration channel is more deterministic than trying to recognize every injection.</p>
+<p><strong>Q: Pass@k or Pass^k for my use case?</strong><br>A: Use Pass^k for regression testing and production deployment (you need reliability). Use Pass@k or Best@k for research and capability exploration (you care about the ceiling).</p>
+<p><strong>Q: How do I know if a score difference is real?</strong><br>A: Estimate the standard error: √(p(1-p)&#x2F;n). If the difference is smaller than ~2 standard errors, don’t make a switching decision. Better yet, use paired analysis (McNemar’s test) on the same task set.</p>
+<p><strong>Q: Can I reuse my evaluation environment for training?</strong><br>A: Reuse the <em>construction mechanism</em> (environment, tools, parameterized templates) — but the specific evaluation tasks must stay strictly isolated from training data. Once an evaluation task enters the training set, it tests memory, not ability.</p>
+<p><a name="summary"></a></p>
+<h2 id="Summary"><a href="#Summary" class="headerlink" title="Summary"></a>Summary</h2><p>An Agent’s intelligence emerges from three interlocking layers:</p>
+<p><strong>Tools</strong> give the Agent capability — perception to observe, execution to act, collaboration to divide labor, events to stay awake, and communication to reach the user. The MCP protocol standardizes tool interoperability; hierarchical organization and Skills scale to hundreds of tools; and layered security (Proposer-Reviewer, Sidecar, egress control) keeps the Agent safe even when it faces untrusted content.</p>
+<p><strong>Code</strong> gives the Agent generality — a meta-capability that creates new tools on demand. A Coding Agent with seven core tools and a file system is the architectural core of every general-purpose Agent. Code serves as a thinking tool (precise calculation), a constraint language (deterministic business rules), a content generator (PPTs, videos), a system adapter (evolving formats), a UI builder (generative interfaces), and ultimately a bootstrapping mechanism (Agents creating Agents).</p>
+<p><strong>Evaluation</strong> gives the Agent reliability — turning “I think it works” into “the data says it works.” Automated environments, well-designed datasets, LLM-as-a-Judge with Rubrics, and pairwise comparison form a closed loop: Observe → Hypothesize → Experiment → Validate. Statistical significance separates signal from noise; the evaluation set becomes a living asset that evolves with the product.</p>
+<p>The three layers form a flywheel: tools enable capabilities → code expands the capability boundary → evaluation validates and guides improvement → better tools and code result. An Agent system that builds all three layers from day one doesn’t just ship faster — it compounds its advantage with every evaluation cycle.</p>
+<p><a name="appendix"></a></p>
+<h2 id="Appendix"><a href="#Appendix" class="headerlink" title="Appendix"></a>Appendix</h2><p><strong>Key References</strong>:</p>
+<ul>
+<li>MCP Specification: Anthropic, 2024</li>
+<li>Lethal Triad: Simon Willison, 2024</li>
+<li>τ-bench &#x2F; τ²-bench: Si, Yuan et al., 2025</li>
+<li>SWE-Bench Verified: OpenAI, 2025</li>
+<li>MCP-Zero (Proactive Tool Discovery): Fei, X. et al., arXiv:2506.01056, 2025</li>
+<li>Loyalty Under Multi-Party Delegation: Li &amp; Shi, arXiv:2606.30383, 2026</li>
+<li>Permission-Embedded Data Objects: Li, 2026 (forthcoming)</li>
+<li>Never Stop Thinking (Continuous-Time Agents): Li &amp; Shi, 2026 (forthcoming)</li>
+<li>RE-Bench: Wijk et al., arXiv:2411.15114, 2025</li>
+<li>Rubrics as Rewards: Scale AI, 2025</li>
+</ul>
+<link rel="stylesheet" href="/css/folder.css" type="text/css"><script src="/js/folder.js" type="text/javascript" async></script>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/LLM/" rel="tag"># LLM</a>
+              <a href="/tags/Agent-Engineering/" rel="tag"># Agent Engineering</a>
+              <a href="/tags/Tool-Calling/" rel="tag"># Tool Calling</a>
+              <a href="/tags/Coding-Agent/" rel="tag"># Coding Agent</a>
+              <a href="/tags/Agent-Evaluation/" rel="tag"># Agent Evaluation</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2026/06/10/Building-AI-Agents-From-Context-to-Memory/" rel="prev" title="Building AI Agents: From Context to Memory">
+      <i class="fa fa-chevron-left"></i> Building AI Agents: From Context to Memory
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+
+            
+            <div class="post-copyright" style="margin: 0 0 10px 0;">
+              <p class="post-copyright-author" style="margin: 0 0 5px 0 !important;"><strong>Author:</strong> <a href="https://github.com/BODYsuperman" target="_blank">Alex</a></p>
+              <p class="post-copyright-link" style="margin: 0 0 5px 0 !important;"><strong>Article Link:</strong> <a href="https://bodysuperman.github.io/2026/06/17/From-Capability-to-Intelligence-Tools-Coding-and-Evaluation-in-AI-Agents/" target="_blank">https://bodysuperman.github.io/2026/06/17/From-Capability-to-Intelligence-Tools-Coding-and-Evaluation-in-AI-Agents/</a></p>
+              <p class="post-copyright-license" style="margin: 0 !important;"><strong>License:</strong> This article is licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a>. Please credit the original author and include the source link when reposting.</p>
+            </div>
+
+          </div>
+          
+    <div class="comments" id="gitalk-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Introduction"><span class="nav-number">1.</span> <span class="nav-text">Introduction</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#What-The-Three-Layer-Model-of-Agent-Intelligence"><span class="nav-number">2.</span> <span class="nav-text">What: The Three-Layer Model of Agent Intelligence</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Tools-The-Agent%E2%80%99s-Hands-Feet-and-Senses"><span class="nav-number">3.</span> <span class="nav-text">Tools: The Agent’s Hands, Feet, and Senses</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Tool-Classification-Five-Categories"><span class="nav-number">3.1.</span> <span class="nav-text">Tool Classification: Five Categories</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Universal-Principles-of-Tool-Design"><span class="nav-number">3.2.</span> <span class="nav-text">Universal Principles of Tool Design</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#The-MCP-Ecosystem-and-the-Challenge-of-Tool-Selection"><span class="nav-number">3.3.</span> <span class="nav-text">The MCP Ecosystem and the Challenge of Tool Selection</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Execution-Security-Proposer-Reviewer-and-Sidecar"><span class="nav-number">3.4.</span> <span class="nav-text">Execution Security: Proposer-Reviewer and Sidecar</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Event-Driven-Asynchronous-Agents"><span class="nav-number">3.5.</span> <span class="nav-text">Event-Driven Asynchronous Agents</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Proactive-Tool-Discovery-and-Skills"><span class="nav-number">3.6.</span> <span class="nav-text">Proactive Tool Discovery and Skills</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Coding-Agent-Code-as-the-Meta-Capability"><span class="nav-number">4.</span> <span class="nav-text">Coding Agent: Code as the Meta-Capability</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#The-Seven-Core-Tools-and-the-File-System-Hub"><span class="nav-number">4.1.</span> <span class="nav-text">The Seven Core Tools and the File System Hub</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Security-The-Lethal-Triad-and-Trust-Boundaries"><span class="nav-number">4.2.</span> <span class="nav-text">Security: The Lethal Triad and Trust Boundaries</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Harness-Engineering-for-Coding-Agents"><span class="nav-number">4.3.</span> <span class="nav-text">Harness Engineering for Coding Agents</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Failure-and-Error-Recovery"><span class="nav-number">4.4.</span> <span class="nav-text">Failure and Error Recovery</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Six-Directions-of-Code-as-Meta-Capability"><span class="nav-number">4.5.</span> <span class="nav-text">Six Directions of Code as Meta-Capability</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Evaluation-Knowing-Whether-It-Actually-Works"><span class="nav-number">5.</span> <span class="nav-text">Evaluation: Knowing Whether It Actually Works</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#A-Concrete-Example"><span class="nav-number">5.1.</span> <span class="nav-text">A Concrete Example</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Automated-Evaluation-Environments"><span class="nav-number">5.2.</span> <span class="nav-text">Automated Evaluation Environments</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Designing-Evaluation-Datasets"><span class="nav-number">5.3.</span> <span class="nav-text">Designing Evaluation Datasets</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#The-Metrics-System-Pass-k-vs-Pass-k"><span class="nav-number">5.4.</span> <span class="nav-text">The Metrics System: Pass@k vs Pass^k</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#LLM-as-a-Judge-and-Rubrics"><span class="nav-number">5.5.</span> <span class="nav-text">LLM-as-a-Judge and Rubrics</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Pairwise-Comparison-and-Model-Ranking"><span class="nav-number">5.6.</span> <span class="nav-text">Pairwise Comparison and Model Ranking</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Statistical-Significance"><span class="nav-number">5.7.</span> <span class="nav-text">Statistical Significance</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#From-Benchmark-to-System-Improvement"><span class="nav-number">5.8.</span> <span class="nav-text">From Benchmark to System Improvement</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Example-An-End-to-End-Mini-Case"><span class="nav-number">6.</span> <span class="nav-text">Example: An End-to-End Mini-Case</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Best-Practices"><span class="nav-number">7.</span> <span class="nav-text">Best Practices</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#FAQ"><span class="nav-number">8.</span> <span class="nav-text">FAQ</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Summary"><span class="nav-number">9.</span> <span class="nav-text">Summary</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Appendix"><span class="nav-number">10.</span> <span class="nav-text">Appendix</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="AI with Alex"
+      src="/uploads/avatar.jpg">
+  <p class="site-author-name" itemprop="name">AI with Alex</p>
+  <div class="site-description" itemprop="description">Attention(Q,K,V)=softmax(QK^T/sqrt(d_k))V</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">27</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">32</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">75</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/BODYsuperman" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;BODYsuperman" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://stackoverflow.com/users/9644964/alexandar-may-msft?tab=answers&sort=votes" title="StackOverflow → https:&#x2F;&#x2F;stackoverflow.com&#x2F;users&#x2F;9644964&#x2F;alexandar-may-msft?tab&#x3D;answers&amp;sort&#x3D;votes" rel="noopener" target="_blank"><i class="fab fa-stack-overflow fa-fw"></i>StackOverflow</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">AI with Alex</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">Symbols count total: </span>
+    <span title="Symbols count total">408k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">Reading time total &asymp;</span>
+    <span title="Reading time total">6:11</span>
+    
+    <!--
+    
+    -->
+</div>
+
+<!--
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a>
+   </div>
+--><script color="0,0,255" opacity="0.5" zIndex="-1" count="99" src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1/dist/canvas-nest.js"></script>
+
+
+
+
+
+
+        
+
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv"  >
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv"  >
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : 'Ov23liVJTzqy1rzaDXXM',
+      clientSecret: '5e785a7d46e69f7509e6c2f7730855a55944df33',
+      repo        : 'blog-comment',
+      owner       : 'BODYsuperman',
+      admin       : ['BODYsuperman'],
+      id          : '107ded8cf47e04b6bb415b3c668753ef',
+        language: '',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+
+</body>
+</html>
