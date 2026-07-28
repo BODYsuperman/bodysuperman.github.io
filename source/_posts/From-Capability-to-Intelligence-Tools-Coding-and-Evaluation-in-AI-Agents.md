@@ -1,10 +1,11 @@
 ---
-title: 'From Capability to Intelligence: Tools, Coding, and Evaluation in AI Agents'
+title: "From Capability to Intelligence: Tools, Coding, and Evaluation in AI Agents"
 date: 2026-06-17 15:09:38
-updated: 2026-07-27 15:09:38
+updated: 2026-07-24 15:09:38
 comments: true
 categories:
   - AI Agent
+  - AI Engineering
 tags:
   - LLM
   - Agent Engineering
@@ -49,13 +50,13 @@ tags:
 
 ## Introduction
 
-In the sci-fi film *Her*, the AI assistant Samantha can proactively organize emails, negotiate on the user's behalf, and seamlessly switch between communication channels. Her intelligence is compelling because she possesses powerful **tools** — the "hands, feet, and senses" that connect a language "brain" to the real digital world.
+In the sci-fi film _Her_, the AI assistant Samantha can proactively organize emails, negotiate on the user's behalf, and seamlessly switch between communication channels. Her intelligence is compelling because she possesses powerful **tools** — the "hands, feet, and senses" that connect a language "brain" to the real digital world.
 
 Building such an assistant with today's technology means solving three progressively deeper challenges:
 
 1. **Tool design**: How does an Agent accurately select the right tool from hundreds of candidates, and how do we keep the Agent safe when those tools can delete files and spend money?
-2. **Code as meta-capability**: When no pre-built tool fits, can the Agent *write one on the spot*? A Coding Agent plus a file system turns out to be the architectural core of every general-purpose Agent.
-3. **Evaluation**: How do we *know* whether a design change actually helps — and whether it's safe to ship?
+2. **Code as meta-capability**: When no pre-built tool fits, can the Agent _write one on the spot_? A Coding Agent plus a file system turns out to be the architectural core of every general-purpose Agent.
+3. **Evaluation**: How do we _know_ whether a design change actually helps — and whether it's safe to ship?
 
 These three layers answer each other in sequence. Tools give capability; code gives generality; evaluation gives reliability. This article walks all three, distilling the key engineering principles from a three-chapter treatment of the topic.
 
@@ -89,13 +90,13 @@ Each layer is necessary but not sufficient on its own. An Agent with great tools
 
 Every Agent tool falls into one of five categories, distinguished by **who initiates** the interaction and **what it acts on**:
 
-| Tool Type | Invocation Direction | Target of Action |
-|---|---|---|
-| Perception | Agent actively invokes | Acquire information |
-| Execution | Agent actively invokes | Change the world |
-| Collaboration | Agent actively invokes | Drive other Agents or humans |
-| User Communication | Agent actively invokes | Convey information to the user |
-| Event-Triggered | Agent registers, external triggers | Drive the Agent to start execution |
+| Tool Type          | Invocation Direction               | Target of Action                   |
+| ------------------ | ---------------------------------- | ---------------------------------- |
+| Perception         | Agent actively invokes             | Acquire information                |
+| Execution          | Agent actively invokes             | Change the world                   |
+| Collaboration      | Agent actively invokes             | Drive other Agents or humans       |
+| User Communication | Agent actively invokes             | Convey information to the user     |
+| Event-Triggered    | Agent registers, external triggers | Drive the Agent to start execution |
 
 **Perception tools** — `web_search`, `read_file`, `grep` — are the Agent's senses. Their read-only nature makes them naturally cacheable and parallelizable: you can read five files simultaneously without worrying about interference.
 
@@ -105,7 +106,7 @@ Every Agent tool falls into one of five categories, distinguished by **who initi
 
 **User Communication tools** — `reply_to_user`, `send_card_to_user` — arise when "speaking" itself must become an explicit tool call, as in multi-channel asynchronous messaging.
 
-**Event-Triggered tools** — `set_timer`, `monitor_shell`, `connect_channel` — let the *world* wake the Agent. Without them, an Agent can only respond when a user sends a message; it cannot act on a timer or react to a new email.
+**Event-Triggered tools** — `set_timer`, `monitor_shell`, `connect_channel` — let the _world_ wake the Agent. Without them, an Agent can only respond when a user sends a message; it cannot act on a timer or react to a new email.
 
 <a name="universal-principles-of-tool-design"></a>
 
@@ -115,9 +116,9 @@ Regardless of category, every tool should obey a handful of principles that sepa
 
 **Granularity: Integrate when similar, separate when different.** `extract_pdf_text`, `extract_docx_content`, and `extract_pptx_content` all share one job — extracting text from a document. A unified `read_document` tool with a `file_type` parameter reduces the LLM's cognitive load. But don't force image OCR and video keyframe extraction into one tool — their parameters and latency are too different.
 
-**Generality over specificity — unless security demands otherwise.** A single `code_interpreter` with SymPy and NumPy replaces dozens of calculators. The logic: *an LLM already possesses powerful reasoning and code-generation abilities; leverage them rather than constrain them.*
+**Generality over specificity — unless security demands otherwise.** A single `code_interpreter` with SymPy and NumPy replaces dozens of calculators. The logic: _an LLM already possesses powerful reasoning and code-generation abilities; leverage them rather than constrain them._
 
-**Description is the most important line of code.** A tool description must tell the LLM **when to use it**, not just what it can do. "Use when you need real-time information" beats "Search for relevant content." Equally important: **state what the tool cannot do**. Most tool-call failures trace not to the model not knowing what the tool *can* do, but to it not knowing what it *cannot*.
+**Description is the most important line of code.** A tool description must tell the LLM **when to use it**, not just what it can do. "Use when you need real-time information" beats "Search for relevant content." Equally important: **state what the tool cannot do**. Most tool-call failures trace not to the model not knowing what the tool _can_ do, but to it not knowing what it _cannot_.
 
 Concrete parameter examples dramatically improve accuracy. `"+8613888888888" (China)` beats "E.164 format." In some benchmarks, adding examples raised tool-call accuracy from ~72% to ~90%.
 
@@ -147,16 +148,16 @@ But MCP introduces two practical challenges:
 
 Execution tools need a multi-layered defense. Beyond input validation and permission control, two higher-level mechanisms add independent review:
 
-**Proposer-Reviewer (pre-approval).** Before an irreversible operation (sending money, modifying production config), one model proposes the action and a second model from a *different family* reviews it. Different training data brings cognitive diversity; similar capability ensures the reviewer can follow the proposer's reasoning. After a rejection, the rejection reason re-enters the Agent's trajectory as a tool error — the Agent already knows how to handle tool failures.
+**Proposer-Reviewer (pre-approval).** Before an irreversible operation (sending money, modifying production config), one model proposes the action and a second model from a _different family_ reviews it. Different training data brings cognitive diversity; similar capability ensures the reviewer can follow the proposer's reasoning. After a rejection, the rejection reason re-enters the Agent's trajectory as a tool error — the Agent already knows how to handle tool failures.
 
-**Sidecar (parallel gating).** While the main model streams a tool call, an independent lightweight LLM classifies whether the call is safe — looking only at structured fields `{tool, parameters}`, not the main model's free-text thinking. This blocks the rhetorical channel that prompt injection exploits. The lightweight model suffices because it judges a *classification problem* over structured data (is this command out of bounds?), not an open-ended reasoning task.
+**Sidecar (parallel gating).** While the main model streams a tool call, an independent lightweight LLM classifies whether the call is safe — looking only at structured fields `{tool, parameters}`, not the main model's free-text thinking. This blocks the rhetorical channel that prompt injection exploits. The lightweight model suffices because it judges a _classification problem_ over structured data (is this command out of bounds?), not an open-ended reasoning task.
 
-| Dimension | Proposer-Reviewer | Sidecar |
-|---|---|---|
-| **Timing** | Before or after operation | Parallel with streaming output, gates each call |
-| **Target** | Reasonableness of the operation or result | The operation itself |
-| **Input Isolation** | Proposer and reviewer see similar information | Sidecar deliberately isolates free text |
-| **Typical Uses** | Irreversible approval, document review | Permission classification, output summarization |
+| Dimension           | Proposer-Reviewer                             | Sidecar                                         |
+| ------------------- | --------------------------------------------- | ----------------------------------------------- |
+| **Timing**          | Before or after operation                     | Parallel with streaming output, gates each call |
+| **Target**          | Reasonableness of the operation or result     | The operation itself                            |
+| **Input Isolation** | Proposer and reviewer see similar information | Sidecar deliberately isolates free text         |
+| **Typical Uses**    | Irreversible approval, document review        | Permission classification, output summarization |
 
 <a name="event-driven-asynchronous-agents"></a>
 
@@ -166,11 +167,11 @@ A synchronous Agent is like a single checkout counter — one customer at a time
 
 Three processing strategies handle events of different urgency:
 
-| Strategy | When | Mechanism |
-|---|---|---|
-| **Cancellation** | Urgent event (user says "Stop!") | Interrupt current step, force a safe point, append event, re-invoke LLM |
-| **Queued** | Routine event (tool result arrives) | Append to queue; batch-process at next safe point |
-| **Parallel** | Independent lightweight query ("What's the weather?") | Spin up a separate reasoning session |
+| Strategy         | When                                                  | Mechanism                                                               |
+| ---------------- | ----------------------------------------------------- | ----------------------------------------------------------------------- |
+| **Cancellation** | Urgent event (user says "Stop!")                      | Interrupt current step, force a safe point, append event, re-invoke LLM |
+| **Queued**       | Routine event (tool result arrives)                   | Append to queue; batch-process at next safe point                       |
+| **Parallel**     | Independent lightweight query ("What's the weather?") | Spin up a separate reasoning session                                    |
 
 **The fundamental contradiction**: LLMs are trained on synchronous trajectories — after a tool call, the next message must be the tool result. Real deployment demands asynchrony — users interrupt, tasks progress concurrently. The engineering workaround: under normal conditions, show the LLM a perfect synchronous trajectory; only when an interruption genuinely occurs, insert a placeholder to fix the format. The fundamental fix awaits next-generation models trained with asynchronous RL.
 
@@ -182,7 +183,7 @@ When tools grow from dozens to hundreds, injecting all schemas at once clogs the
 
 1. **Retrieval-based pre-filtering**: Embed tool descriptions; at query time, retrieve the top-k candidates. Limit: matches once, against the initial query — can't foresee a multi-step cross-domain tool chain.
 
-2. **Proactive discovery (MCP-Zero)**: The Agent emits structured capability requests in its thinking; the system matches and injects on the fly. Reports ~98% token reduction across ~2,800 tools. Dynamic loading appends the schema at the *end* of the context, preserving the KV Cache on the stable prefix.
+2. **Proactive discovery (MCP-Zero)**: The Agent emits structured capability requests in its thinking; the system matches and injects on the fly. Reports ~98% token reduction across ~2,800 tools. Dynamic loading appends the schema at the _end_ of the context, preserving the KV Cache on the stable prefix.
 
 3. **Skills (progressive disclosure)**: At startup the Agent sees only a thin catalog — each skill's name and description. When the current context calls for a capability, the model reads the corresponding skill document on demand. No embedding index to maintain; the Agent needs only general file-reading ability (`grep`, `read_file`) to browse the skill directory.
 
@@ -200,15 +201,15 @@ A general-purpose Agent targeting open-ended tasks has at its core a **Coding Ag
 
 A basic Coding Agent needs only seven tools:
 
-| # | Tool | Purpose |
-|---|---|---|
-| 1 | Code Interpreter | Execute Python in a sandbox |
-| 2 | Bash Shell | Run terminal commands |
-| 3 | Read File | Read code, config, logs |
-| 4 | Write File | Create or overwrite files |
-| 5 | Edit File | Partial modification (core for iteration) |
-| 6 | Glob | Find files by name pattern |
-| 7 | Grep | Search file content by pattern |
+| #   | Tool             | Purpose                                   |
+| --- | ---------------- | ----------------------------------------- |
+| 1   | Code Interpreter | Execute Python in a sandbox               |
+| 2   | Bash Shell       | Run terminal commands                     |
+| 3   | Read File        | Read code, config, logs                   |
+| 4   | Write File       | Create or overwrite files                 |
+| 5   | Edit File        | Partial modification (core for iteration) |
+| 6   | Glob             | Find files by name pattern                |
+| 7   | Grep             | Search file content by pattern            |
 
 A quick example — "compile all TODO comments":
 
@@ -224,7 +225,7 @@ Tool returns: File created
 
 Two tools, one task done. The seven tools are simple individually; in combination they cover a remarkable range.
 
-**Why is the file system the hub?** In OpenClaw, the Agent's long-term memory lives in `MEMORY.md` and date-archived Markdown logs — not a vector database. Markdown lets users directly read and edit the Agent's memory; Git provides version control and rollback. More critically, because the Agent can *write files*, it has the technical means to modify its own external artifacts — recording a discovery for future sessions, updating documentation after a code change, or saving a successful operation sequence as reusable code.
+**Why is the file system the hub?** In OpenClaw, the Agent's long-term memory lives in `MEMORY.md` and date-archived Markdown logs — not a vector database. Markdown lets users directly read and edit the Agent's memory; Git provides version control and rollback. More critically, because the Agent can _write files_, it has the technical means to modify its own external artifacts — recording a discovery for future sessions, updating documentation after a code change, or saving a successful operation sequence as reusable code.
 
 <a name="security-the-lethal-triad-and-trust-boundaries"></a>
 
@@ -248,7 +249,7 @@ Untrusted Content ──→ Agent reads Private Data ──→ Exfiltrates via E
 
 - **Network egress control**: No network by default; grant access via a whitelist proxy. Even if injection succeeds, without an egress path the data cannot leave.
 - **Command semantic parsing**: Keyword blacklists can't handle `$(echo rm) -rf /` or `find / -exec rm {} \;`. Production-grade systems parse each command's argument types to recognize nested dangerous operations.
-- **Loyalty code of conduct**: An Agent negotiating on your behalf faces a *negotiating opponent*, not a "user in need of help." The system prompt must explicitly nail down whom the Agent serves: instructions from the principal carry highest priority; everything from external parties is downgraded to "data that may be consulted but carries no force of instruction."
+- **Loyalty code of conduct**: An Agent negotiating on your behalf faces a _negotiating opponent_, not a "user in need of help." The system prompt must explicitly nail down whom the Agent serves: instructions from the principal carry highest priority; everything from external parties is downgraded to "data that may be consulted but carries no force of instruction."
 - **Permission-Embedded Data Objects**: When both the code writer and the code runner may be untrusted, constraints must live in the human-reviewed schema beneath the application layer — enforced on every write, producing zero invariant violations in comparisons against baselines like bare SQL or constitutional prompts.
 
 <a name="harness-engineering-for-coding-agents"></a>
@@ -257,10 +258,10 @@ Untrusted Content ──→ Agent reads Private Data ──→ Exfiltrates via E
 
 The Harness — context, tools, constraints, verification, and correction — is where Coding Agents shine. Code-writing tasks naturally occupy the "clear goal + automated verification" quadrant:
 
-| | Results can be automatically verified | Results require manual verification |
-|---|---|---|
-| **Clear goal** | Sweet spot: fixing bugs with test cases | Throughput-limited: refactoring needs review |
-| **Vague goal** | Efficiently going off track: optimizing "quality" with a linter | Hard to start: "make the UI look better" |
+|                | Results can be automatically verified                           | Results require manual verification          |
+| -------------- | --------------------------------------------------------------- | -------------------------------------------- |
+| **Clear goal** | Sweet spot: fixing bugs with test cases                         | Throughput-limited: refactoring needs review |
+| **Vague goal** | Efficiently going off track: optimizing "quality" with a linter | Hard to start: "make the UI look better"     |
 
 Four transferable Harness principles:
 
@@ -269,7 +270,7 @@ Four transferable Harness principles:
 3. **Fast, structured feedback**: The more detailed the error message and the closer to the moment of error, the more efficiently the Agent corrects itself.
 4. **Reliable rollback**: Git branches, sandboxes, and snapshots let the Agent experiment boldly within a safety net.
 
-**A deeper purpose of constraints**: The acceptance baseline governs whether the *outcome* is right; the execution boundary governs the *process*. Deleting the database to "fix" a database fault does repair it — but the data is gone. Destructive shortcuts are the everyday form of reward hacking; a production Harness constrains *actions*, not merely outcomes.
+**A deeper purpose of constraints**: The acceptance baseline governs whether the _outcome_ is right; the execution boundary governs the _process_. Deleting the database to "fix" a database fault does repair it — but the data is gone. Destructive shortcuts are the everyday form of reward hacking; a production Harness constrains _actions_, not merely outcomes.
 
 <a name="failure-and-error-recovery"></a>
 
@@ -279,12 +280,12 @@ An Agent's reliability is not determined by whether it makes mistakes, but by wh
 
 **Four failure layers**:
 
-| Layer | Typical Failures |
-|---|---|
-| **API** | Rate limiting (429), service overload, connection drops, token-limit truncation |
-| **Tool** | Hallucinated calls, malformed arguments, repeated identical errors |
-| **Context** | Window overflow, compaction failure, corrupted trajectory structure |
-| **Control-flow** | Infinite loops, death spirals (error-handler calls LLM, fails, cascades) |
+| Layer            | Typical Failures                                                                |
+| ---------------- | ------------------------------------------------------------------------------- |
+| **API**          | Rate limiting (429), service overload, connection drops, token-limit truncation |
+| **Tool**         | Hallucinated calls, malformed arguments, repeated identical errors              |
+| **Context**      | Window overflow, compaction failure, corrupted trajectory structure             |
+| **Control-flow** | Infinite loops, death spirals (error-handler calls LLM, fails, cascades)        |
 
 **Recovery escalates through increasingly visible stages**:
 
@@ -300,22 +301,22 @@ An Agent's reliability is not determined by whether it makes mistakes, but by wh
 
 Code serves an Agent beyond writing programs. These six directions progress from the inside out:
 
-| # | Direction | Code acts on |
-|---|---|---|
-| 1 | Thinking Tool | Reasoning itself — precise calculation vs. probabilistic guessing |
-| 2 | Business Rule Constraints | Vague policies → executable, deterministic validators |
-| 3 | Multimedia Generation | PPTs, videos, visualizations via code + Proposer-Reviewer |
-| 4 | System Adapter | Heterogeneous APIs, evolving log formats |
-| 5 | Generative UI | Dynamic forms, SQL artifacts, customizable apps |
-| 6 | Bootstrapping | An Agent creating or repairing other Agents |
+| #   | Direction                 | Code acts on                                                      |
+| --- | ------------------------- | ----------------------------------------------------------------- |
+| 1   | Thinking Tool             | Reasoning itself — precise calculation vs. probabilistic guessing |
+| 2   | Business Rule Constraints | Vague policies → executable, deterministic validators             |
+| 3   | Multimedia Generation     | PPTs, videos, visualizations via code + Proposer-Reviewer         |
+| 4   | System Adapter            | Heterogeneous APIs, evolving log formats                          |
+| 5   | Generative UI             | Dynamic forms, SQL artifacts, customizable apps                   |
+| 6   | Bootstrapping             | An Agent creating or repairing other Agents                       |
 
 **Code as Thinking Tool**. Natural language says "60% take math = 24 students, 45% take physics = 18, only physics = 24 - 10 = 14" — but that's wrong. Code: `phys - both = 18 - 10 = 8` ✓. Let the LLM understand the problem and write code; let the code interpreter compute precisely.
 
 **Code as Business Rule Constraints**. Consider an airline cancellation policy. The three-tier safeguard:
 
-1. *System prompt* — natural language rules for understanding and explanation
-2. *Tool description + parameters* — act as a mandatory checklist, guiding the model to verify conditions before calling
-3. *Server-side ground-truth validation* — all policy facts read from the database; the model's self-reported parameters are not trusted
+1. _System prompt_ — natural language rules for understanding and explanation
+2. _Tool description + parameters_ — act as a mandatory checklist, guiding the model to verify conditions before calling
+3. _Server-side ground-truth validation_ — all policy facts read from the database; the model's self-reported parameters are not trusted
 
 ```python
 def cancel_reservation(reservation_id: str, cancellation_reason: str,
@@ -335,7 +336,7 @@ def cancel_reservation(reservation_id: str, cancellation_reason: str,
 
 No policy fact comes from the model. If `cabin_class` were a model-filled parameter, a single hallucinated value could bypass the gatekeeper. The last line of defense must be built on data the model cannot forge.
 
-**Code as Generative UI**. Instead of describing query results in prose (burning tokens and risking transcription errors), the Agent generates SQL as an *executable artifact*. The system runs the query and renders the table — data flows from database to interface without passing through the LLM. Faster and more accurate.
+**Code as Generative UI**. Instead of describing query results in prose (burning tokens and risking transcription errors), the Agent generates SQL as an _executable artifact_. The system runs the query and renders the table — data flows from database to interface without passing through the LLM. Faster and more accurate.
 
 <a name="evaluation-knowing-whether-it-actually-works"></a>
 
@@ -374,13 +375,13 @@ Two paradigms:
 
 Five core challenges distilled from benchmarks like GAIA, SWE-Bench Verified, τ²-bench, and AndroidWorld:
 
-| Challenge | Benchmark Example |
-|---|---|
-| Clarity vs. Openness | GAIA: "conceptually simple" goals with open implementation paths |
-| Authenticity vs. Controllability | SWE-Bench Verified: human-screened 500 tasks from 2,294 real issues |
-| Diversity vs. Systematization | AndroidWorld: 116 tasks across 20 apps, annotated by required capability |
-| Cost vs. Coverage | SWE-Bench Verified: 500 tasks (29% pass rate) vs. 2,294 (more noise) |
-| Data Contamination | τ²-bench: dynamic parameter generation; Terminal-Bench: canary GUIDs |
+| Challenge                        | Benchmark Example                                                        |
+| -------------------------------- | ------------------------------------------------------------------------ |
+| Clarity vs. Openness             | GAIA: "conceptually simple" goals with open implementation paths         |
+| Authenticity vs. Controllability | SWE-Bench Verified: human-screened 500 tasks from 2,294 real issues      |
+| Diversity vs. Systematization    | AndroidWorld: 116 tasks across 20 apps, annotated by required capability |
+| Cost vs. Coverage                | SWE-Bench Verified: 500 tasks (29% pass rate) vs. 2,294 (more noise)     |
+| Data Contamination               | τ²-bench: dynamic parameter generation; Terminal-Bench: canary GUIDs     |
 
 **Parameterized template design** (AndroidWorld): A task is a template like "Change `[CONTACT_NAME]`'s phone to `[NEW_PHONE]`" with randomly generated parameters each run — prevents memorization, generates unlimited instances, and supports controlled experiments.
 
@@ -390,15 +391,15 @@ Five core challenges distilled from benchmarks like GAIA, SWE-Bench Verified, τ
 
 Two often-confused metrics measure fundamentally different things:
 
-- **Pass@k**: Probability that *at least one* of k attempts succeeds → "Can the Agent do it?"
-- **Pass^k**: Probability that *all* k attempts succeed → "Is the Agent reliable?"
+- **Pass@k**: Probability that _at least one_ of k attempts succeeds → "Can the Agent do it?"
+- **Pass^k**: Probability that _all_ k attempts succeed → "Is the Agent reliable?"
 
 With 60% single-attempt success: Pass@5 ≈ 99% (almost certain to succeed once), but Pass^5 ≈ 7.8% (unlikely all five succeed). Confuse them and you misread your Agent.
 
-| Evaluation Purpose | Right Metric | Consequence of Misuse |
-|---|---|---|
-| Verify stability (regression) | Pass^k | Pass@k masks instability — 1/5 success still "passes" |
-| Evaluate capability ceiling | Pass@k or Best@k | Pass^k flags occasional fluctuations as failures |
+| Evaluation Purpose            | Right Metric     | Consequence of Misuse                                 |
+| ----------------------------- | ---------------- | ----------------------------------------------------- |
+| Verify stability (regression) | Pass^k           | Pass@k masks instability — 1/5 success still "passes" |
+| Evaluate capability ceiling   | Pass@k or Best@k | Pass^k flags occasional fluctuations as failures      |
 
 <a name="llm-as-a-judge-and-rubrics"></a>
 
@@ -423,7 +424,7 @@ dimensions:
       4_Excellent: "Correctly answers Dr. Chen, links to daughter Lily"
       1_Fail: "Incorrect doctor, or 'I don't know'"
   - name: Hallucination Detection
-    weight: veto  # triggers total score = 0
+    weight: veto # triggers total score = 0
     scoring:
       pass: "All info traceable to conversation history"
       fail: "Fabricated info (fake visit dates, diagnoses)"
@@ -490,7 +491,7 @@ A: Depends on three dimensions: (1) Parameter complexity — nested objects and 
 A: Past ~100 tools, even advanced models start picking wrong ones. Use hierarchical organization, dynamic discovery, or Skills (progressive disclosure) to scale further.
 
 **Q: What's the most overlooked security risk in Agent systems?**
-A: Network egress control. Everyone focuses on input validation, but if injection succeeds and the Agent reads private data, *without an egress path the data cannot leave*. Cutting the exfiltration channel is more deterministic than trying to recognize every injection.
+A: Network egress control. Everyone focuses on input validation, but if injection succeeds and the Agent reads private data, _without an egress path the data cannot leave_. Cutting the exfiltration channel is more deterministic than trying to recognize every injection.
 
 **Q: Pass@k or Pass^k for my use case?**
 A: Use Pass^k for regression testing and production deployment (you need reliability). Use Pass@k or Best@k for research and capability exploration (you care about the ceiling).
@@ -499,7 +500,7 @@ A: Use Pass^k for regression testing and production deployment (you need reliabi
 A: Estimate the standard error: √(p(1-p)/n). If the difference is smaller than ~2 standard errors, don't make a switching decision. Better yet, use paired analysis (McNemar's test) on the same task set.
 
 **Q: Can I reuse my evaluation environment for training?**
-A: Reuse the *construction mechanism* (environment, tools, parameterized templates) — but the specific evaluation tasks must stay strictly isolated from training data. Once an evaluation task enters the training set, it tests memory, not ability.
+A: Reuse the _construction mechanism_ (environment, tools, parameterized templates) — but the specific evaluation tasks must stay strictly isolated from training data. Once an evaluation task enters the training set, it tests memory, not ability.
 
 <a name="summary"></a>
 
@@ -520,6 +521,7 @@ The three layers form a flywheel: tools enable capabilities → code expands the
 ## Appendix
 
 **Key References**:
+
 - MCP Specification: Anthropic, 2024
 - Lethal Triad: Simon Willison, 2024
 - τ-bench / τ²-bench: Si, Yuan et al., 2025
