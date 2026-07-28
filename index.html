@@ -194,6 +194,142 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://bodysuperman.github.io/2026/06/25/From-Post-Training-to-Real-Time-Perception-Self-Evolving-Agents-and-Multimodal-Interaction/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+      <meta itemprop="name" content="AI with Alex">
+      <meta itemprop="description" content="Attention(Q,K,V)=softmax(QK^T/sqrt(d_k))V">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="AI with Alex's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2026/06/25/From-Post-Training-to-Real-Time-Perception-Self-Evolving-Agents-and-Multimodal-Interaction/" class="post-title-link" itemprop="url">From Post-Training to Real-Time Perception: Self-Evolving Agents and Multimodal Interaction</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2026-06-25 15:09:38" itemprop="dateCreated datePublished" datetime="2026-06-25T15:09:38+08:00">2026-06-25</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2026-07-25 15:09:38" itemprop="dateModified" datetime="2026-07-25T15:09:38+08:00">2026-07-25</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/AI-Agent/" itemprop="url" rel="index"><span itemprop="name">AI Agent</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/AI-Agent/AI-Engineering/" itemprop="url" rel="index"><span itemprop="name">AI Engineering</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>30k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>27 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <ul>
+<li><a href="#introduction">Introduction</a><ul>
+<li><a href="#capability-paradox">The Capability Paradox</a></li>
+<li><a href="#three-acts">Three Acts of This Article</a></li>
+</ul>
+</li>
+<li><a href="#post-training">Post-Training: Baking Capability Into Parameters</a><ul>
+<li><a href="#three-stage-pipeline">The Three-Stage Pipeline</a></li>
+<li><a href="#sft-rl-comparison">SFT Memorizes, RL Generalizes</a></li>
+<li><a href="#sft-vs-rl-decision">When to Choose SFT vs RL</a></li>
+<li><a href="#reward-design">Reward Design: From Scalar to Generative</a></li>
+<li><a href="#rlvp">RLVP: Reward the Outcome, Penalize the Path</a></li>
+<li><a href="#data-environment">Data and Environment Matter More Than Algorithms</a></li>
+<li><a href="#practical-takeaway-post-training">The Practical Takeaway</a></li>
+</ul>
+</li>
+<li><a href="#self-evolving">Self-Evolving Agents: Learning From Experience</a><ul>
+<li><a href="#preserving-vs-learning">Preserving Experience Is Not Learning</a></li>
+<li><a href="#three-layer-verification">Three-Layer Verification</a></li>
+<li><a href="#four-update-carriers">Four Update Carriers</a></li>
+<li><a href="#dual-loop-architecture">Dual-Loop Architecture</a></li>
+<li><a href="#done-not-progress">When Done Does Not Mean Progress</a></li>
+<li><a href="#safety-boundaries">Safety Boundaries for Continual Evolution</a></li>
+</ul>
+</li>
+<li><a href="#realtime-multimodal">Real-Time Perception and Multimodal Interaction</a><ul>
+<li><a href="#why-realtime">Why Real-Time Changes Everything</a></li>
+<li><a href="#voice-evolution">Voice: Cascaded to End-to-End to Full-Duplex</a></li>
+<li><a href="#computer-use">Computer Use: The Perceive-Think-Act Loop</a></li>
+<li><a href="#robotics">Robotics: VLA, Action Chunking, and Sim2Real</a></li>
+<li><a href="#fast-slow">The Unifying Theme: Fast-Slow Architecture</a></li>
+</ul>
+</li>
+<li><a href="#full-stack">Putting It Together: The Full Stack of a Modern Agent</a></li>
+<li><a href="#best-practices">Best Practices</a></li>
+<li><a href="#faq">FAQ</a></li>
+<li><a href="#summary">Summary</a></li>
+</ul>
+        
+      
+    </div>
+
+    
+    
+    
+      <!--noindex-->
+      <div class="post-button">
+        <a class="btn" href="/2026/06/25/From-Post-Training-to-Real-Time-Perception-Self-Evolving-Agents-and-Multimodal-Interaction/#more" rel="contents">
+          Read more &raquo;
+        </a>
+      </div>
+      <!--/noindex-->
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="https://bodysuperman.github.io/2026/06/17/From-Capability-to-Intelligence-Tools-Coding-and-Evaluation-in-AI-Agents/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -225,7 +361,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2026-07-27 15:09:38" itemprop="dateModified" datetime="2026-07-27T15:09:38+08:00">2026-07-27</time>
+                <time title="Modified: 2026-07-24 15:09:38" itemprop="dateModified" datetime="2026-07-24T15:09:38+08:00">2026-07-24</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -234,6 +370,10 @@
               <span class="post-meta-item-text">In</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
                   <a href="/categories/AI-Agent/" itemprop="url" rel="index"><span itemprop="name">AI Agent</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/AI-Agent/AI-Engineering/" itemprop="url" rel="index"><span itemprop="name">AI Engineering</span></a>
                 </span>
             </span>
 
@@ -847,134 +987,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://bodysuperman.github.io/2026/04/27/LangChain4J-in-Action-Building-a-Medical-AI-Assistant-Agent/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/uploads/avatar.jpg">
-      <meta itemprop="name" content="AI with Alex">
-      <meta itemprop="description" content="Attention(Q,K,V)=softmax(QK^T/sqrt(d_k))V">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="AI with Alex's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2026/04/27/LangChain4J-in-Action-Building-a-Medical-AI-Assistant-Agent/" class="post-title-link" itemprop="url">LangChain4J in Action: Building a Medical AI Assistant Agent</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2026-04-27 12:48:28" itemprop="dateCreated datePublished" datetime="2026-04-27T12:48:28+08:00">2026-04-27</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2026-06-06 00:00:00" itemprop="dateModified" datetime="2026-06-06T00:00:00+08:00">2026-06-06</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
-                </span>
-                  , 
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Java/AI/" itemprop="url" rel="index"><span itemprop="name">AI</span></a>
-                </span>
-                  , 
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Java/AI/Spring-Boot/" itemprop="url" rel="index"><span itemprop="name">Spring Boot</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="Symbols count in article">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>19k</span>
-            </span>
-            <span class="post-meta-item" title="Reading time">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>17 mins.</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <ul>
-<li><a href="#1-what-is-langchain4j">1. What is LangChain4J?</a><ul>
-<li><a href="#11-the-problem-langchain4j-solves">1.1 The Problem LangChain4J Solves</a></li>
-<li><a href="#12-core-concepts">1.2 Core Concepts</a></li>
-</ul>
-</li>
-<li><a href="#2-project-setup">2. Project Setup</a><ul>
-<li><a href="#21-dependencies">2.1 Dependencies</a></li>
-<li><a href="#22-configuration">2.2 Configuration</a></li>
-</ul>
-</li>
-<li><a href="#3-your-first-llm-integration">3. Your First LLM Integration</a><ul>
-<li><a href="#31-direct-api-call">3.1 Direct API Call</a></li>
-<li><a href="#32-spring-boot-auto-configuration">3.2 Spring Boot Auto-Configuration</a></li>
-</ul>
-</li>
-<li><a href="#4-building-the-ai-service">4. Building the AI Service</a><ul>
-<li><a href="#41-the-assistant-interface">4.1 The Assistant Interface</a></li>
-<li><a href="#42-system-messages">4.2 System Messages</a></li>
-</ul>
-</li>
-<li><a href="#5-adding-chat-memory">5. Adding Chat Memory</a><ul>
-<li><a href="#51-why-memory-matters">5.1 Why Memory Matters</a></li>
-<li><a href="#52-implementing-memory">5.2 Implementing Memory</a></li>
-<li><a href="#53-memory-isolation">5.3 Memory Isolation</a></li>
-<li><a href="#54-persistent-storage-with-mongodb">5.4 Persistent Storage with MongoDB</a>
-        
-      
-    </div>
-
-    
-    
-    
-      <!--noindex-->
-      <div class="post-button">
-        <a class="btn" href="/2026/04/27/LangChain4J-in-Action-Building-a-Medical-AI-Assistant-Agent/#more" rel="contents">
-          Read more &raquo;
-        </a>
-      </div>
-      <!--/noindex-->
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1049,20 +1061,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">27</span>
+          <span class="site-state-item-count">28</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">32</span>
+        <span class="site-state-item-count">33</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">75</span>
+        <span class="site-state-item-count">80</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -1107,13 +1119,13 @@
       <i class="fa fa-chart-area"></i>
     </span>
       <span class="post-meta-item-text">Symbols count total: </span>
-    <span title="Symbols count total">408k</span>
+    <span title="Symbols count total">438k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">Reading time total &asymp;</span>
-    <span title="Reading time total">6:11</span>
+    <span title="Reading time total">6:38</span>
     
     <!--
     

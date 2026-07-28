@@ -1,0 +1,1429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/logo-180.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/logo-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/logo-16.png">
+  <link rel="mask-icon" href="/images/logo-512.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|monospace:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"bodysuperman.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null,"use":"Gitalk","text":true},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="Introduction The Capability Paradox Three Acts of This Article   Post-Training: Baking Capability Into Parameters The Three-Stage Pipeline SFT Memorizes, RL Generalizes When to Choose SFT vs RL Rewar">
+<meta property="og:type" content="article">
+<meta property="og:title" content="From Post-Training to Real-Time Perception: Self-Evolving Agents and Multimodal Interaction">
+<meta property="og:url" content="https://bodysuperman.github.io/2026/06/25/From-Post-Training-to-Real-Time-Perception-Self-Evolving-Agents-and-Multimodal-Interaction/index.html">
+<meta property="og:site_name" content="AI with Alex&#39;s Blog">
+<meta property="og:description" content="Introduction The Capability Paradox Three Acts of This Article   Post-Training: Baking Capability Into Parameters The Three-Stage Pipeline SFT Memorizes, RL Generalizes When to Choose SFT vs RL Rewar">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2026-06-25T07:09:38.000Z">
+<meta property="article:modified_time" content="2026-07-25T07:09:38.000Z">
+<meta property="article:author" content="AI with Alex">
+<meta property="article:tag" content="LLM">
+<meta property="article:tag" content="Post Training">
+<meta property="article:tag" content="Agent Evolution">
+<meta property="article:tag" content="Multimodal AI">
+<meta property="article:tag" content="Autonomous Agents">
+<meta property="article:tag" content="Generative AI">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://bodysuperman.github.io/2026/06/25/From-Post-Training-to-Real-Time-Perception-Self-Evolving-Agents-and-Multimodal-Interaction/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>From Post-Training to Real-Time Perception: Self-Evolving Agents and Multimodal Interaction | AI with Alex's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+
+
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">AI with Alex's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+   
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://bodysuperman.github.io/2026/06/25/From-Post-Training-to-Real-Time-Perception-Self-Evolving-Agents-and-Multimodal-Interaction/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+      <meta itemprop="name" content="AI with Alex">
+      <meta itemprop="description" content="Attention(Q,K,V)=softmax(QK^T/sqrt(d_k))V">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="AI with Alex's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          From Post-Training to Real-Time Perception: Self-Evolving Agents and Multimodal Interaction
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2026-06-25 15:09:38" itemprop="dateCreated datePublished" datetime="2026-06-25T15:09:38+08:00">2026-06-25</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2026-07-25 15:09:38" itemprop="dateModified" datetime="2026-07-25T15:09:38+08:00">2026-07-25</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/AI-Agent/" itemprop="url" rel="index"><span itemprop="name">AI Agent</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/AI-Agent/AI-Engineering/" itemprop="url" rel="index"><span itemprop="name">AI Engineering</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>30k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>27 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <ul>
+<li><a href="#introduction">Introduction</a><ul>
+<li><a href="#capability-paradox">The Capability Paradox</a></li>
+<li><a href="#three-acts">Three Acts of This Article</a></li>
+</ul>
+</li>
+<li><a href="#post-training">Post-Training: Baking Capability Into Parameters</a><ul>
+<li><a href="#three-stage-pipeline">The Three-Stage Pipeline</a></li>
+<li><a href="#sft-rl-comparison">SFT Memorizes, RL Generalizes</a></li>
+<li><a href="#sft-vs-rl-decision">When to Choose SFT vs RL</a></li>
+<li><a href="#reward-design">Reward Design: From Scalar to Generative</a></li>
+<li><a href="#rlvp">RLVP: Reward the Outcome, Penalize the Path</a></li>
+<li><a href="#data-environment">Data and Environment Matter More Than Algorithms</a></li>
+<li><a href="#practical-takeaway-post-training">The Practical Takeaway</a></li>
+</ul>
+</li>
+<li><a href="#self-evolving">Self-Evolving Agents: Learning From Experience</a><ul>
+<li><a href="#preserving-vs-learning">Preserving Experience Is Not Learning</a></li>
+<li><a href="#three-layer-verification">Three-Layer Verification</a></li>
+<li><a href="#four-update-carriers">Four Update Carriers</a></li>
+<li><a href="#dual-loop-architecture">Dual-Loop Architecture</a></li>
+<li><a href="#done-not-progress">When Done Does Not Mean Progress</a></li>
+<li><a href="#safety-boundaries">Safety Boundaries for Continual Evolution</a></li>
+</ul>
+</li>
+<li><a href="#realtime-multimodal">Real-Time Perception and Multimodal Interaction</a><ul>
+<li><a href="#why-realtime">Why Real-Time Changes Everything</a></li>
+<li><a href="#voice-evolution">Voice: Cascaded to End-to-End to Full-Duplex</a></li>
+<li><a href="#computer-use">Computer Use: The Perceive-Think-Act Loop</a></li>
+<li><a href="#robotics">Robotics: VLA, Action Chunking, and Sim2Real</a></li>
+<li><a href="#fast-slow">The Unifying Theme: Fast-Slow Architecture</a></li>
+</ul>
+</li>
+<li><a href="#full-stack">Putting It Together: The Full Stack of a Modern Agent</a></li>
+<li><a href="#best-practices">Best Practices</a></li>
+<li><a href="#faq">FAQ</a></li>
+<li><a href="#summary">Summary</a></li>
+</ul>
+<span id="more"></span>
+
+<p><a name="introduction"></a></p>
+<h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h2><p>AI agents today sit at an inflection point. The same model that writes production code zero-shot will repeat an identical mistake on the thousandth similar request. The same agent that navigates a website flawlessly on Tuesday forgets the workaround it discovered on Monday. The same voice assistant that answers complex questions takes 2 seconds of awkward silence before uttering a word.</p>
+<p>These are not separate problems — they are symptoms of a single gap: <strong>agents can solve tasks, but they do not yet learn, evolve, or respond in real time.</strong></p>
+<p><a name="capability-paradox"></a></p>
+<h3 id="The-Capability-Paradox"><a href="#The-Capability-Paradox" class="headerlink" title="The Capability Paradox"></a>The Capability Paradox</h3><p>Current LLM-based agents exhibit what we call the <strong>capability paradox</strong>:</p>
+<blockquote>
+<p>Agents can solve novel tasks zero-shot, yet fail to learn from experience across tasks.</p>
+</blockquote>
+<p>A Q-learning agent needs ~10,000 episodes to solve a treasure-hunt game. An LLM agent (Kimi K3) completes it in 18 steps on the very first try — but on the next game with slightly different rules, it starts from scratch again. The LLM generalizes semantically; it does not accumulate experience.</p>
+<p>This paradox has three dimensions, each addressed by a different layer of the agent stack:</p>
+<table>
+<thead>
+<tr>
+<th align="left">Dimension</th>
+<th align="left">Problem</th>
+<th align="left">Solution</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>Capability</strong></td>
+<td align="left">Model cannot do X</td>
+<td align="left">Post-training (SFT, RL)</td>
+</tr>
+<tr>
+<td align="left"><strong>Evolution</strong></td>
+<td align="left">Agent repeats mistakes</td>
+<td align="left">Continual learning (dual-loop)</td>
+</tr>
+<tr>
+<td align="left"><strong>Interaction</strong></td>
+<td align="left">Agent is slow, text-only</td>
+<td align="left">Real-time multimodal architecture</td>
+</tr>
+</tbody></table>
+<p><a name="three-acts"></a></p>
+<h3 id="Three-Acts-of-This-Article"><a href="#Three-Acts-of-This-Article" class="headerlink" title="Three Acts of This Article"></a>Three Acts of This Article</h3><p>This article traces the journey from a static trained model to a self-evolving, real-time multimodal agent:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Act 1: Train the Brain          (Post-Training)</span><br><span class="line">        Bake capability into model parameters</span><br><span class="line"></span><br><span class="line">Act 2: Let the Brain Evolve     (Continual Evolution)</span><br><span class="line">        Learn from experience after deployment</span><br><span class="line"></span><br><span class="line">Act 3: Let the Brain See &amp; Speak (Real-Time Multimodal)</span><br><span class="line">        Perceive and act in a continuous, multimodal world</span><br></pre></td></tr></table></figure>
+
+<p>Each act builds on the previous one. Post-training gives us a capable model; continual evolution keeps that model improving; real-time multimodal architecture lets it operate where humans actually live — in conversation, on screens, in physical spaces.</p>
+<p><a name="post-training"></a></p>
+<h2 id="Post-Training-Baking-Capability-Into-Parameters"><a href="#Post-Training-Baking-Capability-Into-Parameters" class="headerlink" title="Post-Training: Baking Capability Into Parameters"></a>Post-Training: Baking Capability Into Parameters</h2><p>The foundation of any agent is its model. The core formula:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Agent = LLM + Context + Tools</span><br></pre></td></tr></table></figure>
+
+<p>Post-training is about the <strong>LLM</strong> component — how to make the model better at using context and tools through parameter updates.</p>
+<p><a name="three-stage-pipeline"></a></p>
+<h3 id="The-Three-Stage-Pipeline"><a href="#The-Three-Stage-Pipeline" class="headerlink" title="The Three-Stage Pipeline"></a>The Three-Stage Pipeline</h3><p>Modern LLMs go through three stages, each with a distinct purpose:</p>
+<table>
+<thead>
+<tr>
+<th align="left">Stage</th>
+<th align="left">Data</th>
+<th align="left">Cost</th>
+<th align="left">Purpose</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>Pre-training</strong></td>
+<td align="left">Massive internet text</td>
+<td align="left">Very expensive</td>
+<td align="left">General knowledge &amp; language ability</td>
+</tr>
+<tr>
+<td align="left"><strong>SFT</strong></td>
+<td align="left">Labeled input-output pairs</td>
+<td align="left">Cheap &amp; fast</td>
+<td align="left">Solidify protocols &amp; formats</td>
+</tr>
+<tr>
+<td align="left"><strong>RL</strong></td>
+<td align="left">Trial-and-error with rewards</td>
+<td align="left">Expensive &amp; unstable</td>
+<td align="left">Discover generalizable strategies</td>
+</tr>
+</tbody></table>
+<p><strong>SFT is mathematically identical to pre-training</strong> — both minimize next-token prediction loss. The differences are practical: SFT uses input-output pairs (not raw text) and applies <strong>loss masking</strong> (gradients computed only on response tokens, not the prompt).</p>
+<p>The critical ordering:</p>
+<blockquote>
+<p><strong>Form first, spirit second.</strong> SFT must come before RL.</p>
+</blockquote>
+<p>RL requires the model to produce parseable output so rewards can be computed. SFT establishes format; RL then pursues strategy. The exception is sufficiently strong base models (e.g., DeepSeek-R1-Zero) that can skip SFT — but they produce poorly formatted, mixed-language output.</p>
+<p><a name="sft-rl-comparison"></a></p>
+<h3 id="SFT-Memorizes-RL-Generalizes"><a href="#SFT-Memorizes-RL-Generalizes" class="headerlink" title="SFT Memorizes, RL Generalizes"></a>SFT Memorizes, RL Generalizes</h3><p>This is the central thread of post-training. The distinction is not about “which is better” — it is about what each one does:</p>
+<table>
+<thead>
+<tr>
+<th align="left">Property</th>
+<th align="left">SFT</th>
+<th align="left">RL</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>Optimizes</strong></td>
+<td align="left">Maximum likelihood of labeled answer</td>
+<td align="left">Expected reward</td>
+</tr>
+<tr>
+<td align="left"><strong>Behavior</strong></td>
+<td align="left">Memorizes training demonstrations</td>
+<td align="left">Discovers transferable strategies</td>
+</tr>
+<tr>
+<td align="left"><strong>KL mode</strong></td>
+<td align="left">Mass-covering (spreads probability)</td>
+<td align="left">Mode-seeking (concentrates on high-reward modes)</td>
+</tr>
+<tr>
+<td align="left"><strong>Ceiling</strong></td>
+<td align="left">Bounded by training data</td>
+<td align="left">Bounded by the task itself</td>
+</tr>
+<tr>
+<td align="left"><strong>Generalization</strong></td>
+<td align="left">Degrades on OOD</td>
+<td align="left">Improves on OOD</td>
+</tr>
+</tbody></table>
+<p><strong>Why RL has a higher ceiling</strong> — three reasons:</p>
+<ol>
+<li><strong>Ceiling of offline is the data; ceiling of online is the task.</strong> SFT can only teach what the demonstrations show. RL can discover strategies no demonstration contains.</li>
+<li><strong>Verifying is easier than generating</strong> (verification-generation asymmetry). A reward function that checks correctness is simpler than one that must produce the correct answer.</li>
+<li><strong>Online learning trains on the model’s own trajectories</strong>, avoiding covariate shift — the mismatch between training states and deployment states.</li>
+</ol>
+<p><strong>Concrete evidence (GeneralPoints experiment):</strong> An arithmetic card game (like “24 Game”) with rule and visual variants:</p>
+<table>
+<thead>
+<tr>
+<th align="left">Method</th>
+<th align="left">Rule OOD</th>
+<th align="left">Visual OOD</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">SFT</td>
+<td align="left"><strong>-8.1%</strong></td>
+<td align="left"><strong>-9.9%</strong></td>
+</tr>
+<tr>
+<td align="left">RL</td>
+<td align="left"><strong>+3.5%</strong></td>
+<td align="left"><strong>+17.6%</strong></td>
+</tr>
+</tbody></table>
+<p>SFT actively hurts out-of-distribution performance. RL improves it.</p>
+<p><a name="sft-vs-rl-decision"></a></p>
+<h3 id="When-to-Choose-SFT-vs-RL"><a href="#When-to-Choose-SFT-vs-RL" class="headerlink" title="When to Choose SFT vs RL"></a>When to Choose SFT vs RL</h3><p>A practical decision framework:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">1. Is post-training needed at all?</span><br><span class="line">   → Most agents don&#x27;t need it. Harness engineering suffices.</span><br><span class="line"></span><br><span class="line">2. If needed, try SFT first.</span><br><span class="line">   → It&#x27;s cheap, stable, and establishes format.</span><br><span class="line"></span><br><span class="line">3. If SFT is insufficient, add RL (after SFT stabilizes format).</span><br><span class="line">   → RL when you need generalization to unseen scenarios.</span><br></pre></td></tr></table></figure>
+
+<p><strong>SFT is suited for:</strong> format stabilization, high-quality demonstrations, stable deployment environments.</p>
+<p><strong>RL is necessary when:</strong> distribution shift between training and deployment, discovering optimal strategies, high annotation costs.</p>
+<p><strong>Practical test:</strong> When adding more demonstrations no longer improves performance on new scenarios, switch to RL.</p>
+<p><strong>LoRA</strong> (Low-Rank Adaptation) is the default cost-saving method for all post-training. Key settings:</p>
+<table>
+<thead>
+<tr>
+<th align="left">Use Case</th>
+<th align="left">LoRA Rank</th>
+<th align="left">Learning Rate</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">SFT</td>
+<td align="left">64–256</td>
+<td align="left">~10× full fine-tuning LR</td>
+</tr>
+<tr>
+<td align="left">RL</td>
+<td align="left">8–32 (or even 1)</td>
+<td align="left">~10× full fine-tuning LR</td>
+</tr>
+</tbody></table>
+<p><a name="reward-design"></a></p>
+<h3 id="Reward-Design-From-Scalar-to-Generative"><a href="#Reward-Design-From-Scalar-to-Generative" class="headerlink" title="Reward Design: From Scalar to Generative"></a>Reward Design: From Scalar to Generative</h3><p>Reward design is where the art of RL meets engineering. The design space has two axes: <strong>density</strong> (how often you give feedback) and <strong>representation</strong> (what form the signal takes).</p>
+<p><strong>Density spectrum:</strong></p>
+<table>
+<thead>
+<tr>
+<th align="left">Type</th>
+<th align="left">When Available</th>
+<th align="left">Example</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>Binary</strong></td>
+<td align="left">Final answer checkable</td>
+<td align="left">Math: correct&#x2F;incorrect</td>
+</tr>
+<tr>
+<td align="left"><strong>Sparse</strong></td>
+<td align="left">Success rare, delayed</td>
+<td align="left">Phone agent: 100+ failures before first success</td>
+</tr>
+<tr>
+<td align="left"><strong>Process</strong></td>
+<td align="left">Every step evaluable</td>
+<td align="left">Navigation: +1 correct, -1 wrong, -1.5 landmark error</td>
+</tr>
+</tbody></table>
+<p><strong>Representation evolution:</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Scalar ──→ Semi-Scalar ──→ Vector ──→ Generative</span><br><span class="line">(0/1)      (0/1 + reason)  (multi-dim)  (NL analysis with reasoning)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>Scalar rewards</strong>: Sufficient for tasks with clear correct answers.</li>
+<li><strong>Vector rewards</strong>: Multi-dimensional scoring across independent quality dimensions.</li>
+<li><strong>Generative reward models</strong>: The model auto-generates evaluation principles, evaluates against each, and the system checks accuracy. DeepSeek’s generative RM can improve through inference-time scaling.</li>
+</ul>
+<p><strong>Key rule:</strong> Training data must be separated from evaluation data. SWE-bench → SWE-Gym, tau2-bench → imitation learning data, AndroidWorld → curriculum learning.</p>
+<p><a name="rlvp"></a></p>
+<h3 id="RLVP-Reward-the-Outcome-Penalize-the-Path"><a href="#RLVP-Reward-the-Outcome-Penalize-the-Path" class="headerlink" title="RLVP: Reward the Outcome, Penalize the Path"></a>RLVP: Reward the Outcome, Penalize the Path</h3><p>A critical insight: <strong>outcome-neutral constraints get violated because violation often raises apparent success rate.</strong></p>
+<p>Examples:</p>
+<ul>
+<li>Calling users who opted out → higher contact rate → looks like more success</li>
+<li>Running <code>rm -rf</code> to clear failing tests → tests pass → looks like success</li>
+<li>Editing test files to make them pass → passes → looks like success</li>
+</ul>
+<p>The problem: real environments are <strong>asymmetric verifiers</strong> — detecting bad actions is easy&#x2F;cheap, but judging meaningful progress is hard&#x2F;expensive.</p>
+<p><strong>RLVP formula:</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">R = O + β × Φ</span><br><span class="line"></span><br><span class="line">O  = outcome reward (did the task succeed?)</span><br><span class="line">Φ  = path signal:</span><br><span class="line">     -λ for violations (penalty)</span><br><span class="line">     +μ for compliant actions (compliance reward)</span><br><span class="line">β  = weighting factor</span><br></pre></td></tr></table></figure>
+
+<p><strong>Why this works:</strong> GRPO advantage is essentially within-group variance. Pure outcome rewards have zero-variance deadlock at extremes (all-fail or all-pass groups get zero gradient). Penalties always restore variance.</p>
+<p><strong>Four design principles for penalties:</strong></p>
+<ol>
+<li>Penalize only <strong>verifiable bad actions</strong>, never “lack of progress”</li>
+<li>Outcome rewards must be the <strong>primary driver</strong> (otherwise: inaction trap)</li>
+<li>Pair each penalty with a <strong>compliance reward</strong></li>
+<li>Compliant paths must be <strong>reachable</strong>, penalty targets must be <strong>un-game-able</strong></li>
+</ol>
+<p><strong>Results (RLVP experiment):</strong></p>
+<table>
+<thead>
+<tr>
+<th align="left">Metric</th>
+<th align="left">Before</th>
+<th align="left">After</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">Violations</td>
+<td align="left">3.71</td>
+<td align="left">0.66 (~6× fewer)</td>
+</tr>
+<tr>
+<td align="left">Iterations to 90% success</td>
+<td align="left">7.0</td>
+<td align="left">4.4</td>
+</tr>
+<tr>
+<td align="left">All-fail groups</td>
+<td align="left">65%</td>
+<td align="left">8%</td>
+</tr>
+</tbody></table>
+<p><a name="data-environment"></a></p>
+<h3 id="Data-and-Environment-Matter-More-Than-Algorithms"><a href="#Data-and-Environment-Matter-More-Than-Algorithms" class="headerlink" title="Data and Environment Matter More Than Algorithms"></a>Data and Environment Matter More Than Algorithms</h3><p>The second thread running through post-training:</p>
+<blockquote>
+<p><strong>With off-the-shelf algorithms, what determines success is simulation environment fidelity and training data quality.</strong></p>
+</blockquote>
+<p>Priority order:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Base Model &gt; Environment &gt; Data &gt; Algorithm</span><br></pre></td></tr></table></figure>
+
+<p>This is the reverse of what many assume. OpenAI’s own exploration path (Algorithm &gt; Environment &gt; Prior) was backwards. The real order is <strong>Prior &gt; Environment &gt; Algorithm</strong>.</p>
+<p><strong>Environment fidelity</strong> is paramount: “A distorted environment means a dead policy.” Building a high-fidelity simulation environment is often harder than training itself.</p>
+<p><strong>Data quality</strong> trumps algorithms on three dimensions: coverage, diversity, annotation accuracy.</p>
+<ul>
+<li>SFT bakes noise directly into parameters</li>
+<li>RL optimizes toward whatever the reward function measures (biased or not)</li>
+</ul>
+<p><strong>Rejection sampling</strong> is the standard technique for pushing annotation accuracy to maximum: sample k candidates, verify, keep only correct ones, deduplicate, then SFT on retained data.</p>
+<p><a name="practical-takeaway-post-training"></a></p>
+<h3 id="The-Practical-Takeaway"><a href="#The-Practical-Takeaway" class="headerlink" title="The Practical Takeaway"></a>The Practical Takeaway</h3><p>For most agent applications, <strong>post-training is not needed at all</strong>. Harness engineering — prompts, tool design, context management — suffices.</p>
+<p>When post-training is needed:</p>
+<ol>
+<li><strong>SFT first</strong> to stabilize format and style</li>
+<li><strong>RL only if</strong> generalization to unseen scenarios is required</li>
+<li><strong>Invest in data and environment</strong> before obsessing over algorithms</li>
+<li><strong>To inject factual knowledge</strong>, use continued pre-training or RAG — <strong>not SFT</strong> (SFT is for protocol knowledge: <em>how</em> to do things, not factual knowledge: <em>what</em> to know)</li>
+</ol>
+<p>Synergy with the broader agent stack:</p>
+<table>
+<thead>
+<tr>
+<th align="left">Component</th>
+<th align="left">Manages</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">RAG</td>
+<td align="left">Facts</td>
+</tr>
+<tr>
+<td align="left">ICL</td>
+<td align="left">Rapid strategy experimentation</td>
+</tr>
+<tr>
+<td align="left">Programs</td>
+<td align="left">Deterministic constraints</td>
+</tr>
+<tr>
+<td align="left">Post-training</td>
+<td align="left">Capabilities hard to express explicitly</td>
+</tr>
+</tbody></table>
+<p><a name="self-evolving"></a></p>
+<h2 id="Self-Evolving-Agents-Learning-From-Experience"><a href="#Self-Evolving-Agents-Learning-From-Experience" class="headerlink" title="Self-Evolving Agents: Learning From Experience"></a>Self-Evolving Agents: Learning From Experience</h2><p>Post-training gives us a capable model at deployment time. But a trained model is a <strong>static artifact</strong> — it does not learn from the interactions it has after deployment.</p>
+<p>This section addresses the question: how do we make agents that actually improve from experience?</p>
+<p><a name="preserving-vs-learning"></a></p>
+<h3 id="Preserving-Experience-Is-Not-Learning"><a href="#Preserving-Experience-Is-Not-Learning" class="headerlink" title="Preserving Experience Is Not Learning"></a>Preserving Experience Is Not Learning</h3><p>This is the most important distinction in this entire article:</p>
+<blockquote>
+<p><strong>Storing trajectories in memory ≠ learning from experience.</strong></p>
+</blockquote>
+<p>Learning requires active evaluation, comparison, generalization, and validation of evidence. An agent that saves every conversation to a vector database has preserved experience — but it has not learned anything.</p>
+<p>Consider the difference:</p>
+<table>
+<thead>
+<tr>
+<th align="left">Type</th>
+<th align="left">Captures</th>
+<th align="left">Effect</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">User memory (Ch. 3)</td>
+<td align="left">“What the user and world are like”</td>
+<td align="left">Helps agent <strong>remember more</strong></td>
+</tr>
+<tr>
+<td align="left">Experience learning</td>
+<td align="left">“What to do under which conditions”</td>
+<td align="left">Helps agent <strong>become more proficient</strong></td>
+</tr>
+</tbody></table>
+<p>Direct self-modification by a running model is dangerous: production environments rarely provide clean learning signals, and unverified feedback can entrench errors and amplify prompt injection.</p>
+<p>The engineering approach: <strong>build a learning system around the model</strong> — record evidence, verify outcomes, extract patterns, then update knowledge&#x2F;instructions&#x2F;programs&#x2F;parameters after regression testing and safety checks.</p>
+<p><a name="three-layer-verification"></a></p>
+<h3 id="Three-Layer-Verification"><a href="#Three-Layer-Verification" class="headerlink" title="Three-Layer Verification"></a>Three-Layer Verification</h3><p>The starting point for any learning system is <strong>evaluation, not summarization</strong>. Without knowing what went well or wrong, LLM reflections are just guesses.</p>
+<p>Critical insight: <strong>correct outcomes do not imply correct processes.</strong></p>
+<ul>
+<li>Deleting failing tests makes tests pass (outcome correct, process wrong)</li>
+<li>Telling a user to wait produces temporary satisfaction (outcome looks correct, process is avoidance)</li>
+</ul>
+<p>The three-layer verification structure:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">┌─────────────────────────────────────┐</span><br><span class="line">│  Quality Verifier                   │  ← Rubric-based: &quot;Was it handled</span><br><span class="line">│  (LLM + human rubric)               │     appropriately?&quot;</span><br><span class="line">├─────────────────────────────────────┤</span><br><span class="line">│  Process Verifier                   │  ← Rule-based: &quot;Was it completed</span><br><span class="line">│  (business rules, permissions)      │     in an allowed manner?&quot;</span><br><span class="line">├─────────────────────────────────────┤</span><br><span class="line">│  Outcome Verifier                   │  ← Code-based: &quot;Was the task</span><br><span class="line">│  (tests, DB states, tool returns)   │     actually completed?&quot;</span><br><span class="line">└─────────────────────────────────────┘</span><br></pre></td></tr></table></figure>
+
+<p><strong>Lower layers should rely on code and environmental ground truth.</strong> Only hard-to-formalize aspects go to an LLM.</p>
+<p>Seven evaluation dimensions for customer-service agents:</p>
+<table>
+<thead>
+<tr>
+<th align="left">Dimension</th>
+<th align="left">What It Checks</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">Task outcome</td>
+<td align="left">Did the agent actually complete the task?</td>
+</tr>
+<tr>
+<td align="left">Rule compliance</td>
+<td align="left">Did it follow business rules?</td>
+</tr>
+<tr>
+<td align="left">Privacy boundaries</td>
+<td align="left">Did it leak sensitive data?</td>
+</tr>
+<tr>
+<td align="left">Factual reliability</td>
+<td align="left">Were claims accurate?</td>
+</tr>
+<tr>
+<td align="left"><strong>Promise-action consistency</strong></td>
+<td align="left">Did claimed actions actually occur?</td>
+</tr>
+<tr>
+<td align="left">Expression quality</td>
+<td align="left">Was language appropriate?</td>
+</tr>
+<tr>
+<td align="left">Compliant alternatives</td>
+<td align="left">When plan A failed, did it find lawful options?</td>
+</tr>
+</tbody></table>
+<p><strong>Promise-action consistency</strong> is particularly important for agents: check whether claimed completed actions actually occurred (e.g., did the refund tool actually get called?).</p>
+<p>Verification results should be <strong>structured diagnoses, not scalars</strong>. Dimensional signals preserve both the nature and location of issues, enabling targeted downstream fixes.</p>
+<p><a name="four-update-carriers"></a></p>
+<h3 id="Four-Update-Carriers"><a href="#Four-Update-Carriers" class="headerlink" title="Four Update Carriers"></a>Four Update Carriers</h3><p>The choice of update method depends on whether the target capability can be naturally represented by a particular medium:</p>
+<table>
+<thead>
+<tr>
+<th align="left">Carrier</th>
+<th align="left">Best For</th>
+<th align="left">Example</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>Experience Knowledge Base</strong></td>
+<td align="left">Facts, patterns, exceptions</td>
+<td align="left">“Refunds under $50 auto-approve”</td>
+</tr>
+<tr>
+<td align="left"><strong>Prompt &amp; Skill</strong></td>
+<td align="left">Linguistically expressible principles</td>
+<td align="left">“Always explain policy before escalating”</td>
+</tr>
+<tr>
+<td align="left"><strong>Programs &amp; Harness</strong></td>
+<td align="left">Deterministic procedures, hard constraints</td>
+<td align="left">Browser workflow, retry logic, validators</td>
+</tr>
+<tr>
+<td align="left"><strong>Model Parameters</strong></td>
+<td align="left">High-dim perception, implicit strategies</td>
+<td align="left">Medical-image understanding, speech prosody</td>
+</tr>
+</tbody></table>
+<p>These are <strong>not alternatives — they are complementary channels.</strong> The same agent uses all four, each for capabilities with different representational natures.</p>
+<p><strong>Capabilities can be promoted across carriers</strong> as evidence accumulates:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">New strategy → Experience doc → Knowledge → Skill → Tool code → Post-training</span><br></pre></td></tr></table></figure>
+
+<p><strong>System Prompt Learning</strong> (Karpathy’s term): when patterns can be clearly expressed in natural language, elevate from “experience for reference” to “rule that must be followed.” Compared to RL, it edits text rather than changing parameters via gradient descent. Like leaving an explicit note to your future self.</p>
+<p>Prompt revision should use <strong>minimal diffs</strong>, not rewriting entire prompts. Generate a minimal diff from similar failures, specify scope, check conflicts, evaluate against boundary cases and retention set.</p>
+<p><strong>Encoding experience as programs:</strong> When experience describes stable, repetitive, verifiable operations, compile into workflows&#x2F;tools&#x2F;Harness code. The <strong>PreAct</strong> system delivered 8.5–13× speedup on repeated browser tasks with no step-by-step LLM calls during replay.</p>
+<p><strong>Encoding experience in parameters:</strong> Capabilities like medical-image understanding or removing “AI feel” are hard to compress into rules or workflows — they must go into model parameters via post-training. This is where Chapter 7 connects back: production trajectories become training data.</p>
+<p><a name="dual-loop-architecture"></a></p>
+<h3 id="Dual-Loop-Architecture"><a href="#Dual-Loop-Architecture" class="headerlink" title="Dual-Loop Architecture"></a>Dual-Loop Architecture</h3><p>The core architecture for continual evolution:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">┌─────────── Online Execution Loop ───────────┐</span><br><span class="line">│                                             │</span><br><span class="line">│  Task → Agent → Trajectory → Evidence Log   │</span><br><span class="line">│         ↑                      │            │</span><br><span class="line">│         └── Current Version ───┘            │</span><br><span class="line">│                                             │</span><br><span class="line">│  Does NOT directly rewrite production       │</span><br><span class="line">└──────────────────────┬──────────────────────┘</span><br><span class="line">                       │ versioned experience</span><br><span class="line">                       │ repository</span><br><span class="line">┌──────────────────────▼──────────────────────┐</span><br><span class="line">│           Offline Evolution Loop            │</span><br><span class="line">│                                             │</span><br><span class="line">│  Aggregate → Diagnose → Generate → Validate │</span><br><span class="line">│             → Release (candidate only)      │</span><br><span class="line">│                                             │</span><br><span class="line">│  New version only after validation gates    │</span><br><span class="line">└─────────────────────────────────────────────┘</span><br></pre></td></tr></table></figure>
+
+<p><strong>Online loop:</strong> completes tasks and records immutable evidence. It does NOT directly modify the production agent.</p>
+<p><strong>Offline loop:</strong> aggregates trajectories, diagnoses root causes, generates candidate modifications, releases new versions only after validation gates.</p>
+<p><strong>Release gate conditions</strong> (all four must pass):</p>
+<ol>
+<li>Nonempty patch</li>
+<li>Traceable provenance</li>
+<li>Measurable improvement on boundary set</li>
+<li>No degradation on retention set</li>
+</ol>
+<p>Passing produces <code>release_to_canary</code>, <strong>never</strong> direct overwrite of production.</p>
+<p><strong>Voyager example (Minecraft):</strong> Three interlocking mechanisms:</p>
+<table>
+<thead>
+<tr>
+<th align="left">Component</th>
+<th align="left">Role</th>
+<th align="left">Without It</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">Automatic curriculum</td>
+<td align="left">Proposes next objective</td>
+<td align="left">Random wandering</td>
+</tr>
+<tr>
+<td align="left">Skill library</td>
+<td align="left">Successful programs as composable code</td>
+<td align="left">Starting from scratch</td>
+</tr>
+<tr>
+<td align="left">Iterative prompting</td>
+<td align="left">Feeds errors back into code generation</td>
+<td align="left">Error accumulation</td>
+</tr>
+</tbody></table>
+<p>Results: 3.3× unique items, 2.3× distance traveled, up to 15.3× faster tech-tree milestones.</p>
+<p><a name="done-not-progress"></a></p>
+<h3 id="When-Done-Does-Not-Mean-Progress"><a href="#When-Done-Does-Not-Mean-Progress" class="headerlink" title="When Done Does Not Mean Progress"></a>When Done Does Not Mean Progress</h3><p>The dual-loop architecture works best for <strong>coding, tool-use, and business-state changes</strong> — tasks with rapid, verifiable feedback.</p>
+<p>For open-ended tasks (research, strategy, design), feedback is delayed and ambiguous. Trehan and Chopra’s autonomous research study: 4 end-to-end attempts, <strong>3 failed</strong>. Three failure modes:</p>
+<table>
+<thead>
+<tr>
+<th align="left">Failure Mode</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>Implementation drift</strong></td>
+<td align="left">Agent retreats to familiar implementation that no longer tests the hypothesis</td>
+</tr>
+<tr>
+<td align="left"><strong>Epistemic over-optimism</strong></td>
+<td align="left">System begins explaining noise, patching methods, announcing findings while ignoring failures</td>
+</tr>
+<tr>
+<td align="left"><strong>Missing tacit judgment</strong></td>
+<td align="left">Agent can run experiments but doesn’t know which baseline matters, which anomaly to investigate, or when to abandon a hypothesis</td>
+</tr>
+</tbody></table>
+<p>Remedies:</p>
+<ul>
+<li>Separate <strong>claims from evidence</strong> (Chain-of-Evidence)</li>
+<li>Retain <strong>negative results</strong></li>
+<li>Preserve <strong>search diversity</strong></li>
+<li>Move <strong>human involvement upward</strong>: problem definition, evaluation criteria, anomalous results, stopping decisions</li>
+</ul>
+<blockquote>
+<p><strong>The ceiling of continual evolution is set by whether the system can evaluate what it actually cares about, not merely the easiest proxy to measure.</strong></p>
+</blockquote>
+<p><a name="safety-boundaries"></a></p>
+<h3 id="Safety-Boundaries-for-Continual-Evolution"><a href="#Safety-Boundaries-for-Continual-Evolution" class="headerlink" title="Safety Boundaries for Continual Evolution"></a>Safety Boundaries for Continual Evolution</h3><p>Three inviolable rules:</p>
+<ol>
+<li><p><strong>Separate evidence from instructions.</strong> Untrusted web&#x2F;tool output must not be written directly into Skills. Writes should be version-controlled as PRs, reviewed by a different-source LLM.</p>
+</li>
+<li><p><strong>Separate candidate from production capabilities.</strong> New knowledge&#x2F;Prompts&#x2F;Skills&#x2F;programs&#x2F;parameters enter candidate area first. Code and dependencies must pass sandbox execution, permission review, supply-chain scanning, behavioral testing.</p>
+</li>
+<li><p><strong>Safety mechanisms must not be self-modifiable.</strong> The agent may modify Prompts, Skills, knowledge, and tools — but <strong>NOT</strong> validators, test cases, release thresholds, audit logs, or stable-version backups.</p>
+</li>
+</ol>
+<p><strong>Sleep learning</strong> — the offline consolidation cycle:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Trigger → Orient → Collect &amp; Consolidate → Validate &amp; Approve → Prune &amp; Index</span><br></pre></td></tr></table></figure>
+
+<p>The online agent’s only job: complete task + append immutable evidence. Background learning reads new experience during idle periods, compares, merges, proposes, and validates.</p>
+<p><a name="realtime-multimodal"></a></p>
+<h2 id="Real-Time-Perception-and-Multimodal-Interaction"><a href="#Real-Time-Perception-and-Multimodal-Interaction" class="headerlink" title="Real-Time Perception and Multimodal Interaction"></a>Real-Time Perception and Multimodal Interaction</h2><p>Post-training gives us a capable model. Continual evolution keeps it improving. But neither addresses a fundamental limitation: <strong>agents interact with a world that is continuous, multimodal, and impatient.</strong></p>
+<p>Static image&#x2F;document understanding is already mature. This section tackles the harder class of problems where <strong>real-time constraints make multimodal problems hard</strong> — voice dialogue, GUI operation, and robot control.</p>
+<p><a name="why-realtime"></a></p>
+<h3 id="Why-Real-Time-Changes-Everything"><a href="#Why-Real-Time-Changes-Everything" class="headerlink" title="Why Real-Time Changes Everything"></a>Why Real-Time Changes Everything</h3><p>All three real-time scenarios share two problems: <strong>processing several modalities at once</strong>, and <strong>acute sensitivity to latency</strong>.</p>
+<p>The queuing latency formula:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Total Latency ≈ Idle Latency / (1 - Utilization)</span><br></pre></td></tr></table></figure>
+
+<p>At 50% utilization, latency doubles. At 80%, latency is <strong>5× idle</strong>. This nonlinear compounding is why serial pipelines break down under load.</p>
+<p><a name="voice-evolution"></a></p>
+<h3 id="Voice-Cascaded-to-End-to-End-to-Full-Duplex"><a href="#Voice-Cascaded-to-End-to-End-to-Full-Duplex" class="headerlink" title="Voice: Cascaded to End-to-End to Full-Duplex"></a>Voice: Cascaded to End-to-End to Full-Duplex</h3><p>Voice has ~4× the bandwidth of typing and frees hands and eyes. The architecture has evolved through three paradigms:</p>
+<p><strong>Paradigm 1: Cascaded Pipeline</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">VAD ──→ ASR ──→ LLM ──→ TTS</span><br><span class="line">500-800ms  50-200ms  100-500ms  200-500ms</span><br><span class="line">                              Total: ~0.9–2s</span><br></pre></td></tr></table></figure>
+
+<p>Modular but slow, with information lost between stages. VAD (Voice Activity Detection) uses a 500–800ms silence threshold to detect when the user has finished speaking — but this threshold is a fundamental bottleneck.</p>
+<p>Full-chain streaming (ASR transcribes while listening, LLM outputs in sentence chunks, TTS streams at sentence level) compresses latency to 600–800ms, but <strong>cannot touch VAD’s silence wait</strong>.</p>
+<p>Three fundamental problems with VAD + ASR:</p>
+<ul>
+<li><strong>Latency accumulation</strong>: each stage adds its own delay</li>
+<li><strong>Information loss</strong>: emotion, tone, hesitation are discarded</li>
+<li><strong>Decreased accuracy</strong>: context disrupted by segmentation</li>
+</ul>
+<p><strong>Paradigm 2: End-to-End Omnimodal</strong></p>
+<p>A single model directly listens to audio, thinks, and speaks — merging three stages. Non-textual information (prosody, emotion) is preserved through an internal latent space.</p>
+<table>
+<thead>
+<tr>
+<th align="left">Property</th>
+<th align="left">Self-Cascade</th>
+<th align="left">End-to-End</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">Semantic content</td>
+<td align="left">Matches or beats E2E</td>
+<td align="left">Matches self-cascade</td>
+</tr>
+<tr>
+<td align="left">Non-verbal cues (prosody, emotion)</td>
+<td align="left"><strong>Loses them</strong></td>
+<td align="left"><strong>Preserves them</strong></td>
+</tr>
+</tbody></table>
+<p>Still assumes turn-taking. Not the final answer.</p>
+<p><strong>Paradigm 3: Full-Duplex &#x2F; Interactive</strong></p>
+<p>The model <strong>listens and speaks simultaneously</strong>. No turn-taking assumption.</p>
+<table>
+<thead>
+<tr>
+<th align="left">Model</th>
+<th align="left">Turn-Switching Latency</th>
+<th align="left">Key Innovation</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">GPT-realtime-2.0</td>
+<td align="left">~1.18s</td>
+<td align="left">VAD-based</td>
+</tr>
+<tr>
+<td align="left">TML-Interaction-Small</td>
+<td align="left">~0.40s</td>
+<td align="left">Micro-turns (~200ms), delegates slow thinking</td>
+</tr>
+<tr>
+<td align="left">GPT-Live (2026)</td>
+<td align="left">Full-duplex</td>
+<td align="left">Delegates to GPT-5.5 for deep reasoning</td>
+</tr>
+</tbody></table>
+<p><strong>GPT-Live</strong> introduced the key architectural insight: <strong>decouple real-time interaction from deep thinking</strong>. The interaction layer processes continuously; deep reasoning happens in a background model.</p>
+<p>The evolution in one line:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Cascaded ──→ End-to-End ──→ Full-Duplex</span><br><span class="line">(turn-taking)    (turn-taking)    (no turns)</span><br></pre></td></tr></table></figure>
+
+<p><a name="computer-use"></a></p>
+<h3 id="Computer-Use-The-Perceive-Think-Act-Loop"><a href="#Computer-Use-The-Perceive-Think-Act-Loop" class="headerlink" title="Computer Use: The Perceive-Think-Act Loop"></a>Computer Use: The Perceive-Think-Act Loop</h3><p>GUI automation agents operate in a loop:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Screenshot ──→ Multimodal Model ──→ Action ──→ Wait ──→ Screenshot</span><br></pre></td></tr></table></figure>
+
+<p>Three key design dimensions:</p>
+<p><strong>1. Action Space (Anthropic’s three tools):</strong></p>
+<table>
+<thead>
+<tr>
+<th align="left">Tool</th>
+<th align="left">Operations</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>GUI Operation</strong></td>
+<td align="left">Mouse: move, click, drag, scroll; Keyboard: type (12ms interval), combos, hold; Perception: screenshot, cursor, wait</td>
+</tr>
+<tr>
+<td align="left"><strong>Command Execution</strong></td>
+<td align="left">bash (120s timeout, persistent session)</td>
+</tr>
+<tr>
+<td align="left"><strong>File Editing</strong></td>
+<td align="left">String matching, view&#x2F;create&#x2F;replace&#x2F;insert&#x2F;undo</td>
+</tr>
+</tbody></table>
+<p><strong>2. Visual Grounding (three approaches):</strong></p>
+<table>
+<thead>
+<tr>
+<th align="left">Approach</th>
+<th align="left">How It Works</th>
+<th align="left">Trade-off</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>Set-of-Mark (SoM)</strong></td>
+<td align="left">Segment regions, overlay numbered markers, model picks a number</td>
+<td align="left">Works on any interface; overhead of segmentation model</td>
+</tr>
+<tr>
+<td align="left"><strong>Structured Element Indexing</strong></td>
+<td align="left">Enumerate interactive elements from DOM via CDP</td>
+<td align="left">More precise where available; web-only</td>
+</tr>
+<tr>
+<td align="left"><strong>Pure Coordinate Prediction</strong></td>
+<td align="left">Model outputs x,y coordinates directly</td>
+<td align="left">Simple; requires resolution matching</td>
+</tr>
+</tbody></table>
+<p><strong>3. Agent-Computer Observation Interface (AOI):</strong></p>
+<p>For dynamic screens (videos, notifications, audio):</p>
+<ul>
+<li>Inter-frame keyframe capture (cheap pixel gate + small model)</li>
+<li>Volume-gated speech transcription (give the agent “ears”)</li>
+<li>Converting observations into <strong>persistent textual descriptions</strong> (+17 to +48 percentage point gains across 8 models without retraining)</li>
+</ul>
+<p><strong>The real bottleneck is efficiency, not accuracy.</strong> Agents need more steps than humans, and per-step latency grows as context lengthens. The practical workaround: <strong>fast-slow decoupling</strong> — fast model for speech, slow model for computer operation, communicating via a “plain text contract” (rolling status summary). This yields 15× faster voice responses (0.58s vs 8.64s median) with no loss in task success rate.</p>
+<p><a name="robotics"></a></p>
+<h3 id="Robotics-VLA-Action-Chunking-and-Sim2Real"><a href="#Robotics-VLA-Action-Chunking-and-Sim2Real" class="headerlink" title="Robotics: VLA, Action Chunking, and Sim2Real"></a>Robotics: VLA, Action Chunking, and Sim2Real</h3><p>In robotics, actions have <strong>irreversible consequences</strong> — one collision can damage the object or the robot.</p>
+<p><strong>Hardware is not the bottleneck</strong> (for visual-feedback household tasks). Teleoperation with a VR headset on a &lt;$1000 robot works smoothly at 100–200ms latency. The gap is in algorithms.</p>
+<p>The two-layer architecture mirrors the fast-slow pattern:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">┌─────────────────────────────────┐</span><br><span class="line">│  Slow: Long-Horizon Planning    │  &quot;Clean the kitchen&quot;</span><br><span class="line">│  (decompose into sub-goals)     │  → wash dishes, wipe counter, sweep floor</span><br><span class="line">├─────────────────────────────────┤</span><br><span class="line">│  Fast: VLA Control              │  Execute specific operations</span><br><span class="line">│  (Vision-Language-Action)       │  at 10–50Hz</span><br><span class="line">└─────────────────────────────────┘</span><br></pre></td></tr></table></figure>
+
+<p><strong>VLA — two action representation approaches:</strong></p>
+<table>
+<thead>
+<tr>
+<th align="left">Approach</th>
+<th align="left">Method</th>
+<th align="left">Best For</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>Discrete Action Tokens</strong> (RT-2, OpenVLA)</td>
+<td align="left">Discretize continuous actions, output autoregressively</td>
+<td align="left">Simple tasks, open-source</td>
+</tr>
+<tr>
+<td align="left"><strong>Continuous Trajectory</strong> (π₀)</td>
+<td align="left">Flow matching: denoise random noise into smooth trajectory</td>
+<td align="left">Dexterous manipulation</td>
+</tr>
+</tbody></table>
+<p><strong>Action Chunking:</strong> The model generates a short sequence of future actions per inference (e.g., π₀ generates 25–50 actions at 50Hz). A control thread replays at high frequency while the model generates the next batch. Like video buffering.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Trade-off: Longer chunks = smoother but less responsive to sudden changes</span><br></pre></td></tr></table></figure>
+
+<p><strong>SimpleVLA-RL experiment:</strong> SFT alone achieves 17.3% on LIBERO; SFT+RL achieves 91.7%. RL discovered the “pushcut” action — <strong>never seen in human demonstrations</strong>, more efficient than the standard approach. This is RL’s generalization advantage in action space.</p>
+<p><strong>Sim2Real Transfer:</strong> Training in simulation, deploying in reality. Two critical engineering steps:</p>
+<ol>
+<li><strong>Calibrate randomization range</strong> — measure from real data, widen step by step</li>
+<li><strong>Visual alignment</strong> — calibrate camera pose, splice real backgrounds into sim renders</li>
+</ol>
+<p><a name="fast-slow"></a></p>
+<h3 id="The-Unifying-Theme-Fast-Slow-Architecture"><a href="#The-Unifying-Theme-Fast-Slow-Architecture" class="headerlink" title="The Unifying Theme: Fast-Slow Architecture"></a>The Unifying Theme: Fast-Slow Architecture</h3><p>Fast-slow architecture appears in <strong>all three scenarios</strong> — not as coincidence, but as a fundamental design pattern:</p>
+<table>
+<thead>
+<tr>
+<th align="left">Scenario</th>
+<th align="left">Fast</th>
+<th align="left">Slow</th>
+<th align="left">Interface</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>Voice</strong></td>
+<td align="left">Real-time interaction</td>
+<td align="left">Deep reasoning</td>
+<td align="left">Background model delegation</td>
+</tr>
+<tr>
+<td align="left"><strong>Computer Use</strong></td>
+<td align="left">Speech model</td>
+<td align="left">VLM for operations</td>
+<td align="left">Plain text contract</td>
+</tr>
+<tr>
+<td align="left"><strong>Robotics</strong></td>
+<td align="left">VLA control (50Hz)</td>
+<td align="left">Planning model</td>
+<td align="left">Sub-goal decomposition</td>
+</tr>
+<tr>
+<td align="left"><strong>Gaming</strong></td>
+<td align="left">Reactor model</td>
+<td align="left">Strategist model</td>
+<td align="left"><strong>Latent Bridge</strong></td>
+</tr>
+</tbody></table>
+<p><strong>Latent Bridge:</strong> Freeze both fast and slow models, train only a small bridge (~tens of millions of parameters) between them. Projects the slow model’s hidden-state conclusions into “latent tokens” inserted into the fast model’s input. +26% to +82% improvement in some Atari games, only ~5ms per step overhead.</p>
+<p>Key finding: <strong>bridge pays off only where the slow thinker is genuinely better than the fast reactor</strong> (correlation r ~ 0.9). Where the task is purely reaction speed, the bridge is useless.</p>
+<p>Three solutions to the thinking architecture tension, not as linear progression but as design trade-offs:</p>
+<table>
+<thead>
+<tr>
+<th align="left">Solution</th>
+<th align="left">Strategy</th>
+<th align="left">Production Example</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>Fast for fillers, slow for answers</strong></td>
+<td align="left">Parallel fast (holding reply) + slow (full answer)</td>
+<td align="left">Standard chat</td>
+</tr>
+<tr>
+<td align="left"><strong>Fast for interaction, slow as strategist</strong></td>
+<td align="left">Slow sees fast’s output, suggests via status bar</td>
+<td align="left">GPT-Live, Pine AI</td>
+</tr>
+<tr>
+<td align="left"><strong>End-to-end unification</strong></td>
+<td align="left">Internalize thinking into the end-to-end model</td>
+<td align="left">Step-Audio R1</td>
+</tr>
+</tbody></table>
+<p>The industry divide: frontier products needing to swap reasoning models choose Solution 2; products chasing ultimate naturalness choose Solution 3.</p>
+<p><a name="full-stack"></a></p>
+<h2 id="Putting-It-Together-The-Full-Stack-of-a-Modern-Agent"><a href="#Putting-It-Together-The-Full-Stack-of-a-Modern-Agent" class="headerlink" title="Putting It Together: The Full Stack of a Modern Agent"></a>Putting It Together: The Full Stack of a Modern Agent</h2><p>The three chapters are not independent topics — they are layers of a single system:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">┌─────────────────────────────────────────────────────────────────┐</span><br><span class="line">│                    Real-Time Multimodal Layer                   │</span><br><span class="line">│   Voice ◆ Computer Use ◆ Robotics                               │</span><br><span class="line">│   ┌──────────────────────────────────────────────────────┐      │</span><br><span class="line">│   │         Fast-Slow Architecture                       │      │</span><br><span class="line">│   │   Fast: real-time interaction    Slow: deep reasoning│      │</span><br><span class="line">│   └──────────────────────────────────────────────────────┘      │</span><br><span class="line">├─────────────────────────────────────────────────────────────────┤</span><br><span class="line">│                  Continual Evolution Layer                      │</span><br><span class="line">│   ┌──────────────┐    ┌──────────────┐                          │</span><br><span class="line">│   │ Online Loop  │───→│ Offline Loop │                          │</span><br><span class="line">│   │ (execute &amp;   │    │ (aggregate,  │                          │</span><br><span class="line">│   │  record)     │    │  diagnose,   │                          │</span><br><span class="line">│   │              │    │  validate,   │                          │</span><br><span class="line">│   │              │    │  release)    │                          │</span><br><span class="line">│   └──────────────┘    └──────────────┘                          │</span><br><span class="line">│                                                                 │</span><br><span class="line">│   Four Carriers: Knowledge | Instructions | Programs | Params   │</span><br><span class="line">├─────────────────────────────────────────────────────────────────┤</span><br><span class="line">│                  Post-Training Layer                            │</span><br><span class="line">│   Pre-training → SFT → RL                                       │</span><br><span class="line">│   &quot;Form first, spirit second&quot;                                   │</span><br><span class="line">│   Priority: Base Model &gt; Environment &gt; Data &gt; Algorithm         │</span><br><span class="line">└─────────────────────────────────────────────────────────────────┘</span><br></pre></td></tr></table></figure>
+
+<p><strong>How the layers connect:</strong></p>
+<ul>
+<li><strong>Post-training</strong> (Ch. 7) produces the initial capable model. Parameter updates are one of four update carriers.</li>
+<li><strong>Continual evolution</strong> (Ch. 8) keeps the system improving after deployment. It decides <strong>when</strong> and <strong>how</strong> to update each carrier — including triggering parameter updates (back to Ch. 7) when production trajectories reveal capability gaps.</li>
+<li><strong>Real-time multimodal</strong> (Ch. 9) provides the interaction surface and the <strong>feedback signals</strong> that drive continual evolution. Real-time environmental outcomes become the verification evidence for the offline evolution loop.</li>
+</ul>
+<p>The critical feedback loop:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Real-time interaction</span><br><span class="line">  → produces trajectories with verifiable outcomes</span><br><span class="line">    → feeds the offline evolution loop</span><br><span class="line">      → generates validated updates across four carriers</span><br><span class="line">        → deploys new versions to the production agent</span><br><span class="line">          → improved real-time interaction</span><br></pre></td></tr></table></figure>
+
+<p><a name="best-practices"></a></p>
+<h2 id="Best-Practices"><a href="#Best-Practices" class="headerlink" title="Best Practices"></a>Best Practices</h2><h3 id="Post-Training"><a href="#Post-Training" class="headerlink" title="Post-Training"></a>Post-Training</h3><ul>
+<li><strong>Try harness engineering first.</strong> Most agents don’t need post-training at all.</li>
+<li><strong>SFT before RL.</strong> Always stabilize format before pursuing strategy.</li>
+<li><strong>Invest in data quality, not algorithm novelty.</strong> Rejection sampling is more impactful than switching from PPO to GRPO.</li>
+<li><strong>Use RAG for facts, SFT for protocols.</strong> Never use SFT to inject factual knowledge.</li>
+<li><strong>Validate with small experiments first.</strong> Don’t commit large compute before testing key assumptions.</li>
+</ul>
+<h3 id="Continual-Evolution"><a href="#Continual-Evolution" class="headerlink" title="Continual Evolution"></a>Continual Evolution</h3><ul>
+<li><strong>Never let the online agent rewrite production directly.</strong> All updates go through the offline validation pipeline.</li>
+<li><strong>Use structured diagnoses, not scalar scores.</strong> Dimensional signals enable targeted fixes.</li>
+<li><strong>Start with the smallest modification target.</strong> Same surface problem may need different root-cause fixes.</li>
+<li><strong>Monitor five long-term outcomes:</strong> Regression, Generalization, Token efficiency, Safety, Engineering quality.</li>
+<li><strong>Keep safety mechanisms outside the self-modification boundary.</strong> The agent may modify its skills — but never its validators.</li>
+</ul>
+<h3 id="Real-Time-Multimodal"><a href="#Real-Time-Multimodal" class="headerlink" title="Real-Time Multimodal"></a>Real-Time Multimodal</h3><ul>
+<li><strong>Latency compounds nonlinearly.</strong> Design for 50% utilization headroom.</li>
+<li><strong>Replace VAD+ASR with streaming perception when quality matters.</strong> Information loss is irrecoverable in a cascaded pipeline.</li>
+<li><strong>Use fast-slow decoupling.</strong> Don’t make the real-time interaction layer wait for deep reasoning.</li>
+<li><strong>For Computer Use, prefer SoM or structured indexing over raw coordinates</strong> when available.</li>
+<li><strong>For robotics, validate Sim2Real</strong> — calibrate randomization range from real data, verify visual alignment.</li>
+</ul>
+<p><a name="faq"></a></p>
+<h2 id="FAQ"><a href="#FAQ" class="headerlink" title="FAQ"></a>FAQ</h2><p><strong>Q: Do I need to post-train a model for my agent?</strong></p>
+<p>A: Probably not. If your agent uses an existing frontier model (Claude, GPT-4, etc.) with well-designed prompts, tools, and context, post-training is unlikely to be cost-effective. Post-training becomes necessary when you need: (1) a smaller&#x2F;faster model with specific capabilities, (2) behavior that differs systematically from what prompting can achieve, or (3) deployment at scale where per-token cost matters.</p>
+<p><strong>Q: Is online self-modification safe?</strong></p>
+<p>A: No — not without guardrails. Direct self-modification by a running model is dangerous because production environments rarely provide clean learning signals, and unverified feedback can entrench errors. Always use the dual-loop architecture: online execution records evidence; offline evolution validates and releases candidates.</p>
+<p><strong>Q: Which RL algorithm should I use?</strong></p>
+<p>A: In most cases, <strong>any reasonable algorithm will do</strong>. Priority: base model &gt; environment &gt; data &gt; algorithm. Practical guide: reliable reward + sufficient compute → GRPO (simple) or PPO (finer credit assignment); high-quality preference data → DPO&#x2F;KTO; early exploration → Best-of-N.</p>
+<p><strong>Q: Should I replace my cascaded voice pipeline with an end-to-end model?</strong></p>
+<p>A: It depends on what you need. If your task depends primarily on semantic content, a self-cascade (ASR → LLM → TTS with streaming) matches or beats end-to-end at lower cost. If your task depends on non-verbal cues (prosody, emotion, hesitation), end-to-end preserves information that the cascade destroys. If you need real conversational fluency (interruptions, backchanneling), full-duplex is the answer.</p>
+<p><strong>Q: How do I know when to switch from SFT to RL?</strong></p>
+<p>A: When adding more demonstrations no longer improves performance on new (out-of-distribution) scenarios. SFT’s ceiling is the training data; RL’s ceiling is the task itself.</p>
+<p><strong>Q: What’s the biggest pitfall in continual evolution?</strong></p>
+<p>A: <strong>Evaluating the wrong thing.</strong> The ceiling of continual evolution is set by whether the system can evaluate what it actually cares about, not merely the easiest proxy to measure. User satisfaction scores are seductive but insufficient — they conflate many distinct failure modes and cannot guide targeted improvement.</p>
+<p><strong>Q: How does action chunking work and when should I use it?</strong></p>
+<p>A: Action chunking amortizes inference latency over multiple execution steps. The model generates a short sequence of future actions (e.g., 25–50 at 50Hz) in one forward pass, and a control thread replays them at high frequency. Use it when: (1) inference latency is much higher than control frequency requirements, and (2) the environment doesn’t change rapidly enough to invalidate the planned actions. Trade-off: longer chunks &#x3D; smoother execution but less responsiveness to sudden changes.</p>
+<p><a name="summary"></a></p>
+<h2 id="Summary"><a href="#Summary" class="headerlink" title="Summary"></a>Summary</h2><p>This article traced the journey from a static trained model to a self-evolving, real-time multimodal agent across three layers:</p>
+<p><strong>Post-Training</strong> — How to bake capability into model parameters:</p>
+<ul>
+<li>SFT memorizes (mass-covering); RL generalizes (mode-seeking)</li>
+<li>Always SFT before RL: form first, spirit second</li>
+<li>Data and environment quality matter more than algorithm choice</li>
+<li>Most agents don’t need post-training at all — harness engineering first</li>
+</ul>
+<p><strong>Self-Evolving Agents</strong> — How to learn from experience after deployment:</p>
+<ul>
+<li>Preserving experience ≠ learning from experience</li>
+<li>Three-layer verification: outcome → process → quality</li>
+<li>Four update carriers: knowledge, instructions, programs, parameters</li>
+<li>Dual-loop architecture: online execution + offline evolution</li>
+<li>Safety mechanisms must never be self-modifiable</li>
+</ul>
+<p><strong>Real-Time Multimodal Interaction</strong> — How to operate in a continuous, multimodal world:</p>
+<ul>
+<li>Voice: cascaded → end-to-end → full-duplex</li>
+<li>Computer Use: perceive-think-act loop, with efficiency as the true bottleneck</li>
+<li>Robotics: VLA + action chunking + Sim2Real</li>
+<li>Fast-slow architecture unifies all three scenarios</li>
+</ul>
+<p><strong>The full stack connects as a feedback loop:</strong> real-time interaction produces verifiable trajectories → offline evolution validates and releases improvements → improved agent delivers better real-time interaction. The ceiling of the entire system is set by whether you can evaluate what you actually care about — not merely the easiest proxy to measure.</p>
+<link rel="stylesheet" href="/css/folder.css" type="text/css"><script src="/js/folder.js" type="text/javascript" async></script>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/LLM/" rel="tag"># LLM</a>
+              <a href="/tags/Post-Training/" rel="tag"># Post Training</a>
+              <a href="/tags/Agent-Evolution/" rel="tag"># Agent Evolution</a>
+              <a href="/tags/Multimodal-AI/" rel="tag"># Multimodal AI</a>
+              <a href="/tags/Autonomous-Agents/" rel="tag"># Autonomous Agents</a>
+              <a href="/tags/Generative-AI/" rel="tag"># Generative AI</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2026/06/17/From-Capability-to-Intelligence-Tools-Coding-and-Evaluation-in-AI-Agents/" rel="prev" title="From Capability to Intelligence: Tools, Coding, and Evaluation in AI Agents">
+      <i class="fa fa-chevron-left"></i> From Capability to Intelligence: Tools, Coding, and Evaluation in AI Agents
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+
+            
+            <div class="post-copyright" style="margin: 0 0 10px 0;">
+              <p class="post-copyright-author" style="margin: 0 0 5px 0 !important;"><strong>Author:</strong> <a href="https://github.com/BODYsuperman" target="_blank">Alex</a></p>
+              <p class="post-copyright-link" style="margin: 0 0 5px 0 !important;"><strong>Article Link:</strong> <a href="https://bodysuperman.github.io/2026/06/25/From-Post-Training-to-Real-Time-Perception-Self-Evolving-Agents-and-Multimodal-Interaction/" target="_blank">https://bodysuperman.github.io/2026/06/25/From-Post-Training-to-Real-Time-Perception-Self-Evolving-Agents-and-Multimodal-Interaction/</a></p>
+              <p class="post-copyright-license" style="margin: 0 !important;"><strong>License:</strong> This article is licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a>. Please credit the original author and include the source link when reposting.</p>
+            </div>
+
+          </div>
+          
+    <div class="comments" id="gitalk-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Introduction"><span class="nav-number">1.</span> <span class="nav-text">Introduction</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#The-Capability-Paradox"><span class="nav-number">1.1.</span> <span class="nav-text">The Capability Paradox</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Three-Acts-of-This-Article"><span class="nav-number">1.2.</span> <span class="nav-text">Three Acts of This Article</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Post-Training-Baking-Capability-Into-Parameters"><span class="nav-number">2.</span> <span class="nav-text">Post-Training: Baking Capability Into Parameters</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#The-Three-Stage-Pipeline"><span class="nav-number">2.1.</span> <span class="nav-text">The Three-Stage Pipeline</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SFT-Memorizes-RL-Generalizes"><span class="nav-number">2.2.</span> <span class="nav-text">SFT Memorizes, RL Generalizes</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#When-to-Choose-SFT-vs-RL"><span class="nav-number">2.3.</span> <span class="nav-text">When to Choose SFT vs RL</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Reward-Design-From-Scalar-to-Generative"><span class="nav-number">2.4.</span> <span class="nav-text">Reward Design: From Scalar to Generative</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#RLVP-Reward-the-Outcome-Penalize-the-Path"><span class="nav-number">2.5.</span> <span class="nav-text">RLVP: Reward the Outcome, Penalize the Path</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Data-and-Environment-Matter-More-Than-Algorithms"><span class="nav-number">2.6.</span> <span class="nav-text">Data and Environment Matter More Than Algorithms</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#The-Practical-Takeaway"><span class="nav-number">2.7.</span> <span class="nav-text">The Practical Takeaway</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Self-Evolving-Agents-Learning-From-Experience"><span class="nav-number">3.</span> <span class="nav-text">Self-Evolving Agents: Learning From Experience</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Preserving-Experience-Is-Not-Learning"><span class="nav-number">3.1.</span> <span class="nav-text">Preserving Experience Is Not Learning</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Three-Layer-Verification"><span class="nav-number">3.2.</span> <span class="nav-text">Three-Layer Verification</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Four-Update-Carriers"><span class="nav-number">3.3.</span> <span class="nav-text">Four Update Carriers</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Dual-Loop-Architecture"><span class="nav-number">3.4.</span> <span class="nav-text">Dual-Loop Architecture</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#When-Done-Does-Not-Mean-Progress"><span class="nav-number">3.5.</span> <span class="nav-text">When Done Does Not Mean Progress</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Safety-Boundaries-for-Continual-Evolution"><span class="nav-number">3.6.</span> <span class="nav-text">Safety Boundaries for Continual Evolution</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Real-Time-Perception-and-Multimodal-Interaction"><span class="nav-number">4.</span> <span class="nav-text">Real-Time Perception and Multimodal Interaction</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Why-Real-Time-Changes-Everything"><span class="nav-number">4.1.</span> <span class="nav-text">Why Real-Time Changes Everything</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Voice-Cascaded-to-End-to-End-to-Full-Duplex"><span class="nav-number">4.2.</span> <span class="nav-text">Voice: Cascaded to End-to-End to Full-Duplex</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Computer-Use-The-Perceive-Think-Act-Loop"><span class="nav-number">4.3.</span> <span class="nav-text">Computer Use: The Perceive-Think-Act Loop</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Robotics-VLA-Action-Chunking-and-Sim2Real"><span class="nav-number">4.4.</span> <span class="nav-text">Robotics: VLA, Action Chunking, and Sim2Real</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#The-Unifying-Theme-Fast-Slow-Architecture"><span class="nav-number">4.5.</span> <span class="nav-text">The Unifying Theme: Fast-Slow Architecture</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Putting-It-Together-The-Full-Stack-of-a-Modern-Agent"><span class="nav-number">5.</span> <span class="nav-text">Putting It Together: The Full Stack of a Modern Agent</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Best-Practices"><span class="nav-number">6.</span> <span class="nav-text">Best Practices</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Post-Training"><span class="nav-number">6.1.</span> <span class="nav-text">Post-Training</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Continual-Evolution"><span class="nav-number">6.2.</span> <span class="nav-text">Continual Evolution</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Real-Time-Multimodal"><span class="nav-number">6.3.</span> <span class="nav-text">Real-Time Multimodal</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#FAQ"><span class="nav-number">7.</span> <span class="nav-text">FAQ</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Summary"><span class="nav-number">8.</span> <span class="nav-text">Summary</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="AI with Alex"
+      src="/uploads/avatar.jpg">
+  <p class="site-author-name" itemprop="name">AI with Alex</p>
+  <div class="site-description" itemprop="description">Attention(Q,K,V)=softmax(QK^T/sqrt(d_k))V</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">28</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">33</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">80</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/BODYsuperman" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;BODYsuperman" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://stackoverflow.com/users/9644964/alexandar-may-msft?tab=answers&sort=votes" title="StackOverflow → https:&#x2F;&#x2F;stackoverflow.com&#x2F;users&#x2F;9644964&#x2F;alexandar-may-msft?tab&#x3D;answers&amp;sort&#x3D;votes" rel="noopener" target="_blank"><i class="fab fa-stack-overflow fa-fw"></i>StackOverflow</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">AI with Alex</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">Symbols count total: </span>
+    <span title="Symbols count total">438k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">Reading time total &asymp;</span>
+    <span title="Reading time total">6:38</span>
+    
+    <!--
+    
+    -->
+</div>
+
+<!--
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a>
+   </div>
+--><script color="0,0,255" opacity="0.5" zIndex="-1" count="99" src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1/dist/canvas-nest.js"></script>
+
+
+
+
+
+
+        
+
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv"  >
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv"  >
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : 'Ov23liVJTzqy1rzaDXXM',
+      clientSecret: '5e785a7d46e69f7509e6c2f7730855a55944df33',
+      repo        : 'blog-comment',
+      owner       : 'BODYsuperman',
+      admin       : ['BODYsuperman'],
+      id          : '8f682311b0ccd333aeaa5e84b2f5fdd5',
+        language: '',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+
+</body>
+</html>
