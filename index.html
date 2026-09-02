@@ -194,6 +194,142 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://bodysuperman.github.io/2026/08/23/Deep%E2%80%91Dive-Advanced-Tips-for-Claude-Code/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+      <meta itemprop="name" content="AI with Alex">
+      <meta itemprop="description" content="Attention(Q,K,V)=softmax(QK^T/sqrt(d_k))V">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="AI with Alex's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2026/08/23/Deep%E2%80%91Dive-Advanced-Tips-for-Claude-Code/" class="post-title-link" itemprop="url">Deep‑Dive & Advanced Tips for Claude Code</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2026-08-23 12:48:28" itemprop="dateCreated datePublished" datetime="2026-08-23T12:48:28+08:00">2026-08-23</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2026-09-02 00:00:00" itemprop="dateModified" datetime="2026-09-02T00:00:00+08:00">2026-09-02</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/AI/" itemprop="url" rel="index"><span itemprop="name">AI</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>35k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>31 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <ul>
+<li><a href="#introduction">Introduction</a></li>
+<li><a href="#the-big-picture-seven-layers-of-extension">The Big Picture: Seven Layers of Extension</a></li>
+<li><a href="#choosing-the-right-model">Choosing the Right Model</a><ul>
+<li><a href="#model-comparison">Model Comparison</a></li>
+<li><a href="#four-ways-to-switch-models">Four Ways to Switch Models</a></li>
+<li><a href="#settings-file-hierarchy">Settings File Hierarchy</a></li>
+</ul>
+</li>
+<li><a href="#core-configuration">Core Configuration</a><ul>
+<li><a href="#settings-json-permissions-and-defaults">settings.json: Permissions and Defaults</a></li>
+<li><a href="#claude-md-the-project-handbook">CLAUDE.md: The Project Handbook</a></li>
+<li><a href="#three-layers-of-memory">Three Layers of Memory</a></li>
+<li><a href="#claudeignore">.claudeignore</a></li>
+</ul>
+</li>
+<li><a href="#daily-commands-and-interactions">Daily Commands and Interactions</a><ul>
+<li><a href="#slash-command-cheat-sheet">Slash Command Cheat Sheet</a></li>
+<li><a href="#the-four-commands-you-must-master">The Four Commands You Must Master</a></li>
+<li><a href="#keyboard-shortcuts">Keyboard Shortcuts</a></li>
+<li><a href="#power-interactions">Power Interactions: !, @, and Images</a></li>
+</ul>
+</li>
+<li><a href="#the-right-workflow-explore-plan-implement-commit">The Right Workflow: Explore, Plan, Implement, Commit</a><ul>
+<li><a href="#plan-mode-and-the-three-operating-modes">Plan Mode and the Three Operating Modes</a></li>
+<li><a href="#when-to-plan-and-when-to-just-do-it">When to Plan and When to Just Do It</a></li>
+<li><a href="#walkthrough-building-a-hello-api-with-express">Walkthrough: Building a Hello API with Express</a></li>
+</ul>
+</li>
+<li><a href="#best-practices">Best Practices</a><ul>
+<li><a href="#prompt-writing-principles">Prompt Writing Principles</a></li>
+<li><a href="#context-management">Context Management</a></li>
+<li><a href="#git-is-your-save-point">Git Is Your Save Point</a></li>
+<li><a href="#controlling-costs">Controlling Costs</a></li>
+<li><a href="#working-in-large-codebases">Working in Large Codebases</a></li>
+<li><a href="#three-overlooked-advanced-tips">Three Overlooked Advanced Tips</a></li>
+</ul>
+</li>
+<li><a href="#starter-kit-for-new-projects">Starter Kit for New Projects</a></li>
+<li><a href="#faq">FAQ</a></li>
+<li><a href="#summary">Summary</a></li>
+</ul>
+        
+      
+    </div>
+
+    
+    
+    
+      <!--noindex-->
+      <div class="post-button">
+        <a class="btn" href="/2026/08/23/Deep%E2%80%91Dive-Advanced-Tips-for-Claude-Code/#more" rel="contents">
+          Read more &raquo;
+        </a>
+      </div>
+      <!--/noindex-->
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="https://bodysuperman.github.io/2026/08/06/Six-money-saving-tips-for-Claude-Code/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -822,135 +958,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://bodysuperman.github.io/2026/05/11/A-Multimodal-AI-Agent-Application-AI-Private-Chef/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/uploads/avatar.jpg">
-      <meta itemprop="name" content="AI with Alex">
-      <meta itemprop="description" content="Attention(Q,K,V)=softmax(QK^T/sqrt(d_k))V">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="AI with Alex's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2026/05/11/A-Multimodal-AI-Agent-Application-AI-Private-Chef/" class="post-title-link" itemprop="url">A Multimodal AI Agent Application: AI Private Chef</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2026-05-11 12:48:28" itemprop="dateCreated datePublished" datetime="2026-05-11T12:48:28+08:00">2026-05-11</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2026-06-10 00:00:00" itemprop="dateModified" datetime="2026-06-10T00:00:00+08:00">2026-06-10</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a>
-                </span>
-                  , 
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Python/AI/" itemprop="url" rel="index"><span itemprop="name">AI</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="Symbols count in article">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>26k</span>
-            </span>
-            <span class="post-meta-item" title="Reading time">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>23 mins.</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <ul>
-<li><a href="#introduction">Introduction</a></li>
-<li><a href="#what-are-we-building">What Are We Building?</a><ul>
-<li><a href="#feature-overview">Feature Overview</a></li>
-<li><a href="#architecture-overview">Architecture Overview</a></li>
-</ul>
-</li>
-<li><a href="#implementation-strategy">Implementation Strategy</a><ul>
-<li><a href="#model-selection">Model Selection</a></li>
-<li><a href="#tool-selection">Tool Selection</a></li>
-<li><a href="#memory-strategy">Memory Strategy</a></li>
-<li><a href="#system-prompt-design">System Prompt Design</a></li>
-</ul>
-</li>
-<li><a href="#prototyping-in-jupyter">Prototyping in Jupyter</a><ul>
-<li><a href="#environment-configuration">Environment Configuration</a></li>
-<li><a href="#dependencies">Dependencies</a></li>
-<li><a href="#loading-configuration">Loading Configuration</a></li>
-<li><a href="#defining-tools">Defining Tools</a></li>
-<li><a href="#initializing-the-multimodal-model">Initializing the Multimodal Model</a></li>
-<li><a href="#memory-management">Memory Management</a></li>
-<li><a href="#creating-the-agent">Creating the Agent</a></li>
-<li><a href="#testing-with-image-input">Testing with Image Input</a></li>
-<li><a href="#testing-conversation-memory">Testing Conversation Memory</a></li>
-</ul>
-</li>
-<li><a href="#deploying-with-langgraph-and-langsmith">Deploying with LangGraph and LangSmith</a><ul>
-<li><a href="#langsmith-setup">LangSmith Setup</a></li>
-<li><a href="#developing-the-agent">Developing the Agent</a></li>
-<li><a href="#local-deployment-with-langgraph-cli">Local Deployment with LangGraph CLI</a></li>
-<li><a href="#testing-in-langsmith-studio">Testing in LangSmith Studio</a>
-        
-      
-    </div>
-
-    
-    
-    
-      <!--noindex-->
-      <div class="post-button">
-        <a class="btn" href="/2026/05/11/A-Multimodal-AI-Agent-Application-AI-Private-Chef/#more" rel="contents">
-          Read more &raquo;
-        </a>
-      </div>
-      <!--/noindex-->
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1025,7 +1032,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">29</span>
+          <span class="site-state-item-count">30</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -1038,7 +1045,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">85</span>
+        <span class="site-state-item-count">87</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -1083,13 +1090,13 @@
       <i class="fa fa-chart-area"></i>
     </span>
       <span class="post-meta-item-text">Symbols count total: </span>
-    <span title="Symbols count total">440k</span>
+    <span title="Symbols count total">474k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">Reading time total &asymp;</span>
-    <span title="Reading time total">6:40</span>
+    <span title="Reading time total">7:11</span>
     
     <!--
     

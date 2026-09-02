@@ -1,0 +1,1862 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/logo-180.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/logo-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/logo-16.png">
+  <link rel="mask-icon" href="/images/logo-512.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|monospace:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"bodysuperman.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null,"use":"Gitalk","text":true},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="Introduction The Big Picture: Seven Layers of Extension Choosing the Right Model Model Comparison Four Ways to Switch Models Settings File Hierarchy   Core Configuration settings.json: Permissions an">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Deep‑Dive &amp; Advanced Tips for Claude Code">
+<meta property="og:url" content="https://bodysuperman.github.io/2026/08/23/Deep%E2%80%91Dive-Advanced-Tips-for-Claude-Code/index.html">
+<meta property="og:site_name" content="AI with Alex&#39;s Blog">
+<meta property="og:description" content="Introduction The Big Picture: Seven Layers of Extension Choosing the Right Model Model Comparison Four Ways to Switch Models Settings File Hierarchy   Core Configuration settings.json: Permissions an">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://bodysuperman.github.io/2026/08/23/Deep%E2%80%91Dive-Advanced-Tips-for-Claude-Code/cl-1.png">
+<meta property="article:published_time" content="2026-08-23T04:48:28.000Z">
+<meta property="article:modified_time" content="2026-09-01T16:00:00.000Z">
+<meta property="article:author" content="AI with Alex">
+<meta property="article:tag" content="AI Agent">
+<meta property="article:tag" content="LLM">
+<meta property="article:tag" content="Claude Code">
+<meta property="article:tag" content="Developer Tools">
+<meta property="article:tag" content="Coding Agent">
+<meta property="article:tag" content="MCP‑Protocol">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://bodysuperman.github.io/2026/08/23/Deep%E2%80%91Dive-Advanced-Tips-for-Claude-Code/cl-1.png">
+
+<link rel="canonical" href="https://bodysuperman.github.io/2026/08/23/Deep%E2%80%91Dive-Advanced-Tips-for-Claude-Code/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>Deep‑Dive & Advanced Tips for Claude Code | AI with Alex's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+
+
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">AI with Alex's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+   
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://bodysuperman.github.io/2026/08/23/Deep%E2%80%91Dive-Advanced-Tips-for-Claude-Code/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+      <meta itemprop="name" content="AI with Alex">
+      <meta itemprop="description" content="Attention(Q,K,V)=softmax(QK^T/sqrt(d_k))V">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="AI with Alex's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Deep‑Dive & Advanced Tips for Claude Code
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2026-08-23 12:48:28" itemprop="dateCreated datePublished" datetime="2026-08-23T12:48:28+08:00">2026-08-23</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2026-09-02 00:00:00" itemprop="dateModified" datetime="2026-09-02T00:00:00+08:00">2026-09-02</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/AI/" itemprop="url" rel="index"><span itemprop="name">AI</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>35k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>31 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <ul>
+<li><a href="#introduction">Introduction</a></li>
+<li><a href="#the-big-picture-seven-layers-of-extension">The Big Picture: Seven Layers of Extension</a></li>
+<li><a href="#choosing-the-right-model">Choosing the Right Model</a><ul>
+<li><a href="#model-comparison">Model Comparison</a></li>
+<li><a href="#four-ways-to-switch-models">Four Ways to Switch Models</a></li>
+<li><a href="#settings-file-hierarchy">Settings File Hierarchy</a></li>
+</ul>
+</li>
+<li><a href="#core-configuration">Core Configuration</a><ul>
+<li><a href="#settings-json-permissions-and-defaults">settings.json: Permissions and Defaults</a></li>
+<li><a href="#claude-md-the-project-handbook">CLAUDE.md: The Project Handbook</a></li>
+<li><a href="#three-layers-of-memory">Three Layers of Memory</a></li>
+<li><a href="#claudeignore">.claudeignore</a></li>
+</ul>
+</li>
+<li><a href="#daily-commands-and-interactions">Daily Commands and Interactions</a><ul>
+<li><a href="#slash-command-cheat-sheet">Slash Command Cheat Sheet</a></li>
+<li><a href="#the-four-commands-you-must-master">The Four Commands You Must Master</a></li>
+<li><a href="#keyboard-shortcuts">Keyboard Shortcuts</a></li>
+<li><a href="#power-interactions">Power Interactions: !, @, and Images</a></li>
+</ul>
+</li>
+<li><a href="#the-right-workflow-explore-plan-implement-commit">The Right Workflow: Explore, Plan, Implement, Commit</a><ul>
+<li><a href="#plan-mode-and-the-three-operating-modes">Plan Mode and the Three Operating Modes</a></li>
+<li><a href="#when-to-plan-and-when-to-just-do-it">When to Plan and When to Just Do It</a></li>
+<li><a href="#walkthrough-building-a-hello-api-with-express">Walkthrough: Building a Hello API with Express</a></li>
+</ul>
+</li>
+<li><a href="#best-practices">Best Practices</a><ul>
+<li><a href="#prompt-writing-principles">Prompt Writing Principles</a></li>
+<li><a href="#context-management">Context Management</a></li>
+<li><a href="#git-is-your-save-point">Git Is Your Save Point</a></li>
+<li><a href="#controlling-costs">Controlling Costs</a></li>
+<li><a href="#working-in-large-codebases">Working in Large Codebases</a></li>
+<li><a href="#three-overlooked-advanced-tips">Three Overlooked Advanced Tips</a></li>
+</ul>
+</li>
+<li><a href="#starter-kit-for-new-projects">Starter Kit for New Projects</a></li>
+<li><a href="#faq">FAQ</a></li>
+<li><a href="#summary">Summary</a></li>
+</ul>
+<span id="more"></span>
+
+<p><a name="introduction"></a></p>
+<h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h2><p>You installed Claude Code, set up the API key, and had your first “wow” moment. Then reality sets in. Most people hit the same three walls:</p>
+<ol>
+<li><strong>“Why did it break my code?”</strong> — You asked for a small feature, and it rewrote three files you never mentioned.</li>
+<li><strong>“Why is it getting dumber?”</strong> — The longer the session runs, the slower and more forgetful it becomes.</li>
+<li><strong>“Why does it treat everyone the same?”</strong> — Every session starts from zero, knowing nothing about your stack, your conventions, or your project.</li>
+</ol>
+<p>Here is the uncomfortable truth: these are not model problems. They are configuration problems. Anthropic states it plainly in its enterprise guide:</p>
+<blockquote>
+<p><strong>Model capability is the floor. Configuration quality is the ceiling.</strong></p>
+</blockquote>
+<p>Spending an hour on good configuration pays off more than chasing the newest model version. This article is the missing manual. It covers three skills, one for each wall:</p>
+<ul>
+<li><strong>Control it</strong> — permissions, modes, and the rewind button</li>
+<li><strong>Manage its context</strong> — the <code>/compact</code> &#x2F; <code>/clear</code> discipline</li>
+<li><strong>Personalize it</strong> — the three-layer memory system</li>
+</ul>
+<p><a name="the-big-picture-seven-layers-of-extension"></a></p>
+<h2 id="The-Big-Picture-Seven-Layers-of-Extension"><a href="#The-Big-Picture-Seven-Layers-of-Extension" class="headerlink" title="The Big Picture: Seven Layers of Extension"></a>The Big Picture: Seven Layers of Extension</h2><p>Before diving into details,a typical directory structure for a Claude Code project is as follows:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">your-project/</span><br><span class="line">├── CLAUDE.md ← Team shared instructions, submitted to git</span><br><span class="line">├── CLAUDE.local.md ← Personal override, ignored by git</span><br><span class="line">└── .claude/</span><br><span class="line"> ├── settings.json ← permissions + configuration, commit to git</span><br><span class="line"> ├── settings.local.json ← Personal permissions, ignored by git</span><br><span class="line"> ├── commands/ ← Custom slash commands</span><br><span class="line"> │ ├── review.md → /project:review</span><br><span class="line"> │ ├── fix-issue.md → /project:fix-issue</span><br><span class="line"> │ └── deploy.md → /project:deploy</span><br><span class="line"> ├── rules/ ← Modular instruction files (globally effective)</span><br><span class="line"> │ ├── code-style.md</span><br><span class="line"> │ ├── testing.md</span><br><span class="line"> │ └── api-conventions.md</span><br><span class="line"> ├── skills/ ← Automatically invoked workflow</span><br><span class="line"> │ ├── security-review/</span><br><span class="line"> │ │ └── SKILL.md</span><br><span class="line"> │ └── deploy/</span><br><span class="line"> │ └── SKILL.md</span><br><span class="line"> └── agents/ ← Sub-agent role definitions</span><br><span class="line"> ├── code-reviewer.md</span><br><span class="line"> └── security-auditor.md</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2026/08/23/Deep%E2%80%91Dive-Advanced-Tips-for-Claude-Code/cl-1.png" alt="pic"></p>
+<p>In essence, Claude Code’s capabilities are organized as <strong>7 extension layers</strong> (the official term is <em>Harness</em>):</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Layer 7  Subagents      Independent contexts working in parallel</span><br><span class="line">Layer 6  MCP            Connect external tools and data sources</span><br><span class="line">Layer 5  LSP            IDE-grade code navigation</span><br><span class="line">Layer 4  Plugins        Package Skills + Hooks + MCP for distribution</span><br><span class="line">Layer 3  Skills         Knowledge packs loaded on demand</span><br><span class="line">Layer 2  Hooks          Event triggers that run at specific moments</span><br><span class="line">Layer 1  CLAUDE.md      Project handbook, loaded every session</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>Layer</th>
+<th>What it is</th>
+<th>When you need it</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>CLAUDE.md</td>
+<td>Project handbook, auto-loaded every session</td>
+<td>Day one</td>
+</tr>
+<tr>
+<td>Hooks</td>
+<td>Event triggers that run automatically at specific moments</td>
+<td>Once you want guardrails</td>
+</tr>
+<tr>
+<td>Skills</td>
+<td>Knowledge packs the AI loads on demand</td>
+<td>Repeated workflows</td>
+</tr>
+<tr>
+<td>Plugins</td>
+<td>Skills + Hooks + MCP bundled for distribution</td>
+<td>Sharing with a team</td>
+</tr>
+<tr>
+<td>LSP</td>
+<td>IDE-level code navigation for the AI</td>
+<td>Large codebases</td>
+</tr>
+<tr>
+<td>MCP</td>
+<td>Connections to external tools and data</td>
+<td>GitHub, DBs, Jira…</td>
+</tr>
+<tr>
+<td>Subagents</td>
+<td>Parallel workers with their own context</td>
+<td>Research-heavy tasks</td>
+</tr>
+</tbody></table>
+<p>Layers 1–3 are <strong>basic configuration</strong>; layers 4–7 are <strong>advanced extensions</strong>. This article focuses on the basics plus the working habits that make them pay off.</p>
+<p><a name="choosing-the-right-model"></a></p>
+<h2 id="Choosing-the-Right-Model"><a href="#Choosing-the-Right-Model" class="headerlink" title="Choosing the Right Model"></a>Choosing the Right Model</h2><p>Once the API is configured, the first question is: which model should I use?</p>
+<p><a name="model-comparison"></a></p>
+<h3 id="Model-Comparison"><a href="#Model-Comparison" class="headerlink" title="Model Comparison"></a>Model Comparison</h3><table>
+<thead>
+<tr>
+<th>Model</th>
+<th>Speed</th>
+<th>Code Quality</th>
+<th>Reasoning</th>
+<th>Cost</th>
+<th>Recommended For</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Claude Haiku 4.5</td>
+<td>Very fast</td>
+<td>Good</td>
+<td>Medium</td>
+<td>$</td>
+<td>Simple completions, formatting, small fixes</td>
+</tr>
+<tr>
+<td>Claude Sonnet 4.6</td>
+<td>Fast</td>
+<td>Excellent</td>
+<td>Strong</td>
+<td>$$</td>
+<td>Daily development, feature work (<strong>default pick</strong>)</td>
+</tr>
+<tr>
+<td>Claude Opus 4.7</td>
+<td>Medium</td>
+<td>Top-tier</td>
+<td>Very strong</td>
+<td>$$$</td>
+<td>Complex architecture, hard bugs, algorithmic problems</td>
+</tr>
+</tbody></table>
+<p>Pricing reference (verified 2026-05-18):</p>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th>Input</th>
+<th>Output</th>
+<th>Typical role</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Claude Haiku 4.5</td>
+<td>$1 &#x2F; M tokens</td>
+<td>$5 &#x2F; M tokens</td>
+<td>Low-cost batch processing</td>
+</tr>
+<tr>
+<td>Claude Sonnet 4.6</td>
+<td>$3 &#x2F; M tokens</td>
+<td>$15 &#x2F; M tokens</td>
+<td>Daily development workhorse</td>
+</tr>
+<tr>
+<td>Claude Opus 4.7</td>
+<td>$5 &#x2F; M tokens</td>
+<td>$25 &#x2F; M tokens</td>
+<td>Reserved for hard problems</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p><strong>Tip:</strong> Sonnet is enough for daily development. Switch to Opus only when a problem is genuinely hard. Haiku shines when you batch-process many simple tasks.</p>
+</blockquote>
+<p>Scenario-based recommendations:</p>
+<table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>Model</th>
+<th>Reason</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Daily feature development</td>
+<td>Sonnet</td>
+<td>Best speed&#x2F;quality balance</td>
+</tr>
+<tr>
+<td>Simple edits &#x2F; formatting</td>
+<td>Haiku</td>
+<td>Good enough, cheapest</td>
+</tr>
+<tr>
+<td>Complex architecture design</td>
+<td>Opus</td>
+<td>Strongest reasoning, worth the cost</td>
+</tr>
+<tr>
+<td>Debugging (simple)</td>
+<td>Sonnet</td>
+<td>Usually enough</td>
+</tr>
+<tr>
+<td>Debugging (hard)</td>
+<td>Opus</td>
+<td>Needs deep reasoning</td>
+</tr>
+<tr>
+<td>Tight budget</td>
+<td>Cheaper third-party APIs</td>
+<td>Pick by current price</td>
+</tr>
+<tr>
+<td>Offline &#x2F; privacy-sensitive</td>
+<td>Local models (Ollama)</td>
+<td>Fully local, free</td>
+</tr>
+</tbody></table>
+<p>A real comparison on the same task — <em>build a small Express.js TODO API with GET and POST endpoints</em>:</p>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th>Time</th>
+<th>Quality</th>
+<th>Extras</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Haiku</td>
+<td>~3s</td>
+<td>Correct, concise</td>
+<td>None</td>
+</tr>
+<tr>
+<td>Sonnet</td>
+<td>~8s</td>
+<td>Correct, with input validation and error handling</td>
+<td>Added CORS and body-parsing middleware</td>
+</tr>
+<tr>
+<td>Opus</td>
+<td>~15s</td>
+<td>Correct, clean architecture</td>
+<td>Layered design, detailed comments, full error handling</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p><strong>Tip:</strong> There is no “best model”, only the right model for the task. Using an expensive model on trivial work wastes money; using a cheap model on hard work wastes time.</p>
+</blockquote>
+<p><a name="four-ways-to-switch-models"></a></p>
+<h3 id="Four-Ways-to-Switch-Models"><a href="#Four-Ways-to-Switch-Models" class="headerlink" title="Four Ways to Switch Models"></a>Four Ways to Switch Models</h3><p>From highest to lowest priority:</p>
+<p><strong>1. Startup flag (one-shot):</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">claude --model opus      <span class="comment"># strongest reasoning</span></span><br><span class="line">claude --model sonnet    <span class="comment"># daily coding (default)</span></span><br><span class="line">claude --model haiku     <span class="comment"># fast and light</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>2. Slash command (during a session):</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">/model            # interactive model picker</span><br><span class="line">/model sonnet     # switch directly</span><br></pre></td></tr></table></figure>
+
+<p>The choice is saved to user settings and survives restarts.</p>
+<p><strong>3. Environment variable (persistent):</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> ANTHROPIC_MODEL=<span class="string">&quot;sonnet&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>4. Settings file (persistent, recommended):</strong></p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ~/.claude/settings.json — applies to all projects</span></span><br><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;model&quot;</span><span class="punctuation">:</span> <span class="string">&quot;sonnet&quot;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// project/.claude/settings.json — this project only</span></span><br><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;model&quot;</span><span class="punctuation">:</span> <span class="string">&quot;opus&quot;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><strong>Note:</strong> Priority order: <code>--model</code> flag &gt; <code>ANTHROPIC_MODEL</code> env var &gt; <code>model</code> field in <code>settings.json</code>. The <code>/model</code> command writes its choice into the user settings file.</p>
+</blockquote>
+<p><a name="settings-file-hierarchy"></a></p>
+<h3 id="Settings-File-Hierarchy"><a href="#Settings-File-Hierarchy" class="headerlink" title="Settings File Hierarchy"></a>Settings File Hierarchy</h3><p>Claude Code has three levels of settings files. Each level overrides the one above it:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Global    ~/.claude/settings.json                 (all projects)</span><br><span class="line">              ↓ overridden by</span><br><span class="line">Project   project/.claude/settings.json           (team-shared, committed)</span><br><span class="line">              ↓ overridden by</span><br><span class="line">Local     project/.claude/settings.local.json     (personal, gitignored)</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Scope</th>
+<th>Committed to Git</th>
+<th>Priority</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>~/.claude/settings.json</code></td>
+<td>Global (all projects)</td>
+<td>No</td>
+<td>Low</td>
+</tr>
+<tr>
+<td><code>project/.claude/settings.json</code></td>
+<td>Project (team-shared)</td>
+<td>Yes</td>
+<td>Medium</td>
+</tr>
+<tr>
+<td><code>project/.claude/settings.local.json</code></td>
+<td>Project (personal)</td>
+<td>No (gitignored)</td>
+<td>High</td>
+</tr>
+</tbody></table>
+<p>The same pattern applies to <code>CLAUDE.md</code>, as we will see next.</p>
+<p><a name="core-configuration"></a></p>
+<h2 id="Core-Configuration"><a href="#Core-Configuration" class="headerlink" title="Core Configuration"></a>Core Configuration</h2><p><a name="settings-json-permissions-and-defaults"></a></p>
+<h3 id="settings-json-Permissions-and-Defaults"><a href="#settings-json-Permissions-and-Defaults" class="headerlink" title="settings.json: Permissions and Defaults"></a>settings.json: Permissions and Defaults</h3><p><code>settings.json</code> controls what Claude Code is allowed to do without asking. The most important block is <code>permissions</code>:</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;permissions&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;allow&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">      <span class="string">&quot;Read&quot;</span><span class="punctuation">,</span> <span class="comment">// read files</span></span><br><span class="line">      <span class="string">&quot;Write&quot;</span><span class="punctuation">,</span> <span class="comment">// write files</span></span><br><span class="line">      <span class="string">&quot;Bash(npm *)&quot;</span><span class="punctuation">,</span> <span class="comment">// run npm commands</span></span><br><span class="line">      <span class="string">&quot;Bash(git *)&quot;</span><span class="punctuation">,</span> <span class="comment">// run git commands</span></span><br><span class="line">      <span class="string">&quot;Bash(node *)&quot;</span> <span class="comment">// run node commands</span></span><br><span class="line">    <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;deny&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">      <span class="string">&quot;Bash(rm -rf *)&quot;</span> <span class="comment">// block dangerous deletes</span></span><br><span class="line">    <span class="punctuation">]</span></span><br><span class="line">  <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;model&quot;</span><span class="punctuation">:</span> <span class="string">&quot;sonnet&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;autoCompactThreshold&quot;</span><span class="punctuation">:</span> <span class="number">80</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><strong>Warning:</strong> Be careful with permissions. An allowlist that is too broad lets the AI do things you did not intend. If you are a beginner, keep the defaults and confirm every action — the confirmation prompts are your chance to review each step.</p>
+</blockquote>
+<p><a name="claude-md-the-project-handbook"></a></p>
+<h3 id="CLAUDE-md-The-Project-Handbook"><a href="#CLAUDE-md-The-Project-Handbook" class="headerlink" title="CLAUDE.md: The Project Handbook"></a>CLAUDE.md: The Project Handbook</h3><p>CLAUDE.md is <strong>the single most important configuration file</strong>. Think of it as the onboarding handbook you would write for a new intern: project background, tech stack, coding conventions, and current status.</p>
+<p>Without it, Claude Code must re-discover your project in every session. With it, the AI knows the full context from the first message.</p>
+<p><strong>A template you can copy and adapt:</strong></p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="section"># Project Name</span></span><br><span class="line"></span><br><span class="line"><span class="section">## Overview</span></span><br><span class="line"></span><br><span class="line">One sentence describing what this project does.</span><br><span class="line"></span><br><span class="line"><span class="section">## Tech Stack</span></span><br><span class="line"></span><br><span class="line"><span class="bullet">-</span> Frontend: Next.js 14 + TypeScript + Tailwind CSS</span><br><span class="line"><span class="bullet">-</span> Backend: Next.js API Routes</span><br><span class="line"><span class="bullet">-</span> Database: Prisma + SQLite</span><br><span class="line"><span class="bullet">-</span> Deployment: Vercel</span><br><span class="line"></span><br><span class="line"><span class="section">## Project Structure</span></span><br><span class="line"></span><br><span class="line"><span class="code">```</span></span><br><span class="line"><span class="code">src/</span></span><br><span class="line"><span class="code">├── app/          # Next.js App Router pages</span></span><br><span class="line"><span class="code">├── components/   # React components</span></span><br><span class="line"><span class="code">├── lib/          # utilities and config</span></span><br><span class="line"><span class="code">├── prisma/       # database schema and migrations</span></span><br><span class="line"><span class="code">└── types/        # TypeScript type definitions</span></span><br><span class="line"><span class="code">```</span></span><br><span class="line"></span><br><span class="line"><span class="section">## Coding Conventions</span></span><br><span class="line"></span><br><span class="line"><span class="bullet">-</span> Functional components + React Hooks</span><br><span class="line"><span class="bullet">-</span> Components in PascalCase (e.g. BookmarkCard.tsx)</span><br><span class="line"><span class="bullet">-</span> API routes return a unified shape: &#123; success, data?, error? &#125;</span><br><span class="line"><span class="bullet">-</span> All database access goes through the Prisma client</span><br><span class="line"></span><br><span class="line"><span class="section">## Current Status</span></span><br><span class="line"></span><br><span class="line"><span class="bullet">-</span> [x] Project initialized, DB schema done</span><br><span class="line"><span class="bullet">-</span> [ ] Bookmark CRUD API in progress</span><br><span class="line"><span class="bullet">-</span> [ ] Frontend pages not started</span><br><span class="line"></span><br><span class="line"><span class="section">## Do NOT</span></span><br><span class="line"></span><br><span class="line"><span class="bullet">-</span> Do not commit prisma/dev.db or .env</span><br><span class="line"><span class="bullet">-</span> Do not modify migration files</span><br><span class="line"><span class="bullet">-</span> Create a branch before starting any new feature</span><br></pre></td></tr></table></figure>
+
+<p><strong>Three levels of CLAUDE.md.</strong> Most people only know the project-root one, but there are actually three levels, and they stack:</p>
+<table>
+<thead>
+<tr>
+<th>Level</th>
+<th>Path</th>
+<th>Scope</th>
+<th>What to put there</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Global</td>
+<td><code>~/.claude/CLAUDE.md</code></td>
+<td>Every project</td>
+<td>Personal habits (“always reply in English”, “never auto-commit”)</td>
+</tr>
+<tr>
+<td>Project</td>
+<td><code>project/CLAUDE.md</code></td>
+<td>This project</td>
+<td>Stack, architecture, conventions, status (commit to Git, share with team)</td>
+</tr>
+<tr>
+<td>Folder</td>
+<td><code>src/payment/CLAUDE.md</code></td>
+<td>That subdirectory</td>
+<td>Module-specific rules (e.g. pitfalls of the payment module)</td>
+</tr>
+</tbody></table>
+<p>Priority: folder &gt; project &gt; global. They add up; they don’t conflict.</p>
+<p><strong>Two official ways to create them:</strong></p>
+<ul>
+<li><strong><code>/init</code> for the project level</strong> — run <code>claude</code> in the project root, type <code>/init</code>, and Claude scans the project and drafts a CLAUDE.md for you to refine. Works best once the project has some substance.</li>
+<li><strong><code>/memory</code> for the global level</strong> — type <code>/memory</code> in a session and pick the global CLAUDE.md to edit it. Restart Claude Code afterwards for global changes to apply.</li>
+</ul>
+<p><strong>Best practices:</strong></p>
+<ol>
+<li><strong>Keep it current</strong> — update it as features land and pitfalls are found.</li>
+<li><strong>Be specific</strong> — exact version numbers, real directory structure.</li>
+<li><strong>Write down the forbidden</strong> — “do not touch the migrations” is as valuable as any instruction.</li>
+<li><strong>Stay concise</strong> — the AI needs key facts, not an essay.</li>
+<li><strong>Only top-level invariants</strong> — Karpathy’s publicly shared rules file got 100k+ stars with just a few hundred lines of universal rules. If a rule is not top-level, invariant, and strict, it belongs elsewhere (see the next section).</li>
+</ol>
+<p><a name="three-layers-of-memory"></a></p>
+<h3 id="Three-Layers-of-Memory"><a href="#Three-Layers-of-Memory" class="headerlink" title="Three Layers of Memory"></a>Three Layers of Memory</h3><p>Claude Code’s memory comes in three layers. Each answers a different question:</p>
+<table>
+<thead>
+<tr>
+<th>Layer</th>
+<th>What it is</th>
+<th>Loaded how</th>
+<th>Maintained by</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1. CLAUDE.md</td>
+<td>Rules you write explicitly</td>
+<td>Fully loaded at session start</td>
+<td>You</td>
+</tr>
+<tr>
+<td>2. Auto Memory</td>
+<td>Notes Claude writes itself</td>
+<td>Index first, subfiles on demand</td>
+<td>Claude, reviewed by you</td>
+</tr>
+<tr>
+<td>3. Reference docs</td>
+<td>Specialist docs you author</td>
+<td>Only when a task needs them</td>
+<td>You</td>
+</tr>
+</tbody></table>
+<p><strong>Layer 1 — CLAUDE.md</strong> is your explicit rulebook, covered above.</p>
+<p><strong>Layer 2 — Auto Memory</strong> is Claude’s own notebook. Habits, feedback, and project facts you never wrote down get recorded by a background agent. Enable it with <code>/memory</code> and select “Enable Auto Memory”. It records four kinds of entries:</p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Meaning</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>user</code></td>
+<td>About you</td>
+<td>Your role, preferences (“dislikes dark UIs”)</td>
+</tr>
+<tr>
+<td><code>feedback</code></td>
+<td>Corrections you gave</td>
+<td>“Don’t do it that way” &#x2F; “Yes, exactly like that”</td>
+</tr>
+<tr>
+<td><code>project</code></td>
+<td>Project facts</td>
+<td>Progress, decisions, tech choices</td>
+</tr>
+<tr>
+<td><code>reference</code></td>
+<td>External pointers</td>
+<td>“The design doc lives at docs&#x2F;design.md”</td>
+</tr>
+</tbody></table>
+<p>How it feels in practice:</p>
+<ul>
+<li>It is <strong>project-scoped</strong> — each project accumulates its own memory.</li>
+<li>It is <strong>cheap</strong> — only an index (<code>memory.md</code>) is loaded; subfiles are read only when relevant.</li>
+<li>Press <code>Ctrl+O</code> during a session to inspect which memories were actually used.</li>
+<li>If it remembered something wrong, just say <em>“forget that I dislike dark themes”</em> and it deletes the entry.</li>
+</ul>
+<blockquote>
+<p><strong>Tip:</strong> One sentence to tell them apart: CLAUDE.md is the <strong>explicit rulebook, fully injected</strong>; Auto Memory is the <strong>implicit notebook, injected on demand</strong>. Together they make Claude Code understand you better over time.</p>
+</blockquote>
+<p><strong>Layer 3 — self-authored reference docs (progressive disclosure).</strong> Some knowledge is too specialized or too long for CLAUDE.md, but must be available when needed. Write dedicated docs and add pointers in CLAUDE.md:</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">## Reference Docs</span></span><br><span class="line"></span><br><span class="line"><span class="bullet">-</span> Changing colors, fonts, or spacing → read docs/brand-visual.md first</span><br><span class="line"><span class="bullet">-</span> Writing UI copy or button labels → read docs/copywriting-style.md first</span><br><span class="line"><span class="bullet">-</span> Defining API response shapes → read docs/api-conventions.md first</span><br></pre></td></tr></table></figure>
+
+<p>Claude reads the full document only when the task requires it — accurate when it matters, zero overhead otherwise.</p>
+<blockquote>
+<p><strong>Insight:</strong> All “memory” in an agent is the same trick: injecting compressed context into the model at the right moment. These mechanisms are prompt engineering, organized into layers for you.</p>
+</blockquote>
+<p><a name="claudeignore"></a></p>
+<h3 id="claudeignore"><a href="#claudeignore" class="headerlink" title=".claudeignore"></a>.claudeignore</h3><p>Like <code>.gitignore</code>, but for the AI — tell Claude Code what it should never bother reading:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># .claudeignore</span><br><span class="line">node_modules/      # dependencies (huge, the AI doesn&#x27;t need them)</span><br><span class="line">.next/             # build output</span><br><span class="line">dist/              # compiled output</span><br><span class="line">*.log              # log files</span><br><span class="line">.env               # secrets</span><br></pre></td></tr></table></figure>
+
+<p><a name="daily-commands-and-interactions"></a></p>
+<h2 id="Daily-Commands-and-Interactions"><a href="#Daily-Commands-and-Interactions" class="headerlink" title="Daily Commands and Interactions"></a>Daily Commands and Interactions</h2><p>Mastering daily usage is like learning the pedals and mirrors before driving on the highway.</p>
+<p><strong>Starting a session:</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">claude                              <span class="comment"># start in the current directory</span></span><br><span class="line">claude --project-dir /path/to/app   <span class="comment"># start in a specific project</span></span><br><span class="line">claude --model sonnet               <span class="comment"># start with a specific model</span></span><br><span class="line">claude -p <span class="string">&quot;list all JS files here&quot;</span>  <span class="comment"># one-shot mode, exits when done</span></span><br></pre></td></tr></table></figure>
+
+<p>Before executing an action, Claude Code asks for confirmation:</p>
+<table>
+<thead>
+<tr>
+<th>Action</th>
+<th>Example</th>
+<th>You can</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Create file</td>
+<td><code>index.html</code></td>
+<td><strong>Enter &#x2F; y</strong> to confirm</td>
+</tr>
+<tr>
+<td>Edit file</td>
+<td><code>app.js</code> line 10</td>
+<td><strong>n</strong> to refuse</td>
+</tr>
+<tr>
+<td>Run command</td>
+<td><code>npm install express</code></td>
+<td>Type extra info to adjust the plan</td>
+</tr>
+<tr>
+<td>Delete file</td>
+<td><code>temp.txt</code></td>
+<td></td>
+</tr>
+</tbody></table>
+<p><a name="slash-command-cheat-sheet"></a></p>
+<h3 id="Slash-Command-Cheat-Sheet"><a href="#Slash-Command-Cheat-Sheet" class="headerlink" title="Slash Command Cheat Sheet"></a>Slash Command Cheat Sheet</h3><p>Type <code>/</code> in the input box to see the full list; <code>/help</code> explains every command.</p>
+<p><strong>Basics you will use daily:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Purpose</th>
+<th>When to use</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>/help</code></td>
+<td>Show help</td>
+<td>When you forget a command</td>
+</tr>
+<tr>
+<td><code>/model</code></td>
+<td>View&#x2F;switch the model</td>
+<td>Switching to a stronger&#x2F;faster model</td>
+</tr>
+<tr>
+<td><code>/compact</code></td>
+<td>Compress conversation context</td>
+<td>Long sessions, AI starts “forgetting”</td>
+</tr>
+<tr>
+<td><code>/clear</code></td>
+<td>Wipe the conversation entirely</td>
+<td>Starting a brand-new task</td>
+</tr>
+<tr>
+<td><code>/context</code></td>
+<td>Show what eats the context</td>
+<td>Diagnosing token usage</td>
+</tr>
+<tr>
+<td><code>/memory</code></td>
+<td>Edit CLAUDE.md and auto memory</td>
+<td>Managing memory layers</td>
+</tr>
+<tr>
+<td><code>/status</code></td>
+<td>Session status</td>
+<td>Check model and token usage</td>
+</tr>
+<tr>
+<td><code>/cost</code></td>
+<td>Session cost</td>
+<td>Watching spend</td>
+</tr>
+<tr>
+<td><code>/review</code></td>
+<td>Code review</td>
+<td>After finishing a feature</td>
+</tr>
+<tr>
+<td><code>/init</code></td>
+<td>Generate CLAUDE.md automatically</td>
+<td>First thing in a new project</td>
+</tr>
+<tr>
+<td><code>/plan</code></td>
+<td>Enter Plan Mode (read-only)</td>
+<td>Opening move for complex tasks</td>
+</tr>
+<tr>
+<td><code>/rewind</code></td>
+<td>Roll back Claude’s changes</td>
+<td>The “undo button”</td>
+</tr>
+<tr>
+<td><code>/resume</code></td>
+<td>Restore a past session</td>
+<td>Continuing yesterday’s work</td>
+</tr>
+</tbody></table>
+<p><strong>Extension management:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>/skill &lt;name&gt;</code></td>
+<td>Invoke a Skill manually</td>
+</tr>
+<tr>
+<td><code>/agent</code></td>
+<td>Create, list, or invoke subagents</td>
+</tr>
+<tr>
+<td><code>/plugin</code></td>
+<td>Plugin manager (discover &#x2F; installed)</td>
+</tr>
+<tr>
+<td><code>/login</code></td>
+<td>Sign in with a Claude subscription</td>
+</tr>
+</tbody></table>
+<p><a name="the-four-commands-you-must-master"></a></p>
+<h3 id="The-Four-Commands-You-Must-Master"><a href="#The-Four-Commands-You-Must-Master" class="headerlink" title="The Four Commands You Must Master"></a>The Four Commands You Must Master</h3><p><strong><code>/compact</code> — context compression.</strong> This is the cure for “the AI gets dumber over time”. Every message, every file read, every command output squeezes into the context window. The window may be 200K tokens, but only 60–80% of it stays effective, and quality degrades as it fills up. <code>/compact</code> summarizes the conversation so far and frees space:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&gt; /compact</span><br><span class="line"></span><br><span class="line">Context compressed. Summary:</span><br><span class="line">- Building a bookmark manager</span><br><span class="line">- Done: database design, API endpoints</span><br><span class="line">- Now: frontend pages</span><br></pre></td></tr></table></figure>
+
+<p><strong><code>/context</code> — the context monitor.</strong> Run it before compacting to see <em>what</em> is eating the window:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&gt; /context</span><br><span class="line"></span><br><span class="line">Used: 142,000 / 200,000 tokens (71%)</span><br><span class="line">├── Conversation history: 89,000</span><br><span class="line">├── CLAUDE.md:             2,100</span><br><span class="line">├── Skills:               12,500</span><br><span class="line">└── MCP tools:             4,800</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><strong>Tip:</strong> My habit: once <code>/context</code> shows more than 60% usage, run <code>/compact</code>. Don’t wait for auto-compaction near full capacity — by then the AI has already started forgetting.</p>
+</blockquote>
+<p><strong><code>/compact</code> vs <code>/clear</code>:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Effect</th>
+<th>When</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>/compact</code></td>
+<td>Compresses history into a summary, keeps key decisions</td>
+<td>Same task, conversation too long</td>
+</tr>
+<tr>
+<td><code>/clear</code></td>
+<td>Full wipe, fresh start</td>
+<td>One task fully done, starting another</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p><strong>Rule of thumb:</strong> Prefer several <code>/clear</code>s with fresh background over one endless conversation. Every <code>/clear</code> gives the AI a chance to refocus.</p>
+</blockquote>
+<p><strong><code>/rewind</code> — the undo button (double-tap <code>Esc</code> also works).</strong> When Claude changes code and you don’t like the result, <code>/rewind</code> opens a rollback menu:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[Rewind] Choose rollback mode:</span><br><span class="line">  1. Conversation only     → keep files, drop recent turns</span><br><span class="line">  2. Conversation + files  → recommended, return to a checkpoint</span><br><span class="line">  3. Files only            → keep the conversation, restore files</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><strong>Warning:</strong> <code>/rewind</code> only undoes <strong>files Claude itself edited</strong>. Terminal commands it ran (installing dependencies, modifying a database) are NOT rolled back. The real undo button is Git — see <a href="#git-is-your-save-point">Git Is Your Save Point</a>.</p>
+</blockquote>
+<p><a name="keyboard-shortcuts"></a></p>
+<h3 id="Keyboard-Shortcuts"><a href="#Keyboard-Shortcuts" class="headerlink" title="Keyboard Shortcuts"></a>Keyboard Shortcuts</h3><table>
+<thead>
+<tr>
+<th>Shortcut</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>Enter</code></td>
+<td>Send message &#x2F; confirm action</td>
+</tr>
+<tr>
+<td><code>Shift + Enter</code></td>
+<td><strong>Also sends!</strong> (not a newline — beginners constantly send half-written prompts this way)</td>
+</tr>
+<tr>
+<td><code>Option + Enter</code> (Mac) &#x2F; <code>Ctrl + Enter</code> (Win)</td>
+<td>Newline without sending</td>
+</tr>
+<tr>
+<td><code>Ctrl + C</code></td>
+<td>Interrupt current operation</td>
+</tr>
+<tr>
+<td><code>Esc</code></td>
+<td>Cancel generation in progress</td>
+</tr>
+<tr>
+<td><code>Esc</code> × 2</td>
+<td>Open the <code>/rewind</code> rollback menu</td>
+</tr>
+<tr>
+<td><code>Shift + Tab</code></td>
+<td>Cycle Normal → Auto-Accept → Plan modes</td>
+</tr>
+<tr>
+<td><code>↑</code> &#x2F; <code>↓</code></td>
+<td>Browse message history</td>
+</tr>
+<tr>
+<td><code>Ctrl + B</code></td>
+<td>Send the running command to the background</td>
+</tr>
+<tr>
+<td><code>Ctrl + O</code></td>
+<td>Inspect Auto Memory contents used in this session</td>
+</tr>
+</tbody></table>
+<p><a name="power-interactions"></a></p>
+<h3 id="Power-Interactions-and-Images"><a href="#Power-Interactions-and-Images" class="headerlink" title="Power Interactions: !, @, and Images"></a>Power Interactions: !, @, and Images</h3><p><strong>1. <code>!</code> — Bash mode.</strong> Run a shell command without leaving the conversation:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt; !npm run dev</span><br><span class="line">&gt; !node app.js</span><br></pre></td></tr></table></figure>
+
+<p>If the command never exits (like a dev server), press <code>Ctrl+B</code> to push it to the background and keep talking.</p>
+<p><strong>2. <code>@file</code> — precise context.</strong> Claude does not load your whole project into context; it greps on demand. Naming a file with <code>@</code> saves it the exploration cost:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&gt; Following the style of @src/auth/login.ts, add register.ts under @src/auth/</span><br><span class="line"></span><br><span class="line">&gt; Prompt too long to type? Write it into a doc first:</span><br><span class="line">&gt; Implement the requirements in @docs/feature-spec.md</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><strong>Tip:</strong> Counterintuitive but true: shorter instructions can cost <em>more</em> tokens, because Claude must explore the project to guess what you mean. Specific instructions + explicit <code>@</code> references are cheaper and more accurate.</p>
+</blockquote>
+<p><strong>3. Paste images.</strong> Drag an image into the input box or press <code>Ctrl+V</code>. Great for:</p>
+<ul>
+<li>Turning a design mockup into UI code</li>
+<li>Pasting an error screenshot for diagnosis</li>
+<li>Implementing a system from an architecture diagram</li>
+</ul>
+<p><strong>4. Useful startup flags:</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">claude -c                             <span class="comment"># --continue: resume the last session</span></span><br><span class="line">claude --permission-mode plan         <span class="comment"># start directly in Plan Mode</span></span><br><span class="line">claude --dangerously-skip-permissions <span class="comment"># &quot;green light&quot;: never asks, ever</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><strong>Warning:</strong> <code>--dangerously-skip-permissions</code> is only sane in a sandbox, a project fully covered by Git, or a throwaway experiment. Never in production code. Beginners should stay in the default mode.</p>
+</blockquote>
+<p><a name="the-right-workflow-explore-plan-implement-commit"></a></p>
+<h2 id="The-Right-Workflow-Explore-Plan-Implement-Commit"><a href="#The-Right-Workflow-Explore-Plan-Implement-Commit" class="headerlink" title="The Right Workflow: Explore, Plan, Implement, Commit"></a>The Right Workflow: Explore, Plan, Implement, Commit</h2><p>The officially recommended workflow has four phases:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">┌──────────┐    ┌──────────┐    ┌──────────────┐    ┌──────────┐</span><br><span class="line">│ Explore  │ →  │  Plan    │ →  │ Implement    │ →  │ Commit   │</span><br><span class="line">│ read the │    │ propose  │    │ execute the  │    │ commit   │</span><br><span class="line">│ code     │    │ a plan   │    │ approved plan│    │ the work │</span><br><span class="line">└──────────┘    └──────────┘    └──────────────┘    └──────────┘</span><br><span class="line">      ↑                                                    │</span><br><span class="line">      └────────────────── next task ───────────────────────┘</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>Phase</th>
+<th>What you do</th>
+<th>What the AI does</th>
+<th>Mode</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Explore</td>
+<td>Point at the area to change</td>
+<td>Reads files, greps, traces references</td>
+<td>Plan Mode</td>
+</tr>
+<tr>
+<td>Plan</td>
+<td>Review the proposal</td>
+<td>Writes a detailed plan, checks edge cases</td>
+<td>Plan Mode</td>
+</tr>
+<tr>
+<td>Implement</td>
+<td>Approve and switch modes</td>
+<td>Edits files in order, runs builds</td>
+<td>Normal &#x2F; Auto-Accept</td>
+</tr>
+<tr>
+<td>Commit</td>
+<td>Ask for a commit message</td>
+<td>Generates the message, commits</td>
+<td>Normal</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p><strong>Tip:</strong> Why bother with phases? Picture this: you say “add soft deletes”, and 15 minutes later the AI has touched 14 files, modified a global query filter, and broken 3 existing endpoints — leaving you to revert by hand. <strong>That is the cost of skipping the plan.</strong> Five minutes in Plan Mode routinely saves thirty minutes of rework.</p>
+</blockquote>
+<p><a name="plan-mode-and-the-three-operating-modes"></a></p>
+<h3 id="Plan-Mode-and-the-Three-Operating-Modes"><a href="#Plan-Mode-and-the-Three-Operating-Modes" class="headerlink" title="Plan Mode and the Three Operating Modes"></a>Plan Mode and the Three Operating Modes</h3><p>Claude Code has <strong>three mutually exclusive operating modes</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Mode</th>
+<th>Behavior</th>
+<th>Good for</th>
+<th>Status bar</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Normal (default)</td>
+<td>Every edit and command needs confirmation</td>
+<td>Small tasks, careful review</td>
+<td>(no marker)</td>
+</tr>
+<tr>
+<td>Auto-Accept</td>
+<td>Executes without asking</td>
+<td>Approved batch work</td>
+<td><code>accept edits on</code></td>
+</tr>
+<tr>
+<td>Plan Mode</td>
+<td>Fully read-only: analyze, question, propose</td>
+<td>Complex tasks, unfamiliar code, architecture</td>
+<td><code>plan mode on</code></td>
+</tr>
+</tbody></table>
+<p>In Plan Mode the AI can only use read-only tools:</p>
+<table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Read</td>
+<td>View file contents</td>
+</tr>
+<tr>
+<td>Glob</td>
+<td>Find files by pattern</td>
+</tr>
+<tr>
+<td>Grep</td>
+<td>Search file contents</td>
+</tr>
+<tr>
+<td>LS</td>
+<td>List directories</td>
+</tr>
+<tr>
+<td>WebSearch &#x2F; WebFetch</td>
+<td>Research online</td>
+</tr>
+<tr>
+<td>Task</td>
+<td>Delegate research to a read-only subagent</td>
+</tr>
+<tr>
+<td>AskUserQuestion</td>
+<td>Ask you clarifying questions</td>
+</tr>
+</tbody></table>
+<p>Writing files, editing files, and running shell commands are <strong>strictly forbidden</strong> in Plan Mode — nothing in your project changes until you approve a plan.</p>
+<p><strong>Four ways to enter Plan Mode</strong> (from temporary to permanent):</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">1. Shift+Tab twice          → cycle into Plan Mode (most common)</span><br><span class="line">2. /plan                    → slash command (v2.1.0+)</span><br><span class="line">3. claude --permission-mode plan        → startup flag</span><br><span class="line">4. settings.json &quot;defaultMode&quot;: &quot;plan&quot;  → project default</span><br></pre></td></tr></table></figure>
+
+<p>First <code>Shift+Tab</code> switches to Auto-Accept, the second to Plan Mode, the third back to Normal.</p>
+<blockquote>
+<p><strong>Note:</strong> On some Windows terminals <code>Shift+Tab</code> skips Plan Mode and only toggles Normal&#x2F;Auto-Accept. Use <code>Alt+M</code> there instead — this is a known issue.</p>
+</blockquote>
+<p>With <code>defaultMode: &quot;plan&quot;</code> in the project’s <code>.claude/settings.json</code>, every session in that project starts in Plan Mode — a good default for complex codebases.</p>
+<p><a name="when-to-plan-and-when-to-just-do-it"></a></p>
+<h3 id="When-to-Plan-and-When-to-Just-Do-It"><a href="#When-to-Plan-and-When-to-Just-Do-It" class="headerlink" title="When to Plan and When to Just Do It"></a>When to Plan and When to Just Do It</h3><p>A one-line rule:</p>
+<blockquote>
+<p><strong>If you can describe the expected diff in one sentence, skip planning. If you can’t, plan first.</strong></p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>Task</th>
+<th>Recommended mode</th>
+<th>Reason</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>New project from scratch</td>
+<td>Plan Mode</td>
+<td>Architecture decisions first</td>
+</tr>
+<tr>
+<td>Complex feature (auth, billing, soft delete)</td>
+<td>Plan Mode</td>
+<td>Touches many files, revert cost is high</td>
+</tr>
+<tr>
+<td>Large refactor, cross-file migration</td>
+<td>Plan Mode</td>
+<td>Impact must be assessed</td>
+</tr>
+<tr>
+<td>Exploring an unfamiliar codebase</td>
+<td>Plan Mode</td>
+<td>Read-only by nature</td>
+</tr>
+<tr>
+<td>Fixing a well-defined bug</td>
+<td>Normal</td>
+<td>Scope and goal are clear</td>
+</tr>
+<tr>
+<td>Renaming a function or variable</td>
+<td>Normal</td>
+<td>The diff fits in one sentence</td>
+</tr>
+<tr>
+<td>Batch work following an approved plan</td>
+<td>Auto-Accept</td>
+<td>Don’t interrupt execution</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p><strong>Core principle:</strong> Simple tasks just do it; complex tasks plan first. When unsure, choose Plan Mode — it is always the safer bet.</p>
+</blockquote>
+<p><strong>A cost-optimization variant:</strong> <code>claude --model opusplan</code> uses <strong>Opus</strong> for the planning phase (strong reasoning, expensive) and <strong>Sonnet</strong> for implementation (fast, cheap) — think hard with the expensive model, type with the cheap one.</p>
+<p><a name="walkthrough-building-a-hello-api-with-express"></a></p>
+<h3 id="Walkthrough-Building-a-Hello-API-with-Express"><a href="#Walkthrough-Building-a-Hello-API-with-Express" class="headerlink" title="Walkthrough: Building a Hello API with Express"></a>Walkthrough: Building a Hello API with Express</h3><p>Let’s run the full workflow on a tiny project.</p>
+<p><strong>Step 1 — Initialize:</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> hello-api &amp;&amp; <span class="built_in">cd</span> hello-api</span><br><span class="line">claude</span><br></pre></td></tr></table></figure>
+
+<p>Then, in the conversation:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Initialize a Node.js Express project:</span><br><span class="line">1. npm init to create package.json</span><br><span class="line">2. Install express</span><br><span class="line">3. Create app.js as the entry point</span><br><span class="line">4. Add GET /hello returning &#123; message: &quot;Hello AI Coding!&quot; &#125;</span><br><span class="line">5. Use port 3000</span><br></pre></td></tr></table></figure>
+
+<p>Claude lists each action and asks before running it:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[Claude] Will run: npm init -y           → y</span><br><span class="line">[Claude] Will run: npm install express   → y</span><br><span class="line">[Claude] Will create file: app.js        → y</span><br></pre></td></tr></table></figure>
+
+<p>The generated <code>app.js</code>:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> express = <span class="built_in">require</span>(<span class="string">&quot;express&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> app = <span class="title function_">express</span>();</span><br><span class="line"><span class="keyword">const</span> <span class="variable constant_">PORT</span> = <span class="number">3000</span>;</span><br><span class="line"></span><br><span class="line">app.<span class="title function_">get</span>(<span class="string">&quot;/hello&quot;</span>, <span class="function">(<span class="params">req, res</span>) =&gt;</span> &#123;</span><br><span class="line">  res.<span class="title function_">json</span>(&#123; <span class="attr">message</span>: <span class="string">&quot;Hello AI Coding!&quot;</span> &#125;);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">app.<span class="title function_">listen</span>(<span class="variable constant_">PORT</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">`Server running at http://localhost:<span class="subst">$&#123;PORT&#125;</span>/hello`</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p><strong>Step 2 — Run and verify:</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Start the server and test /hello with curl</span><br></pre></td></tr></table></figure>
+
+<p>Then open <code>http://localhost:3000/hello</code> in a browser. If you see the JSON below, it works:</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;message&quot;</span><span class="punctuation">:</span> <span class="string">&quot;Hello AI Coding!&quot;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>Step 3 — Commit:</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Initialize a Git repo and commit with the message &quot;Init Express Hello World API&quot;</span><br></pre></td></tr></table></figure>
+
+<p>Claude runs <code>git init</code>, <code>git add .</code>, and <code>git commit</code>. Four phases done: explored nothing (new project), planned inline, implemented, committed.</p>
+<p><a name="best-practices"></a></p>
+<h2 id="Best-Practices"><a href="#Best-Practices" class="headerlink" title="Best Practices"></a>Best Practices</h2><p><a name="prompt-writing-principles"></a></p>
+<h3 id="Prompt-Writing-Principles"><a href="#Prompt-Writing-Principles" class="headerlink" title="Prompt Writing Principles"></a>Prompt Writing Principles</h3><p><strong>1. Be specific, not vague:</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">BAD:  Add a login feature</span><br><span class="line">GOOD: Create a login API under /api/auth/:</span><br><span class="line">      - POST /api/auth/login</span><br><span class="line">      - Accepts &#123; email, password &#125;</span><br><span class="line">      - Verify the password with bcrypt</span><br><span class="line">      - Return a JWT on success</span><br><span class="line">      - Use the existing Prisma client to query the User table</span><br></pre></td></tr></table></figure>
+
+<p><strong>2. Point at existing code as a reference:</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">GOOD: Following the style of /api/bookmarks/route.ts, create similar CRUD</span><br><span class="line">      endpoints under /api/tags/. The data model is the Tag table in</span><br><span class="line">      prisma/schema.prisma.</span><br></pre></td></tr></table></figure>
+
+<p><strong>3. Ask for a plan before execution:</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">GOOD: I want to add search to the bookmark manager. First list which files</span><br><span class="line">      need to change and show me the plan. Start only after I confirm.</span><br></pre></td></tr></table></figure>
+
+<p><strong>4. One thing at a time:</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">BAD:  Add search, tag management, auth, and export — all at once</span><br><span class="line">GOOD: Implement bookmark search first:</span><br><span class="line">      - Add a search box to the list page</span><br><span class="line">      - Search by title and description</span><br><span class="line">      - Filter results live on the frontend</span><br></pre></td></tr></table></figure>
+
+<p><a name="context-management"></a></p>
+<h3 id="Context-Management"><a href="#Context-Management" class="headerlink" title="Context Management"></a>Context Management</h3><p>A quick decision table for the symptoms you will actually see:</p>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Cause</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Responses slow down, quality drops</td>
+<td>Context nearly full</td>
+<td><code>/context</code> → if over 60%, <code>/compact</code></td>
+</tr>
+<tr>
+<td>AI “forgets” early decisions</td>
+<td>Early info pushed out of the window</td>
+<td><code>/compact</code> now</td>
+</tr>
+<tr>
+<td>AI re-asks already-answered questions</td>
+<td>Confused context</td>
+<td><code>/clear</code>, start fresh</td>
+</tr>
+<tr>
+<td>Switching to a completely different task</td>
+<td>Avoid cross-task pollution</td>
+<td><code>/clear</code>, start fresh</td>
+</tr>
+<tr>
+<td>Want a rule to persist forever</td>
+<td>Needs persistent memory</td>
+<td><code>/memory</code> or write it into CLAUDE.md</td>
+</tr>
+</tbody></table>
+<p><a name="git-is-your-save-point"></a></p>
+<h3 id="Git-Is-Your-Save-Point"><a href="#Git-Is-Your-Save-Point" class="headerlink" title="Git Is Your Save Point"></a>Git Is Your Save Point</h3><p>Think of Git as your <strong>game save system</strong>. Before a boss fight you save; if you lose, you reload. Projects with Claude Code work exactly the same way: <strong>save at every good checkpoint; reload when things go wrong.</strong></p>
+<p>One property of AI coding makes this non-negotiable: Claude Code is <strong>non-deterministic</strong>. Ask for the same thing twice and you may get two different implementations. That is not a bug — it is the nature of the tool. Build the muscle memory: <strong>commit after every successful step.</strong> With Git as a safety net, you can let Claude try bold approaches.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Golden rule: commit BEFORE letting the AI make big changes</span><br><span class="line"></span><br><span class="line">1. git commit              → save current state</span><br><span class="line">2. AI implements the feature</span><br><span class="line">3. Test it</span><br><span class="line">   ├── works  → git commit → next feature</span><br><span class="line">   └── broken → git checkout . → retry differently</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Save before starting</span></span><br><span class="line">git add . &amp;&amp; git commit -m <span class="string">&quot;checkpoint: before adding search&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># ... Claude implements the feature ...</span></span><br><span class="line"><span class="comment"># If it went wrong:</span></span><br><span class="line">git checkout .</span><br><span class="line"></span><br><span class="line"><span class="comment"># If it worked:</span></span><br><span class="line">git add . &amp;&amp; git commit -m <span class="string">&quot;feat: search&quot;</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><strong>Pitfall:</strong> The most common and most painful beginner mistake is letting the AI rewrite code without committing first — then the damage cannot be undone. Remember: <strong>save before you change.</strong></p>
+</blockquote>
+<p><a name="controlling-costs"></a></p>
+<h3 id="Controlling-Costs"><a href="#Controlling-Costs" class="headerlink" title="Controlling Costs"></a>Controlling Costs</h3><table>
+<thead>
+<tr>
+<th>Strategy</th>
+<th>How</th>
+<th>Typical savings</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Tiered models</td>
+<td>Haiku for simple, Sonnet for normal, Opus for hard</td>
+<td>30–50%</td>
+</tr>
+<tr>
+<td>Precise prompts</td>
+<td>Fewer correction rounds</td>
+<td>20–30%</td>
+</tr>
+<tr>
+<td>Timely <code>/compact</code></td>
+<td>Avoid re-sending long context</td>
+<td>10–20%</td>
+</tr>
+<tr>
+<td><code>/cost</code> monitoring</td>
+<td>Know what you spend in real time</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Budget cap</td>
+<td>Monthly limit in the Anthropic Console</td>
+<td>Prevents blowups</td>
+</tr>
+</tbody></table>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&gt; /cost</span><br><span class="line"></span><br><span class="line">Session cost:</span><br><span class="line">  Input tokens:  15,234</span><br><span class="line">  Output tokens:  8,721</span><br><span class="line">  Estimated:     $0.18</span><br></pre></td></tr></table></figure>
+
+<p>Anthropic has also published six concrete habits for saving tokens — clearing sessions between tasks, locking the model early to protect the prompt cache, <code>@</code>-mentioning files, silencing noisy command output, checking <code>/context</code> in a fresh session, and compacting before a break. I summarized them with the official numbers here: <a href="/2026/08/06/Six-money-saving-tips-for-Claude-Code/" title="Six money-saving tips for Claude Code">[Six money-saving tips for Claude Code]</a>.</p>
+<p><a name="working-in-large-codebases"></a></p>
+<h3 id="Working-in-Large-Codebases"><a href="#Working-in-Large-Codebases" class="headerlink" title="Working in Large Codebases"></a>Working in Large Codebases</h3><p>Everything above is general advice. For <strong>multi-developer codebases with hundreds of thousands of lines</strong>, Anthropic’s large-codebase playbook adds six practices. The core tension: even a huge context window is smaller than a real codebase. The first three are discipline; the last three are weapons.</p>
+<p><strong>Discipline 1 — <code>/init</code> on day one.</strong> Run <code>/init</code> in a new project, then manually add three things to the generated CLAUDE.md:</p>
+<table>
+<thead>
+<tr>
+<th>Must add</th>
+<th>Why</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Directory map</td>
+<td>So the AI knows where code lives</td>
+<td>“Auth logic in src&#x2F;auth&#x2F;, UI in src&#x2F;components&#x2F;“</td>
+</tr>
+<tr>
+<td>Forbidden zones</td>
+<td>So the AI breaks nothing</td>
+<td>“Never modify prisma&#x2F;migrations&#x2F; or vendor&#x2F;“</td>
+</tr>
+<tr>
+<td>Team conventions</td>
+<td>Consistent style</td>
+<td>“All APIs return { success, data, error }”</td>
+</tr>
+</tbody></table>
+<p><strong>Discipline 2 — small, focused tasks.</strong> The most dangerous move in a big codebase is throwing one huge request at the AI:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">BAD:  Refactor the whole payment module: new risk control, reconciliation,</span><br><span class="line">      notifications, and reports</span><br><span class="line">GOOD: Step one — extract the risk-rules engine under src/payment/risk/.</span><br><span class="line">      Interface spec in docs/risk-rules.md. Don&#x27;t touch callers yet.</span><br></pre></td></tr></table></figure>
+
+<p>Rule of thumb: one task should touch <strong>≤ 5 files &#x2F; ≤ 200 changed lines</strong>. Beyond that, split it.</p>
+<p><strong>Discipline 3 — reset context frequently.</strong> Many beginners believe a longer conversation means a smarter AI. In large codebases the opposite is true: stale fragments and failed attempts from earlier tasks pollute later ones.</p>
+<table>
+<thead>
+<tr>
+<th>Moment</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Task done (PR merged)</td>
+<td><code>/clear</code></td>
+</tr>
+<tr>
+<td>Same task, conversation too long</td>
+<td><code>/compact</code></td>
+</tr>
+<tr>
+<td>Want a completely fresh start</td>
+<td>Quit and restart <code>claude</code></td>
+</tr>
+</tbody></table>
+<p><strong>Weapon 1 — Plan Mode first.</strong> In an unfamiliar codebase, or any change that touches many places, start with <code>/plan</code> or <code>Shift+Tab</code> twice. Explore read-only, approve a plan, then act. Rollback cost stays near zero.</p>
+<p><strong>Weapon 2 — offload research to subagents and Skills.</strong> Investigations like “find every call site of this deprecated API” or “map this module’s dependency graph” burn tokens. Don’t run them in the main session — delegate to a subagent (only the conclusion returns) or package the workflow as a reusable Skill.</p>
+<p><strong>Weapon 3 — connect MCP and LSP.</strong> A real engineer does more than read code: they check Jira, query databases, and use “go to definition”. MCP brings those abilities in:</p>
+<table>
+<thead>
+<tr>
+<th>Integration</th>
+<th>Solves</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>GitHub MCP</td>
+<td>PRs, issues, CI logs</td>
+<td>“Was this bug discussed in PR #1234?”</td>
+</tr>
+<tr>
+<td>Database MCP</td>
+<td>Direct queries</td>
+<td>“How many users have deleted_at set?”</td>
+</tr>
+<tr>
+<td>Jira &#x2F; Linear MCP</td>
+<td>Task cards</td>
+<td>“Implement per PROJ-123”</td>
+</tr>
+<tr>
+<td>LSP</td>
+<td>Precise jumps, types, references</td>
+<td>IDE-grade “find all references”</td>
+</tr>
+<tr>
+<td>Sentry &#x2F; Datadog MCP</td>
+<td>Alerts, stack traces</td>
+<td>“Show 5xx errors from the last hour”</td>
+</tr>
+</tbody></table>
+<p>Quick-reference card:</p>
+<table>
+<thead>
+<tr>
+<th>Practice</th>
+<th>Command &#x2F; entry</th>
+<th>When</th>
+<th>Payoff</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Project init</td>
+<td><code>/init</code> + manual edits</td>
+<td>First day on a project</td>
+<td>Map + forbidden zones</td>
+</tr>
+<tr>
+<td>Task splitting</td>
+<td>(habit)</td>
+<td>Before every request</td>
+<td>No mass breakage</td>
+</tr>
+<tr>
+<td>Context reset</td>
+<td><code>/clear</code> &#x2F; <code>/compact</code></td>
+<td>Task end &#x2F; long context</td>
+<td>No pollution, fewer tokens</td>
+</tr>
+<tr>
+<td>Plan first</td>
+<td><code>/plan</code> or <code>Shift+Tab ×2</code></td>
+<td>Complex tasks</td>
+<td>Explore before acting</td>
+</tr>
+<tr>
+<td>Offload research</td>
+<td>Subagent &#x2F; Skill</td>
+<td>Frequent investigations</td>
+<td>Protects main context</td>
+</tr>
+<tr>
+<td>Tool integrations</td>
+<td><code>claude mcp add ...</code></td>
+<td>Project setup</td>
+<td>Sees beyond the code</td>
+</tr>
+</tbody></table>
+<p><a name="three-overlooked-advanced-tips"></a></p>
+<h3 id="Three-Overlooked-Advanced-Tips"><a href="#Three-Overlooked-Advanced-Tips" class="headerlink" title="Three Overlooked Advanced Tips"></a>Three Overlooked Advanced Tips</h3><p>These three appear repeatedly in official guidance, yet beginners skip them most often.</p>
+<p><strong>1. Start in a subdirectory, not the repo root.</strong> Counterintuitive in monorepos, but critical:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># BAD: start at the monorepo root</span></span><br><span class="line">user@monorepo $ claude</span><br><span class="line"><span class="comment"># The AI sees 300 services and thousands of packages → context pollution</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># GOOD: start inside the service you&#x27;re changing</span></span><br><span class="line">user@monorepo $ <span class="built_in">cd</span> services/payment</span><br><span class="line">user@monorepo/services/payment $ claude</span><br><span class="line"><span class="comment"># Claude walks upward and still loads every CLAUDE.md on the way,</span></span><br><span class="line"><span class="comment"># but its working scope is precisely limited to the relevant code</span></span><br></pre></td></tr></table></figure>
+
+<p>Pair this with a small CLAUDE.md per subdirectory listing <strong>that directory’s own test and lint commands</strong> — so the AI never runs the whole repo’s test suite after touching one service.</p>
+<p><strong>2. Review your configuration every 3–6 months.</strong> Instructions written for last year’s model can actively hurt on this year’s. Two real examples from Anthropic:</p>
+<table>
+<thead>
+<tr>
+<th>Outdated config</th>
+<th>Once useful</th>
+<th>Now harmful</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>“Only edit one file per refactor” in CLAUDE.md</td>
+<td>Kept old models focused</td>
+<td>New models coordinate across files; the rule is a straitjacket</td>
+</tr>
+<tr>
+<td>A hook running <code>p4 edit</code> on every write</td>
+<td>Needed before native Perforce support</td>
+<td>Redundant — Perforce is now supported natively</td>
+</tr>
+</tbody></table>
+<p>Set a calendar reminder: after every major model release, re-read <code>CLAUDE.md</code>, <code>.claude/settings.json</code>, hooks, and skills, and ask: <em>Is this rule still needed? Is there a better way now? Which model’s weakness was this compensating for?</em> If Claude Code feels stuck at a plateau, the problem is often not the model — it is configuration that hasn’t kept up.</p>
+<p><strong>3. Teams need an owner (DRI &#x2F; Agent Manager).</strong> For teams rather than individuals: the organizations that roll out Claude Code fastest put a small group in charge of the foundations first.</p>
+<table>
+<thead>
+<tr>
+<th>Team size</th>
+<th>Role</th>
+<th>Responsibilities</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Small (&lt; 20)</td>
+<td>DRI — one interested volunteer</td>
+<td>Project CLAUDE.md, shared Skills, plugin choices</td>
+</tr>
+<tr>
+<td>Mid-size</td>
+<td>Agent Manager (part PM, part engineer)</td>
+<td>Cross-team rollout, permission policy, security</td>
+</tr>
+<tr>
+<td>Large &#x2F; regulated</td>
+<td>Cross-functional working group</td>
+<td>Engineering + security + governance + compliance</td>
+</tr>
+</tbody></table>
+<p>Why it matters: a developer’s <strong>first</strong> experience with Claude Code decides whether the whole rollout succeeds. If day one is “the AI wrecked my code”, winning people back is hard.</p>
+<p><a name="starter-kit-for-new-projects"></a></p>
+<h2 id="Starter-Kit-for-New-Projects"><a href="#Starter-Kit-for-New-Projects" class="headerlink" title="Starter Kit for New Projects"></a>Starter Kit for New Projects</h2><p>Every new project starts with Claude Code as a fresh hire: it doesn’t know your stack, your forbidden zones, or your conventions. The default Claude Code is a generalist that can do anything and knows nothing. The fix: turn one-time explanations into reusable config files. <strong>Four files, set up in five minutes, and every future project starts pre-trained.</strong></p>
+<p><strong>File 1 — global CLAUDE.md</strong> (your personal defaults):</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">## Communication</span></span><br><span class="line"></span><br><span class="line"><span class="bullet">-</span> Reply in English; keep code, commands, and paths in English too</span><br><span class="line"><span class="bullet">-</span> Conclusion first, concise, no background preamble</span><br><span class="line"><span class="bullet">-</span> Give real judgment — call out problems with my plan directly</span><br><span class="line"></span><br><span class="line"><span class="section">## Git</span></span><br><span class="line"></span><br><span class="line"><span class="bullet">-</span> Never auto-commit or auto-push unless I ask</span><br><span class="line"><span class="bullet">-</span> Show a change summary before any commit</span><br><span class="line"><span class="bullet">-</span> Commit messages in concise English</span><br><span class="line"></span><br><span class="line"><span class="section">## Red lines</span></span><br><span class="line"></span><br><span class="line">Even in auto-accept mode, always ask before:</span><br><span class="line"></span><br><span class="line"><span class="bullet">-</span> Deleting files, directories, or git history</span><br><span class="line"><span class="bullet">-</span> Touching .env, keys, tokens, certificates, CI/CD config</span><br><span class="line"><span class="bullet">-</span> git push / rebase / reset --hard / force push</span><br><span class="line"><span class="bullet">-</span> Publishing (npm publish, production deploys)</span><br></pre></td></tr></table></figure>
+
+<p>Layer a project-level CLAUDE.md on top with the stack, directory map, commit format, and forbidden zones. Maintenance rule: <strong>every time Claude burns you, add one line to CLAUDE.md.</strong> After three months the file becomes “every mistake Claude ever made on this project — prevented”. The most productive sentence you will ever type: <em>“Update CLAUDE.md so this never happens again.”</em></p>
+<p><strong>File 2 — settings.json</strong> (let the safe stuff through, lock the dangerous stuff down):</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;permissions&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;allow&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">      <span class="string">&quot;Read&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="string">&quot;Glob&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="string">&quot;Grep&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="string">&quot;Edit&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="string">&quot;MultiEdit&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="string">&quot;Write(src/**)&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="string">&quot;Write(tests/**)&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="string">&quot;Bash(npm *)&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="string">&quot;Bash(pnpm *)&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="string">&quot;Bash(git status)&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="string">&quot;Bash(git diff *)&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="string">&quot;Bash(git log *)&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="string">&quot;Bash(git add *)&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="string">&quot;Bash(git commit *)&quot;</span></span><br><span class="line">    <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;deny&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">      <span class="string">&quot;Read(**/.env*)&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="string">&quot;Read(**/*.pem)&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="string">&quot;Read(**/*.key)&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="string">&quot;Write(**/.env*)&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="string">&quot;Write(**/secrets/**)&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="string">&quot;Bash(rm -rf *)&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="string">&quot;Bash(sudo *)&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="string">&quot;Bash(git push *)&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="string">&quot;Bash(git rebase *)&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="string">&quot;Bash(curl * | sh)&quot;</span></span><br><span class="line">    <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;defaultMode&quot;</span><span class="punctuation">:</span> <span class="string">&quot;acceptEdits&quot;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>Result: zero prompts for daily operations, automatic block on dangerous ones. Adjust <code>allow</code> to your toolchain (yarn, bun…); keep the <code>deny</code> list as your security floor.</p>
+<p><strong>File 3 — .gitignore additions</strong> (protect AI-tool config and secrets from being committed):</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># AI tool local config</span><br><span class="line">.claude/settings.local.json</span><br><span class="line">.cursor/</span><br><span class="line"></span><br><span class="line"># Keys and credentials</span><br><span class="line">*.pem</span><br><span class="line">*.key</span><br><span class="line">credentials.json</span><br></pre></td></tr></table></figure>
+
+<p>Note the split: <code>.claude/settings.local.json</code> is ignored, but <code>.claude/settings.json</code> and <code>.claude/skills/</code> are committed — team config is shared, personal preferences stay personal.</p>
+<p><strong>File 4 — a handful of Skills</strong> (your pre-flight checklists as commands). Each Skill is a Markdown file at <code>.claude/skills/&lt;name&gt;/SKILL.md</code>. The three most valuable:</p>
+<ul>
+<li><strong><code>/review</code></strong> — review code by severity: CRITICAL (logic errors, null derefs, race conditions, security holes) → WARNING (N+1 queries, missing error handling) → INFO (naming, dead code). Ends with “X critical, Y warnings, Z info”.</li>
+<li><strong><code>/commit</code></strong> — runs <code>git status</code> and <code>git diff --stat</code>, groups changes logically, writes messages in <code>type(scope): description</code> format.</li>
+<li><strong><code>/deploy-check</code></strong> — pre-release gate: type check → tests → lint → build → search for stray <code>console.log</code> → verify <code>.env</code> references → confirm a clean working tree. Ship only when everything is green.</li>
+</ul>
+<p><strong>Three ways to install the kit:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Situation</th>
+<th>How</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Brand-new project</td>
+<td>Copy the templates, fill in the stack, commit config in the first commit</td>
+</tr>
+<tr>
+<td>Existing project</td>
+<td>Add CLAUDE.md and .gitignore to the root, merge settings.json, drop in skills</td>
+</tr>
+<tr>
+<td>All projects at once</td>
+<td>settings.json + skills in <code>~/.claude/</code> (global); CLAUDE.md stays per-project</td>
+</tr>
+</tbody></table>
+<p>Recommended: permissions and Skills global, CLAUDE.md per project.</p>
+<p><strong>The kit is alive.</strong> The template’s value is not “use as-is” but “start here and let it grow into your project”: CLAUDE.md gains one line per burn, settings.json grows with your toolchain, Skills absorb your team’s conventions. Three months later, the template has been worn into a different shape by your habits — and that change is the value.</p>
+<p><a name="faq"></a></p>
+<h2 id="FAQ"><a href="#FAQ" class="headerlink" title="FAQ"></a>FAQ</h2><p><strong>Q: Installation fails with <code>ENOENT: no such file or directory</code></strong></p>
+<p>Corrupted npm cache. Run <code>npm cache clean --force</code>, then reinstall.</p>
+<p><strong>Q: Installed, but the <code>claude</code> command is not found</strong></p>
+<p>The npm global path is not in your <code>PATH</code>. Run <code>npm config get prefix</code> and add the output path to your <code>PATH</code> environment variable.</p>
+<p><strong>Q: Windows says “running scripts is disabled on this system”</strong></p>
+<p>PowerShell execution policy. Open PowerShell as administrator and run <code>Set-ExecutionPolicy RemoteSigned</code>.</p>
+<p><strong>Q: <code>Invalid API Key</code> on startup</strong></p>
+<p>The key is wrong or expired. Verify the environment variable: <code>echo $ANTHROPIC_API_KEY</code> (macOS&#x2F;Linux) or <code>echo $env:ANTHROPIC_API_KEY</code> (PowerShell).</p>
+<p><strong>Q: Connection times out through a proxy&#x2F;relay service</strong></p>
+<p>Check <code>ANTHROPIC_BASE_URL</code>, confirm the relay service is up in a browser, and test connectivity with <code>curl</code>.</p>
+<p><strong>Q: <code>Rate limit exceeded</code></strong></p>
+<p>Too many requests in a short window. Wait a minute and retry; if it happens constantly, upgrade the plan.</p>
+<p><strong>Q: The AI modified files it should not have touched</strong></p>
+<p>First revert with <code>git checkout .</code>. Then restate the requirement with an explicit scope (“only modify file X”), and add the forbidden files to CLAUDE.md so it never happens again.</p>
+<p><strong>Q: The AI loops — fixing A breaks B, fixing B breaks A</strong></p>
+<p>The AI lacks the global picture. Roll back to a stable commit, <code>/clear</code>, and restate the <em>complete</em> requirement with all constraints at once.</p>
+<p><strong>Q: After a long conversation the AI “forgets” early content</strong></p>
+<p>The context window is nearly full. Run <code>/compact</code>, or start a fresh session.</p>
+<p><strong>Q: The AI recommends an npm package that doesn’t exist</strong></p>
+<p>Hallucination. Before installing anything the AI suggests, check npmjs.com that the package exists.</p>
+<p><strong>Q: Costs feel too high</strong></p>
+<p>Run <code>/cost</code> to see actual spend, switch to a cheaper model, keep conversations short, and set a monthly budget cap in the Anthropic Console.</p>
+<p><a name="summary"></a></p>
+<h2 id="Summary"><a href="#Summary" class="headerlink" title="Summary"></a>Summary</h2><p>Claude Code out of the box is a generalist that can do anything and knows nothing. Configuration turns it into <em>your</em> specialist. The whole article compresses into three habits:</p>
+<ol>
+<li><strong>Save before you change.</strong> Git is the real undo button — commit before every big AI change, and <code>/rewind</code> becomes a bonus instead of a lifeline.</li>
+<li><strong>Plan before you act.</strong> If you can’t describe the expected diff in one sentence, start in Plan Mode. Five minutes of planning saves thirty minutes of rework.</li>
+<li><strong>Teach it once, permanently.</strong> Every burn becomes a line in CLAUDE.md; every repeated workflow becomes a Skill. Model capability is the floor — configuration quality is the ceiling.</li>
+</ol>
+<p>Everything else is detail:</p>
+<table>
+<thead>
+<tr>
+<th>Topic</th>
+<th>One-line takeaway</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Models</td>
+<td>Sonnet daily, Opus for hard problems, Haiku for batches</td>
+</tr>
+<tr>
+<td>Memory</td>
+<td>CLAUDE.md &#x3D; explicit rules, Auto Memory &#x3D; implicit notes, reference docs &#x3D; on demand</td>
+</tr>
+<tr>
+<td>Context</td>
+<td><code>/context</code> to inspect, <code>/compact</code> above 60%, <code>/clear</code> between tasks</td>
+</tr>
+<tr>
+<td>Modes</td>
+<td>Normal by default, Auto-Accept for approved batches, Plan Mode for anything complex</td>
+</tr>
+<tr>
+<td>Large codebases</td>
+<td><code>/init</code> + small tasks + frequent resets + subagents + MCP</td>
+</tr>
+<tr>
+<td>Costs</td>
+<td>Tiered models, precise prompts, timely compaction, <code>/cost</code> monitoring</td>
+</tr>
+</tbody></table>
+<p>Now go update your CLAUDE.md — that is the single highest-leverage five minutes you will spend today.</p>
+<link rel="stylesheet" href="/css/folder.css" type="text/css"><script src="/js/folder.js" type="text/javascript" async></script>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/AI-Agent/" rel="tag"># AI Agent</a>
+              <a href="/tags/LLM/" rel="tag"># LLM</a>
+              <a href="/tags/Claude-Code/" rel="tag"># Claude Code</a>
+              <a href="/tags/Developer-Tools/" rel="tag"># Developer Tools</a>
+              <a href="/tags/Coding-Agent/" rel="tag"># Coding Agent</a>
+              <a href="/tags/MCP%E2%80%91Protocol/" rel="tag"># MCP‑Protocol</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2026/08/06/Six-money-saving-tips-for-Claude-Code/" rel="prev" title="Six money-saving tips for Claude Code">
+      <i class="fa fa-chevron-left"></i> Six money-saving tips for Claude Code
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+
+            
+            <div class="post-copyright" style="margin: 0 0 10px 0;">
+              <p class="post-copyright-author" style="margin: 0 0 5px 0 !important;"><strong>Author:</strong> <a href="https://github.com/BODYsuperman" target="_blank">Alex</a></p>
+              <p class="post-copyright-link" style="margin: 0 0 5px 0 !important;"><strong>Article Link:</strong> <a href="https://bodysuperman.github.io/2026/08/23/Deep%E2%80%91Dive-Advanced-Tips-for-Claude-Code/" target="_blank">https://bodysuperman.github.io/2026/08/23/Deep%E2%80%91Dive-Advanced-Tips-for-Claude-Code/</a></p>
+              <p class="post-copyright-license" style="margin: 0 !important;"><strong>License:</strong> This article is licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a>. Please credit the original author and include the source link when reposting.</p>
+            </div>
+
+          </div>
+          
+    <div class="comments" id="gitalk-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Introduction"><span class="nav-number">1.</span> <span class="nav-text">Introduction</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#The-Big-Picture-Seven-Layers-of-Extension"><span class="nav-number">2.</span> <span class="nav-text">The Big Picture: Seven Layers of Extension</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Choosing-the-Right-Model"><span class="nav-number">3.</span> <span class="nav-text">Choosing the Right Model</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Model-Comparison"><span class="nav-number">3.1.</span> <span class="nav-text">Model Comparison</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Four-Ways-to-Switch-Models"><span class="nav-number">3.2.</span> <span class="nav-text">Four Ways to Switch Models</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Settings-File-Hierarchy"><span class="nav-number">3.3.</span> <span class="nav-text">Settings File Hierarchy</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Core-Configuration"><span class="nav-number">4.</span> <span class="nav-text">Core Configuration</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#settings-json-Permissions-and-Defaults"><span class="nav-number">4.1.</span> <span class="nav-text">settings.json: Permissions and Defaults</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CLAUDE-md-The-Project-Handbook"><span class="nav-number">4.2.</span> <span class="nav-text">CLAUDE.md: The Project Handbook</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Three-Layers-of-Memory"><span class="nav-number">4.3.</span> <span class="nav-text">Three Layers of Memory</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#claudeignore"><span class="nav-number">4.4.</span> <span class="nav-text">.claudeignore</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Daily-Commands-and-Interactions"><span class="nav-number">5.</span> <span class="nav-text">Daily Commands and Interactions</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Slash-Command-Cheat-Sheet"><span class="nav-number">5.1.</span> <span class="nav-text">Slash Command Cheat Sheet</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#The-Four-Commands-You-Must-Master"><span class="nav-number">5.2.</span> <span class="nav-text">The Four Commands You Must Master</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Keyboard-Shortcuts"><span class="nav-number">5.3.</span> <span class="nav-text">Keyboard Shortcuts</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Power-Interactions-and-Images"><span class="nav-number">5.4.</span> <span class="nav-text">Power Interactions: !, @, and Images</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#The-Right-Workflow-Explore-Plan-Implement-Commit"><span class="nav-number">6.</span> <span class="nav-text">The Right Workflow: Explore, Plan, Implement, Commit</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Plan-Mode-and-the-Three-Operating-Modes"><span class="nav-number">6.1.</span> <span class="nav-text">Plan Mode and the Three Operating Modes</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#When-to-Plan-and-When-to-Just-Do-It"><span class="nav-number">6.2.</span> <span class="nav-text">When to Plan and When to Just Do It</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Walkthrough-Building-a-Hello-API-with-Express"><span class="nav-number">6.3.</span> <span class="nav-text">Walkthrough: Building a Hello API with Express</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Best-Practices"><span class="nav-number">7.</span> <span class="nav-text">Best Practices</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Prompt-Writing-Principles"><span class="nav-number">7.1.</span> <span class="nav-text">Prompt Writing Principles</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Context-Management"><span class="nav-number">7.2.</span> <span class="nav-text">Context Management</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Git-Is-Your-Save-Point"><span class="nav-number">7.3.</span> <span class="nav-text">Git Is Your Save Point</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Controlling-Costs"><span class="nav-number">7.4.</span> <span class="nav-text">Controlling Costs</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Working-in-Large-Codebases"><span class="nav-number">7.5.</span> <span class="nav-text">Working in Large Codebases</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Three-Overlooked-Advanced-Tips"><span class="nav-number">7.6.</span> <span class="nav-text">Three Overlooked Advanced Tips</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Starter-Kit-for-New-Projects"><span class="nav-number">8.</span> <span class="nav-text">Starter Kit for New Projects</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#FAQ"><span class="nav-number">9.</span> <span class="nav-text">FAQ</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Summary"><span class="nav-number">10.</span> <span class="nav-text">Summary</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="AI with Alex"
+      src="/uploads/avatar.jpg">
+  <p class="site-author-name" itemprop="name">AI with Alex</p>
+  <div class="site-description" itemprop="description">Attention(Q,K,V)=softmax(QK^T/sqrt(d_k))V</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">30</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">35</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">87</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/BODYsuperman" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;BODYsuperman" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://stackoverflow.com/users/9644964/alexandar-may-msft?tab=answers&sort=votes" title="StackOverflow → https:&#x2F;&#x2F;stackoverflow.com&#x2F;users&#x2F;9644964&#x2F;alexandar-may-msft?tab&#x3D;answers&amp;sort&#x3D;votes" rel="noopener" target="_blank"><i class="fab fa-stack-overflow fa-fw"></i>StackOverflow</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">AI with Alex</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">Symbols count total: </span>
+    <span title="Symbols count total">474k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">Reading time total &asymp;</span>
+    <span title="Reading time total">7:11</span>
+    
+    <!--
+    
+    -->
+</div>
+
+<!--
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a>
+   </div>
+--><script color="0,0,255" opacity="0.5" zIndex="-1" count="99" src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1/dist/canvas-nest.js"></script>
+
+
+
+
+
+
+        
+
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv"  >
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv"  >
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : 'Ov23liVJTzqy1rzaDXXM',
+      clientSecret: '5e785a7d46e69f7509e6c2f7730855a55944df33',
+      repo        : 'blog-comment',
+      owner       : 'BODYsuperman',
+      admin       : ['BODYsuperman'],
+      id          : '7e96123b9f64655e289f413f15685a89',
+        language: '',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+
+</body>
+</html>
