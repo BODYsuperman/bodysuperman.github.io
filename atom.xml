@@ -1,0 +1,908 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <author>
+    <name>AI with Alex</name>
+  </author>
+  <generator uri="https://hexo.io/">Hexo</generator>
+  <id>https://bodysuperman.github.io/</id>
+  <link href="https://bodysuperman.github.io/" rel="alternate"/>
+  <link href="https://bodysuperman.github.io/atom.xml" rel="self"/>
+  <rights>All rights reserved 2026, AI with Alex</rights>
+  <subtitle>Attention(Q,K,V)=softmax(QK^T/sqrt(d_k))V</subtitle>
+  <title>AI with Alex's Blog</title>
+  <updated>2026-09-25T16:00:00.000Z</updated>
+  <entry>
+    <author>
+      <name>AI with Alex</name>
+    </author>
+    <category term="AI" scheme="https://bodysuperman.github.io/categories/AI/"/>
+    <category term="AI Agent" scheme="https://bodysuperman.github.io/tags/AI-Agent/"/>
+    <category term="LLM" scheme="https://bodysuperman.github.io/tags/LLM/"/>
+    <category term="Claude Code" scheme="https://bodysuperman.github.io/tags/Claude-Code/"/>
+    <category term="Skills" scheme="https://bodysuperman.github.io/tags/Skills/"/>
+    <category term="Developer Tools" scheme="https://bodysuperman.github.io/tags/Developer-Tools/"/>
+    <category term="Automation" scheme="https://bodysuperman.github.io/tags/Automation/"/>
+    <id>https://bodysuperman.github.io/2026/08/30/Build-your-own-AI-Skills/</id>
+    <link href="https://bodysuperman.github.io/2026/08/30/Build-your-own-AI-Skills/"/>
+    <published>2026-08-30T01:32:54.000Z</published>
+    <summary>
+      <![CDATA[<ul>
+<li><a href="#introduction">Introduction</a></li>
+<li><a href="#what-is-a-skill">What Is a Skill</a></li>
+<li><a href="#why-skills-matter">Why Skills Matter</a></li>
+<li><a href="#anatomy-of-a-skill">Anatomy of a Skill</a><ul>
+<li><a href="#the-skill-md-file">The SKILL.md File</a></li>
+<li><a href="#the-supporting-cast">The Supporting Cast</a></li>
+</ul>
+</li>
+<li><a href="#build-your-own-from-simple-to-complete">Build Your Own: From Simple to Complete</a><ul>
+<li><a href="#git-commit-messages-just-skill-md">Git Commit Messages: Just SKILL.md</a></li>
+<li><a href="#api-endpoint-generator-add-a-config">API Endpoint Generator: Add a Config</a></li>
+<li><a href="#react-component-generator-scripts-and-templates">React Component Generator: Scripts and Templates</a></li>
+<li><a href="#security-audit-reference-documents">Security Audit: Reference Documents</a></li>
+<li><a href="#which-structure-do-you-need">Which Structure Do You Need?</a></li>
+</ul>
+</li>
+<li><a href="#find-ready-made-skills">Find Ready-Made Skills</a><ul>
+<li><a href="#official-libraries">Official Libraries</a></li>
+<li><a href="#the-skills-cli">The Skills CLI</a></li>
+<li><a href="#community-libraries">Community Libraries</a></li>
+<li><a href="#safety-before-you-install">Safety Before You Install</a></li>
+</ul>
+</li>
+<li><a href="#integrating-skills-into-your-workflow">Integrating Skills Into Your Workflow</a></li>
+<li><a href="#iterating-and-versioning">Iterating and Versioning</a></li>
+<li><a href="#best-practices">Best Practices</a></li>
+<li><a href="#faq">FAQ</a></li>
+<li><a href="#summary">Summary</a></li>
+</ul>]]>
+    </summary>
+    <title>Build Your Own AI Skills</title>
+    <updated>2026-09-25T16:00:00.000Z</updated>
+  </entry>
+  <entry>
+    <author>
+      <name>AI with Alex</name>
+    </author>
+    <category term="AI" scheme="https://bodysuperman.github.io/categories/AI/"/>
+    <category term="AI Agent" scheme="https://bodysuperman.github.io/tags/AI-Agent/"/>
+    <category term="LLM" scheme="https://bodysuperman.github.io/tags/LLM/"/>
+    <category term="Claude Code" scheme="https://bodysuperman.github.io/tags/Claude-Code/"/>
+    <category term="Developer Tools" scheme="https://bodysuperman.github.io/tags/Developer-Tools/"/>
+    <category term="Coding Agent" scheme="https://bodysuperman.github.io/tags/Coding-Agent/"/>
+    <category term="MCP‑Protocol" scheme="https://bodysuperman.github.io/tags/MCP%E2%80%91Protocol/"/>
+    <id>https://bodysuperman.github.io/2026/08/23/Deep%E2%80%91Dive-Advanced-Tips-for-Claude-Code/</id>
+    <link href="https://bodysuperman.github.io/2026/08/23/Deep%E2%80%91Dive-Advanced-Tips-for-Claude-Code/"/>
+    <published>2026-08-23T04:48:28.000Z</published>
+    <summary>
+      <![CDATA[<ul>
+<li><a href="#introduction">Introduction</a></li>
+<li><a href="#the-big-picture-seven-layers-of-extension">The Big Picture: Seven Layers of Extension</a></li>
+<li><a href="#choosing-the-right-model">Choosing the Right Model</a><ul>
+<li><a href="#model-comparison">Model Comparison</a></li>
+<li><a href="#four-ways-to-switch-models">Four Ways to Switch Models</a></li>
+<li><a href="#settings-file-hierarchy">Settings File Hierarchy</a></li>
+</ul>
+</li>
+<li><a href="#core-configuration">Core Configuration</a><ul>
+<li><a href="#settings-json-permissions-and-defaults">settings.json: Permissions and Defaults</a></li>
+<li><a href="#claude-md-the-project-handbook">CLAUDE.md: The Project Handbook</a></li>
+<li><a href="#three-layers-of-memory">Three Layers of Memory</a></li>
+<li><a href="#claudeignore">.claudeignore</a></li>
+</ul>
+</li>
+<li><a href="#daily-commands-and-interactions">Daily Commands and Interactions</a><ul>
+<li><a href="#slash-command-cheat-sheet">Slash Command Cheat Sheet</a></li>
+<li><a href="#the-four-commands-you-must-master">The Four Commands You Must Master</a></li>
+<li><a href="#keyboard-shortcuts">Keyboard Shortcuts</a></li>
+<li><a href="#power-interactions">Power Interactions: !, @, and Images</a></li>
+</ul>
+</li>
+<li><a href="#the-right-workflow-explore-plan-implement-commit">The Right Workflow: Explore, Plan, Implement, Commit</a><ul>
+<li><a href="#plan-mode-and-the-three-operating-modes">Plan Mode and the Three Operating Modes</a></li>
+<li><a href="#when-to-plan-and-when-to-just-do-it">When to Plan and When to Just Do It</a></li>
+<li><a href="#walkthrough-building-a-hello-api-with-express">Walkthrough: Building a Hello API with Express</a></li>
+</ul>
+</li>
+<li><a href="#best-practices">Best Practices</a><ul>
+<li><a href="#prompt-writing-principles">Prompt Writing Principles</a></li>
+<li><a href="#context-management">Context Management</a></li>
+<li><a href="#git-is-your-save-point">Git Is Your Save Point</a></li>
+<li><a href="#controlling-costs">Controlling Costs</a></li>
+<li><a href="#working-in-large-codebases">Working in Large Codebases</a></li>
+<li><a href="#three-overlooked-advanced-tips">Three Overlooked Advanced Tips</a></li>
+</ul>
+</li>
+<li><a href="#starter-kit-for-new-projects">Starter Kit for New Projects</a></li>
+<li><a href="#faq">FAQ</a></li>
+<li><a href="#summary">Summary</a></li>
+</ul>]]>
+    </summary>
+    <title>
+      <![CDATA[Deep‑Dive & Advanced Tips for Claude Code]]>
+    </title>
+    <updated>2026-09-01T16:00:00.000Z</updated>
+  </entry>
+  <entry>
+    <author>
+      <name>AI with Alex</name>
+    </author>
+    <category term="AI Engineering" scheme="https://bodysuperman.github.io/categories/AI-Engineering/"/>
+    <category term="Developer Tools" scheme="https://bodysuperman.github.io/categories/AI-Engineering/Developer-Tools/"/>
+    <category term="LLM" scheme="https://bodysuperman.github.io/tags/LLM/"/>
+    <category term="Claude Code" scheme="https://bodysuperman.github.io/tags/Claude-Code/"/>
+    <category term="Context Engineering" scheme="https://bodysuperman.github.io/tags/Context-Engineering/"/>
+    <category term="AI Coding Agent" scheme="https://bodysuperman.github.io/tags/AI-Coding-Agent/"/>
+    <category term="Agent Workflow" scheme="https://bodysuperman.github.io/tags/Agent-Workflow/"/>
+    <category term="Prompt Engineering" scheme="https://bodysuperman.github.io/tags/Prompt-Engineering/"/>
+    <category term="Software Development" scheme="https://bodysuperman.github.io/tags/Software-Development/"/>
+    <id>https://bodysuperman.github.io/2026/08/06/Six-money-saving-tips-for-Claude-Code/</id>
+    <link href="https://bodysuperman.github.io/2026/08/06/Six-money-saving-tips-for-Claude-Code/"/>
+    <published>2026-08-06T08:15:59.000Z</published>
+    <summary>
+      <![CDATA[<p>Anthropic released a blog sharing six money-saving tips for Claude Code: clear the conversation with <code>/clear</code> after completing a task; lock the model and reasoning intensity at the start to avoid invalidating the prompt cache by switching; use <code>@</code> to reference files instead of typing paths manually; add silent parameters to commands that generate a lot of output; run <code>/compact</code> before taking a break; assign large output tasks to sub-agents.</p>
+<p><img src="/2026/08/06/Six-money-saving-tips-for-Claude-Code/pic01.png" alt="pic"></p>]]>
+    </summary>
+    <title>Six money-saving tips for Claude Code</title>
+    <updated>2026-08-16T10:04:19.000Z</updated>
+  </entry>
+  <entry>
+    <author>
+      <name>AI with Alex</name>
+    </author>
+    <category term="AI Agent" scheme="https://bodysuperman.github.io/categories/AI-Agent/"/>
+    <category term="AI Engineering" scheme="https://bodysuperman.github.io/categories/AI-Agent/AI-Engineering/"/>
+    <category term="LLM" scheme="https://bodysuperman.github.io/tags/LLM/"/>
+    <category term="Post Training" scheme="https://bodysuperman.github.io/tags/Post-Training/"/>
+    <category term="Agent Evolution" scheme="https://bodysuperman.github.io/tags/Agent-Evolution/"/>
+    <category term="Multimodal AI" scheme="https://bodysuperman.github.io/tags/Multimodal-AI/"/>
+    <category term="Autonomous Agents" scheme="https://bodysuperman.github.io/tags/Autonomous-Agents/"/>
+    <category term="Generative AI" scheme="https://bodysuperman.github.io/tags/Generative-AI/"/>
+    <id>https://bodysuperman.github.io/2026/06/25/From-Post-Training-to-Real-Time-Perception-Self-Evolving-Agents-and-Multimodal-Interaction/</id>
+    <link href="https://bodysuperman.github.io/2026/06/25/From-Post-Training-to-Real-Time-Perception-Self-Evolving-Agents-and-Multimodal-Interaction/"/>
+    <published>2026-06-25T07:09:38.000Z</published>
+    <summary>
+      <![CDATA[<ul>
+<li><a href="#introduction">Introduction</a><ul>
+<li><a href="#capability-paradox">The Capability Paradox</a></li>
+<li><a href="#three-acts">Three Acts of This Article</a></li>
+</ul>
+</li>
+<li><a href="#post-training">Post-Training: Baking Capability Into Parameters</a><ul>
+<li><a href="#three-stage-pipeline">The Three-Stage Pipeline</a></li>
+<li><a href="#sft-rl-comparison">SFT Memorizes, RL Generalizes</a></li>
+<li><a href="#sft-vs-rl-decision">When to Choose SFT vs RL</a></li>
+<li><a href="#reward-design">Reward Design: From Scalar to Generative</a></li>
+<li><a href="#rlvp">RLVP: Reward the Outcome, Penalize the Path</a></li>
+<li><a href="#data-environment">Data and Environment Matter More Than Algorithms</a></li>
+<li><a href="#practical-takeaway-post-training">The Practical Takeaway</a></li>
+</ul>
+</li>
+<li><a href="#self-evolving">Self-Evolving Agents: Learning From Experience</a><ul>
+<li><a href="#preserving-vs-learning">Preserving Experience Is Not Learning</a></li>
+<li><a href="#three-layer-verification">Three-Layer Verification</a></li>
+<li><a href="#four-update-carriers">Four Update Carriers</a></li>
+<li><a href="#dual-loop-architecture">Dual-Loop Architecture</a></li>
+<li><a href="#done-not-progress">When Done Does Not Mean Progress</a></li>
+<li><a href="#safety-boundaries">Safety Boundaries for Continual Evolution</a></li>
+</ul>
+</li>
+<li><a href="#realtime-multimodal">Real-Time Perception and Multimodal Interaction</a><ul>
+<li><a href="#why-realtime">Why Real-Time Changes Everything</a></li>
+<li><a href="#voice-evolution">Voice: Cascaded to End-to-End to Full-Duplex</a></li>
+<li><a href="#computer-use">Computer Use: The Perceive-Think-Act Loop</a></li>
+<li><a href="#robotics">Robotics: VLA, Action Chunking, and Sim2Real</a></li>
+<li><a href="#fast-slow">The Unifying Theme: Fast-Slow Architecture</a></li>
+</ul>
+</li>
+<li><a href="#full-stack">Putting It Together: The Full Stack of a Modern Agent</a></li>
+<li><a href="#best-practices">Best Practices</a></li>
+<li><a href="#faq">FAQ</a></li>
+<li><a href="#summary">Summary</a></li>
+</ul>]]>
+    </summary>
+    <title>From Post-Training to Real-Time Perception: Self-Evolving Agents and Multimodal Interaction</title>
+    <updated>2026-07-25T07:09:38.000Z</updated>
+  </entry>
+  <entry>
+    <author>
+      <name>AI with Alex</name>
+    </author>
+    <category term="AI Agent" scheme="https://bodysuperman.github.io/categories/AI-Agent/"/>
+    <category term="AI Engineering" scheme="https://bodysuperman.github.io/categories/AI-Agent/AI-Engineering/"/>
+    <category term="LLM" scheme="https://bodysuperman.github.io/tags/LLM/"/>
+    <category term="Coding Agent" scheme="https://bodysuperman.github.io/tags/Coding-Agent/"/>
+    <category term="Agent Engineering" scheme="https://bodysuperman.github.io/tags/Agent-Engineering/"/>
+    <category term="Tool Calling" scheme="https://bodysuperman.github.io/tags/Tool-Calling/"/>
+    <category term="Agent Evaluation" scheme="https://bodysuperman.github.io/tags/Agent-Evaluation/"/>
+    <id>https://bodysuperman.github.io/2026/06/17/From-Capability-to-Intelligence-Tools-Coding-and-Evaluation-in-AI-Agents/</id>
+    <link href="https://bodysuperman.github.io/2026/06/17/From-Capability-to-Intelligence-Tools-Coding-and-Evaluation-in-AI-Agents/"/>
+    <published>2026-06-17T07:09:38.000Z</published>
+    <summary>
+      <![CDATA[<ul>
+<li><a href="#introduction">Introduction</a></li>
+<li><a href="#what-the-three-layer-model-of-agent-intelligence">What: The Three-Layer Model of Agent Intelligence</a></li>
+<li><a href="#tools-the-agents-hands-feet-and-senses">Tools: The Agent’s Hands, Feet, and Senses</a><ul>
+<li><a href="#tool-classification-five-categories">Tool Classification: Five Categories</a></li>
+<li><a href="#universal-principles-of-tool-design">Universal Principles of Tool Design</a></li>
+<li><a href="#the-mcp-ecosystem-and-the-challenge-of-tool-selection">The MCP Ecosystem and the Challenge of Tool Selection</a></li>
+<li><a href="#execution-security-proposer-reviewer-and-sidecar">Execution Security: Proposer-Reviewer and Sidecar</a></li>
+<li><a href="#event-driven-asynchronous-agents">Event-Driven Asynchronous Agents</a></li>
+<li><a href="#proactive-tool-discovery-and-skills">Proactive Tool Discovery and Skills</a></li>
+</ul>
+</li>
+<li><a href="#coding-agent-code-as-the-meta-capability">Coding Agent: Code as the Meta-Capability</a><ul>
+<li><a href="#the-seven-core-tools-and-the-file-system-hub">The Seven Core Tools and the File System Hub</a></li>
+<li><a href="#security-the-lethal-triad-and-trust-boundaries">Security: The Lethal Triad and Trust Boundaries</a></li>
+<li><a href="#harness-engineering-for-coding-agents">Harness Engineering for Coding Agents</a></li>
+<li><a href="#failure-and-error-recovery">Failure and Error Recovery</a></li>
+<li><a href="#six-directions-of-code-as-meta-capability">Six Directions of Code as Meta-Capability</a></li>
+</ul>
+</li>
+<li><a href="#evaluation-knowing-whether-it-actually-works">Evaluation: Knowing Whether It Actually Works</a><ul>
+<li><a href="#a-concrete-example">A Concrete Example</a></li>
+<li><a href="#automated-evaluation-environments">Automated Evaluation Environments</a></li>
+<li><a href="#designing-evaluation-datasets">Designing Evaluation Datasets</a></li>
+<li><a href="#the-metrics-system-passk-vs-passk">The Metrics System: Pass@k vs Pass^k</a></li>
+<li><a href="#llm-as-a-judge-and-rubrics">LLM-as-a-Judge and Rubrics</a></li>
+<li><a href="#pairwise-comparison-and-model-ranking">Pairwise Comparison and Model Ranking</a></li>
+<li><a href="#statistical-significance">Statistical Significance</a></li>
+<li><a href="#from-benchmark-to-system-improvement">From Benchmark to System Improvement</a></li>
+</ul>
+</li>
+<li><a href="#example-an-end-to-end-mini-case">Example: An End-to-End Mini-Case</a></li>
+<li><a href="#best-practices">Best Practices</a></li>
+<li><a href="#faq">FAQ</a></li>
+<li><a href="#summary">Summary</a></li>
+<li><a href="#appendix">Appendix</a></li>
+</ul>]]>
+    </summary>
+    <title>From Capability to Intelligence: Tools, Coding, and Evaluation in AI Agents</title>
+    <updated>2026-07-24T07:09:38.000Z</updated>
+  </entry>
+  <entry>
+    <author>
+      <name>AI with Alex</name>
+    </author>
+    <category term="AI" scheme="https://bodysuperman.github.io/categories/AI/"/>
+    <category term="AI Agent" scheme="https://bodysuperman.github.io/categories/AI/AI-Agent/"/>
+    <category term="AI Agent" scheme="https://bodysuperman.github.io/tags/AI-Agent/"/>
+    <category term="LLM" scheme="https://bodysuperman.github.io/tags/LLM/"/>
+    <category term="Context Engineering" scheme="https://bodysuperman.github.io/tags/Context-Engineering/"/>
+    <category term="RAG" scheme="https://bodysuperman.github.io/tags/RAG/"/>
+    <category term="Memory" scheme="https://bodysuperman.github.io/tags/Memory/"/>
+    <id>https://bodysuperman.github.io/2026/06/10/Building-AI-Agents-From-Context-to-Memory/</id>
+    <link href="https://bodysuperman.github.io/2026/06/10/Building-AI-Agents-From-Context-to-Memory/"/>
+    <published>2026-06-10T07:09:38.000Z</published>
+    <summary>
+      <![CDATA[<ul>
+<li><a href="#introduction">Introduction</a></li>
+<li><a href="#what-is-an-ai-agent">What Is an AI Agent</a><ul>
+<li><a href="#the-core-formula-llm-context-tools">The Core Formula: LLM + Context + Tools</a></li>
+<li><a href="#the-react-loop-how-agents-actually-work">The ReAct Loop: How Agents Actually Work</a></li>
+</ul>
+</li>
+<li><a href="#context-engineering-the-ceiling-of-agent-capability">Context Engineering: The Ceiling of Agent Capability</a><ul>
+<li><a href="#context-at-the-api-level-static-prefix-dynamic-trajectory">Context at the API Level: Static Prefix + Dynamic Trajectory</a></li>
+<li><a href="#kv-cache-why-prefix-stability-matters">KV Cache: Why Prefix Stability Matters</a></li>
+<li><a href="#prompt-engineering-writing-the-agents-operating-manual">Prompt Engineering: Writing the Agent’s Operating Manual</a></li>
+<li><a href="#agent-skills-load-knowledge-on-demand">Agent Skills: Load Knowledge On Demand</a></li>
+<li><a href="#agent-status-bar-from-implicit-state-to-explicit-knowledge">Agent Status Bar: From Implicit State to Explicit Knowledge</a></li>
+<li><a href="#context-compression-when-less-is-more">Context Compression: When Less Is More</a></li>
+</ul>
+</li>
+<li><a href="#from-context-to-memory-making-agents-remember">From Context to Memory: Making Agents Remember</a><ul>
+<li><a href="#user-memory-building-a-model-of-the-user">User Memory: Building a Model of the User</a></li>
+<li><a href="#four-storage-formats-from-simple-notes-to-advanced-json-cards">Four Storage Formats: From Simple Notes to Advanced JSON Cards</a></li>
+<li><a href="#rag-giving-agents-a-knowledge-base">RAG: Giving Agents a Knowledge Base</a></li>
+<li><a href="#beyond-flat-text-structured-indexing-and-agentic-rag">Beyond Flat Text: Structured Indexing and Agentic RAG</a></li>
+<li><a href="#contextual-retrieval-fixing-chunking-at-the-root">Contextual Retrieval: Fixing Chunking at the Root</a></li>
+<li><a href="#the-two-tier-memory-architecture">The Two-Tier Memory Architecture</a></li>
+</ul>
+</li>
+<li><a href="#harness-engineering-reliability-beyond-the-demo">Harness Engineering: Reliability Beyond the Demo</a><ul>
+<li><a href="#constrain-verify-correct-the-three-safety-layers">Constrain, Verify, Correct: The Three Safety Layers</a></li>
+<li><a href="#workflow-vs-autonomous-choosing-the-right-pattern">Workflow vs. Autonomous: Choosing the Right Pattern</a></li>
+</ul>
+</li>
+<li><a href="#best-practices">Best Practices</a></li>
+<li><a href="#faq">FAQ</a></li>
+<li><a href="#summary">Summary</a></li>
+</ul>]]>
+    </summary>
+    <title>Building AI Agents: From Context to Memory</title>
+    <updated>2026-07-23T07:09:38.000Z</updated>
+  </entry>
+  <entry>
+    <author>
+      <name>AI with Alex</name>
+    </author>
+    <category term="Python" scheme="https://bodysuperman.github.io/categories/Python/"/>
+    <category term="AI" scheme="https://bodysuperman.github.io/categories/Python/AI/"/>
+    <category term="LangChain" scheme="https://bodysuperman.github.io/tags/LangChain/"/>
+    <category term="AI Agent" scheme="https://bodysuperman.github.io/tags/AI-Agent/"/>
+    <category term="LLM" scheme="https://bodysuperman.github.io/tags/LLM/"/>
+    <category term="LangChain Runtime" scheme="https://bodysuperman.github.io/tags/LangChain-Runtime/"/>
+    <category term="Middleware" scheme="https://bodysuperman.github.io/tags/Middleware/"/>
+    <category term="LLM Engineering" scheme="https://bodysuperman.github.io/tags/LLM-Engineering/"/>
+    <category term="Large Language Model" scheme="https://bodysuperman.github.io/tags/Large-Language-Model/"/>
+    <id>https://bodysuperman.github.io/2026/05/18/LangChain-Runtime-Middleware-Core-Principles-and-more/</id>
+    <link href="https://bodysuperman.github.io/2026/05/18/LangChain-Runtime-Middleware-Core-Principles-and-more/"/>
+    <published>2026-05-18T04:00:00.000Z</published>
+    <summary>
+      <![CDATA[<ul>
+<li><a href="#introduction">Introduction</a></li>
+<li><a href="#what">What</a><ul>
+<li><a href="#what-is-runtime">What is Runtime?</a></li>
+<li><a href="#what-is-middleware">What is Middleware?</a></li>
+</ul>
+</li>
+<li><a href="#why">Why</a><ul>
+<li><a href="#why-runtime-matters">Why Runtime Matters</a></li>
+<li><a href="#why-middleware-matters">Why Middleware Matters</a></li>
+</ul>
+</li>
+<li><a href="#how">How</a><ul>
+<li><a href="#runtime-deep-dive">Runtime Deep Dive</a><ul>
+<li><a href="#state-short-term-memory">State — Short-term Memory</a></li>
+<li><a href="#store-long-term-memory">Store — Long-term Memory</a></li>
+<li><a href="#context-runtime-context">Context — Runtime Context</a></li>
+</ul>
+</li>
+<li><a href="#middleware-deep-dive">Middleware Deep Dive</a><ul>
+<li><a href="#prebuilt-middleware">Prebuilt Middleware</a><ul>
+<li><a href="#piimiddleware">PIIMiddleware</a></li>
+<li><a href="#modelfallbackmiddleware">ModelFallbackMiddleware</a></li>
+<li><a href="#humanintheloopmiddleware">HumanInTheLoopMiddleware</a></li>
+<li><a href="#approve-reject-edit">Approve, Reject, Edit</a></li>
+</ul>
+</li>
+<li><a href="#custom-middleware">Custom Middleware</a><ul>
+<li><a href="#node-style-hooks">Node-style Hooks</a></li>
+<li><a href="#wrap-style-hooks">Wrap-style Hooks</a></li>
+<li><a href="#class-based-middleware">Class-based Middleware</a>]]>
+    </summary>
+    <title>
+      <![CDATA[LangChain Runtime & Middleware: Core Principles and Practical Guide]]>
+    </title>
+    <updated>2026-06-03T04:00:00.000Z</updated>
+  </entry>
+  <entry>
+    <author>
+      <name>AI with Alex</name>
+    </author>
+    <category term="Python" scheme="https://bodysuperman.github.io/categories/Python/"/>
+    <category term="AI" scheme="https://bodysuperman.github.io/categories/Python/AI/"/>
+    <category term="LangChain" scheme="https://bodysuperman.github.io/tags/LangChain/"/>
+    <category term="LangSmith" scheme="https://bodysuperman.github.io/tags/LangSmith/"/>
+    <category term="LangGraph" scheme="https://bodysuperman.github.io/tags/LangGraph/"/>
+    <category term="AI Agent" scheme="https://bodysuperman.github.io/tags/AI-Agent/"/>
+    <category term="LLM" scheme="https://bodysuperman.github.io/tags/LLM/"/>
+    <category term="MultiModal" scheme="https://bodysuperman.github.io/tags/MultiModal/"/>
+    <id>https://bodysuperman.github.io/2026/05/11/A-Multimodal-AI-Agent-Application-AI-Private-Chef/</id>
+    <link href="https://bodysuperman.github.io/2026/05/11/A-Multimodal-AI-Agent-Application-AI-Private-Chef/"/>
+    <published>2026-05-11T04:48:28.000Z</published>
+    <summary>
+      <![CDATA[<ul>
+<li><a href="#introduction">Introduction</a></li>
+<li><a href="#what-are-we-building">What Are We Building?</a><ul>
+<li><a href="#feature-overview">Feature Overview</a></li>
+<li><a href="#architecture-overview">Architecture Overview</a></li>
+</ul>
+</li>
+<li><a href="#implementation-strategy">Implementation Strategy</a><ul>
+<li><a href="#model-selection">Model Selection</a></li>
+<li><a href="#tool-selection">Tool Selection</a></li>
+<li><a href="#memory-strategy">Memory Strategy</a></li>
+<li><a href="#system-prompt-design">System Prompt Design</a></li>
+</ul>
+</li>
+<li><a href="#prototyping-in-jupyter">Prototyping in Jupyter</a><ul>
+<li><a href="#environment-configuration">Environment Configuration</a></li>
+<li><a href="#dependencies">Dependencies</a></li>
+<li><a href="#loading-configuration">Loading Configuration</a></li>
+<li><a href="#defining-tools">Defining Tools</a></li>
+<li><a href="#initializing-the-multimodal-model">Initializing the Multimodal Model</a></li>
+<li><a href="#memory-management">Memory Management</a></li>
+<li><a href="#creating-the-agent">Creating the Agent</a></li>
+<li><a href="#testing-with-image-input">Testing with Image Input</a></li>
+<li><a href="#testing-conversation-memory">Testing Conversation Memory</a></li>
+</ul>
+</li>
+<li><a href="#deploying-with-langgraph-and-langsmith">Deploying with LangGraph and LangSmith</a><ul>
+<li><a href="#langsmith-setup">LangSmith Setup</a></li>
+<li><a href="#developing-the-agent">Developing the Agent</a></li>
+<li><a href="#local-deployment-with-langgraph-cli">Local Deployment with LangGraph CLI</a></li>
+<li><a href="#testing-in-langsmith-studio">Testing in LangSmith Studio</a>]]>
+    </summary>
+    <title>A Multimodal AI Agent Application: AI Private Chef</title>
+    <updated>2026-06-09T16:00:00.000Z</updated>
+  </entry>
+  <entry>
+    <author>
+      <name>AI with Alex</name>
+    </author>
+    <category term="Python" scheme="https://bodysuperman.github.io/categories/Python/"/>
+    <category term="AI" scheme="https://bodysuperman.github.io/categories/Python/AI/"/>
+    <category term="LangChain" scheme="https://bodysuperman.github.io/tags/LangChain/"/>
+    <category term="LangSmith" scheme="https://bodysuperman.github.io/tags/LangSmith/"/>
+    <category term="AI Agent" scheme="https://bodysuperman.github.io/tags/AI-Agent/"/>
+    <category term="LLM" scheme="https://bodysuperman.github.io/tags/LLM/"/>
+    <category term="MultiModal" scheme="https://bodysuperman.github.io/tags/MultiModal/"/>
+    <id>https://bodysuperman.github.io/2026/05/04/LangChain-Core-Components%EF%BC%9AMode-Message-Prompt-Tool-Memory/</id>
+    <link href="https://bodysuperman.github.io/2026/05/04/LangChain-Core-Components%EF%BC%9AMode-Message-Prompt-Tool-Memory/"/>
+    <published>2026-05-04T04:48:28.000Z</published>
+    <summary>
+      <![CDATA[<ul>
+<li><a href="#what-is-langchain">What is LangChain?</a><ul>
+<li><a href="#the-platform">The Platform</a></li>
+<li><a href="#what-is-an-agent">What is an Agent?</a></li>
+<li><a href="#llm-vs-agent-the-difference">LLM vs Agent: The Difference</a></li>
+</ul>
+</li>
+<li><a href="#models--the-brain">Models — The Brain</a><ul>
+<li><a href="#initializing-a-model">Initializing a Model</a></li>
+<li><a href="#custom-models-and-parameters">Custom Models and Parameters</a></li>
+<li><a href="#using-model-classes">Using Model Classes</a></li>
+<li><a href="#calling-the-model-invoke-vs-stream">Calling the Model: invoke vs stream</a></li>
+<li><a href="#using-models-in-an-agent">Using Models in an Agent</a></li>
+</ul>
+</li>
+<li><a href="#messages--the-building-blocks-of-conversation">Messages — The Building Blocks of Conversation</a><ul>
+<li><a href="#message-types">Message Types</a></li>
+<li><a href="#multimodal-messages">Multimodal Messages</a></li>
+</ul>
+</li>
+<li><a href="#prompts--steering-the-output">Prompts — Steering the Output</a><ul>
+<li><a href="#system-prompts">System Prompts</a></li>
+<li><a href="#prompt-engineering">Prompt Engineering</a></li>
+<li><a href="#structured-output">Structured Output</a></li>
+</ul>
+</li>
+<li><a href="#tools--the-hands">Tools — The Hands</a><ul>
+<li><a href="#defining-tools">Defining Tools</a></li>
+<li><a href="#custom-tools">Custom Tools</a></li>
+<li><a href="#predefined-tools-tavily-search">Predefined Tools: Tavily Search</a></li>
+<li><a href="#combining-tools-with-an-agent">Combining Tools with an Agent</a></li>
+</ul>
+</li>
+<li><a href="#memory--making-the-agent-remember">Memory — Making the Agent Remember</a><ul>
+<li><a href="#short-term-vs-long-term-memory">Short-Term vs Long-Term Memory</a></li>
+<li><a href="#short-term-memory-with-inmemorysaver">Short-Term Memory with InMemorySaver</a></li>
+<li><a href="#persistent-memory-optional">Persistent Memory (Optional)</a></li>
+<li><a href="#memory-management-strategies">Memory Management Strategies</a>]]>
+    </summary>
+    <title>LangChain Core Components: Model, Message, Prompt, Tool, Memory</title>
+    <updated>2026-06-05T16:00:00.000Z</updated>
+  </entry>
+  <entry>
+    <author>
+      <name>AI with Alex</name>
+    </author>
+    <category term="Java" scheme="https://bodysuperman.github.io/categories/Java/"/>
+    <category term="AI" scheme="https://bodysuperman.github.io/categories/Java/AI/"/>
+    <category term="Spring Boot" scheme="https://bodysuperman.github.io/categories/Java/AI/Spring-Boot/"/>
+    <category term="LLM" scheme="https://bodysuperman.github.io/tags/LLM/"/>
+    <category term="RAG" scheme="https://bodysuperman.github.io/tags/RAG/"/>
+    <category term="LangChain4J" scheme="https://bodysuperman.github.io/tags/LangChain4J/"/>
+    <category term="OpenAI" scheme="https://bodysuperman.github.io/tags/OpenAI/"/>
+    <category term="Function Calling" scheme="https://bodysuperman.github.io/tags/Function-Calling/"/>
+    <category term="Spring Boot" scheme="https://bodysuperman.github.io/tags/Spring-Boot/"/>
+    <id>https://bodysuperman.github.io/2026/04/27/LangChain4J-in-Action-Building-a-Medical-AI-Assistant-Agent/</id>
+    <link href="https://bodysuperman.github.io/2026/04/27/LangChain4J-in-Action-Building-a-Medical-AI-Assistant-Agent/"/>
+    <published>2026-04-27T04:48:28.000Z</published>
+    <summary>
+      <![CDATA[<ul>
+<li><a href="#1-what-is-langchain4j">1. What is LangChain4J?</a><ul>
+<li><a href="#11-the-problem-langchain4j-solves">1.1 The Problem LangChain4J Solves</a></li>
+<li><a href="#12-core-concepts">1.2 Core Concepts</a></li>
+</ul>
+</li>
+<li><a href="#2-project-setup">2. Project Setup</a><ul>
+<li><a href="#21-dependencies">2.1 Dependencies</a></li>
+<li><a href="#22-configuration">2.2 Configuration</a></li>
+</ul>
+</li>
+<li><a href="#3-your-first-llm-integration">3. Your First LLM Integration</a><ul>
+<li><a href="#31-direct-api-call">3.1 Direct API Call</a></li>
+<li><a href="#32-spring-boot-auto-configuration">3.2 Spring Boot Auto-Configuration</a></li>
+</ul>
+</li>
+<li><a href="#4-building-the-ai-service">4. Building the AI Service</a><ul>
+<li><a href="#41-the-assistant-interface">4.1 The Assistant Interface</a></li>
+<li><a href="#42-system-messages">4.2 System Messages</a></li>
+</ul>
+</li>
+<li><a href="#5-adding-chat-memory">5. Adding Chat Memory</a><ul>
+<li><a href="#51-why-memory-matters">5.1 Why Memory Matters</a></li>
+<li><a href="#52-implementing-memory">5.2 Implementing Memory</a></li>
+<li><a href="#53-memory-isolation">5.3 Memory Isolation</a></li>
+<li><a href="#54-persistent-storage-with-mongodb">5.4 Persistent Storage with MongoDB</a>]]>
+    </summary>
+    <title>LangChain4J in Action: Building a Medical AI Assistant Agent</title>
+    <updated>2026-06-05T16:00:00.000Z</updated>
+  </entry>
+  <entry>
+    <author>
+      <name>AI with Alex</name>
+    </author>
+    <category term="Backend Development" scheme="https://bodysuperman.github.io/categories/Backend-Development/"/>
+    <category term="Java" scheme="https://bodysuperman.github.io/tags/Java/"/>
+    <category term="Spring Boot" scheme="https://bodysuperman.github.io/tags/Spring-Boot/"/>
+    <category term="RabbitMQ" scheme="https://bodysuperman.github.io/tags/RabbitMQ/"/>
+    <category term="Message Queue" scheme="https://bodysuperman.github.io/tags/Message-Queue/"/>
+    <category term="Microservices" scheme="https://bodysuperman.github.io/tags/Microservices/"/>
+    <id>https://bodysuperman.github.io/2026/04/26/Message-Middleware-Selection-Guide-RabbitMQ/</id>
+    <link href="https://bodysuperman.github.io/2026/04/26/Message-Middleware-Selection-Guide-RabbitMQ/"/>
+    <published>2026-04-26T04:48:28.000Z</published>
+    <summary>
+      <![CDATA[<ol>
+<li><a href="#introduction-why-we-need-message-middleware">Introduction: Why We Need Message Middleware</a></li>
+<li><a href="#message-queue-comparison">Message Queue Comparison</a></li>
+<li><a href="#rabbitmq-core-concepts">RabbitMQ Core Concepts</a></li>
+<li><a href="#exchange-types-explained">Exchange Types Explained</a></li>
+<li><a href="#spring-amqp-in-practice">Spring AMQP in Practice</a></li>
+<li><a href="#message-reliability-guarantees">Message Reliability Guarantees</a></li>
+<li><a href="#delayed-message-implementation">Delayed Message Implementation</a></li>
+<li><a href="#best-practices--common-issues">Best Practices &amp; Common Issues</a></li>
+<li><a href="#summary">Summary</a></li>
+</ol>]]>
+    </summary>
+    <title>Message Middleware Selection Guide: RabbitMQ</title>
+    <updated>2026-06-04T16:00:00.000Z</updated>
+  </entry>
+  <entry>
+    <author>
+      <name>AI with Alex</name>
+    </author>
+    <category term="Docker" scheme="https://bodysuperman.github.io/categories/Docker/"/>
+    <category term="Backend Development" scheme="https://bodysuperman.github.io/categories/Docker/Backend-Development/"/>
+    <category term="DevOps" scheme="https://bodysuperman.github.io/categories/Docker/Backend-Development/DevOps/"/>
+    <category term="Docker Network" scheme="https://bodysuperman.github.io/tags/Docker-Network/"/>
+    <category term="Docker Compose" scheme="https://bodysuperman.github.io/tags/Docker-Compose/"/>
+    <category term="Containerization" scheme="https://bodysuperman.github.io/tags/Containerization/"/>
+    <category term="MySQL" scheme="https://bodysuperman.github.io/tags/MySQL/"/>
+    <category term="Nacos" scheme="https://bodysuperman.github.io/tags/Nacos/"/>
+    <category term="Hands-on Tutorial" scheme="https://bodysuperman.github.io/tags/Hands-on-Tutorial/"/>
+    <category term="Microservices Architecture" scheme="https://bodysuperman.github.io/tags/Microservices-Architecture/"/>
+    <id>https://bodysuperman.github.io/2026/04/19/Getting-Started-with-Docker-A-Practical-Guide-for-Developers/</id>
+    <link href="https://bodysuperman.github.io/2026/04/19/Getting-Started-with-Docker-A-Practical-Guide-for-Developers/"/>
+    <published>2026-04-19T04:48:28.000Z</published>
+    <summary>
+      <![CDATA[<ul>
+<li><a href="#understanding-docker-technology">Understanding Docker Technology</a><ul>
+<li><a href="#application-scenarios-of-docker">Application Scenarios of Docker</a></li>
+<li><a href="#core-advantages">Core Advantages</a></li>
+<li><a href="#core-concepts">Core Concepts</a></li>
+</ul>
+</li>
+<li><a href="#docker-vs-virtual-machines">Docker vs Virtual Machines</a></li>
+<li><a href="#basic-commands">Basic Commands</a></li>
+<li><a href="#docker-data-volumes">Docker Data Volumes</a><ul>
+<li><a href="#what-is-a-data-volume">What is a Data Volume</a></li>
+<li><a href="#volume-commands">Volume Commands</a></li>
+<li><a href="#mounting-local-directories">Mounting Local Directories</a></li>
+</ul>
+</li>
+<li><a href="#docker-networking">Docker Networking</a><ul>
+<li><a href="#default-networks">Default Networks</a></li>
+<li><a href="#custom-networks">Custom Networks</a></li>
+</ul>
+</li>
+<li><a href="#building-custom-images">Building Custom Images</a><ul>
+<li><a href="#image-structure">Image Structure</a></li>
+<li><a href="#dockerfile-syntax">Dockerfile Syntax</a></li>
+<li><a href="#building-images">Building Images</a></li>
+</ul>
+</li>
+<li><a href="#docker-compose">Docker Compose</a><ul>
+<li><a href="#basic-syntax">Basic Syntax</a></li>
+<li><a href="#common-commands">Common Commands</a></li>
+</ul>
+</li>
+<li><a href="#practical-examples">Practical Examples</a><ul>
+<li><a href="#deploying-mysql">Deploying MySQL</a></li>
+<li><a href="#deploying-a-java-application">Deploying a Java Application</a></li>
+</ul>
+</li>
+<li><a href="#best-practices">Best Practices</a></li>
+<li><a href="#faq">FAQ</a></li>
+<li><a href="#summary">Summary</a></li>
+<li><a href="#references">References</a></li>
+</ul>]]>
+    </summary>
+    <title>Getting Started with Docker</title>
+    <updated>2026-06-04T16:00:00.000Z</updated>
+  </entry>
+  <entry>
+    <author>
+      <name>AI with Alex</name>
+    </author>
+    <category term="Data Structure and Algorithm" scheme="https://bodysuperman.github.io/categories/Data-Structure-and-Algorithm/"/>
+    <category term="Backtracking" scheme="https://bodysuperman.github.io/tags/Backtracking/"/>
+    <category term="DFS" scheme="https://bodysuperman.github.io/tags/DFS/"/>
+    <category term="Recursion" scheme="https://bodysuperman.github.io/tags/Recursion/"/>
+    <category term="LeetCode" scheme="https://bodysuperman.github.io/tags/LeetCode/"/>
+    <category term="Problem Solving" scheme="https://bodysuperman.github.io/tags/Problem-Solving/"/>
+    <category term="Mental Model" scheme="https://bodysuperman.github.io/tags/Mental-Model/"/>
+    <category term="Developer Journey" scheme="https://bodysuperman.github.io/tags/Developer-Journey/"/>
+    <id>https://bodysuperman.github.io/2026/04/12/Backtracking-Algorithm/</id>
+    <link href="https://bodysuperman.github.io/2026/04/12/Backtracking-Algorithm/"/>
+    <published>2026-04-12T04:48:28.000Z</published>
+    <summary>
+      <![CDATA[<ul>
+<li><a href="#1-understanding-backtracking">1. Understanding Backtracking</a><ul>
+<li><a href="#11-what-is-backtracking">1.1 What is Backtracking?</a></li>
+<li><a href="#12-real-world-analogy">1.2 Real-World Analogy</a></li>
+<li><a href="#13-when-to-use-backtracking">1.3 When to Use Backtracking</a></li>
+</ul>
+</li>
+<li><a href="#2-the-core-pattern">2. The Core Pattern</a><ul>
+<li><a href="#21-the-three-step-cycle">2.1 The Three-Step Cycle</a></li>
+<li><a href="#22-why-undo-is-critical">2.2 Why “Undo” is Critical</a></li>
+<li><a href="#23-the-standard-template">2.3 The Standard Template</a></li>
+</ul>
+</li>
+<li><a href="#3-decision-tree-mental-model">3. Decision Tree Mental Model</a><ul>
+<li><a href="#31-tree-levels-vs-branches">3.1 Tree Levels vs Branches</a></li>
+<li><a href="#32-understanding-startindex">3.2 Understanding startIndex</a></li>
+<li><a href="#33-what-i-1-really-means">3.3 What i + 1 Really Means</a></li>
+</ul>
+</li>
+<li><a href="#4-pruning-necessity-not-optimization">4. Pruning: Necessity, Not Optimization</a><ul>
+<li><a href="#41-early-termination-logic">4.1 Early Termination Logic</a></li>
+<li><a href="#42-pruning-in-practice">4.2 Pruning in practice</a></li>
+</ul>
+</li>
+<li><a href="#5-deduplication-strategy">5. Deduplication Strategy</a><ul>
+<li><a href="#51-why-deduplication-matters">5.1 Why Deduplication Matters</a></li>
+<li><a href="#52-the-i--startindex-pattern">5.2 The i &gt; startIndex Pattern</a>]]>
+    </summary>
+    <title>Backtracking Algorithm</title>
+    <updated>2026-04-21T16:00:00.000Z</updated>
+  </entry>
+  <entry>
+    <author>
+      <name>AI with Alex</name>
+    </author>
+    <category term="AI Agent" scheme="https://bodysuperman.github.io/categories/AI-Agent/"/>
+    <category term="Tutorials" scheme="https://bodysuperman.github.io/categories/AI-Agent/Tutorials/"/>
+    <category term="AI Agent" scheme="https://bodysuperman.github.io/tags/AI-Agent/"/>
+    <category term="OpenClaw" scheme="https://bodysuperman.github.io/tags/OpenClaw/"/>
+    <category term="Multi-Agent" scheme="https://bodysuperman.github.io/tags/Multi-Agent/"/>
+    <category term="Self-Hosted" scheme="https://bodysuperman.github.io/tags/Self-Hosted/"/>
+    <category term="Open Source" scheme="https://bodysuperman.github.io/tags/Open-Source/"/>
+    <category term="AI Automation" scheme="https://bodysuperman.github.io/tags/AI-Automation/"/>
+    <category term="Digital Employee" scheme="https://bodysuperman.github.io/tags/Digital-Employee/"/>
+    <category term="Tutorial" scheme="https://bodysuperman.github.io/tags/Tutorial/"/>
+    <id>https://bodysuperman.github.io/2026/03/08/OpenClaw-CookBook/</id>
+    <link href="https://bodysuperman.github.io/2026/03/08/OpenClaw-CookBook/"/>
+    <published>2026-03-08T01:37:33.000Z</published>
+    <summary>
+      <![CDATA[<ul>
+<li><a href="#1-understanding-openclaw">1. Understanding OpenClaw</a><ul>
+<li><a href="#11-what-is-openclaw">1.1 What is OpenClaw?</a></li>
+<li><a href="#12-core-capabilities">1.2 Core Capabilities</a></li>
+<li><a href="#13-architecture-overview">1.3 Architecture Overview</a></li>
+</ul>
+</li>
+<li><a href="#2-quick-start">2. Quick Start</a><ul>
+<li><a href="#21-system-requirements">2.1 System Requirements</a></li>
+<li><a href="#22-one-click-installation">2.2 One-Click Installation</a></li>
+<li><a href="#23-verify-installation">2.3 Verify Installation</a></li>
+<li><a href="#24-5-minute-quick-experience">2.4 5-Minute Quick Experience</a></li>
+</ul>
+</li>
+<li><a href="#3-installation--deployment">3. Installation &amp; Deployment</a><ul>
+<li><a href="#31-installation-methods-comparison">3.1 Installation Methods Comparison</a></li>
+<li><a href="#32-manual-installation-npm">3.2 Manual Installation (npm)</a></li>
+<li><a href="#33-configure-path-if-needed">3.3 Configure PATH (if needed)</a></li>
+<li><a href="#34-docker-deployment">3.4 Docker Deployment</a></li>
+<li><a href="#35-version-updates">3.5 Version Updates</a>]]>
+    </summary>
+    <title>OpenClaw User Guide - Complete Tutorial</title>
+    <updated>2026-03-17T02:23:00.000Z</updated>
+  </entry>
+  <entry>
+    <author>
+      <name>AI with Alex</name>
+    </author>
+    <category term="AI" scheme="https://bodysuperman.github.io/categories/AI/"/>
+    <category term="Vibe Coding" scheme="https://bodysuperman.github.io/categories/AI/Vibe-Coding/"/>
+    <category term="Automation" scheme="https://bodysuperman.github.io/tags/Automation/"/>
+    <category term="AI Programming" scheme="https://bodysuperman.github.io/tags/AI-Programming/"/>
+    <category term="Claude" scheme="https://bodysuperman.github.io/tags/Claude/"/>
+    <category term="Productivity" scheme="https://bodysuperman.github.io/tags/Productivity/"/>
+    <category term="Workflow" scheme="https://bodysuperman.github.io/tags/Workflow/"/>
+    <id>https://bodysuperman.github.io/2026/02/19/Workflow-Orchestration/</id>
+    <link href="https://bodysuperman.github.io/2026/02/19/Workflow-Orchestration/"/>
+    <published>2026-02-19T05:53:06.000Z</published>
+    <summary>
+      <![CDATA[<h2 id="Workflow-Orchestration"><a href="#Workflow-Orchestration" class="headerlink" title="Workflow Orchestration"></a>Workflow Orchestration</h2><h3 id="1-Plan-Node-Default"><a href="#1-Plan-Node-Default" class="headerlink" title="1. Plan Node Default"></a>1. Plan Node Default</h3><ul>
+<li>Enter plan mode for ANY non-trivial task (3+ steps or architectural decisions)</li>
+<li>If something goes sideways, STOP and re-plan immediately – don’t keep pushing</li>
+<li>Write detailed specs upfront to reduce ambiguity</li>
+</ul>
+<h3 id="2-Subagent-Strategy"><a href="#2-Subagent-Strategy" class="headerlink" title="2. Subagent Strategy"></a>2. Subagent Strategy</h3><ul>
+<li>Use subagents liberally to keep main context window clean</li>
+<li>Offload research, exploration, and parallel analysis to subagents</li>
+<li>One tack per subagent for focused execution]]>
+    </summary>
+    <title>Workflow Orchestration</title>
+    <updated>2026-02-19T11:04:19.000Z</updated>
+  </entry>
+  <entry>
+    <author>
+      <name>AI with Alex</name>
+    </author>
+    <category term="Java" scheme="https://bodysuperman.github.io/categories/Java/"/>
+    <category term="Spring Boot" scheme="https://bodysuperman.github.io/categories/Java/Spring-Boot/"/>
+    <category term="MyBatis" scheme="https://bodysuperman.github.io/tags/MyBatis/"/>
+    <category term="Pagination" scheme="https://bodysuperman.github.io/tags/Pagination/"/>
+    <category term="JWT" scheme="https://bodysuperman.github.io/tags/JWT/"/>
+    <category term="AOP" scheme="https://bodysuperman.github.io/tags/AOP/"/>
+    <category term="RESTful API" scheme="https://bodysuperman.github.io/tags/RESTful-API/"/>
+    <id>https://bodysuperman.github.io/2026/02/18/TLias-Spring-Boot-Practice-Guide/</id>
+    <link href="https://bodysuperman.github.io/2026/02/18/TLias-Spring-Boot-Practice-Guide/"/>
+    <published>2026-02-18T05:53:06.000Z</published>
+    <summary>
+      <![CDATA[<ul>
+<li><a href="#1-project-overview-what-is-tlias">1. Project Overview: What is Tlias?</a><ul>
+<li><a href="#core-technology-stack">1.1 Core Technology Stack</a></li>
+<li><a href="#project-architecture">1.2 Project Architecture</a></li>
+<li><a href="#project-structure-overview">1.3 Project Structure Overview</a></li>
+<li><a href="#database-design">1.4 Database Design</a></li>
+</ul>
+</li>
+<li><a href="#2-environment-setup-the-hardest-part">2. Environment Setup: The Hardest Part</a><ul>
+<li><a href="#key-insight">2.1 Key Insight</a></li>
+<li><a href="#unified-response-class">2.2 Unified Response Class</a></li>
+</ul>
+</li>
+<li><a href="#3-department-management-first-crud-experience">3. Department Management</a></li>
+<li><a href="#4-employee-management-pagination--dynamic-sql">4. Employee Management: Pagination &amp; Dynamic SQL</a><ul>
+<li><a href="#pagination-query-basic-version">4.1 Pagination Query (Basic Version)</a></li>
+<li><a href="#using-pagehelper-plugin-recommended--deep-dive">4.2 Using PageHelper Plugin (Recommended) – Deep Dive</a></li>
+<li><a href="#conditional-pagination-query-dynamic-sql--advanced-details">4.3 Conditional Pagination Query (Dynamic SQL) – Advanced Details</a></li>
+<li><a href="#batch-delete-employees--foreach-in-xml">4.4 Batch Delete Employees – ForEach in XML</a></li>
+<li><a href="#add-employee">4.5 Add Employee</a>]]>
+    </summary>
+    <title>TLias Spring Boot Practice Guide</title>
+    <updated>2026-02-18T11:04:19.000Z</updated>
+  </entry>
+  <entry>
+    <author>
+      <name>AI with Alex</name>
+    </author>
+    <category term="Development" scheme="https://bodysuperman.github.io/categories/Development/"/>
+    <category term="Git" scheme="https://bodysuperman.github.io/categories/Development/Git/"/>
+    <category term="Git" scheme="https://bodysuperman.github.io/tags/Git/"/>
+    <category term="Version Control" scheme="https://bodysuperman.github.io/tags/Version-Control/"/>
+    <category term="GitHub" scheme="https://bodysuperman.github.io/tags/GitHub/"/>
+    <category term="CLI" scheme="https://bodysuperman.github.io/tags/CLI/"/>
+    <category term="Software Engineering" scheme="https://bodysuperman.github.io/tags/Software-Engineering/"/>
+    <id>https://bodysuperman.github.io/2025/11/10/Git-guideline/</id>
+    <link href="https://bodysuperman.github.io/2025/11/10/Git-guideline/"/>
+    <published>2025-11-10T08:15:59.000Z</published>
+    <summary>
+      <![CDATA[<ul>
+<li><a href="#understanding-git-basics">Understanding Git Basics</a><ul>
+<li><a href="#1-working-directory">1. Working Directory</a></li>
+<li><a href="#2-staging-area-index">2. Staging Area (Index)</a></li>
+<li><a href="#3-repository">3. Repository</a></li>
+</ul>
+</li>
+<li><a href="#essential-git-commands">Essential Git Commands</a><ul>
+<li><a href="#initial-setup">Initial Setup</a></li>
+<li><a href="#cloning-a-repository">Cloning a Repository</a></li>
+<li><a href="#tracking-and-committing-changes">Tracking and Committing Changes</a></li>
+<li><a href="#view-history">View history</a></li>
+<li><a href="#recommended-commit-prefixes">Recommended commit prefixes</a>]]>
+    </summary>
+    <title>Git guideline</title>
+    <updated>2025-11-10T10:04:19.000Z</updated>
+  </entry>
+  <entry>
+    <author>
+      <name>AI with Alex</name>
+    </author>
+    <id>https://bodysuperman.github.io/2025/11/03/The-Complete-Guide-to-Modern-CSS-Layouts-From-Flexbox-to-Grid-and-Beyond/</id>
+    <link href="https://bodysuperman.github.io/2025/11/03/The-Complete-Guide-to-Modern-CSS-Layouts-From-Flexbox-to-Grid-and-Beyond/"/>
+    <published>2025-11-03T03:07:07.000Z</published>
+    <summary>
+      <![CDATA[<p><a href="/HTML/p2/index.html" target="_blank">project demo1</a><br><a href="/HTML/p3/index.html" target="_blank">project demo2</a></p>
+<link rel="stylesheet" href="/css/folder.css" type="text/css"><script src="/js/folder.js" type="text/javascript" async></script>]]>
+    </summary>
+    <title>The Complete Guide to Modern CSS Layouts: From Flexbox to Grid and Beyond</title>
+    <updated>2025-11-05T11:04:19.000Z</updated>
+  </entry>
+  <entry>
+    <author>
+      <name>AI with Alex</name>
+    </author>
+    <category term="CSS3" scheme="https://bodysuperman.github.io/categories/CSS3/"/>
+    <category term="HTML5" scheme="https://bodysuperman.github.io/categories/CSS3/HTML5/"/>
+    <category term="Front-End Development" scheme="https://bodysuperman.github.io/categories/CSS3/HTML5/Front-End-Development/"/>
+    <category term="Web Styling" scheme="https://bodysuperman.github.io/categories/CSS3/HTML5/Front-End-Development/Web-Styling/"/>
+    <category term="Responsive Design" scheme="https://bodysuperman.github.io/categories/CSS3/HTML5/Front-End-Development/Web-Styling/Responsive-Design/"/>
+    <category term="Web Development" scheme="https://bodysuperman.github.io/tags/Web-Development/"/>
+    <id>https://bodysuperman.github.io/2025/10/26/CSS3-Core-Technologies-study-note/</id>
+    <link href="https://bodysuperman.github.io/2025/10/26/CSS3-Core-Technologies-study-note/"/>
+    <published>2025-10-26T05:53:06.000Z</published>
+    <summary>
+      <![CDATA[<ul>
+<li><a href="#introduction">1. Introduction to CSS3</a><ul>
+<li><a href="#what">1.1 What is CSS3?</a></li>
+<li><a href="#role">1.2 Core Roles of CSS3</a></li>
+<li><a href="#classify">1.3 CSS Classification by Location</a></li>
+</ul>
+</li>
+<li><a href="#css3selector">2. CSS3 Selectors: Target Elements Precisely</a><ul>
+<li><a href="#basic">2.1 Basic Selectors</a></li>
+<li><a href="#re">2.2 Relationship Selectors</a></li>
+<li><a href="#pse">2.3 Pseudo-Classes &amp; Pseudo-Elements</a></li>
+<li><a href="#attr">2.4 Attribute Selectors</a></li>
+</ul>
+</li>
+<li><a href="#text">3. Text Styling &amp; Layout</a><ul>
+<li><a href="#fonts">3.1 Font Styles</a></li>
+<li><a href="#textly">3.2 Text Layout</a></li>
+<li><a href="#fontshort">3.3 Font Shorthand</a></li>
+</ul>
+</li>
+<li><a href="#csssp">4. CSS Specificity (Priority)</a></li>
+<li><a href="#box-model">5. Box Model</a><ul>
+<li><a href="#box-model-c">5.1 Box Model Components</a></li>
+<li><a href="#key-p">5.2 Key Properties</a></li>
+<li><a href="#box-s">5.3 Box Sizing</a></li>
+<li><a href="#box-model-c">5.4 Box Model Components</a></li>
+<li><a href="#mccf">5.5 Margin Collapse &amp; Collapse Fix</a></li>
+</ul>
+</li>
+<li><a href="#css-b">6. CSS Backgrounds</a><ul>
+<li><a href="#b-p">6.1 Background Properties</a></li>
+<li><a href="#b-g">6.2 Background Gradients</a>]]>
+    </summary>
+    <title>CSS3 Core Technologies study note</title>
+    <updated>2025-10-26T11:04:19.000Z</updated>
+  </entry>
+  <entry>
+    <author>
+      <name>AI with Alex</name>
+    </author>
+    <category term="Machine Learning" scheme="https://bodysuperman.github.io/categories/Machine-Learning/"/>
+    <category term="Stanford CS229 Notes" scheme="https://bodysuperman.github.io/categories/Machine-Learning/Stanford-CS229-Notes/"/>
+    <category term="Linear Regression" scheme="https://bodysuperman.github.io/tags/Linear-Regression/"/>
+    <category term="Gradient Descent" scheme="https://bodysuperman.github.io/tags/Gradient-Descent/"/>
+    <category term="Cost Function" scheme="https://bodysuperman.github.io/tags/Cost-Function/"/>
+    <id>https://bodysuperman.github.io/2025/10/19/CS229-Notes-Part-1-Mathematical-Basics-of-Linear-Regression-%E2%80%94-From-Model-Formulation-to-Gradient-Descent/</id>
+    <link href="https://bodysuperman.github.io/2025/10/19/CS229-Notes-Part-1-Mathematical-Basics-of-Linear-Regression-%E2%80%94-From-Model-Formulation-to-Gradient-Descent/"/>
+    <published>2025-10-19T05:53:06.000Z</published>
+    <summary>
+      <![CDATA[<ul>
+<li><a href="#introduction">1. Introduction:</a><ul>
+<li><a href="#welcome">1.1 Welcome to the world of Machine Learning</a></li>
+<li><a href="#what-is-ml">1.2 What Is Machine Learning?</a></li>
+<li><a href="#sl">1.3 Supervised Learning</a></li>
+<li><a href="#ul">1.4 Unsupervised Learning</a></li>
+</ul>
+</li>
+<li><a href="#lr">2. Linear Regression with One Variable</a><ul>
+<li><a href="#mp">2.1 Model Representation</a></li>
+<li><a href="#cf">2.2 Cost Function</a><ul>
+<li><a href="#dcf">2.2.1 Definition of the Cost Function</a></li>
+</ul>
+</li>
+<li><a href="#intuition">2.3 Intuition for the Cost Function (I)</a></li>
+<li><a href="#plot">2.4 Intuition for the Cost Function (II): Contour Plots</a></li>
+<li><a href="#gd">2.5 Gradient Descent</a></li>
+<li><a href="#gdi">2.6 Gradient Descent Intuition</a></li>
+<li><a href="#gdlr">2.7 Gradient Descent for Linear Regression</a></li>
+</ul>
+</li>
+</ul>]]>
+    </summary>
+    <title>CS229 Notes (Part 1): Mathematical Basics of Linear Regression — From Model Formulation to Gradient Descent</title>
+    <updated>2025-10-19T11:04:19.000Z</updated>
+  </entry>
+</feed>
