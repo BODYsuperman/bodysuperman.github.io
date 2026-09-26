@@ -176,7 +176,7 @@ site_state: true
 social:
   GitHub: https://github.com/BODYsuperman || fab fa-github
   RSS Feed: /atom.xml || fas fa-rss
-  E-Mail: meijiaping6@gmail.com || fa fa-envelope
+  Email: mailto:meijiaping6@gmail.com || fas fa-envelope
   #Weibo: https://weibo.com/yourname || fab fa-weibo
   #Google: https://plus.google.com/yourname || fab fa-google
   #Twitter: https://twitter.com/yourname || fab fa-twitter
