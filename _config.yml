@@ -134,3 +134,16 @@ search:
   field: post
   content: true
   format: html
+
+feed:
+  enable: true
+  type:
+    - atom
+    - rss2
+  path:
+    - atom.xml
+    - rss.xml
+  limit: 20
+  content: false
+  content_limit: 300
+  autodiscovery: true
