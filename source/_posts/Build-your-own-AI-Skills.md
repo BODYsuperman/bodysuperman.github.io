@@ -1,6 +1,6 @@
 ---
 title: Build Your Own AI Skills
-date: 2026-09-26 09:32:54
+date: 2026-08-30 09:32:54
 updated: 2026-09-26 00:00:00
 comments: true
 categories:
