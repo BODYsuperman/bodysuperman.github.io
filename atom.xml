@@ -484,10 +484,10 @@
     <category term="Spring Boot" scheme="https://bodysuperman.github.io/categories/Java/AI/Spring-Boot/"/>
     <category term="LLM" scheme="https://bodysuperman.github.io/tags/LLM/"/>
     <category term="RAG" scheme="https://bodysuperman.github.io/tags/RAG/"/>
-    <category term="Spring Boot" scheme="https://bodysuperman.github.io/tags/Spring-Boot/"/>
     <category term="LangChain4J" scheme="https://bodysuperman.github.io/tags/LangChain4J/"/>
     <category term="OpenAI" scheme="https://bodysuperman.github.io/tags/OpenAI/"/>
     <category term="Function Calling" scheme="https://bodysuperman.github.io/tags/Function-Calling/"/>
+    <category term="Spring Boot" scheme="https://bodysuperman.github.io/tags/Spring-Boot/"/>
     <id>https://bodysuperman.github.io/2026/04/27/LangChain4J-in-Action-Building-a-Medical-AI-Assistant-Agent/</id>
     <link href="https://bodysuperman.github.io/2026/04/27/LangChain4J-in-Action-Building-a-Medical-AI-Assistant-Agent/"/>
     <published>2026-04-27T04:48:28.000Z</published>
@@ -528,10 +528,10 @@
     </author>
     <category term="Backend Development" scheme="https://bodysuperman.github.io/categories/Backend-Development/"/>
     <category term="Java" scheme="https://bodysuperman.github.io/tags/Java/"/>
+    <category term="Spring Boot" scheme="https://bodysuperman.github.io/tags/Spring-Boot/"/>
     <category term="RabbitMQ" scheme="https://bodysuperman.github.io/tags/RabbitMQ/"/>
     <category term="Message Queue" scheme="https://bodysuperman.github.io/tags/Message-Queue/"/>
     <category term="Microservices" scheme="https://bodysuperman.github.io/tags/Microservices/"/>
-    <category term="Spring Boot" scheme="https://bodysuperman.github.io/tags/Spring-Boot/"/>
     <id>https://bodysuperman.github.io/2026/04/26/Message-Middleware-Selection-Guide-RabbitMQ/</id>
     <link href="https://bodysuperman.github.io/2026/04/26/Message-Middleware-Selection-Guide-RabbitMQ/"/>
     <published>2026-04-26T04:48:28.000Z</published>
