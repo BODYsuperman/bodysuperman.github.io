@@ -13,6 +13,7 @@
  */
 
 const { Permalink } = require('hexo-util');
+const { join } = require('path').posix;
 const indexGenerator = require('hexo-generator-index/lib/generator');
 
 const ZH = 'zh-CN';
@@ -124,4 +125,31 @@ hexo.extend.generator.register('index-zh-CN', function(locals) {
     }
     return Object.assign({}, route, { path: `${ZH}/${route.path}`, data });
   });
+});
+
+// 4. 中文文章的相对图片引用（如 ![pic](pic01.png)）：
+// marked 的 postAsset 解析会用中文文章的 postPath（source/_posts/X.zh）查
+// PostAsset，而资源实际在英文文章的文件夹（source/_posts/X/）里，查不到就
+// 渲染成 /pic01.png（站点根路径，404）。这里拦截 image()：按 .zh 目录解析
+// 失败时，回退到英文文章目录的同名资源，直接使用其发布路径（asset.path，
+// 与英文页面的解析结果一致）。已有 .zh 资源文件夹的旧文章行为不变。
+hexo.extend.filter.register('marked:renderer', renderer => {
+  const origImage = renderer.image;
+  renderer.image = function(href, title, text) {
+    const { hexo, options } = this;
+    const { postPath } = options;
+    if (
+      postPath &&
+      postPath.endsWith(ZH_SUFFIX) &&
+      !/^(#|\/\/|https?:|\/|\\)/.test(href)
+    ) {
+      const PostAsset = hexo.model('PostAsset');
+      if (!PostAsset.findById(join(postPath, href))) {
+        const enPath = postPath.slice(0, -ZH_SUFFIX.length); // 去掉 .zh 后缀
+        const asset = PostAsset.findById(join(enPath, href));
+        if (asset) href = asset.path.replace(/\\/g, '/');
+      }
+    }
+    return origImage.call(this, href, title, text);
+  };
 });
