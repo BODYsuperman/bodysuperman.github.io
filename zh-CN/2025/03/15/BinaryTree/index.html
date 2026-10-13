@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en,zh-CN,default">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/logo-180.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/logo-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/logo-16.png">
+  <link rel="mask-icon" href="/images/logo-512.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|monospace:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"bodysuperman.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null,"use":"Gitalk","text":true},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="二叉树 什么是二叉树？ 关键组成部分与术语 基于层次完整性的二叉树类型 树的遍历技术 深度优先搜索（DFS） 广度优先搜索（BFS）   二叉搜索树（BST） BST 实现 如何在 BST 中删除节点   二叉树的最大深度 实际应用">
+<meta property="og:type" content="article">
+<meta property="og:title" content="二叉树">
+<meta property="og:url" content="https://bodysuperman.github.io/zh-CN/2025/03/15/BinaryTree/index.html">
+<meta property="og:site_name" content="AI with Alex&#39;s Blog">
+<meta property="og:description" content="二叉树 什么是二叉树？ 关键组成部分与术语 基于层次完整性的二叉树类型 树的遍历技术 深度优先搜索（DFS） 广度优先搜索（BFS）   二叉搜索树（BST） BST 实现 如何在 BST 中删除节点   二叉树的最大深度 实际应用">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://bodysuperman.github.io/images/b1.png">
+<meta property="og:image" content="https://bodysuperman.github.io/images/b2.png">
+<meta property="og:image" content="https://bodysuperman.github.io/images/b3.png">
+<meta property="og:image" content="https://bodysuperman.github.io/images/b4.png">
+<meta property="article:published_time" content="2025-03-15T05:04:19.000Z">
+<meta property="article:modified_time" content="2025-03-15T05:04:19.000Z">
+<meta property="article:author" content="AI with Alex">
+<meta property="article:tag" content="Data Structure and Alogrithm">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://bodysuperman.github.io/images/b1.png">
+
+<link rel="canonical" href="https://bodysuperman.github.io/zh-CN/2025/03/15/BinaryTree/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>二叉树 | AI with Alex's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="AI with Alex's Blog" type="application/atom+xml">
+<link rel="alternate" href="/rss.xml" title="AI with Alex's Blog" type="application/rss+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+
+
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">AI with Alex's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+  <div class="site-lang-switcher">
+    <span class="lang-item lang-current">简体中文</span>
+      <a class="lang-item lang-link" href="/2025/03/15/BinaryTree/" rel="section" title="English">
+        <i class="fa fa-language"></i> English
+      </a>
+  </div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+   
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://bodysuperman.github.io/zh-CN/2025/03/15/BinaryTree/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+      <meta itemprop="name" content="AI with Alex">
+      <meta itemprop="description" content="Attention(Q,K,V)=softmax(QK^T/sqrt(d_k))V">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="AI with Alex's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          二叉树
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2025-03-15 13:04:19" itemprop="dateCreated datePublished" datetime="2025-03-15T13:04:19+08:00">2025-03-15</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Data-Structure-and-Alogrithm/" itemprop="url" rel="index"><span itemprop="name">Data Structure and Alogrithm</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>5.2k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>5 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="二叉树"><a href="#二叉树" class="headerlink" title="二叉树"></a>二叉树</h1><ol>
+<li><a href="#what-is-a-binary-tree">什么是二叉树？</a></li>
+<li><a href="#key-components">关键组成部分与术语</a></li>
+<li><a href="#types-of-binarytree">基于层次完整性的二叉树类型</a></li>
+<li><a href="#traversal-techniques">树的遍历技术</a><ul>
+<li><a href="#dfs">深度优先搜索（DFS）</a></li>
+<li><a href="#bfs">广度优先搜索（BFS）</a></li>
+</ul>
+</li>
+<li><a href="#bst">二叉搜索树（BST）</a><ul>
+<li><a href="#bstim">BST 实现</a></li>
+<li><a href="#deletebst">如何在 BST 中删除节点</a></li>
+</ul>
+</li>
+<li><a href="#depth">二叉树的最大深度</a></li>
+<li><a href="#applications">实际应用</a><span id="more"></span></li>
+</ol>
+<h2 id="1-什么是二叉树？"><a href="#1-什么是二叉树？" class="headerlink" title="1. 什么是二叉树？ "></a>1. 什么是二叉树？ <a name="what-is-a-doubly-linked-list"></a></h2><p><strong>二叉树（binary tree）</strong>是一种<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Tree_(data_structure)">树形数据结构</a>，其中每个节点最多有两个子节点，分别称为<strong>左子节点</strong>和<strong>右子节点</strong>。最顶层的节点称为<strong>根节点</strong>，没有子节点的节点称为<strong>叶子节点</strong>。它在计算机科学中被广泛用于高效的数据存储和检索，支持插入、删除和遍历等各种操作。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">     A  &lt;- Root</span><br><span class="line">   /   \</span><br><span class="line">  B     C  &lt;- Children</span><br><span class="line"> / \</span><br><span class="line">D   E  &lt;- Leave</span><br></pre></td></tr></table></figure>
+<p>通用 TreeNode 类：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">public class TreeNode&lt;T&gt; where T : IComparable&lt;T&gt;</span><br><span class="line">&#123;</span><br><span class="line">    public T Data &#123; get; set; &#125;</span><br><span class="line">    public TreeNode&lt;T&gt;? Left &#123; get; set; &#125;</span><br><span class="line">    public TreeNode&lt;T&gt;? Right &#123; get; set; &#125;</span><br><span class="line"></span><br><span class="line">    public TreeNode(T data)</span><br><span class="line">    &#123;</span><br><span class="line">        Data = data;</span><br><span class="line">        Left = null;</span><br><span class="line">        Right = null;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="2-关键组成部分与术语："><a href="#2-关键组成部分与术语：" class="headerlink" title="2. 关键组成部分与术语： "></a>2. 关键组成部分与术语： <a name="key-components"></a></h2><ul>
+<li><strong>根节点（Root）</strong>：顶层节点（示例中的 A）</li>
+<li><strong>父节点&#x2F;子节点（Parent&#x2F;Child）</strong>：A 是 B 和 C 的父节点</li>
+<li><strong>叶子节点（Leaf）</strong>：没有子节点的节点（D、E、C）</li>
+<li><strong>子树（Subtree）</strong>：任意节点及其所有后代构成的树</li>
+<li><strong>深度（Depth）</strong>：从根节点到某节点的距离（根节点的默认深度为 1）</li>
+<li><strong>高度（Height）</strong>：从某节点到其最远叶子节点的最长路径</li>
+<li><strong>层（Level）</strong>：处于相同深度的所有节点</li>
+</ul>
+<h2 id="3-基于层次完整性的二叉树类型"><a href="#3-基于层次完整性的二叉树类型" class="headerlink" title="3. 基于层次完整性的二叉树类型 "></a>3. 基于层次完整性的二叉树类型 <a name="types-of-binarytree"></a></h2><ul>
+<li>完全二叉树（Complete Binary Tree）</li>
+<li>完美二叉树（Perfect Binary Tree）</li>
+<li>平衡二叉树（Balanced Binary Tree）</li>
+</ul>
+<h3 id="完美二叉树"><a href="#完美二叉树" class="headerlink" title="完美二叉树"></a>完美二叉树</h3><p>完美二叉树是指所有内部节点都有两个子节点，且所有叶子节点都在同一层的二叉树。<br>高度为 h 的完美二叉树（二叉树的高度是从根节点到树中任意叶子节点的最长路径上的边数，根节点的高度为 0）共有 <strong>2<sup>h+1</sup>-1</strong> 个节点。<br><img src="/images/b1.png" alt="pic"></p>
+<h3 id="完全二叉树"><a href="#完全二叉树" class="headerlink" title="完全二叉树"></a>完全二叉树</h3><p>完全二叉树是指除最后一层外，所有层都被完全填充，且最后一层的所有键尽可能靠左的二叉树。<br>完全二叉树类似于满二叉树，但有两个主要区别：</p>
+<ul>
+<li>除最后一层外，每一层必须被完全填充。</li>
+<li>所有叶子元素必须向左倾斜。（我认为它们必须从左到右连续排列）</li>
+<li>最后一个叶子元素可能没有右兄弟节点，即完全二叉树不一定是满二叉树。<br><img src="/images/b2.png" alt="pic"></li>
+</ul>
+<h3 id="满二叉树"><a href="#满二叉树" class="headerlink" title="满二叉树"></a>满二叉树</h3><p>满二叉树是每个节点要么有零个子节点，要么有两个子节点的二叉树。<br><img src="/images/b3.png" alt="pic"></p>
+<h3 id="平衡二叉树"><a href="#平衡二叉树" class="headerlink" title="平衡二叉树"></a>平衡二叉树</h3><p>如果二叉树的高度为 O(Log n)（其中 n 是节点数），则该树是平衡的。例如，AVL 树通过确保左右子树的高度差最多为 <strong>1</strong>（关键属性！）来维持 O(Log n) 的高度。红黑树通过确保从根到叶子的每条路径上的黑色节点数量相同，且没有相邻的红色节点来维持 O(Log n) 的高度。平衡二叉搜索树在性能上表现良好，它们为搜索、插入和删除操作提供 O(log n) 的时间复杂度。<br><img src="/images/b4.png" alt="pic"></p>
+<h2 id="4-树的遍历技术"><a href="#4-树的遍历技术" class="headerlink" title="4. 树的遍历技术 "></a>4. 树的遍历技术 <a name="traversal-techniques"></a></h2><p>树的遍历是指按某种顺序恰好访问或访问树中每个节点一次的过程。树的遍历算法帮助我们访问和处理树的所有节点。由于树不是线性数据结构，下一个要访问的节点可能有多种选择，因此我们有多种遍历树的方式。</p>
+<ul>
+<li>深度优先搜索（DFS）<ul>
+<li>中序遍历（Inorder Traversal）</li>
+<li>前序遍历（Preorder Traversal）</li>
+<li>后序遍历（Postorder Traversal）</li>
+</ul>
+</li>
+<li>层序遍历（Level Order Traversal），即广度优先搜索（BFS）</li>
+</ul>
+<h3 id="深度优先搜索（DFS）"><a href="#深度优先搜索（DFS）" class="headerlink" title="深度优先搜索（DFS） "></a>深度优先搜索（DFS） <a name="dfs"></a></h3><ul>
+<li><p>中序遍历（左-根-右）</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">void Inorder(TreeNode node) &#123;</span><br><span class="line">    if (node == null) return;</span><br><span class="line">    Inorder(node.Left);</span><br><span class="line">    Console.Write(node.Value + &quot; &quot;);</span><br><span class="line">    Inorder(node.Right);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>输出</strong>：<code> D B E A C</code></p>
+</li>
+<li><p>前序遍历（根-左-右）</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">void Preorder(TreeNode node) &#123;</span><br><span class="line">    if (node == null) return;</span><br><span class="line">    Console.Write(node.Value + &quot; &quot;);</span><br><span class="line">    Preorder(node.Left);</span><br><span class="line">    Preorder(node.Right);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>输出</strong>：<code>A B D E C</code></p>
+</li>
+<li><p>后序遍历（左-右-根）</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">void Postorder(TreeNode node) &#123;</span><br><span class="line">    if (node == null) return;</span><br><span class="line">    Postorder(node.Left);</span><br><span class="line">    Postorder(node.Right);</span><br><span class="line">    Console.Write(node.Value + &quot; &quot;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>输出</strong>：<code>D E B C A</code></p>
+</li>
+</ul>
+<h3 id="层序遍历，即广度优先搜索（BFS）"><a href="#层序遍历，即广度优先搜索（BFS）" class="headerlink" title="层序遍历，即广度优先搜索（BFS） "></a>层序遍历，即广度优先搜索（BFS） <a name="bfs"></a></h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">public IList&lt;IList&lt;int&gt;&gt; LevelOrder(TreeNode root)</span><br><span class="line">&#123;</span><br><span class="line">    var res = new List&lt;IList&lt;int&gt;&gt;();</span><br><span class="line">    var que = new Queue&lt;TreeNode&gt;();</span><br><span class="line">    if (root == null) return res;</span><br><span class="line">    que.Enqueue(root);</span><br><span class="line">    while (que.Count != 0)</span><br><span class="line">    &#123;</span><br><span class="line">        var size = que.Count;</span><br><span class="line">        var vec = new List&lt;int&gt;();</span><br><span class="line">        for (int i = 0; i &lt; size; i++)</span><br><span class="line">        &#123;</span><br><span class="line">            var cur = que.Dequeue();</span><br><span class="line">            vec.Add(cur.val);</span><br><span class="line">            if (cur.left != null) que.Enqueue(cur.left);</span><br><span class="line">            if (cur.right != null) que.Enqueue(cur.right);</span><br><span class="line">        &#125;</span><br><span class="line">        res.Add(vec);</span><br><span class="line">    &#125;</span><br><span class="line">    return res;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>输出</strong>：<code>A B C D E</code></p>
+<h2 id="5-二叉搜索树（BST）"><a href="#5-二叉搜索树（BST）" class="headerlink" title="5. 二叉搜索树（BST） "></a>5. 二叉搜索树（BST） <a name="bst"></a></h2><p>根据<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Binary_search_tree">维基百科</a>：</p>
+<blockquote>
+<p>在计算机科学中，<strong>二叉搜索树</strong>（<strong>BST</strong>），也称为<strong>有序二叉树</strong>或<strong>排序二叉树</strong>，是一种以键为根的二叉树数据结构，其中每个内部节点的键大于其左子树中所有节点的键，小于其右子树中所有节点的键。二叉搜索树上的操作时间复杂度与树的高度成线性关系。</p>
+</blockquote>
+<p><strong><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Time_complexity">时间复杂度</a>（<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Big_O_notation">大 O 表示法</a>）</strong></p>
+<table>
+<thead>
+<tr>
+<th align="center">操作</th>
+<th align="center">平均</th>
+<th align="center">最坏情况</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">搜索（Search）</td>
+<td align="center">O(log n)</td>
+<td align="center">O(n)</td>
+</tr>
+<tr>
+<td align="center">插入（Insert）</td>
+<td align="center">O(log n)</td>
+<td align="center">O(n)</td>
+</tr>
+<tr>
+<td align="center">删除（Delete）</td>
+<td align="center">O(log n)</td>
+<td align="center">O(n)</td>
+</tr>
+</tbody></table>
+<h3 id="BST-实现"><a href="#BST-实现" class="headerlink" title="BST 实现 "></a>BST 实现 <a name="bstim"></a></h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">public class BinarySearchTree&lt;T&gt; where T : IComparable&lt;T&gt;</span><br><span class="line">&#123;</span><br><span class="line">    private TreeNode&lt;T&gt;? _root;</span><br><span class="line"></span><br><span class="line">    public void Insert(T data)</span><br><span class="line">    &#123;</span><br><span class="line">        _root = InsertRec(_root, data);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private TreeNode&lt;T&gt; InsertRec(TreeNode&lt;T&gt;? node, T data)</span><br><span class="line">    &#123;</span><br><span class="line">        if (node == null) return new TreeNode&lt;T&gt;(data);</span><br><span class="line"></span><br><span class="line">        int comparison = data.CompareTo(node.Data);</span><br><span class="line">        if (comparison &lt; 0)</span><br><span class="line">            node.Left = InsertRec(node.Left, data);</span><br><span class="line">        else if (comparison &gt; 0)</span><br><span class="line">            node.Right = InsertRec(node.Right, data);</span><br><span class="line"></span><br><span class="line">        return node;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public bool Search(T data)</span><br><span class="line">    &#123;</span><br><span class="line">        return SearchRec(_root, data);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private bool SearchRec(TreeNode&lt;T&gt;? node, T data)</span><br><span class="line">    &#123;</span><br><span class="line">        if (node == null) return false;</span><br><span class="line"></span><br><span class="line">        int comparison = data.CompareTo(node.Data);</span><br><span class="line">        return comparison == 0 ||</span><br><span class="line">               SearchRec(comparison &lt; 0 ? node.Left : node.Right, data);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="如何在-BST-中删除节点？"><a href="#如何在-BST-中删除节点？" class="headerlink" title="如何在 BST 中删除节点？ "></a>如何在 BST 中删除节点？ <a name="deletebst"></a></h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">public TreeNode DeleteNode(TreeNode root, int key)</span><br><span class="line">&#123;</span><br><span class="line">    /*</span><br><span class="line">     * 1.Not found the target key</span><br><span class="line">     *</span><br><span class="line">     * 2. Found</span><br><span class="line">     * 2.1 the left and right node is null which mean its a leaf node</span><br><span class="line">     * 2.2 the left is null and  the right is not null</span><br><span class="line">     * 2.3 the left is not null and  the right is null</span><br><span class="line">     * 2.4 Both left and right node is not null</span><br><span class="line">     *</span><br><span class="line">     */</span><br><span class="line">    //not found</span><br><span class="line">    if (root == null) return null;</span><br><span class="line">    //Found</span><br><span class="line">    if(root.val == key)</span><br><span class="line">    &#123;</span><br><span class="line">        if (root.left == null &amp;&amp; root.right == null) return null;</span><br><span class="line">        if (root.left == null &amp;&amp; root.right != null) return root.right;</span><br><span class="line">        if (root.left != null &amp;&amp; root.right == null) return root.left;</span><br><span class="line">        if (root.left != null &amp;&amp; root.right != null)</span><br><span class="line">        &#123;</span><br><span class="line">            TreeNode leftode = root.right;</span><br><span class="line">            while(leftode.left != null)</span><br><span class="line">            &#123;</span><br><span class="line">                leftode = leftode.left;</span><br><span class="line">            &#125;</span><br><span class="line">            leftode.left = root.left;</span><br><span class="line">            return root.right;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    if (root.val &gt; key) root.left = DeleteNode(root.left, key);</span><br><span class="line">    if (root.val &lt; key) root.right = DeleteNode(root.right, key);</span><br><span class="line"></span><br><span class="line">    return root;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="6-二叉树的最大深度"><a href="#6-二叉树的最大深度" class="headerlink" title="6. 二叉树的最大深度 "></a>6. 二叉树的最大深度 <a name="depth"></a></h2><p>给定一棵二叉树，任务是找到该树的最大深度。最大深度或树的高度是从根节点到最深节点的边数。</p>
+<ul>
+<li><p>方法一：使用递归——时间复杂度 O(n)，空间复杂度 O(h)</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">public int MaxDepth(TreeNode root) &#123;</span><br><span class="line">    if(root == null) return 0;</span><br><span class="line"></span><br><span class="line">    int leftDepth = MaxDepth(root.left);</span><br><span class="line">    int rightDepth = MaxDepth(root.right);</span><br><span class="line"></span><br><span class="line">    return 1 + Math.Max(leftDepth, rightDepth);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>方法二：不使用空分隔符的层序遍历——时间复杂度 O(n)，空间复杂度 O(n)</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">public int MaxDepth(TreeNode root)</span><br><span class="line">&#123;</span><br><span class="line">    int depth = 0;</span><br><span class="line">    Queue&lt;TreeNode&gt; que = new();</span><br><span class="line">    if (root == null) return depth;</span><br><span class="line">    que.Enqueue(root);</span><br><span class="line">    while (que.Count != 0)</span><br><span class="line">    &#123;</span><br><span class="line">        int size = que.Count;</span><br><span class="line">        depth++;</span><br><span class="line">        for (int i = 0; i &lt; size; i++)</span><br><span class="line">        &#123;</span><br><span class="line">            var node = que.Dequeue();</span><br><span class="line">            if (node.left != null) que.Enqueue(node.left);</span><br><span class="line">            if (node.right != null) que.Enqueue(node.right);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return depth;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="7-实际应用"><a href="#7-实际应用" class="headerlink" title="7. 实际应用 "></a>7. 实际应用 <a name="applications"></a></h2><ol>
+<li>LINQ 查询优化<ul>
+<li>表达式树驱动 LINQ 查询</li>
+</ul>
+</li>
+<li>游戏开发<ul>
+<li>Unity 使用空间分割树（Octrees&#x2F;BVH）</li>
+</ul>
+</li>
+<li>数据库系统<ul>
+<li>SQL Server 使用 B 树存储索引</li>
+</ul>
+</li>
+</ol>
+<link rel="stylesheet" href="/css/folder.css" type="text/css"><script src="/js/folder.js" type="text/javascript" async></script>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Data-Structure-and-Alogrithm/" rel="tag"># Data Structure and Alogrithm</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/zh-CN/2025/03/08/KMP-Algorithm/" rel="prev" title="KMP 算法">
+      <i class="fa fa-chevron-left"></i> KMP 算法
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2025/03/15/BinaryTree/" rel="next" title="Binary Tree">
+      Binary Tree <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+
+            
+            <div class="post-copyright" style="margin: 0 0 10px 0;">
+              <p class="post-copyright-author" style="margin: 0 0 5px 0 !important;"><strong>Author:</strong> <a href="https://github.com/BODYsuperman" target="_blank">Alex</a></p>
+              <p class="post-copyright-link" style="margin: 0 0 5px 0 !important;"><strong>Article Link:</strong> <a href="https://bodysuperman.github.io/zh-CN/2025/03/15/BinaryTree/" target="_blank">https://bodysuperman.github.io/zh-CN/2025/03/15/BinaryTree/</a></p>
+              <p class="post-copyright-license" style="margin: 0 !important;"><strong>License:</strong> This article is licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a>. Please credit the original author and include the source link when reposting.</p>
+            </div>
+
+          </div>
+          
+    <div class="comments" id="gitalk-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%8C%E5%8F%89%E6%A0%91"><span class="nav-number">1.</span> <span class="nav-text">二叉树</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E4%BB%80%E4%B9%88%E6%98%AF%E4%BA%8C%E5%8F%89%E6%A0%91%EF%BC%9F"><span class="nav-number">1.1.</span> <span class="nav-text">1. 什么是二叉树？ </span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E5%85%B3%E9%94%AE%E7%BB%84%E6%88%90%E9%83%A8%E5%88%86%E4%B8%8E%E6%9C%AF%E8%AF%AD%EF%BC%9A"><span class="nav-number">1.2.</span> <span class="nav-text">2. 关键组成部分与术语： </span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E5%9F%BA%E4%BA%8E%E5%B1%82%E6%AC%A1%E5%AE%8C%E6%95%B4%E6%80%A7%E7%9A%84%E4%BA%8C%E5%8F%89%E6%A0%91%E7%B1%BB%E5%9E%8B"><span class="nav-number">1.3.</span> <span class="nav-text">3. 基于层次完整性的二叉树类型 </span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%8C%E7%BE%8E%E4%BA%8C%E5%8F%89%E6%A0%91"><span class="nav-number">1.3.1.</span> <span class="nav-text">完美二叉树</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%8C%E5%85%A8%E4%BA%8C%E5%8F%89%E6%A0%91"><span class="nav-number">1.3.2.</span> <span class="nav-text">完全二叉树</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%BB%A1%E4%BA%8C%E5%8F%89%E6%A0%91"><span class="nav-number">1.3.3.</span> <span class="nav-text">满二叉树</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B9%B3%E8%A1%A1%E4%BA%8C%E5%8F%89%E6%A0%91"><span class="nav-number">1.3.4.</span> <span class="nav-text">平衡二叉树</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-%E6%A0%91%E7%9A%84%E9%81%8D%E5%8E%86%E6%8A%80%E6%9C%AF"><span class="nav-number">1.4.</span> <span class="nav-text">4. 树的遍历技术 </span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B7%B1%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2%EF%BC%88DFS%EF%BC%89"><span class="nav-number">1.4.1.</span> <span class="nav-text">深度优先搜索（DFS） </span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B1%82%E5%BA%8F%E9%81%8D%E5%8E%86%EF%BC%8C%E5%8D%B3%E5%B9%BF%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2%EF%BC%88BFS%EF%BC%89"><span class="nav-number">1.4.2.</span> <span class="nav-text">层序遍历，即广度优先搜索（BFS） </span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91%EF%BC%88BST%EF%BC%89"><span class="nav-number">1.5.</span> <span class="nav-text">5. 二叉搜索树（BST） </span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#BST-%E5%AE%9E%E7%8E%B0"><span class="nav-number">1.5.1.</span> <span class="nav-text">BST 实现 </span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E5%9C%A8-BST-%E4%B8%AD%E5%88%A0%E9%99%A4%E8%8A%82%E7%82%B9%EF%BC%9F"><span class="nav-number">1.5.2.</span> <span class="nav-text">如何在 BST 中删除节点？ </span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E6%9C%80%E5%A4%A7%E6%B7%B1%E5%BA%A6"><span class="nav-number">1.6.</span> <span class="nav-text">6. 二叉树的最大深度 </span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-%E5%AE%9E%E9%99%85%E5%BA%94%E7%94%A8"><span class="nav-number">1.7.</span> <span class="nav-text">7. 实际应用 </span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="AI with Alex"
+      src="/uploads/avatar.jpg">
+  <p class="site-author-name" itemprop="name">AI with Alex</p>
+  <div class="site-description" itemprop="description">Attention(Q,K,V)=softmax(QK^T/sqrt(d_k))V</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">62</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">35</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">88</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/BODYsuperman" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;BODYsuperman" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/atom.xml" title="RSS Feed → &#x2F;atom.xml"><i class="fas fa-rss fa-fw"></i>RSS Feed</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:meijiaping6@gmail.com" title="Email → mailto:meijiaping6@gmail.com" rel="noopener" target="_blank"><i class="fas fa-envelope fa-fw"></i>Email</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://stackoverflow.com/users/9644964/alexandar-may-msft?tab=answers&sort=votes" title="StackOverflow → https:&#x2F;&#x2F;stackoverflow.com&#x2F;users&#x2F;9644964&#x2F;alexandar-may-msft?tab&#x3D;answers&amp;sort&#x3D;votes" rel="noopener" target="_blank"><i class="fab fa-stack-overflow fa-fw"></i>StackOverflow</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">AI with Alex</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">Symbols count total: </span>
+    <span title="Symbols count total">840k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">Reading time total &asymp;</span>
+    <span title="Reading time total">12:43</span>
+    
+    <!--
+    
+    -->
+</div>
+
+<!--
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a>
+   </div>
+--><script color="0,0,255" opacity="0.5" zIndex="-1" count="99" src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1/dist/canvas-nest.js"></script>
+
+
+
+
+
+
+        
+
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv"  >
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv"  >
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : 'Ov23liVJTzqy1rzaDXXM',
+      clientSecret: '5e785a7d46e69f7509e6c2f7730855a55944df33',
+      repo        : 'blog-comment',
+      owner       : 'BODYsuperman',
+      admin       : ['BODYsuperman'],
+      id          : 'dd8a0ae509141edaf251730d614b200e',
+        language: '',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+
+</body>
+</html>

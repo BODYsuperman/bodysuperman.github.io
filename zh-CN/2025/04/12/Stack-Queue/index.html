@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="en,zh-CN,default">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/logo-180.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/logo-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/logo-16.png">
+  <link rel="mask-icon" href="/images/logo-512.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|monospace:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"bodysuperman.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null,"use":"Gitalk","text":true},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="引言   栈概述   核心特性   应用场景   队列概述   核心特性   应用场景   队列类型   实现栈   基于数组   基于链表   实现队列   基于数组   基于链表   用两个栈实现队列   用一个队列实现栈   总结">
+<meta property="og:type" content="article">
+<meta property="og:title" content="栈与队列">
+<meta property="og:url" content="https://bodysuperman.github.io/zh-CN/2025/04/12/Stack-Queue/index.html">
+<meta property="og:site_name" content="AI with Alex&#39;s Blog">
+<meta property="og:description" content="引言   栈概述   核心特性   应用场景   队列概述   核心特性   应用场景   队列类型   实现栈   基于数组   基于链表   实现队列   基于数组   基于链表   用两个栈实现队列   用一个队列实现栈   总结">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://bodysuperman.github.io/sq1.png">
+<meta property="article:published_time" content="2025-04-12T10:40:32.000Z">
+<meta property="article:modified_time" content="2025-04-12T10:04:19.000Z">
+<meta property="article:author" content="AI with Alex">
+<meta property="article:tag" content="Data Structure and Alogrithm">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://bodysuperman.github.io/sq1.png">
+
+<link rel="canonical" href="https://bodysuperman.github.io/zh-CN/2025/04/12/Stack-Queue/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>栈与队列 | AI with Alex's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="AI with Alex's Blog" type="application/atom+xml">
+<link rel="alternate" href="/rss.xml" title="AI with Alex's Blog" type="application/rss+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+
+
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">AI with Alex's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+  <div class="site-lang-switcher">
+    <span class="lang-item lang-current">简体中文</span>
+      <a class="lang-item lang-link" href="/2025/04/12/Stack-Queue/" rel="section" title="English">
+        <i class="fa fa-language"></i> English
+      </a>
+  </div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+   
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://bodysuperman.github.io/zh-CN/2025/04/12/Stack-Queue/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+      <meta itemprop="name" content="AI with Alex">
+      <meta itemprop="description" content="Attention(Q,K,V)=softmax(QK^T/sqrt(d_k))V">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="AI with Alex's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          栈与队列
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2025-04-12 18:40:32 / 修改时间：18:04:19" itemprop="dateCreated datePublished" datetime="2025-04-12T18:40:32+08:00">2025-04-12</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Data-Structure-and-Alogrithm/" itemprop="url" rel="index"><span itemprop="name">Data Structure and Alogrithm</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>5.4k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>5 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <ol>
+<li><a href="#introduction">引言</a>  </li>
+<li><a href="#stack-overview">栈概述</a>  <ul>
+<li><a href="#key-features-of-stack">核心特性</a>  </li>
+<li><a href="#applications-of-stack">应用场景</a></li>
+</ul>
+</li>
+<li><a href="#queue-overview">队列概述</a>  <ul>
+<li><a href="#key-features-of-queue">核心特性</a>  </li>
+<li><a href="#applications-of-queue">应用场景</a>  </li>
+<li><a href="#type">队列类型</a></li>
+</ul>
+</li>
+<li><a href="#implementing-stack">实现栈</a>  <ul>
+<li><a href="#stack-implementation-using-array">基于数组</a>  </li>
+<li><a href="#stack-implementation-using-linked-list">基于链表</a></li>
+</ul>
+</li>
+<li><a href="#implementing-queue">实现队列</a>  <ul>
+<li><a href="#queue-implementation-using-array">基于数组</a>  </li>
+<li><a href="#queue-implementation-using-linked-list">基于链表</a></li>
+</ul>
+</li>
+<li><a href="#implementing-queue-with-two-stacks">用两个栈实现队列</a>  </li>
+<li><a href="#implementing-stack-with-one-queue">用一个队列实现栈</a>  </li>
+<li><a href="#summary">总结</a>  <span id="more"></span></li>
+</ol>
+<h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言<a name="introduction"></a></h2><p>栈（Stack）是一种线性数据结构，遵循<strong>后进先出（LIFO, Last In, First Out）</strong>原则，最后插入的元素最先被弹出。这意味着插入和删除操作都只在一端进行。而队列（Queue）遵循<strong>先进先出（FIFO, First In, First Out）</strong>原则，最先加入队列的元素最先被移除。</p>
+<ul>
+<li><strong>栈</strong>：遵循<strong>后进先出（LIFO）</strong>。  </li>
+<li><strong>队列</strong>：遵循<strong>先进先出（FIFO）</strong>。</li>
+</ul>
+<h2 id="栈概述"><a href="#栈概述" class="headerlink" title="栈概述"></a>栈概述<a name="stack-overview"></a></h2><h3 id="栈的核心特性"><a href="#栈的核心特性" class="headerlink" title="栈的核心特性"></a>栈的核心特性<a name="key-features-of-stack"></a></h3><ul>
+<li><strong>栈顶（Top）</strong>：唯一可进行插入&#x2F;删除操作的一端。  </li>
+<li><strong>操作</strong>：  <ul>
+<li>push() 将元素压入栈中</li>
+<li>pop() 从栈中移除元素</li>
+<li>top() 返回栈顶元素。</li>
+<li>isEmpty() 栈为空时返回 true，否则返回 false。</li>
+<li>isFull() 栈已满时返回 true，否则返回 false。</li>
+</ul>
+</li>
+</ul>
+<h3 id="栈的应用场景"><a href="#栈的应用场景" class="headerlink" title="栈的应用场景"></a>栈的应用场景<a name="applications-of-stack"></a></h3><ul>
+<li>函数调用管理（调用栈）。  </li>
+<li>撤销&#x2F;重做功能。  </li>
+<li>语法解析（如括号匹配）。</li>
+</ul>
+<h2 id="队列概述"><a href="#队列概述" class="headerlink" title="队列概述"></a>队列概述<a name="queue-overview"></a></h2><h3 id="队列的核心特性"><a href="#队列的核心特性" class="headerlink" title="队列的核心特性"></a>队列的核心特性<a name="key-features-of-queue"></a></h3><ul>
+<li><strong>队头&#x2F;队尾（Front&#x2F;Back）</strong>：元素从队尾进入，从队头离开。  </li>
+<li><strong>操作</strong>：  <ul>
+<li>Enqueue（入队）：将元素添加到队列的末尾（队尾）。如果队列已满，则发生溢出错误。</li>
+<li>Dequeue（出队）：从队列的队头移除元素。如果队列为空，则发生下溢错误。</li>
+<li>Peek&#x2F;Front（查看队头）：返回队头元素但不移除它。</li>
+<li>Size（大小）：返回队列中的元素个数。</li>
+<li>isEmpty（判空）：队列为空时返回 true，否则返回 false。</li>
+<li>isFull（判满）：队列已满时返回 true，否则返回 false。</li>
+</ul>
+</li>
+</ul>
+<h3 id="队列的应用场景"><a href="#队列的应用场景" class="headerlink" title="队列的应用场景"></a>队列的应用场景<a name="applications-of-queue"></a></h3><ul>
+<li>任务调度（如打印机管理打印任务）。  </li>
+<li>图算法中的广度优先搜索（BFS）。  </li>
+<li>数据流缓冲。</li>
+</ul>
+<h3 id="队列类型"><a href="#队列类型" class="headerlink" title="队列类型"></a>队列类型<a name="type"></a></h3><ol>
+<li>普通队列（Simple Queue）：普通队列遵循 FIFO 结构。我们只能在队尾插入元素，在队头移除元素。普通队列可以使用链表或循环数组高效实现。</li>
+<li>双端队列（Deque）：在双端队列中，插入和删除操作都可以在两端进行。它分为两种类型：<br>输入受限队列：这是一种简单队列。在这种类型中，输入只能从一端进行，但删除可以从任意一端进行。<br>输出受限队列：这也是一种简单队列。在这种类型中，输入可以从两端进行，但删除只能从一端进行。</li>
+<li>优先队列（Priority Queue）：优先队列是一种特殊队列，元素按照分配的优先级进行访问。它分为两种类型：</li>
+</ol>
+<ul>
+<li>升序优先队列：在升序优先队列中，元素按优先级值从小到大排列。优先级值最小的元素最先被弹出。</li>
+<li>降序优先队列：在降序优先队列中，元素按优先级值从大到小排列。优先级值最大的元素最先被弹出。<br><img src="/sq1.png" alt="pic"></li>
+</ul>
+<h2 id="实现栈"><a href="#实现栈" class="headerlink" title="实现栈 "></a>实现栈 <a name="implementing-stack"></a></h2><h3 id="基于数组实现栈"><a href="#基于数组实现栈" class="headerlink" title="基于数组实现栈"></a>基于数组实现栈<a name="stack-implementation-using-array"></a></h3><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">ArrayStack</span>&lt;<span class="title">T</span>&gt;</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> T[] _array;</span><br><span class="line">    <span class="keyword">private</span> <span class="built_in">int</span> _topIndex;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">ArrayStack</span>(<span class="params"><span class="built_in">int</span> capacity = <span class="number">4</span></span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        _array = <span class="keyword">new</span> T[capacity];</span><br><span class="line">        _topIndex = <span class="number">-1</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Push</span>(<span class="params">T item</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (_topIndex == _array.Length - <span class="number">1</span>)</span><br><span class="line">            Array.Resize(<span class="keyword">ref</span> _array, _array.Length * <span class="number">2</span>);</span><br><span class="line">        _array[++_topIndex] = item;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> T <span class="title">Pop</span>()</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (IsEmpty()) <span class="keyword">throw</span> <span class="keyword">new</span> InvalidOperationException(<span class="string">&quot;Stack is empty.&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> _array[_topIndex--];</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> T <span class="title">Peek</span>()</span> =&gt; IsEmpty() ? <span class="keyword">throw</span> <span class="keyword">new</span> InvalidOperationException(<span class="string">&quot;Stack is empty.&quot;</span>) : _array[_topIndex];</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="built_in">bool</span> <span class="title">IsEmpty</span>()</span> =&gt; _topIndex == <span class="number">-1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="基于链表实现栈"><a href="#基于链表实现栈" class="headerlink" title="基于链表实现栈"></a>基于链表实现栈<a name="stack-implementation-using-linked-list"></a></h3><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Node</span>&lt;<span class="title">T</span>&gt;</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> T Value;</span><br><span class="line">    <span class="keyword">public</span> Node&lt;T&gt; Next;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Node</span>(<span class="params">T <span class="keyword">value</span></span>)</span> =&gt; Value = <span class="keyword">value</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">LinkedListStack</span>&lt;<span class="title">T</span>&gt;</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> Node&lt;T&gt; _top;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Push</span>(<span class="params">T item</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">var</span> newNode = <span class="keyword">new</span> Node&lt;T&gt;(item) &#123; Next = _top &#125;;</span><br><span class="line">        _top = newNode;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> T <span class="title">Pop</span>()</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (_top == <span class="literal">null</span>) <span class="keyword">throw</span> <span class="keyword">new</span> InvalidOperationException(<span class="string">&quot;Stack is empty.&quot;</span>);</span><br><span class="line">        <span class="keyword">var</span> <span class="keyword">value</span> = _top.Value;</span><br><span class="line">        _top = _top.Next;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">value</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> T <span class="title">Peek</span>()</span> =&gt; _top == <span class="literal">null</span> ? <span class="keyword">throw</span> <span class="keyword">new</span> InvalidOperationException(<span class="string">&quot;Stack is empty.&quot;</span>) : _top.Value;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="built_in">bool</span> <span class="title">IsEmpty</span>()</span> =&gt; _top == <span class="literal">null</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="实现队列"><a href="#实现队列" class="headerlink" title="实现队列"></a>实现队列<a name="implementing-queue"></a></h2><h3 id="基于数组实现队列"><a href="#基于数组实现队列" class="headerlink" title="基于数组实现队列"></a>基于数组实现队列<a name="queue-implementation-using-array"></a></h3><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">ArrayQueue</span>&lt;<span class="title">T</span>&gt;</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> T[] _array;</span><br><span class="line">    <span class="keyword">private</span> <span class="built_in">int</span> _front;</span><br><span class="line">    <span class="keyword">private</span> <span class="built_in">int</span> _back;</span><br><span class="line">    <span class="keyword">private</span> <span class="built_in">int</span> _count;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">ArrayQueue</span>(<span class="params"><span class="built_in">int</span> capacity = <span class="number">4</span></span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        _array = <span class="keyword">new</span> T[capacity];</span><br><span class="line">        _front = <span class="number">0</span>;</span><br><span class="line">        _back = <span class="number">0</span>;</span><br><span class="line">        _count = <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Enqueue</span>(<span class="params">T item</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (_count == _array.Length)</span><br><span class="line">            Array.Resize(<span class="keyword">ref</span> _array, _array.Length * <span class="number">2</span>);</span><br><span class="line">        _array[_back % _array.Length] = item;</span><br><span class="line">        _back++;</span><br><span class="line">        _count++;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> T <span class="title">Dequeue</span>()</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (IsEmpty()) <span class="keyword">throw</span> <span class="keyword">new</span> InvalidOperationException(<span class="string">&quot;Queue is empty.&quot;</span>);</span><br><span class="line">        <span class="keyword">var</span> <span class="keyword">value</span> = _array[_front % _array.Length];</span><br><span class="line">        _front++;</span><br><span class="line">        _count--;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">value</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> T <span class="title">Peek</span>()</span> =&gt; IsEmpty() ? <span class="keyword">throw</span> <span class="keyword">new</span> InvalidOperationException(<span class="string">&quot;Queue is empty.&quot;</span>) : _array[_front % _array.Length];</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="built_in">bool</span> <span class="title">IsEmpty</span>()</span> =&gt; _count == <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="基于链表实现队列"><a href="#基于链表实现队列" class="headerlink" title="基于链表实现队列"></a>基于链表实现队列<a name="queue-implementation-using-linked-list"></a></h3><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">LinkedListQueue</span>&lt;<span class="title">T</span>&gt;</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> Node&lt;T&gt; _front;</span><br><span class="line">    <span class="keyword">private</span> Node&lt;T&gt; _back;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Enqueue</span>(<span class="params">T item</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">var</span> newNode = <span class="keyword">new</span> Node&lt;T&gt;(item);</span><br><span class="line">        <span class="keyword">if</span> (_back != <span class="literal">null</span>) _back.Next = newNode;</span><br><span class="line">        _back = newNode;</span><br><span class="line">        <span class="keyword">if</span> (_front == <span class="literal">null</span>) _front = _back;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> T <span class="title">Dequeue</span>()</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (_front == <span class="literal">null</span>) <span class="keyword">throw</span> <span class="keyword">new</span> InvalidOperationException(<span class="string">&quot;Queue is empty.&quot;</span>);</span><br><span class="line">        <span class="keyword">var</span> <span class="keyword">value</span> = _front.Value;</span><br><span class="line">        _front = _front.Next;</span><br><span class="line">        <span class="keyword">if</span> (_front == <span class="literal">null</span>) _back = <span class="literal">null</span>;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">value</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> T <span class="title">Peek</span>()</span> =&gt; _front == <span class="literal">null</span> ? <span class="keyword">throw</span> <span class="keyword">new</span> InvalidOperationException(<span class="string">&quot;Queue is empty.&quot;</span>) : _front.Value;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="built_in">bool</span> <span class="title">IsEmpty</span>()</span> =&gt; _front == <span class="literal">null</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="用两个栈实现队列"><a href="#用两个栈实现队列" class="headerlink" title="用两个栈实现队列 "></a>用两个栈实现队列 <a name="implementing-queue-with-two-stacks"></a></h2><p>使用两个栈（inStack 和 outStack）来模拟 FIFO 行为：</p>
+<ul>
+<li>inStack 处理入队操作（Enqueue）。</li>
+<li>outStack 处理出队操作（Dequeue）。当 outStack 为空时，将 inStack 中的所有元素弹出并压入 outStack，以反转顺序。<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">StackToQueue</span>&lt;<span class="title">T</span>&gt; &#123;</span><br><span class="line">    <span class="keyword">private</span> Stack&lt;T&gt; _inStack;</span><br><span class="line">    <span class="keyword">private</span> Stack&lt;T&gt; _outStack;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">StackToQueue</span>()</span> &#123;</span><br><span class="line">        _inStack = <span class="keyword">new</span> Stack&lt;T&gt;();</span><br><span class="line">        _outStack = <span class="keyword">new</span> Stack&lt;T&gt;();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Enqueue</span>(<span class="params">T item</span>)</span> &#123;</span><br><span class="line">        _inStack.Push(item);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> T <span class="title">Dequeue</span>()</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (IsEmpty()) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> InvalidOperationException(<span class="string">&quot;Queue is empty&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        MoveInToOut(); <span class="comment">// Ensure outStack has elements</span></span><br><span class="line">        <span class="keyword">return</span> _outStack.Pop();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> T <span class="title">Peek</span>()</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (IsEmpty()) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> InvalidOperationException(<span class="string">&quot;Queue is empty&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        MoveInToOut();</span><br><span class="line">        <span class="keyword">return</span> _outStack.Peek();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">MoveInToOut</span>()</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (_outStack.Count == <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">while</span> (_inStack.Count &gt; <span class="number">0</span>) &#123;</span><br><span class="line">                _outStack.Push(_inStack.Pop());</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="built_in">bool</span> <span class="title">IsEmpty</span>()</span> =&gt; _inStack.Count + _outStack.Count == <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">int</span> Count =&gt; _inStack.Count + _outStack.Count;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="用一个队列实现栈"><a href="#用一个队列实现栈" class="headerlink" title="用一个队列实现栈"></a>用一个队列实现栈<a name="implementing-stack-with-one-queue"></a></h3><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">MyStack</span> &#123;</span><br><span class="line">    Queue&lt;<span class="built_in">int</span>&gt; myQueue;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">MyStack</span>()</span> &#123;</span><br><span class="line">        myQueue = <span class="keyword">new</span> Queue&lt;<span class="built_in">int</span>&gt;();</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Push</span>(<span class="params"><span class="built_in">int</span> x</span>)</span> &#123;</span><br><span class="line">        myQueue.Enqueue(x);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="built_in">int</span> <span class="title">Pop</span>()</span> &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; myQueue.Count<span class="number">-1</span>; i++)</span><br><span class="line">        &#123;</span><br><span class="line">            myQueue.Enqueue(myQueue.Dequeue());</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> myQueue.Dequeue();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//reuse Pop()</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="built_in">int</span> <span class="title">Top</span>()</span> &#123;</span><br><span class="line">        <span class="built_in">int</span> res = Pop();</span><br><span class="line">        myQueue.Enqueue(res);</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="built_in">bool</span> <span class="title">Empty</span>()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> (myQueue.Count == <span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结<a name="summary"></a></h2><table>
+<thead>
+<tr>
+<th align="center"><strong>数据结构</strong></th>
+<th align="center"><strong>逻辑特性</strong></th>
+<th align="center"><strong>典型场景</strong></th>
+<th align="center"><strong>基于数组的优势</strong></th>
+<th align="center"><strong>基于链表的优势</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">栈</td>
+<td align="center">LIFO</td>
+<td align="center">表达式求值、撤销操作</td>
+<td align="center">访问速度快</td>
+<td align="center">无需预分配</td>
+</tr>
+<tr>
+<td align="center">队列</td>
+<td align="center">FIFO</td>
+<td align="center">任务调度、消息队列</td>
+<td align="center">内存连续</td>
+<td align="center">动态扩展灵活</td>
+</tr>
+</tbody></table>
+<h3 id="互相实现的意义"><a href="#互相实现的意义" class="headerlink" title="互相实现的意义"></a>互相实现的意义</h3><ul>
+<li><strong>用栈实现队列</strong>：理解 LIFO 和 FIFO 之间的转换，利用栈的特性模拟队列行为。</li>
+<li><strong>用队列实现栈</strong>：深入理解数据结构的底层原理，掌握复杂场景下的算法设计。</li>
+</ul>
+<link rel="stylesheet" href="/css/folder.css" type="text/css"><script src="/js/folder.js" type="text/javascript" async></script>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Data-Structure-and-Alogrithm/" rel="tag"># Data Structure and Alogrithm</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/04/12/Stack-Queue/" rel="prev" title="Stack & Queue">
+      <i class="fa fa-chevron-left"></i> Stack & Queue
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/zh-CN/2025/04/19/Design-Patterns/" rel="next" title="设计模式">
+      设计模式 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+
+            
+            <div class="post-copyright" style="margin: 0 0 10px 0;">
+              <p class="post-copyright-author" style="margin: 0 0 5px 0 !important;"><strong>Author:</strong> <a href="https://github.com/BODYsuperman" target="_blank">Alex</a></p>
+              <p class="post-copyright-link" style="margin: 0 0 5px 0 !important;"><strong>Article Link:</strong> <a href="https://bodysuperman.github.io/zh-CN/2025/04/12/Stack-Queue/" target="_blank">https://bodysuperman.github.io/zh-CN/2025/04/12/Stack-Queue/</a></p>
+              <p class="post-copyright-license" style="margin: 0 !important;"><strong>License:</strong> This article is licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a>. Please credit the original author and include the source link when reposting.</p>
+            </div>
+
+          </div>
+          
+    <div class="comments" id="gitalk-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%95%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">引言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A0%88%E6%A6%82%E8%BF%B0"><span class="nav-number">2.</span> <span class="nav-text">栈概述</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%88%E7%9A%84%E6%A0%B8%E5%BF%83%E7%89%B9%E6%80%A7"><span class="nav-number">2.1.</span> <span class="nav-text">栈的核心特性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%88%E7%9A%84%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="nav-number">2.2.</span> <span class="nav-text">栈的应用场景</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%98%9F%E5%88%97%E6%A6%82%E8%BF%B0"><span class="nav-number">3.</span> <span class="nav-text">队列概述</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%98%9F%E5%88%97%E7%9A%84%E6%A0%B8%E5%BF%83%E7%89%B9%E6%80%A7"><span class="nav-number">3.1.</span> <span class="nav-text">队列的核心特性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%98%9F%E5%88%97%E7%9A%84%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="nav-number">3.2.</span> <span class="nav-text">队列的应用场景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%98%9F%E5%88%97%E7%B1%BB%E5%9E%8B"><span class="nav-number">3.3.</span> <span class="nav-text">队列类型</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0%E6%A0%88"><span class="nav-number">4.</span> <span class="nav-text">实现栈 </span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8E%E6%95%B0%E7%BB%84%E5%AE%9E%E7%8E%B0%E6%A0%88"><span class="nav-number">4.1.</span> <span class="nav-text">基于数组实现栈</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8E%E9%93%BE%E8%A1%A8%E5%AE%9E%E7%8E%B0%E6%A0%88"><span class="nav-number">4.2.</span> <span class="nav-text">基于链表实现栈</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0%E9%98%9F%E5%88%97"><span class="nav-number">5.</span> <span class="nav-text">实现队列</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8E%E6%95%B0%E7%BB%84%E5%AE%9E%E7%8E%B0%E9%98%9F%E5%88%97"><span class="nav-number">5.1.</span> <span class="nav-text">基于数组实现队列</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8E%E9%93%BE%E8%A1%A8%E5%AE%9E%E7%8E%B0%E9%98%9F%E5%88%97"><span class="nav-number">5.2.</span> <span class="nav-text">基于链表实现队列</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%94%A8%E4%B8%A4%E4%B8%AA%E6%A0%88%E5%AE%9E%E7%8E%B0%E9%98%9F%E5%88%97"><span class="nav-number">6.</span> <span class="nav-text">用两个栈实现队列 </span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%A8%E4%B8%80%E4%B8%AA%E9%98%9F%E5%88%97%E5%AE%9E%E7%8E%B0%E6%A0%88"><span class="nav-number">6.1.</span> <span class="nav-text">用一个队列实现栈</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">7.</span> <span class="nav-text">总结</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%92%E7%9B%B8%E5%AE%9E%E7%8E%B0%E7%9A%84%E6%84%8F%E4%B9%89"><span class="nav-number">7.1.</span> <span class="nav-text">互相实现的意义</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="AI with Alex"
+      src="/uploads/avatar.jpg">
+  <p class="site-author-name" itemprop="name">AI with Alex</p>
+  <div class="site-description" itemprop="description">Attention(Q,K,V)=softmax(QK^T/sqrt(d_k))V</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">62</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">35</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">88</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/BODYsuperman" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;BODYsuperman" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/atom.xml" title="RSS Feed → &#x2F;atom.xml"><i class="fas fa-rss fa-fw"></i>RSS Feed</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:meijiaping6@gmail.com" title="Email → mailto:meijiaping6@gmail.com" rel="noopener" target="_blank"><i class="fas fa-envelope fa-fw"></i>Email</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://stackoverflow.com/users/9644964/alexandar-may-msft?tab=answers&sort=votes" title="StackOverflow → https:&#x2F;&#x2F;stackoverflow.com&#x2F;users&#x2F;9644964&#x2F;alexandar-may-msft?tab&#x3D;answers&amp;sort&#x3D;votes" rel="noopener" target="_blank"><i class="fab fa-stack-overflow fa-fw"></i>StackOverflow</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">AI with Alex</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">Symbols count total: </span>
+    <span title="Symbols count total">840k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">Reading time total &asymp;</span>
+    <span title="Reading time total">12:43</span>
+    
+    <!--
+    
+    -->
+</div>
+
+<!--
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a>
+   </div>
+--><script color="0,0,255" opacity="0.5" zIndex="-1" count="99" src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1/dist/canvas-nest.js"></script>
+
+
+
+
+
+
+        
+
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv"  >
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv"  >
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : 'Ov23liVJTzqy1rzaDXXM',
+      clientSecret: '5e785a7d46e69f7509e6c2f7730855a55944df33',
+      repo        : 'blog-comment',
+      owner       : 'BODYsuperman',
+      admin       : ['BODYsuperman'],
+      id          : 'ce928e9e7e70394dc0595137ac493dcb',
+        language: '',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+
+</body>
+</html>

@@ -1,0 +1,1165 @@
+<!DOCTYPE html>
+<html lang="en,zh-CN,default">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/logo-180.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/logo-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/logo-16.png">
+  <link rel="mask-icon" href="/images/logo-512.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|monospace:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"bodysuperman.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null,"use":"Gitalk","text":true},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="Attention(Q,K,V)&#x3D;softmax(QK^T&#x2F;sqrt(d_k))V">
+<meta property="og:type" content="website">
+<meta property="og:title" content="AI with Alex&#39;s Blog">
+<meta property="og:url" content="https://bodysuperman.github.io/zh-CN/page/4/index.html">
+<meta property="og:site_name" content="AI with Alex&#39;s Blog">
+<meta property="og:description" content="Attention(Q,K,V)&#x3D;softmax(QK^T&#x2F;sqrt(d_k))V">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:author" content="AI with Alex">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://bodysuperman.github.io/zh-CN/page/4/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : true,
+    isPost : false,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>AI with Alex's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="AI with Alex's Blog" type="application/atom+xml">
+<link rel="alternate" href="/rss.xml" title="AI with Alex's Blog" type="application/rss+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+
+
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">AI with Alex's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+  <div class="site-lang-switcher">
+    <span class="lang-item lang-current">简体中文</span>
+      <a class="lang-item lang-link" href="/page/4/" rel="section" title="English">
+        <i class="fa fa-language"></i> English
+      </a>
+  </div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content index posts-expand">
+   
+            
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://bodysuperman.github.io/zh-CN/2025/10/26/CSS3-Core-Technologies-study-note/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+      <meta itemprop="name" content="AI with Alex">
+      <meta itemprop="description" content="Attention(Q,K,V)=softmax(QK^T/sqrt(d_k))V">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="AI with Alex's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/zh-CN/2025/10/26/CSS3-Core-Technologies-study-note/" class="post-title-link" itemprop="url">CSS3 核心技术学习笔记</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2025-10-26 13:53:06 / 修改时间：19:04:19" itemprop="dateCreated datePublished" datetime="2025-10-26T13:53:06+08:00">2025-10-26</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/CSS3/" itemprop="url" rel="index"><span itemprop="name">CSS3</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/CSS3/HTML5/" itemprop="url" rel="index"><span itemprop="name">HTML5</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/CSS3/HTML5/Front-End-Development/" itemprop="url" rel="index"><span itemprop="name">Front-End Development</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/CSS3/HTML5/Front-End-Development/Web-Styling/" itemprop="url" rel="index"><span itemprop="name">Web Styling</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/CSS3/HTML5/Front-End-Development/Web-Styling/Responsive-Design/" itemprop="url" rel="index"><span itemprop="name">Responsive Design</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>12k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>11 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <ul>
+<li><a href="#introduction">1. CSS3 简介</a><ul>
+<li><a href="#what">1.1 什么是 CSS3？</a></li>
+<li><a href="#role">1.2 CSS3 的核心作用</a></li>
+<li><a href="#classify">1.3 CSS 按位置分类</a></li>
+</ul>
+</li>
+<li><a href="#css3selector">2. CSS3 选择器：精准定位元素</a><ul>
+<li><a href="#basic">2.1 基础选择器</a></li>
+<li><a href="#re">2.2 关系选择器</a></li>
+<li><a href="#pse">2.3 伪类与伪元素</a></li>
+<li><a href="#attr">2.4 属性选择器</a></li>
+</ul>
+</li>
+<li><a href="#text">3. 文本样式与排版</a><ul>
+<li><a href="#fonts">3.1 字体样式</a></li>
+<li><a href="#textly">3.2 文本排版</a></li>
+<li><a href="#fontshort">3.3 font 简写</a></li>
+</ul>
+</li>
+<li><a href="#csssp">4. CSS 优先级（权重）</a></li>
+<li><a href="#box-model">5. 盒模型</a><ul>
+<li><a href="#box-model-c">5.1 盒模型组成</a></li>
+<li><a href="#key-p">5.2 关键属性</a></li>
+<li><a href="#box-s">5.3 box-sizing</a></li>
+<li><a href="#box-model-c">5.4 盒模型组成</a></li>
+<li><a href="#mccf">5.5 外边距折叠与修复</a></li>
+</ul>
+</li>
+<li><a href="#css-b">6. CSS 背景</a><ul>
+<li><a href="#b-p">6.1 背景属性</a></li>
+<li><a href="#b-g">6.2 背景渐变</a>
+        
+      
+    </div>
+
+    
+    
+    
+      <!--noindex-->
+      <div class="post-button">
+        <a class="btn" href="/zh-CN/2025/10/26/CSS3-Core-Technologies-study-note/#more" rel="contents">
+          阅读全文 &raquo;
+        </a>
+      </div>
+      <!--/noindex-->
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://bodysuperman.github.io/zh-CN/2025/10/19/CS229-Notes-Part-1-Mathematical-Basics-of-Linear-Regression-%E2%80%94-From-Model-Formulation-to-Gradient-Descent/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+      <meta itemprop="name" content="AI with Alex">
+      <meta itemprop="description" content="Attention(Q,K,V)=softmax(QK^T/sqrt(d_k))V">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="AI with Alex's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/zh-CN/2025/10/19/CS229-Notes-Part-1-Mathematical-Basics-of-Linear-Regression-%E2%80%94-From-Model-Formulation-to-Gradient-Descent/" class="post-title-link" itemprop="url">CS229 笔记（一）：线性回归的数学基础 — 从模型构建到梯度下降</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2025-10-19 13:53:06 / 修改时间：19:04:19" itemprop="dateCreated datePublished" datetime="2025-10-19T13:53:06+08:00">2025-10-19</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Machine-Learning/" itemprop="url" rel="index"><span itemprop="name">Machine Learning</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Machine-Learning/Stanford-CS229-Notes/" itemprop="url" rel="index"><span itemprop="name">Stanford CS229 Notes</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>4k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>4 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <ul>
+<li><a href="#introduction">1. 引言：</a><ul>
+<li><a href="#welcome">1.1 欢迎来到机器学习的世界</a></li>
+<li><a href="#what-is-ml">1.2 什么是机器学习？</a></li>
+<li><a href="#sl">1.3 监督学习</a></li>
+<li><a href="#ul">1.4 无监督学习</a></li>
+</ul>
+</li>
+<li><a href="#lr">2. 单变量线性回归</a><ul>
+<li><a href="#mp">2.1 模型表示</a></li>
+<li><a href="#cf">2.2 代价函数</a><ul>
+<li><a href="#dcf">2.2.1 代价函数的定义</a></li>
+</ul>
+</li>
+<li><a href="#intuition">2.3 代价函数的直观理解（一）</a></li>
+<li><a href="#plot">2.4 代价函数的直观理解（二）：等高线图</a></li>
+<li><a href="#gd">2.5 梯度下降</a></li>
+<li><a href="#gdi">2.6 梯度下降的直观理解</a></li>
+<li><a href="#gdlr">2.7 线性回归的梯度下降</a></li>
+</ul>
+</li>
+</ul>
+        
+      
+    </div>
+
+    
+    
+    
+      <!--noindex-->
+      <div class="post-button">
+        <a class="btn" href="/zh-CN/2025/10/19/CS229-Notes-Part-1-Mathematical-Basics-of-Linear-Regression-%E2%80%94-From-Model-Formulation-to-Gradient-Descent/#more" rel="contents">
+          阅读全文 &raquo;
+        </a>
+      </div>
+      <!--/noindex-->
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://bodysuperman.github.io/zh-CN/2025/05/03/Hexo-Blog-Multi-Device-Synchronization-and-Management-Guide-Based-on-Git-Branch-Strategy/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+      <meta itemprop="name" content="AI with Alex">
+      <meta itemprop="description" content="Attention(Q,K,V)=softmax(QK^T/sqrt(d_k))V">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="AI with Alex's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/zh-CN/2025/05/03/Hexo-Blog-Multi-Device-Synchronization-and-Management-Guide-Based-on-Git-Branch-Strategy/" class="post-title-link" itemprop="url">基于 Git 分支策略的 Hexo 博客多设备同步与管理指南</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2025-05-03 09:52:39 / 修改时间：19:04:19" itemprop="dateCreated datePublished" datetime="2025-05-03T09:52:39+08:00">2025-05-03</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Blog/" itemprop="url" rel="index"><span itemprop="name">Blog</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Blog/Hexo/" itemprop="url" rel="index"><span itemprop="name">Hexo</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>6.8k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>6 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <ul>
+<li><a href="#introduction-the-necessity">引言：多设备协作的必要性</a></li>
+<li><a href="#core-principles-of-hexo">Hexo 多设备同步的核心原理</a><ul>
+<li><a href="#hexo-directory">Hexo 目录结构与版本控制策略</a></li>
+<li><a href="#git-branch">Git 分支分工模型</a></li>
+</ul>
+</li>
+<li><a href="#old-computer-operation">旧电脑操作指南：搭建远程同步基础</a><ul>
+<li><a href="#creating-and-configuring-remote-branches">创建和配置远程分支</a></li>
+<li><a href="#local-environment">本地环境与远程仓库同步</a></li>
+<li><a href="#gitignore-key-configuration">.gitignore 关键配置</a></li>
+</ul>
+</li>
+<li><a href="#new-computer-environment">新电脑环境搭建：从远程仓库恢复博客</a><ul>
+<li><a href="#ssh-key-configuration">SSH Key 配置与环境依赖安装</a></li>
+<li><a href="#remote-repository">远程仓库克隆与依赖恢复</a></li>
+<li><a href="#first-run-verification">首次运行验证与配置检查</a></li>
+</ul>
+</li>
+<li><a href="#daily-update-workflow">日常更新工作流：双分支协同操作</a><ul>
+<li><a href="#source-code">源码更新与提交流程</a></li>
+<li><a href="#static-file">静态文件部署与分支同步</a></li>
+<li><a href="#automation-script">自动化脚本优化工作流</a></li>
+</ul>
+</li>
+<li><a href="#common-problems">常见问题与解决方案</a><ul>
+<li><a href="#branch-switching">分支切换冲突处理</a></li>
+<li><a href="#environment-dependency">环境依赖不一致问题</a></li>
+<li><a href="#theme-and-pluginy">主题和插件同步异常</a></li>
+</ul>
+</li>
+<li><a href="#advanced-tips-private">进阶技巧：私有仓库与多分支策略</a><ul>
+<li><a href="#private-repositories">私有仓库保护源码安全</a></li>
+<li><a href="#multi-branch-collaborative-development-model">多分支协同开发模型</a></li>
+</ul>
+</li>
+<li><a href="#conclusion-best-practices">结语：多设备同步的最佳实践</a>
+        
+      
+    </div>
+
+    
+    
+    
+      <!--noindex-->
+      <div class="post-button">
+        <a class="btn" href="/zh-CN/2025/05/03/Hexo-Blog-Multi-Device-Synchronization-and-Management-Guide-Based-on-Git-Branch-Strategy/#more" rel="contents">
+          阅读全文 &raquo;
+        </a>
+      </div>
+      <!--/noindex-->
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://bodysuperman.github.io/zh-CN/2025/04/26/Common-Binary-Tree-Problems/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+      <meta itemprop="name" content="AI with Alex">
+      <meta itemprop="description" content="Attention(Q,K,V)=softmax(QK^T/sqrt(d_k))V">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="AI with Alex's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/zh-CN/2025/04/26/Common-Binary-Tree-Problems/" class="post-title-link" itemprop="url">常见二叉树问题</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2025-04-26 16:03:41 / 修改时间：19:04:19" itemprop="dateCreated datePublished" datetime="2025-04-26T16:03:41+08:00">2025-04-26</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Data-Structure-and-Alogrithm/" itemprop="url" rel="index"><span itemprop="name">Data Structure and Alogrithm</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Data-Structure-and-Alogrithm/Binary-Tree/" itemprop="url" rel="index"><span itemprop="name">Binary Tree</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>10k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>9 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <ol>
+<li><a href="#introduction">引言</a>  </li>
+<li><a href="#cs">案例研究</a>  <ul>
+<li><a href="#case1">翻转二叉树</a>  </li>
+<li><a href="#case2">对称二叉树</a>  </li>
+<li><a href="#case3">二叉树的最大深度</a>  </li>
+<li><a href="#case4">二叉树的最小深度</a>  </li>
+<li><a href="#case5">完全二叉树的节点个数</a>  </li>
+<li><a href="#case6">平衡二叉树</a>  </li>
+<li><a href="#case7">二叉树的所有路径</a>  </li>
+<li><a href="#case8">左叶子之和</a>  </li>
+<li><a href="#case9">找树左下角的值</a></li>
+</ul>
+</li>
+</ol>
+        
+      
+    </div>
+
+    
+    
+    
+      <!--noindex-->
+      <div class="post-button">
+        <a class="btn" href="/zh-CN/2025/04/26/Common-Binary-Tree-Problems/#more" rel="contents">
+          阅读全文 &raquo;
+        </a>
+      </div>
+      <!--/noindex-->
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://bodysuperman.github.io/zh-CN/2025/04/19/Design-Patterns/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+      <meta itemprop="name" content="AI with Alex">
+      <meta itemprop="description" content="Attention(Q,K,V)=softmax(QK^T/sqrt(d_k))V">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="AI with Alex's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/zh-CN/2025/04/19/Design-Patterns/" class="post-title-link" itemprop="url">设计模式</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2025-04-19 16:05:17 / 修改时间：19:04:19" itemprop="dateCreated datePublished" datetime="2025-04-19T16:05:17+08:00">2025-04-19</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Design-Patterns/" itemprop="url" rel="index"><span itemprop="name">Design Patterns</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Design-Patterns/Software-Design/" itemprop="url" rel="index"><span itemprop="name">Software Design</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>39k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>35 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <ol>
+<li><a href="#introduction">简介</a>  <ul>
+<li><a href="#types-of-dp">设计模式的类型</a>  </li>
+<li><a href="#key-c-of-dp">设计模式的主要特征</a></li>
+</ul>
+</li>
+<li><a href="#cp">创建型模式</a>  <ul>
+<li><a href="#factoryp">工厂模式</a>  </li>
+<li><a href="#afactory">抽象工厂模式</a>  </li>
+<li><a href="#builder">建造者模式</a>  </li>
+<li><a href="#singleton-pattern">单例模式</a></li>
+</ul>
+</li>
+<li><a href="#sp">结构型模式</a>  <ul>
+<li><a href="#adapter-pattern">适配器模式</a>  </li>
+<li><a href="#bridge-pattern">桥接模式</a>  </li>
+<li><a href="#composite-pattern">组合模式</a></li>
+<li><a href="#decorator-pattern">装饰器模式</a>  </li>
+<li><a href="#facade-pattern">外观模式</a>  </li>
+<li><a href="#flyweight-pattern">享元模式</a></li>
+<li><a href="#proxy-pattern">代理模式</a></li>
+</ul>
+</li>
+<li><a href="#behavior-pattern">行为型模式</a>  <ul>
+<li><a href="#observer-pattern">观察者模式</a>  </li>
+<li><a href="#iterator-pattern">迭代器模式</a>  </li>
+<li><a href="#command-pattern">命令模式</a></li>
+<li><a href="#strategy-pattern">策略模式</a>  </li>
+<li><a href="#state-pattern">状态模式</a>
+        
+      
+    </div>
+
+    
+    
+    
+      <!--noindex-->
+      <div class="post-button">
+        <a class="btn" href="/zh-CN/2025/04/19/Design-Patterns/#more" rel="contents">
+          阅读全文 &raquo;
+        </a>
+      </div>
+      <!--/noindex-->
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://bodysuperman.github.io/zh-CN/2025/04/12/Stack-Queue/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+      <meta itemprop="name" content="AI with Alex">
+      <meta itemprop="description" content="Attention(Q,K,V)=softmax(QK^T/sqrt(d_k))V">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="AI with Alex's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/zh-CN/2025/04/12/Stack-Queue/" class="post-title-link" itemprop="url">栈与队列</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2025-04-12 18:40:32 / 修改时间：18:04:19" itemprop="dateCreated datePublished" datetime="2025-04-12T18:40:32+08:00">2025-04-12</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Data-Structure-and-Alogrithm/" itemprop="url" rel="index"><span itemprop="name">Data Structure and Alogrithm</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>5.4k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>5 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <ol>
+<li><a href="#introduction">引言</a>  </li>
+<li><a href="#stack-overview">栈概述</a>  <ul>
+<li><a href="#key-features-of-stack">核心特性</a>  </li>
+<li><a href="#applications-of-stack">应用场景</a></li>
+</ul>
+</li>
+<li><a href="#queue-overview">队列概述</a>  <ul>
+<li><a href="#key-features-of-queue">核心特性</a>  </li>
+<li><a href="#applications-of-queue">应用场景</a>  </li>
+<li><a href="#type">队列类型</a></li>
+</ul>
+</li>
+<li><a href="#implementing-stack">实现栈</a>  <ul>
+<li><a href="#stack-implementation-using-array">基于数组</a>  </li>
+<li><a href="#stack-implementation-using-linked-list">基于链表</a></li>
+</ul>
+</li>
+<li><a href="#implementing-queue">实现队列</a>  <ul>
+<li><a href="#queue-implementation-using-array">基于数组</a>  </li>
+<li><a href="#queue-implementation-using-linked-list">基于链表</a></li>
+</ul>
+</li>
+<li><a href="#implementing-queue-with-two-stacks">用两个栈实现队列</a>  </li>
+<li><a href="#implementing-stack-with-one-queue">用一个队列实现栈</a>  </li>
+<li><a href="#summary">总结</a>
+        
+      
+    </div>
+
+    
+    
+    
+      <!--noindex-->
+      <div class="post-button">
+        <a class="btn" href="/zh-CN/2025/04/12/Stack-Queue/#more" rel="contents">
+          阅读全文 &raquo;
+        </a>
+      </div>
+      <!--/noindex-->
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+
+  
+  <nav class="pagination">
+    <a class="extend prev" rel="prev" href="/zh-CN/page/3/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/zh-CN/">1</a><span class="space">&hellip;</span><a class="page-number" href="/zh-CN/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/zh-CN/page/5/">5</a><a class="page-number" href="/zh-CN/page/6/">6</a><a class="extend next" rel="next" href="/zh-CN/page/5/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+  </nav>
+
+
+
+
+            
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="AI with Alex"
+      src="/uploads/avatar.jpg">
+  <p class="site-author-name" itemprop="name">AI with Alex</p>
+  <div class="site-description" itemprop="description">Attention(Q,K,V)=softmax(QK^T/sqrt(d_k))V</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">62</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">35</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">88</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/BODYsuperman" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;BODYsuperman" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/atom.xml" title="RSS Feed → &#x2F;atom.xml"><i class="fas fa-rss fa-fw"></i>RSS Feed</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:meijiaping6@gmail.com" title="Email → mailto:meijiaping6@gmail.com" rel="noopener" target="_blank"><i class="fas fa-envelope fa-fw"></i>Email</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://stackoverflow.com/users/9644964/alexandar-may-msft?tab=answers&sort=votes" title="StackOverflow → https:&#x2F;&#x2F;stackoverflow.com&#x2F;users&#x2F;9644964&#x2F;alexandar-may-msft?tab&#x3D;answers&amp;sort&#x3D;votes" rel="noopener" target="_blank"><i class="fab fa-stack-overflow fa-fw"></i>StackOverflow</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">AI with Alex</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">Symbols count total: </span>
+    <span title="Symbols count total">840k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">Reading time total &asymp;</span>
+    <span title="Reading time total">12:43</span>
+    
+    <!--
+    
+    -->
+</div>
+
+<!--
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a>
+   </div>
+--><script color="0,0,255" opacity="0.5" zIndex="-1" count="99" src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1/dist/canvas-nest.js"></script>
+
+
+
+
+
+
+        
+
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv"  >
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv"  >
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+
+</body>
+</html>

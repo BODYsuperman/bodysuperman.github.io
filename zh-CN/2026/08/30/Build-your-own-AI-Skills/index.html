@@ -1,0 +1,1045 @@
+<!DOCTYPE html>
+<html lang="en,zh-CN,default">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/logo-180.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/logo-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/logo-16.png">
+  <link rel="mask-icon" href="/images/logo-512.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|monospace:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"bodysuperman.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null,"use":"Gitalk","text":true},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="引言 什么是技能（Skill） 为什么技能很重要 技能的解剖结构 SKILL.md 文件 配角阵容   动手搭建：从简单到完整 Git 提交信息：只要一个 SKILL.md API 端点生成器：加一份配置 React 组件生成器：脚本与模板 安全审计：参考文档 你需要哪种结构？   寻找现成的技能 官方技能库 Skills CLI 社区技能库 安装前的安全检查   将技能融入你的工作流 迭代与版">
+<meta property="og:type" content="article">
+<meta property="og:title" content="搭建属于你自己的AI技能">
+<meta property="og:url" content="https://bodysuperman.github.io/zh-CN/2026/08/30/Build-your-own-AI-Skills/index.html">
+<meta property="og:site_name" content="AI with Alex&#39;s Blog">
+<meta property="og:description" content="引言 什么是技能（Skill） 为什么技能很重要 技能的解剖结构 SKILL.md 文件 配角阵容   动手搭建：从简单到完整 Git 提交信息：只要一个 SKILL.md API 端点生成器：加一份配置 React 组件生成器：脚本与模板 安全审计：参考文档 你需要哪种结构？   寻找现成的技能 官方技能库 Skills CLI 社区技能库 安装前的安全检查   将技能融入你的工作流 迭代与版">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-08-30T01:32:54.000Z">
+<meta property="article:modified_time" content="2026-09-25T16:00:00.000Z">
+<meta property="article:author" content="AI with Alex">
+<meta property="article:tag" content="AI Agent">
+<meta property="article:tag" content="LLM">
+<meta property="article:tag" content="Claude Code">
+<meta property="article:tag" content="Skills">
+<meta property="article:tag" content="Developer Tools">
+<meta property="article:tag" content="Automation">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://bodysuperman.github.io/zh-CN/2026/08/30/Build-your-own-AI-Skills/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>搭建属于你自己的AI技能 | AI with Alex's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="AI with Alex's Blog" type="application/atom+xml">
+<link rel="alternate" href="/rss.xml" title="AI with Alex's Blog" type="application/rss+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+
+
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">AI with Alex's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+  <div class="site-lang-switcher">
+    <span class="lang-item lang-current">简体中文</span>
+      <a class="lang-item lang-link" href="/2026/08/30/Build-your-own-AI-Skills/" rel="section" title="English">
+        <i class="fa fa-language"></i> English
+      </a>
+  </div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+   
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://bodysuperman.github.io/zh-CN/2026/08/30/Build-your-own-AI-Skills/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+      <meta itemprop="name" content="AI with Alex">
+      <meta itemprop="description" content="Attention(Q,K,V)=softmax(QK^T/sqrt(d_k))V">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="AI with Alex's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          搭建属于你自己的AI技能
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2026-08-30 09:32:54" itemprop="dateCreated datePublished" datetime="2026-08-30T09:32:54+08:00">2026-08-30</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2026-09-26 00:00:00" itemprop="dateModified" datetime="2026-09-26T00:00:00+08:00">2026-09-26</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/AI/" itemprop="url" rel="index"><span itemprop="name">AI</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>16k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>15 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <ul>
+<li><a href="#introduction">引言</a></li>
+<li><a href="#what-is-a-skill">什么是技能（Skill）</a></li>
+<li><a href="#why-skills-matter">为什么技能很重要</a></li>
+<li><a href="#anatomy-of-a-skill">技能的解剖结构</a><ul>
+<li><a href="#the-skill-md-file">SKILL.md 文件</a></li>
+<li><a href="#the-supporting-cast">配角阵容</a></li>
+</ul>
+</li>
+<li><a href="#build-your-own-from-simple-to-complete">动手搭建：从简单到完整</a><ul>
+<li><a href="#git-commit-messages-just-skill-md">Git 提交信息：只要一个 SKILL.md</a></li>
+<li><a href="#api-endpoint-generator-add-a-config">API 端点生成器：加一份配置</a></li>
+<li><a href="#react-component-generator-scripts-and-templates">React 组件生成器：脚本与模板</a></li>
+<li><a href="#security-audit-reference-documents">安全审计：参考文档</a></li>
+<li><a href="#which-structure-do-you-need">你需要哪种结构？</a></li>
+</ul>
+</li>
+<li><a href="#find-ready-made-skills">寻找现成的技能</a><ul>
+<li><a href="#official-libraries">官方技能库</a></li>
+<li><a href="#the-skills-cli">Skills CLI</a></li>
+<li><a href="#community-libraries">社区技能库</a></li>
+<li><a href="#safety-before-you-install">安装前的安全检查</a></li>
+</ul>
+</li>
+<li><a href="#integrating-skills-into-your-workflow">将技能融入你的工作流</a></li>
+<li><a href="#iterating-and-versioning">迭代与版本管理</a></li>
+<li><a href="#best-practices">最佳实践</a></li>
+<li><a href="#faq">常见问题</a></li>
+<li><a href="#summary">总结</a></li>
+</ul>
+<span id="more"></span>
+
+<p><a name="introduction"></a></p>
+<h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>这周你已经把同一个提示词敲了三遍。每一次，AI 给你的回答都略有不同——周一它用 Tab 缩进，今天它用空格，中间某次它还悄悄”优化”了一个你根本没让它碰的函数。</p>
+<p>这就是**”吩咐”<strong>与</strong>“教会”**之间的区别。</p>
+<p>当你和 AI 对话时，你给的是一条口头指令，模型每次都要重新解读一遍。而当你写下一个<strong>技能（Skill）</strong>时，你交给它的是一本成文的操作手册——一份标准作业程序（SOP），它可以每次都一字不差地照着执行，在每个项目里都保持一致。</p>
+<blockquote>
+<p>如果提示词是一句口头命令，那么技能就是打印出来的 <code>SOP</code>。</p>
+</blockquote>
+<p>这篇文章会告诉你：技能是什么、为什么重要，以及最重要的——如何搭建属于你自己的技能。读完之后，你将掌握一套可复用的方法，把那些”我又在敲同一个提示词”的时刻，变成你个人的 AI 工具箱。</p>
+<p><a name="what-is-a-skill"></a></p>
+<h2 id="什么是技能（Skill）"><a href="#什么是技能（Skill）" class="headerlink" title="什么是技能（Skill）"></a>什么是技能（Skill）</h2><p><strong>技能</strong>是一组可复用的指令，它把某项特定能力打包起来。</p>
+<p>想想做菜。每次凭记忆烧一道菜，你都可能漏掉某种配料或某个步骤。但如果把菜谱写下来一次，你就能每次都完美复刻——还能把它分享给别人。技能就是这样一份菜谱，只不过是写给 AI 的。</p>
+<p>它与一次性提示词的对比正是全部意义所在：</p>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>单个提示词</th>
+<th>技能</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>本质</td>
+<td>一次性指令</td>
+<td>可复用的标准流程</td>
+</tr>
+<tr>
+<td>一致性</td>
+<td>每次输出都不一样</td>
+<td>每次都遵循同一标准</td>
+</tr>
+<tr>
+<td>成本</td>
+<td>每次都要重新写</td>
+<td>触发一次即可</td>
+</tr>
+<tr>
+<td>维护</td>
+<td>用完即弃</td>
+<td>可版本化、可持续改进</td>
+</tr>
+<tr>
+<td>类比</td>
+<td>一句口头命令</td>
+<td>一份成文的 SOP（标准作业程序）</td>
+</tr>
+</tbody></table>
+<p>技能不是一种新模型，也不是运行在 AI”外部”的插件。它只是<strong>指令加资源</strong>，按照一定的结构组织起来，让 AI 能在需要时精准加载所需内容。正是这种简单性让它行之有效。</p>
+<p><a name="why-skills-matter"></a></p>
+<h2 id="为什么技能很重要"><a href="#为什么技能很重要" class="headerlink" title="为什么技能很重要"></a>为什么技能很重要</h2><p>四个实实在在的好处，按它们真正为你节省的程度排序：</p>
+<ol>
+<li><strong>一致性</strong> —— AI 每次都遵循同一标准。再也不用忍受”今天 Tab、明天空格”。</li>
+<li><strong>效率</strong> —— 复杂的多步骤工作流收缩成一次触发，而不是一段反复重写的提示词。</li>
+<li><strong>可复用性</strong> —— 一个技能可以跨项目、跨团队使用，最佳实践不再只存在于你的脑子里。</li>
+<li><strong>可迭代性</strong> —— 技能是一个你可以持续改进的文件，所以它会越用_越好_，而不是原地冻结。</li>
+</ol>
+<p>这里有一个你早就熟悉的编程原则：<strong>DRY —— Don’t Repeat Yourself（不要重复自己）。</strong> 它不仅适用于代码，也适用于提示词。如果类似的提示词你已经写了三遍，那就该把它变成技能了。</p>
+<p>技能之所以重要的更深层原因是：大模型的训练数据里不可能内置每个领域的最佳实践。技能是你按需注入_你的_专业知识的方式——你团队的约定、你的安全标准、你的模板。这就是”聪明的通才”与_你的_领域专家之间的区别。</p>
+<p><a name="anatomy-of-a-skill"></a></p>
+<h2 id="技能的解剖结构"><a href="#技能的解剖结构" class="headerlink" title="技能的解剖结构"></a>技能的解剖结构</h2><p>先说一个人们最常搞错的点：<strong>技能是一个文件夹，而不是一个文件。</strong> 单个 Markdown 文件可能就够用了，但一个完整的技能是一个小型”能力包”，可能捆绑多种类型的文件。</p>
+<p>继续用菜谱来类比：</p>
+<ul>
+<li><strong><code>SKILL.md</code></strong> 是菜谱本身——菜名、步骤、注意事项。</li>
+<li><strong><code>scripts/</code></strong> 是厨房工具抽屉——处理琐碎工作的辅助脚本。</li>
+<li><strong><code>resources/</code></strong> 是配料包——模板、示例数据和配置。</li>
+<li><strong><code>references/</code></strong> 是后墙的参考书架——AI 可以查阅的标准和文档。</li>
+<li><strong><code>requirements.txt</code></strong> 声明脚本需要哪些第三方依赖包。</li>
+</ul>
+<p>标准的目录结构长这样：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">skill-xxx/                 # Skill root (naming: lowercase + hyphens)</span><br><span class="line">├── SKILL.md               # Core: the instruction file (required)</span><br><span class="line">├── scripts/               # Helper scripts (optional)</span><br><span class="line">│   ├── helper.py</span><br><span class="line">│   └── utils.js</span><br><span class="line">├── resources/             # Bundled resources (optional)</span><br><span class="line">│   ├── template/          # Code/report templates</span><br><span class="line">│   ├── examples/          # Input/output examples</span><br><span class="line">│   └── config/            # Config files (JSON/YAML)</span><br><span class="line">├── references/            # Reference docs (optional)</span><br><span class="line">│   ├── best-practices.md</span><br><span class="line">│   ├── api-docs.md</span><br><span class="line">│   └── standards.md</span><br><span class="line">└── requirements.txt       # Dependency declarations (optional)</span><br></pre></td></tr></table></figure>
+
+<p>只有 <code>SKILL.md</code> 是必需的。其他一切都是可选的，只有在确实需要时才添加。</p>
+<p><a name="the-skill-md-file"></a></p>
+<h3 id="SKILL-md-文件"><a href="#SKILL-md-文件" class="headerlink" title="SKILL.md 文件"></a>SKILL.md 文件</h3><p><code>SKILL.md</code> 是技能的心脏。它由两部分组成：一个可选的 <strong>frontmatter</strong>（元数据）块，以及承载实际指令的正文。</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">---</span><br><span class="line">name: react-component-generator # unique identifier</span><br><span class="line">version: 1.0 # skill version</span><br><span class="line">description: Generate React component files that follow project conventions</span><br><span class="line">trigger: [&quot;create component&quot;, &quot;new React component&quot;] # trigger keywords</span><br><span class="line">tools: [&quot;typescript&quot;, &quot;react&quot;] # dependent tools</span><br><span class="line"><span class="section">author: your-name</span></span><br><span class="line"><span class="section">---</span></span><br><span class="line"></span><br><span class="line"><span class="section"># React Component Generator</span></span><br><span class="line"></span><br><span class="line"><span class="section">## Execution Steps</span></span><br><span class="line"></span><br><span class="line"><span class="bullet">1.</span> Confirm the component name and requirements.</span><br><span class="line"><span class="bullet">2.</span> Create files under <span class="code">`src/components/&#123;componentName&#125;/`</span>.</span><br><span class="line"><span class="bullet">3.</span> Generate code from the templates in <span class="code">`resources/template/`</span>.</span><br><span class="line"><span class="bullet">4.</span> Run <span class="code">`scripts/validate.js`</span> to verify the structure.</span><br><span class="line"></span><br><span class="line"><span class="section">## Output Rules</span></span><br><span class="line"></span><br><span class="line"><span class="bullet">-</span> Report the list of created files when done.</span><br><span class="line"><span class="bullet">-</span> Provide a usage example.</span><br><span class="line"></span><br><span class="line"><span class="section">## Error Handling</span></span><br><span class="line"></span><br><span class="line"><span class="bullet">-</span> If the directory exists, ask before overwriting.</span><br><span class="line"><span class="bullet">-</span> If dependencies are missing, print the install command.</span><br><span class="line"></span><br><span class="line"><span class="section">## Example</span></span><br><span class="line"></span><br><span class="line">(one complete input → output example)</span><br></pre></td></tr></table></figure>
+
+<p>frontmatter 是可选的——很多技能干脆不写它。但当一个技能需要被智能体系统_自动发现_时，<code>trigger</code> 和 <code>description</code> 字段就变得重要了。智能体在启动时只读取元数据，只有当任务匹配时才加载完整指令。这种<strong>渐进式披露（progressive disclosure）</strong>设计节省了上下文窗口的空间，这在长会话中至关重要。</p>
+<p><a name="the-supporting-cast"></a></p>
+<h3 id="配角阵容"><a href="#配角阵容" class="headerlink" title="配角阵容"></a>配角阵容</h3><p>四个可选目录各自解决不同的问题：</p>
+<p><strong><code>scripts/</code> —— 辅助脚本。</strong> 当技能需要真正的逻辑（数据清洗、批量文件操作、格式校验）时，把它移进脚本可以让 <code>SKILL.md</code> 保持干净。AI 只需调用脚本，而不用重新推导逻辑。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># scripts/helper.py — encapsulate complex logic, call it from SKILL.md</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">fill_missing_value</span>(<span class="params">df, column, strategy=<span class="string">&quot;mean&quot;</span></span>):</span><br><span class="line">    <span class="keyword">if</span> strategy == <span class="string">&quot;mean&quot;</span>:</span><br><span class="line">        df[column].fillna(df[column].mean(), inplace=<span class="literal">True</span>)</span><br><span class="line">    <span class="keyword">elif</span> strategy == <span class="string">&quot;empty&quot;</span>:</span><br><span class="line">        df[column].fillna(<span class="string">&quot;&quot;</span>, inplace=<span class="literal">True</span>)</span><br><span class="line">    <span class="keyword">return</span> df</span><br></pre></td></tr></table></figure>
+
+<p><strong><code>resources/</code> —— 生产物料。</strong> 模板、示例和配置文件。它们被_直接使用_来产出结果：</p>
+<ul>
+<li><code>template/</code> —— AI 生成输出所依据的代码&#x2F;文档模板。</li>
+<li><code>examples/</code> —— 输入&#x2F;输出示例对，展示”好的输出长什么样”。</li>
+<li><code>config/</code> —— 存放规则和默认值的 JSON&#x2F;YAML 文件，避免把它们硬编码进 <code>SKILL.md</code>。</li>
+</ul>
+<p><strong><code>references/</code> —— 参考书架。</strong> 与 <code>resources/</code> 不同，这些内容_不会_被复制进输出；它们是 <strong>AI 为了做出正确决策而阅读的知识</strong>。编码规范、安全检查清单（如 OWASP Top 10）、API 文档和技术决策记录都属于这里。</p>
+<blockquote>
+<p><strong>一句话区分 <code>resources/</code> 与 <code>references/</code>：</strong> <code>resources/</code> 是你用来构建的_物料_（模板、配置）；<code>references/</code> 是你用来查阅的_手册_（标准、规则）。</p>
+</blockquote>
+<p><strong><code>requirements.txt</code> —— 依赖声明。</strong> 如果 <code>scripts/</code> 用到了第三方库，把它们列在这里，环境就能一步搭建完成。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">pandas&gt;=2.0.0</span><br><span class="line">openpyxl&gt;=3.1.0</span><br></pre></td></tr></table></figure>
+
+<p><a name="build-your-own-from-simple-to-complete"></a></p>
+<h2 id="动手搭建：从简单到完整"><a href="#动手搭建：从简单到完整" class="headerlink" title="动手搭建：从简单到完整"></a>动手搭建：从简单到完整</h2><p>现在到了你期待已久的部分。搭建技能最重要的一条规则：</p>
+<blockquote>
+<p><strong>用能解决问题的最简单结构。</strong></p>
+</blockquote>
+<p>不是每个技能都需要每个目录。下面四个示例从单文件一路演进到完整能力包，每个示例教会你结构中的一个组成部分。读完之后，你就会清楚_你的_技能到底需要多少结构。</p>
+<p><a name="git-commit-messages-just-skill-md"></a></p>
+<h3 id="Git-提交信息：只要一个-SKILL-md"><a href="#Git-提交信息：只要一个-SKILL-md" class="headerlink" title="Git 提交信息：只要一个 SKILL.md"></a>Git 提交信息：只要一个 SKILL.md</h3><p><strong>目标：</strong> 每次都不假思索地生成一条 Conventional Commits 格式的提交信息。</p>
+<p>这是最简单的技能——只有一个 <code>SKILL.md</code>，别无其他。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">.claude/skills/git-commit/</span><br><span class="line">└── SKILL.md</span><br></pre></td></tr></table></figure>
+
+<p>创建 <code>.claude/skills/git-commit/SKILL.md</code>：</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">---</span><br><span class="line">name: git-commit-standard</span><br><span class="line">version: 1.0</span><br><span class="line">description: Generate Conventional Commits messages from staged changes</span><br><span class="line"><span class="section">trigger: [&quot;commit&quot;, &quot;git commit&quot;, &quot;generate commit&quot;]</span></span><br><span class="line"><span class="section">---</span></span><br><span class="line"></span><br><span class="line"><span class="section"># Git Commit Standardization</span></span><br><span class="line"></span><br><span class="line"><span class="section">## Steps</span></span><br><span class="line"></span><br><span class="line"><span class="bullet">1.</span> Run <span class="code">`git diff --staged`</span> to see the staged changes.</span><br><span class="line"><span class="bullet">2.</span> Classify the change:</span><br><span class="line"><span class="bullet">   -</span> feat: new feature</span><br><span class="line"><span class="bullet">   -</span> fix: bug fix</span><br><span class="line"><span class="bullet">   -</span> refactor: restructuring (no behavior change)</span><br><span class="line"><span class="bullet">   -</span> style: formatting</span><br><span class="line"><span class="bullet">   -</span> docs: documentation</span><br><span class="line"><span class="bullet">   -</span> test: tests</span><br><span class="line"><span class="bullet">   -</span> chore: build/tooling</span><br><span class="line"><span class="bullet">3.</span> Generate the message in the format <span class="code">`&lt;type&gt;(&lt;scope&gt;): &lt;description&gt;`</span>.</span><br><span class="line"><span class="bullet">4.</span> Show it to the user for confirmation before committing.</span><br><span class="line"></span><br><span class="line"><span class="section">## Example</span></span><br><span class="line"></span><br><span class="line">Changed the navigation style in <span class="code">`src/components/Header.tsx`</span></span><br><span class="line"></span><br><span class="line">Generated message:</span><br><span class="line">style(Header): improve responsive layout of the navbar</span><br></pre></td></tr></table></figure>
+
+<p>就这样。没有脚本，没有模板——而它能用，因为这项工作纯粹是遵循指令。一旦你的任务需要真正的逻辑或固定的输出格式，就要添加目录了，如下面的示例所示。</p>
+<p><a name="api-endpoint-generator-add-a-config"></a></p>
+<h3 id="API-端点生成器：加一份配置"><a href="#API-端点生成器：加一份配置" class="headerlink" title="API 端点生成器：加一份配置"></a>API 端点生成器：加一份配置</h3><p><strong>目标：</strong> 生成标准的 CRUD 端点，全部返回相同的 JSON 结构。</p>
+<p>这个技能新增了一个组成部分：<code>resources/config/</code>。它把响应格式存放在文件里，而不是硬编码在指令中。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">.claude/skills/api-endpoint/</span><br><span class="line">├── SKILL.md</span><br><span class="line">└── resources/</span><br><span class="line">   └── config/</span><br><span class="line">      └── response-format.json</span><br></pre></td></tr></table></figure>
+
+<p>创建 <code>SKILL.md</code>：</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">---</span><br><span class="line">name: api-endpoint-generator</span><br><span class="line">version: 1.0</span><br><span class="line">description: Generate standard CRUD API endpoints for a data model</span><br><span class="line"><span class="section">trigger: [&quot;create API&quot;, &quot;generate endpoint&quot;, &quot;new endpoint&quot;]</span></span><br><span class="line"><span class="section">---</span></span><br><span class="line"></span><br><span class="line"><span class="section"># RESTful API Endpoint Generator</span></span><br><span class="line"></span><br><span class="line"><span class="section">## Inputs</span></span><br><span class="line"></span><br><span class="line"><span class="bullet">-</span> modelName (required): the data model name (e.g. &quot;bookmark&quot;, &quot;tag&quot;)</span><br><span class="line"><span class="bullet">-</span> fields (required): the model&#x27;s fields</span><br><span class="line"><span class="bullet">-</span> operations (optional, default: all): create/read/update/delete/list</span><br><span class="line"></span><br><span class="line"><span class="section">## Steps</span></span><br><span class="line"></span><br><span class="line"><span class="bullet">1.</span> Create <span class="code">`route.ts`</span> under <span class="code">`src/app/api/&#123;modelName&#125;s/`</span>.</span><br><span class="line"><span class="bullet">2.</span> Implement:</span><br><span class="line"><span class="bullet">   -</span> GET /api/&#123;modelName&#125;s → list (with pagination and search)</span><br><span class="line"><span class="bullet">   -</span> POST /api/&#123;modelName&#125;s → create</span><br><span class="line"><span class="bullet">   -</span> GET /api/&#123;modelName&#125;s/[id] → get one</span><br><span class="line"><span class="bullet">   -</span> PUT /api/&#123;modelName&#125;s/[id] → update</span><br><span class="line"><span class="bullet">   -</span> DELETE /api/&#123;modelName&#125;s/[id] → delete</span><br><span class="line"><span class="bullet">3.</span> Conventions:</span><br><span class="line"><span class="bullet">   -</span> Use Prisma for database access.</span><br><span class="line"><span class="bullet">   -</span> Follow <span class="code">`resources/config/response-format.json`</span> for return shapes.</span><br><span class="line"><span class="bullet">   -</span> Include input validation and try/catch error handling.</span><br><span class="line"><span class="bullet">4.</span> List every endpoint&#x27;s URL and usage when done.</span><br></pre></td></tr></table></figure>
+
+<p>以及配置文件 <code>.claude/skills/api-endpoint/resources/config/response-format.json</code>：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;success_response&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span> <span class="attr">&quot;success&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span> <span class="attr">&quot;data&quot;</span><span class="punctuation">:</span> <span class="string">&quot;&lt;payload&gt;&quot;</span> <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;error_response&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span> <span class="attr">&quot;success&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">false</span></span><span class="punctuation">,</span> <span class="attr">&quot;error&quot;</span><span class="punctuation">:</span> <span class="string">&quot;&lt;message&gt;&quot;</span> <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;list_response&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;success&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;data&quot;</span><span class="punctuation">:</span> <span class="string">&quot;&lt;array&gt;&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;pagination&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span> <span class="attr">&quot;page&quot;</span><span class="punctuation">:</span> <span class="number">1</span><span class="punctuation">,</span> <span class="attr">&quot;pageSize&quot;</span><span class="punctuation">:</span> <span class="number">20</span><span class="punctuation">,</span> <span class="attr">&quot;total&quot;</span><span class="punctuation">:</span> <span class="number">100</span> <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>这里的好处是关注点分离：只需编辑一个 JSON 文件就能改变响应结构，完全不用碰指令。<code>SKILL.md</code> 保持简短，格式在所有使用处保持一致。</p>
+<p><a name="react-component-generator-scripts-and-templates"></a></p>
+<h3 id="React-组件生成器：脚本与模板"><a href="#React-组件生成器：脚本与模板" class="headerlink" title="React 组件生成器：脚本与模板"></a>React 组件生成器：脚本与模板</h3><p><strong>目标：</strong> 每个新 React 组件都遵循相同的文件结构、编码风格和测试配置。</p>
+<p>这是一个_完整的_技能包——它用 <code>scripts/</code> 做校验，用 <code>resources/template/</code> 保证代码一致性。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">.claude/skills/react-component/</span><br><span class="line">├── SKILL.md</span><br><span class="line">├── scripts/</span><br><span class="line">│   └── validate.js</span><br><span class="line">└── resources/</span><br><span class="line">   ├── template/</span><br><span class="line">   │   ├── component.tsx.tpl</span><br><span class="line">   │   └── test.tsx.tpl</span><br><span class="line">   └── examples/</span><br><span class="line">      └── BookmarkCard-example/</span><br></pre></td></tr></table></figure>
+
+<p>先搭好目录结构：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> -p .claude/skills/react-component/scripts</span><br><span class="line"><span class="built_in">mkdir</span> -p .claude/skills/react-component/resources/template</span><br><span class="line"><span class="built_in">mkdir</span> -p .claude/skills/react-component/resources/examples</span><br></pre></td></tr></table></figure>
+
+<p><code>SKILL.md</code> 定义了完整契约：</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">---</span><br><span class="line">name: react-component-generator</span><br><span class="line">version: 1.0</span><br><span class="line">description: Generate React component files that follow project conventions</span><br><span class="line">trigger: [&quot;create component&quot;, &quot;new React component&quot;]</span><br><span class="line"><span class="section">tools: [&quot;typescript&quot;, &quot;react&quot;, &quot;tailwindcss&quot;]</span></span><br><span class="line"><span class="section">---</span></span><br><span class="line"></span><br><span class="line"><span class="section"># React Component Generator</span></span><br><span class="line"></span><br><span class="line"><span class="section">## Inputs</span></span><br><span class="line"></span><br><span class="line"><span class="bullet">-</span> componentName (required): PascalCase component name</span><br><span class="line"><span class="bullet">-</span> description (required): what the component does</span><br><span class="line"><span class="bullet">-</span> hasProps (optional, default true): generate a Props type</span><br><span class="line"><span class="bullet">-</span> hasState (optional, default false): include state management</span><br><span class="line"></span><br><span class="line"><span class="section">## Steps</span></span><br><span class="line"></span><br><span class="line"><span class="bullet">1.</span> Create the folder <span class="code">`src/components/&#123;componentName&#125;/`</span>.</span><br><span class="line"><span class="bullet">2.</span> Using the templates in <span class="code">`resources/template/`</span>, create:</span><br><span class="line"><span class="bullet">   -</span> <span class="code">`index.tsx`</span> (from component.tsx.tpl)</span><br><span class="line"><span class="bullet">   -</span> <span class="code">`types.ts`</span> (if hasProps)</span><br><span class="line"><span class="bullet">   -</span> <span class="code">`&#123;componentName&#125;.test.tsx`</span> (from test.tsx.tpl)</span><br><span class="line"><span class="bullet">3.</span> Code conventions:</span><br><span class="line"><span class="bullet">   -</span> Functional components + TypeScript.</span><br><span class="line"><span class="bullet">   -</span> Props as an interface named <span class="code">`&#123;componentName&#125;Props`</span>.</span><br><span class="line"><span class="bullet">   -</span> Tailwind CSS for styling.</span><br><span class="line"><span class="bullet">   -</span> Named exports and JSDoc comments.</span><br><span class="line"><span class="bullet">4.</span> Test conventions:</span><br><span class="line"><span class="bullet">   -</span> Use @testing-library/react.</span><br><span class="line"><span class="bullet">   -</span> At minimum: a render test and a props test.</span><br><span class="line"><span class="bullet">5.</span> Run <span class="code">`scripts/validate.js`</span> to verify the structure.</span><br></pre></td></tr></table></figure>
+
+<p>校验脚本 <code>scripts/validate.js</code> 给技能内置了一个自检机制：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> fs = <span class="built_in">require</span>(<span class="string">&quot;fs&quot;</span>);</span><br><span class="line"><span class="keyword">const</span> path = <span class="built_in">require</span>(<span class="string">&quot;path&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">validateComponent</span>(<span class="params">componentName</span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> dir = path.<span class="title function_">join</span>(<span class="string">&quot;src/components&quot;</span>, componentName);</span><br><span class="line">  <span class="keyword">const</span> requiredFiles = [<span class="string">&quot;index.tsx&quot;</span>, <span class="string">&quot;types.ts&quot;</span>];</span><br><span class="line">  <span class="keyword">const</span> missing = requiredFiles.<span class="title function_">filter</span>(</span><br><span class="line">    <span class="function">(<span class="params">f</span>) =&gt;</span> !fs.<span class="title function_">existsSync</span>(path.<span class="title function_">join</span>(dir, f)),</span><br><span class="line">  );</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (missing.<span class="property">length</span> &gt; <span class="number">0</span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">error</span>(</span><br><span class="line">      <span class="string">`Component <span class="subst">$&#123;componentName&#125;</span> is missing: <span class="subst">$&#123;missing.join(<span class="string">&quot;, &quot;</span>)&#125;</span>`</span>,</span><br><span class="line">    );</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">`Component <span class="subst">$&#123;componentName&#125;</span> structure OK`</span>);</span><br><span class="line">  <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> name = process.<span class="property">argv</span>[<span class="number">2</span>];</span><br><span class="line"><span class="keyword">if</span> (!name) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">error</span>(<span class="string">&quot;Usage: node validate.js &lt;ComponentName&gt;&quot;</span>);</span><br><span class="line">  process.<span class="title function_">exit</span>(<span class="number">1</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="title function_">validateComponent</span>(name);</span><br></pre></td></tr></table></figure>
+
+<p>模板 <code>resources/template/component.tsx.tpl</code> 给 AI 提供了一个具体的参考形态（不是让它逐字照抄，而是一种要遵循的_风格_）：</p>
+<figure class="highlight tsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * &#123;componentName&#125; component</span></span><br><span class="line"><span class="comment"> * &#123;description&#125;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> &#123; &#123;componentName&#125;<span class="title class_">Props</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;./types&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">function</span> &#123;componentName&#125;(&#123; ...props &#125;: &#123;componentName&#125;<span class="title class_">Props</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">div</span> <span class="attr">className</span>=<span class="string">&quot;...&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      &#123;/* component content */&#125;</span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><strong>为什么模板胜过纯文字描述。</strong> “干净、带类型、函数式组件”这样的文字描述是含糊的；而模板向 AI 精确展示了你的意思。它产出的质量永远高于一段文字描述。</p>
+</blockquote>
+<p>配置好之后，你只需要一句话就能使用它：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt; Create a BookmarkCard component. It shows a bookmark&#x27;s title, URL, description,</span><br><span class="line">&gt; and tag list. It needs Props, no state.</span><br></pre></td></tr></table></figure>
+
+<p><a name="security-audit-reference-documents"></a></p>
+<h3 id="安全审计：参考文档"><a href="#安全审计：参考文档" class="headerlink" title="安全审计：参考文档"></a>安全审计：参考文档</h3><p><strong>目标：</strong> 按照_你的_标准审计代码，而不是靠 AI 的泛泛猜测。</p>
+<p>前面三个示例覆盖了 <code>scripts/</code>、<code>resources/</code> 和一个裸 <code>SKILL.md</code>。这一个则重点介绍 **<code>references/</code>**——当 AI 必须依据特定的外部规则行事时，这个目录就至关重要。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">.claude/skills/security-audit/</span><br><span class="line">├── SKILL.md</span><br><span class="line">├── references/</span><br><span class="line">│   ├── owasp-top10-checklist.md</span><br><span class="line">│   └── team-security-standards.md</span><br><span class="line">└── resources/</span><br><span class="line">   └── examples/</span><br><span class="line">      └── audit-report-sample.md</span><br></pre></td></tr></table></figure>
+
+<p><code>SKILL.md</code> 告诉 AI _该做什么、规则在哪里_：</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">---</span><br><span class="line">name: security-audit</span><br><span class="line">version: 1.0</span><br><span class="line">description: Audit code against OWASP Top 10 and team security standards</span><br><span class="line"><span class="section">trigger: [&quot;security audit&quot;, &quot;security check&quot;, &quot;code security&quot;]</span></span><br><span class="line"><span class="section">---</span></span><br><span class="line"></span><br><span class="line"><span class="section"># Code Security Audit</span></span><br><span class="line"></span><br><span class="line"><span class="section">## Steps</span></span><br><span class="line"></span><br><span class="line"><span class="bullet">1.</span> Read the target files or directory.</span><br><span class="line"><span class="bullet">2.</span> Check against <span class="code">`references/owasp-top10-checklist.md`</span>.</span><br><span class="line"><span class="bullet">3.</span> Check against <span class="code">`references/team-security-standards.md`</span>.</span><br><span class="line"><span class="bullet">4.</span> Format the report like <span class="code">`resources/examples/audit-report-sample.md`</span>.</span><br><span class="line"><span class="bullet">5.</span> For each issue: severity (high/medium/low), fix suggestion, and fix code.</span><br><span class="line"></span><br><span class="line"><span class="section">## Output Rules</span></span><br><span class="line"></span><br><span class="line"><span class="bullet">-</span> List all issues in a Markdown table.</span><br><span class="line"><span class="bullet">-</span> Each issue: file, line, description, severity, fix suggestion.</span><br><span class="line"><span class="bullet">-</span> End with a security score (0-100) and a summary.</span><br></pre></td></tr></table></figure>
+
+<p>参考文档是你团队_具体_要求存放的地方——那些通用模型永远不可能知道的内容：</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="section"># Team Security Standards</span></span><br><span class="line"></span><br><span class="line"><span class="section">## Mandatory rules (violation = high severity)</span></span><br><span class="line"></span><br><span class="line"><span class="bullet">1.</span> No hardcoded secrets, keys, or tokens — use environment variables.</span><br><span class="line"><span class="bullet">2.</span> All database access through the ORM (Prisma). No raw SQL.</span><br><span class="line"><span class="bullet">3.</span> All user input validated server-side. Never trust the frontend alone.</span><br><span class="line"><span class="bullet">4.</span> Every API route must enforce authorization. No open endpoints.</span><br><span class="line"></span><br><span class="line"><span class="section">## Recommended rules (violation = medium severity)</span></span><br><span class="line"></span><br><span class="line"><span class="bullet">1.</span> File uploads must restrict type and size.</span><br><span class="line"><span class="bullet">2.</span> Sensitive operations (delete, change password) need a second confirmation.</span><br><span class="line"><span class="bullet">3.</span> Pagination must cap pageSize to prevent abuse.</span><br><span class="line"><span class="bullet">4.</span> Error responses must not leak internal implementation details.</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><strong>为什么 <code>references/</code> 值得投入。</strong> 没有它，AI 只会用它的_通用_知识做审计，漏掉你团队的_具体_规则。有了它，审计标准就变得<strong>确定、可控、可迭代</strong>——规则变了就更新 <code>references/team-security-standards.md</code>，之后每一次审计都会立刻遵循新规则。</p>
+</blockquote>
+<p><a name="which-structure-do-you-need"></a></p>
+<h3 id="你需要哪种结构？"><a href="#你需要哪种结构？" class="headerlink" title="你需要哪种结构？"></a>你需要哪种结构？</h3><p>把四个示例并排放在一起，结论就显而易见了：</p>
+<table>
+<thead>
+<tr>
+<th>示例</th>
+<th>核心组成部分</th>
+<th>它教会你什么</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Git 提交</td>
+<td>仅 <code>SKILL.md</code></td>
+<td>最简单的技能形态</td>
+</tr>
+<tr>
+<td>API 端点</td>
+<td><code>SKILL.md</code> + <code>resources/config/</code></td>
+<td>配置外部化</td>
+</tr>
+<tr>
+<td>React 组件</td>
+<td><code>SKILL.md</code> + <code>scripts/</code> + <code>resources/template/</code></td>
+<td>脚本校验 + 模板</td>
+</tr>
+<tr>
+<td>安全审计</td>
+<td><code>SKILL.md</code> + <code>references/</code> + <code>resources/examples/</code></td>
+<td>参考文档驱动的审查</td>
+</tr>
+</tbody></table>
+<p>这里有一份为你自己的技能准备的快速决策指南：</p>
+<table>
+<thead>
+<tr>
+<th>场景</th>
+<th>推荐结构</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>编码规范</td>
+<td>仅 <code>SKILL.md</code></td>
+</tr>
+<tr>
+<td>代码生成</td>
+<td><code>SKILL.md</code> + <code>resources/template/</code></td>
+</tr>
+<tr>
+<td>数据处理</td>
+<td><code>SKILL.md</code> + <code>scripts/</code> + <code>resources/config/</code></td>
+</tr>
+<tr>
+<td>质量审查</td>
+<td><code>SKILL.md</code> + <code>references/</code></td>
+</tr>
+<tr>
+<td>完整工程化流程</td>
+<td>以上全部</td>
+</tr>
+</tbody></table>
+<p><a name="find-ready-made-skills"></a></p>
+<h2 id="寻找现成的技能"><a href="#寻找现成的技能" class="headerlink" title="寻找现成的技能"></a>寻找现成的技能</h2><p>你不必从零开始。一个成熟的技能生态已经存在，高效的路径是<strong>寻找 → 评估 → 安装 → 定制</strong>，而不是从头造轮子。</p>
+<p><a name="official-libraries"></a></p>
+<h3 id="官方技能库"><a href="#官方技能库" class="headerlink" title="官方技能库"></a>官方技能库</h3><p><strong>Anthropic</strong> 官方技能库（<a target="_blank" rel="noopener" href="https://github.com/anthropics/skills">github.com&#x2F;anthropics&#x2F;skills</a>）是质量最高的起点。它自己的定义说得很好：</p>
+<blockquote>
+<p><em>“技能是包含指令、脚本和资源的文件夹，Claude 会动态加载它们，以提升在专业任务上的表现。”</em></p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>分类</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>文档处理</td>
+<td><code>docx</code>、<code>pdf</code>、<code>pptx</code>、<code>xlsx</code></td>
+</tr>
+<tr>
+<td>创意&#x2F;设计</td>
+<td><code>algorithmic-art</code>、<code>canvas-design</code>、<code>slack-gif-creator</code></td>
+</tr>
+<tr>
+<td>开发</td>
+<td><code>frontend-design</code>、<code>mcp-builder</code>、<code>webapp-testing</code></td>
+</tr>
+<tr>
+<td>企业沟通</td>
+<td><code>brand-guidelines</code>、<code>internal-comms</code></td>
+</tr>
+<tr>
+<td>元技能</td>
+<td><code>skill-creator</code>（一个用来创建技能的技能）</td>
+</tr>
+</tbody></table>
+<p><strong>Vercel</strong> 技能库（<a target="_blank" rel="noopener" href="https://github.com/vercel-labs/skills">github.com&#x2F;vercel-labs&#x2F;skills</a>）专注于 React&#x2F;Next.js&#x2F;AI SDK 生态，如果那是你的技术栈，它将非常有价值。</p>
+<p><a name="the-skills-cli"></a></p>
+<h3 id="Skills-CLI"><a href="#Skills-CLI" class="headerlink" title="Skills CLI"></a>Skills CLI</h3><p>Vercel 还提供了一个 CLI，相当于<strong>技能界的 npm</strong>——在终端里搜索、安装和管理技能：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">npx skills find <span class="string">&quot;react testing&quot;</span>              <span class="comment"># search</span></span><br><span class="line">npx skills add &lt;owner/repo&gt;                  <span class="comment"># install all Skills in a repo</span></span><br><span class="line">npx skills add &lt;owner/repo&gt;@&lt;name&gt; -g        <span class="comment"># install one, globally</span></span><br><span class="line">npx skills list                              <span class="comment"># list installed Skills</span></span><br><span class="line">npx skills init                              <span class="comment"># scaffold the Skills directory</span></span><br></pre></td></tr></table></figure>
+
+<p>入门时最值得先装的两个：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">npx skills add anthropics/skills@skill-creator -g    <span class="comment"># a Skill that builds Skills</span></span><br><span class="line">npx skills add vercel-labs/skills@find-skills -g     <span class="comment"># a Skill that finds Skills</span></span><br></pre></td></tr></table></figure>
+
+<p><code>skill-creator</code> 是一个”元技能”：告诉它你想要什么，它会引导你创建一个结构规范的 <code>SKILL.md</code> 和目录结构。<code>find-skills</code> 则帮你在不知道有什么可用的时候发现现成的技能。这两个都强烈推荐新手安装。</p>
+<p><a name="community-libraries"></a></p>
+<h3 id="社区技能库"><a href="#社区技能库" class="headerlink" title="社区技能库"></a>社区技能库</h3><p>除了官方库，社区已经聚合了数千个技能：</p>
+<table>
+<thead>
+<tr>
+<th>仓库</th>
+<th>规模</th>
+<th>亮点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>alirezarezvani/claude-skills</code></td>
+<td>235+</td>
+<td>9 大领域，25 个”POWERFUL”级进阶技能</td>
+</tr>
+<tr>
+<td><code>ComposioHQ/awesome-claude-skills</code></td>
+<td>127+</td>
+<td>10 大分类，59 个 SaaS 集成技能</td>
+</tr>
+<tr>
+<td><code>travisvn/awesome-claude-skills</code></td>
+<td>精选</td>
+<td>社区投票选出的短名单</td>
+</tr>
+</tbody></table>
+<p>聚合平台则免去了”逐个翻仓库”的痛苦：<strong>skills.sh</strong>（约 4.8 万个技能）和 <strong>SkillsMP</strong>（约 90 万个技能）让你可以按分类和关键词搜索，并一键安装。</p>
+<p><a name="safety-before-you-install"></a></p>
+<h3 id="安装前的安全检查"><a href="#安装前的安全检查" class="headerlink" title="安装前的安全检查"></a>安装前的安全检查</h3><p>技能是一组 _AI 将会执行的指令_——而恶意技能可能包含危险操作。在使用任何第三方技能之前，先做一次快速安全检查：</p>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>检查什么</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>安全性</td>
+<td>有危险命令吗？有数据外传吗？</td>
+<td>留意 <code>rm -rf</code>、指向外部主机的 <code>curl</code></td>
+</tr>
+<tr>
+<td>维护状况</td>
+<td>最近有更新吗？作者活跃吗？</td>
+<td>超过 6 个月无人维护就要警惕</td>
+</tr>
+<tr>
+<td>文档</td>
+<td><code>SKILL.md</code> 是否清晰、有示例？</td>
+<td>文档糟糕往往意味着质量低下</td>
+</tr>
+<tr>
+<td>兼容性</td>
+<td>与你的工具版本匹配吗？</td>
+<td>查看 frontmatter 的 <code>tools</code> 字段</td>
+</tr>
+<tr>
+<td>来源可信度</td>
+<td>官方 &#x2F; 知名组织 &#x2F; 个人？Star 数如何？</td>
+<td>优先选择官方和高 Star 仓库</td>
+</tr>
+</tbody></table>
+<p>黄金法则：</p>
+<blockquote>
+<p><strong>永远不要盲目安装技能。使用前先读它的 <code>SKILL.md</code> 和所有 <code>scripts/</code>——检查是否有网络调用和文件删除操作。官方库优先，高 Star 社区仓库其次，不知名的个人仓库最后。</strong></p>
+</blockquote>
+<p><a name="integrating-skills-into-your-workflow"></a></p>
+<h2 id="将技能融入你的工作流"><a href="#将技能融入你的工作流" class="headerlink" title="将技能融入你的工作流"></a>将技能融入你的工作流</h2><p>放在文件夹里的技能什么也做不了，直到 AI 知道要去用它。在 Claude Code 中有两种常见的接入方式：</p>
+<p><strong>方式一——在 <code>CLAUDE.md</code> 中引用它（推荐）。</strong> 列出你的技能，让 AI 在合适的任务中加载合适的技能：</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">## Project Skills</span></span><br><span class="line"></span><br><span class="line">These Skills define standardized workflows (each is a folder with its core</span><br><span class="line">instructions in SKILL.md):</span><br><span class="line"></span><br><span class="line"><span class="bullet">-</span> <span class="code">`.claude/skills/react-component/`</span> — React component generation rules</span><br><span class="line"><span class="bullet">-</span> <span class="code">`.claude/skills/api-endpoint/`</span> — API endpoint generation rules</span><br><span class="line"><span class="bullet">-</span> <span class="code">`.claude/skills/git-commit/`</span> — Git commit message rules</span><br><span class="line"><span class="bullet">-</span> <span class="code">`.claude/skills/security-audit/`</span> — Code security audit</span><br><span class="line"></span><br><span class="line">When a task matches, read the matching SKILL.md and follow it strictly,</span><br><span class="line">including any scripts/, resources/, or references/.</span><br></pre></td></tr></table></figure>
+
+<p><strong>方式二——把它暴露为斜杠命令。</strong> 在 <code>.claude/commands/</code> 中放一个触发文件，就能通过 <code>/skill-name</code> 直接调用某个技能：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">.claude/</span><br><span class="line">├── commands/</span><br><span class="line">│   ├── new-component.md    → /new-component</span><br><span class="line">│   └── security-check.md   → /security-check</span><br><span class="line">└── skills/</span><br><span class="line">    ├── react-component/</span><br><span class="line">    ├── api-endpoint/</span><br><span class="line">    ├── security-audit/</span><br><span class="line">    └── git-commit/</span><br></pre></td></tr></table></figure>
+
+<p>对其他工具而言思路是一样的——技能的规则成为项目级上下文。比如在 Cursor 中，你可以把技能的核心规则转写成一个 <code>.cursor/rules/*.mdc</code> 文件。</p>
+<p><a name="iterating-and-versioning"></a></p>
+<h2 id="迭代与版本管理"><a href="#迭代与版本管理" class="headerlink" title="迭代与版本管理"></a>迭代与版本管理</h2><p>技能不是”写一次、忘一辈子”的东西。要像对待代码一样对待它：</p>
+<ul>
+<li><strong>每次使用后都迭代。</strong> 记下 AI 做得好的地方（保留）和做错的地方（加一条更明确的指令）。漏掉了某个边界情况？把它补进错误处理部分。</li>
+<li><strong>用 Git 做版本管理。</strong> 你的技能目录就是代码，所以要像代码一样提交：</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">git add .claude/skills/react-component/</span><br><span class="line">git commit -m <span class="string">&quot;feat(skills): add React component generator v1.0&quot;</span></span><br><span class="line"></span><br><span class="line">git add .claude/skills/react-component/SKILL.md</span><br><span class="line">git commit -m <span class="string">&quot;chore(skills): bump React Skill to v1.1, refine template&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>一旦技能被提交到共享仓库，每个拉取代码的人都会获得同样的工作流。这才是真正的回报：最佳实践不再是口口相传的部落知识，而是可版本化、可审查的文件。</p>
+<p><a name="best-practices"></a></p>
+<h2 id="最佳实践"><a href="#最佳实践" class="headerlink" title="最佳实践"></a>最佳实践</h2><p>一份简短的清单，按你应当应用的顺序排列：</p>
+<ol>
+<li><strong>从最小化开始。</strong> 对于简单规则，一个 <code>SKILL.md</code> 胜过一个完整能力包。只有当具体需求出现时才添加目录。</li>
+<li><strong>重复第三次时就技能化。</strong> 如果类似的提示词你已经写了三遍，这就是该搭建技能的信号。</li>
+<li><strong>优先使用官方库。</strong> 不要重复造 <code>pdf</code>、<code>docx</code> 或 <code>frontend-design</code> 的轮子——直接安装然后定制。</li>
+<li><strong>安装前先阅读。</strong> 审查每一个第三方的 <code>SKILL.md</code> 和 <code>scripts/</code>，排查危险命令。</li>
+<li><strong>模板胜过描述。</strong> 相比文字叙述，模板文件能更可靠地传达你想要的输出形态。</li>
+<li><strong>把规则放进 <code>references/</code>。</strong> 当 AI 必须遵循_你的_标准时，把这些标准写进参考文档，而不是留在你的脑子里。</li>
+<li><strong>用 Git 做版本管理。</strong> 像代码一样提交技能，让它们可共享、可审查、可回滚。</li>
+</ol>
+<p><a name="faq"></a></p>
+<h2 id="常见问题"><a href="#常见问题" class="headerlink" title="常见问题"></a>常见问题</h2><p><strong>问：每个技能都真的需要完整的文件夹结构吗？</strong></p>
+<p>不需要。很多技能只有一个 <code>SKILL.md</code>，别无他物。用能解决问题的最简单结构——上面的决策指南展示了何时该添加哪些组成部分。</p>
+<p><strong>问：SKILL.md 中的 frontmatter 是必需的吗？</strong></p>
+<p>不是，它是可选的。它主要在智能体系统需要按 <code>trigger</code> 和 <code>description</code> 自动发现和匹配技能时才重要，这样可以避免把完整指令加载进每一个会话。</p>
+<p><strong>问：<code>resources/</code> 和 <code>references/</code> 的实际区别是什么？</strong></p>
+<p><code>resources/</code> 存放直接用于产出结果的_物料_（模板、示例、配置）。<code>references/</code> 存放 AI 为了做出正确决策而阅读的_知识_（标准、检查清单、API 文档）。前者会被复制进输出；后者只供查阅。</p>
+<p><strong>问：怎么让 Claude Code 真正用上我的技能？</strong></p>
+<p>在 <code>CLAUDE.md</code> 中引用它，让 AI 在匹配的任务中加载它；或者在 <code>.claude/commands/</code> 中添加一个触发文件，把它作为斜杠命令调用。</p>
+<p><strong>问：技能和 Cursor Rules 是一回事吗？</strong></p>
+<p>不完全是，但它们是”表亲”。两者都是”把经验沉淀为可复用的上下文”。Cursor Rules（<code>*.mdc</code>）是项目级的行为指令，而技能是一个更结构化、自包含的能力包，带有脚本和资源。你可以把技能的核心规则转写成一个 Rules 文件。</p>
+<p><strong>问：我怎么知道一个第三方技能是否安全？</strong></p>
+<p>安装前先阅读它的 <code>SKILL.md</code> 和所有 <code>scripts/</code>，检查是否有危险命令（<code>rm -rf</code>）或数据外传行为（指向外部主机的 <code>curl</code>）。优先选择官方库和高 Star 仓库，并先在一个一次性项目里测试。</p>
+<p><strong>问：技能可以调用外部工具吗？</strong></p>
+<p>可以。技能可以调用 MCP（Model Context Protocol）服务器来获得额外能力——比如一个部署技能可以调用 GitHub MCP 服务器来创建 PR。但请把 MCP 当作进阶话题；先掌握基础技能。</p>
+<p><strong>问：技能和 MCP 有什么区别？</strong></p>
+<p>它们是互补的。技能定义_做什么、怎么做_（流程和规则）；MCP 提供_新能力_（把 AI 连接到外部服务）。你可以两者结合使用——一个调用 MCP 所提供工具的技能。</p>
+<p><a name="summary"></a></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>如果说与 AI 对话是下达口头命令，那么技能就是把打印好的操作手册交到它手上。整篇文章可以浓缩为三个习惯：</p>
+<ol>
+<li><strong>把重复的操作技能化。</strong> 每个你敲过三遍的提示词都值得变成一个技能。一致性、效率和可复用性都会随之免费获得。</li>
+<li><strong>用可行的最简结构。</strong> 从一个 <code>SKILL.md</code> 开始；只有当具体需求出现时才添加 <code>resources/config/</code>、<code>scripts/</code>、<code>resources/template/</code> 或 <code>references/</code>——绝不提前。</li>
+<li><strong>先借用，再自建。</strong> 从 Anthropic 和 Vercel 的官方库安装，审查所有第三方内容，定制而不是重新发明。</li>
+</ol>
+<p>其余的都是细节：</p>
+<table>
+<thead>
+<tr>
+<th>主题</th>
+<th>一句话要点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>是什么</td>
+<td>技能是可复用的指令集——一份菜谱&#x2F;SOP，而不是一次性提示词</td>
+</tr>
+<tr>
+<td>结构</td>
+<td><code>SKILL.md</code> 是必需的；<code>scripts/</code>、<code>resources/</code>、<code>references/</code> 是可选的</td>
+</tr>
+<tr>
+<td>一致性</td>
+<td>每次运行都遵循同一标准，不同于每次重写的提示词</td>
+</tr>
+<tr>
+<td>配置</td>
+<td>把固定格式放进 <code>resources/config/</code>，不要硬编码在指令里</td>
+</tr>
+<tr>
+<td>校验</td>
+<td>把真实逻辑封装进 <code>scripts/</code>，让 AI 调用而不是重新推导</td>
+</tr>
+<tr>
+<td>标准</td>
+<td>把_你的_规则放进 <code>references/</code>，让审计变得确定而非泛泛</td>
+</tr>
+<tr>
+<td>来源</td>
+<td>官方库优先，社区仓库其次，不知名的个人仓库最后</td>
+</tr>
+<tr>
+<td>维护</td>
+<td>每次使用后迭代，并用 Git 对技能做版本管理</td>
+</tr>
+</tbody></table>
+<p>从小处开始：为你重复最多的那个提示词写一个 <code>SKILL.md</code>，把它接入 <code>CLAUDE.md</code>，然后用上一次。这第一个技能教会你的东西，会比这篇文章剩下的所有内容加起来还多。</p>
+<link rel="stylesheet" href="/css/folder.css" type="text/css"><script src="/js/folder.js" type="text/javascript" async></script>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/AI-Agent/" rel="tag"># AI Agent</a>
+              <a href="/tags/LLM/" rel="tag"># LLM</a>
+              <a href="/tags/Claude-Code/" rel="tag"># Claude Code</a>
+              <a href="/tags/Skills/" rel="tag"># Skills</a>
+              <a href="/tags/Developer-Tools/" rel="tag"># Developer Tools</a>
+              <a href="/tags/Automation/" rel="tag"># Automation</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2026/08/23/Deep%E2%80%91Dive-Advanced-Tips-for-Claude-Code/" rel="prev" title="Deep‑Dive & Advanced Tips for Claude Code">
+      <i class="fa fa-chevron-left"></i> Deep‑Dive & Advanced Tips for Claude Code
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2026/08/30/Build-your-own-AI-Skills/" rel="next" title="Build Your Own AI Skills">
+      Build Your Own AI Skills <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+
+            
+            <div class="post-copyright" style="margin: 0 0 10px 0;">
+              <p class="post-copyright-author" style="margin: 0 0 5px 0 !important;"><strong>Author:</strong> <a href="https://github.com/BODYsuperman" target="_blank">Alex</a></p>
+              <p class="post-copyright-link" style="margin: 0 0 5px 0 !important;"><strong>Article Link:</strong> <a href="https://bodysuperman.github.io/zh-CN/2026/08/30/Build-your-own-AI-Skills/" target="_blank">https://bodysuperman.github.io/zh-CN/2026/08/30/Build-your-own-AI-Skills/</a></p>
+              <p class="post-copyright-license" style="margin: 0 !important;"><strong>License:</strong> This article is licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a>. Please credit the original author and include the source link when reposting.</p>
+            </div>
+
+          </div>
+          
+    <div class="comments" id="gitalk-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%95%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">引言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E6%8A%80%E8%83%BD%EF%BC%88Skill%EF%BC%89"><span class="nav-number">2.</span> <span class="nav-text">什么是技能（Skill）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E6%8A%80%E8%83%BD%E5%BE%88%E9%87%8D%E8%A6%81"><span class="nav-number">3.</span> <span class="nav-text">为什么技能很重要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8A%80%E8%83%BD%E7%9A%84%E8%A7%A3%E5%89%96%E7%BB%93%E6%9E%84"><span class="nav-number">4.</span> <span class="nav-text">技能的解剖结构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#SKILL-md-%E6%96%87%E4%BB%B6"><span class="nav-number">4.1.</span> <span class="nav-text">SKILL.md 文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E8%A7%92%E9%98%B5%E5%AE%B9"><span class="nav-number">4.2.</span> <span class="nav-text">配角阵容</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8A%A8%E6%89%8B%E6%90%AD%E5%BB%BA%EF%BC%9A%E4%BB%8E%E7%AE%80%E5%8D%95%E5%88%B0%E5%AE%8C%E6%95%B4"><span class="nav-number">5.</span> <span class="nav-text">动手搭建：从简单到完整</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Git-%E6%8F%90%E4%BA%A4%E4%BF%A1%E6%81%AF%EF%BC%9A%E5%8F%AA%E8%A6%81%E4%B8%80%E4%B8%AA-SKILL-md"><span class="nav-number">5.1.</span> <span class="nav-text">Git 提交信息：只要一个 SKILL.md</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#API-%E7%AB%AF%E7%82%B9%E7%94%9F%E6%88%90%E5%99%A8%EF%BC%9A%E5%8A%A0%E4%B8%80%E4%BB%BD%E9%85%8D%E7%BD%AE"><span class="nav-number">5.2.</span> <span class="nav-text">API 端点生成器：加一份配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#React-%E7%BB%84%E4%BB%B6%E7%94%9F%E6%88%90%E5%99%A8%EF%BC%9A%E8%84%9A%E6%9C%AC%E4%B8%8E%E6%A8%A1%E6%9D%BF"><span class="nav-number">5.3.</span> <span class="nav-text">React 组件生成器：脚本与模板</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E5%85%A8%E5%AE%A1%E8%AE%A1%EF%BC%9A%E5%8F%82%E8%80%83%E6%96%87%E6%A1%A3"><span class="nav-number">5.4.</span> <span class="nav-text">安全审计：参考文档</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%A0%E9%9C%80%E8%A6%81%E5%93%AA%E7%A7%8D%E7%BB%93%E6%9E%84%EF%BC%9F"><span class="nav-number">5.5.</span> <span class="nav-text">你需要哪种结构？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AF%BB%E6%89%BE%E7%8E%B0%E6%88%90%E7%9A%84%E6%8A%80%E8%83%BD"><span class="nav-number">6.</span> <span class="nav-text">寻找现成的技能</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%98%E6%96%B9%E6%8A%80%E8%83%BD%E5%BA%93"><span class="nav-number">6.1.</span> <span class="nav-text">官方技能库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Skills-CLI"><span class="nav-number">6.2.</span> <span class="nav-text">Skills CLI</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A4%BE%E5%8C%BA%E6%8A%80%E8%83%BD%E5%BA%93"><span class="nav-number">6.3.</span> <span class="nav-text">社区技能库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E5%89%8D%E7%9A%84%E5%AE%89%E5%85%A8%E6%A3%80%E6%9F%A5"><span class="nav-number">6.4.</span> <span class="nav-text">安装前的安全检查</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B0%86%E6%8A%80%E8%83%BD%E8%9E%8D%E5%85%A5%E4%BD%A0%E7%9A%84%E5%B7%A5%E4%BD%9C%E6%B5%81"><span class="nav-number">7.</span> <span class="nav-text">将技能融入你的工作流</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%AD%E4%BB%A3%E4%B8%8E%E7%89%88%E6%9C%AC%E7%AE%A1%E7%90%86"><span class="nav-number">8.</span> <span class="nav-text">迭代与版本管理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5"><span class="nav-number">9.</span> <span class="nav-text">最佳实践</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98"><span class="nav-number">10.</span> <span class="nav-text">常见问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">11.</span> <span class="nav-text">总结</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="AI with Alex"
+      src="/uploads/avatar.jpg">
+  <p class="site-author-name" itemprop="name">AI with Alex</p>
+  <div class="site-description" itemprop="description">Attention(Q,K,V)=softmax(QK^T/sqrt(d_k))V</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">62</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">35</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">88</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/BODYsuperman" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;BODYsuperman" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/atom.xml" title="RSS Feed → &#x2F;atom.xml"><i class="fas fa-rss fa-fw"></i>RSS Feed</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:meijiaping6@gmail.com" title="Email → mailto:meijiaping6@gmail.com" rel="noopener" target="_blank"><i class="fas fa-envelope fa-fw"></i>Email</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://stackoverflow.com/users/9644964/alexandar-may-msft?tab=answers&sort=votes" title="StackOverflow → https:&#x2F;&#x2F;stackoverflow.com&#x2F;users&#x2F;9644964&#x2F;alexandar-may-msft?tab&#x3D;answers&amp;sort&#x3D;votes" rel="noopener" target="_blank"><i class="fab fa-stack-overflow fa-fw"></i>StackOverflow</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">AI with Alex</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">Symbols count total: </span>
+    <span title="Symbols count total">840k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">Reading time total &asymp;</span>
+    <span title="Reading time total">12:43</span>
+    
+    <!--
+    
+    -->
+</div>
+
+<!--
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a>
+   </div>
+--><script color="0,0,255" opacity="0.5" zIndex="-1" count="99" src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1/dist/canvas-nest.js"></script>
+
+
+
+
+
+
+        
+
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv"  >
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv"  >
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : 'Ov23liVJTzqy1rzaDXXM',
+      clientSecret: '5e785a7d46e69f7509e6c2f7730855a55944df33',
+      repo        : 'blog-comment',
+      owner       : 'BODYsuperman',
+      admin       : ['BODYsuperman'],
+      id          : '498f1d9ab841f12a74bcfb827e130011',
+        language: '',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+
+</body>
+</html>

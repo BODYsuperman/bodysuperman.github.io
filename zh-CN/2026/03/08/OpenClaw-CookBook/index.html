@@ -1,0 +1,1280 @@
+<!DOCTYPE html>
+<html lang="en,zh-CN,default">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/logo-180.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/logo-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/logo-16.png">
+  <link rel="mask-icon" href="/images/logo-512.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|monospace:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"bodysuperman.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null,"use":"Gitalk","text":true},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="1. 了解 OpenClaw 1.1 什么是 OpenClaw？ 1.2 核心能力 1.3 架构概览   2. 快速开始 2.1 系统要求 2.2 一键安装 2.3 验证安装 2.4 五分钟快速体验   3. 安装与部署 3.1 安装方式对比 3.2 手动安装（npm） 3.3 配置 PATH（如需要） 3.4 Docker 部署 3.5 版本更新">
+<meta property="og:type" content="article">
+<meta property="og:title" content="OpenClaw 使用指南 - 完整教程">
+<meta property="og:url" content="https://bodysuperman.github.io/zh-CN/2026/03/08/OpenClaw-CookBook/index.html">
+<meta property="og:site_name" content="AI with Alex&#39;s Blog">
+<meta property="og:description" content="1. 了解 OpenClaw 1.1 什么是 OpenClaw？ 1.2 核心能力 1.3 架构概览   2. 快速开始 2.1 系统要求 2.2 一键安装 2.3 验证安装 2.4 五分钟快速体验   3. 安装与部署 3.1 安装方式对比 3.2 手动安装（npm） 3.3 配置 PATH（如需要） 3.4 Docker 部署 3.5 版本更新">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://bodysuperman.github.io/a1.png">
+<meta property="article:published_time" content="2026-03-08T01:37:33.000Z">
+<meta property="article:modified_time" content="2026-03-17T02:23:00.000Z">
+<meta property="article:author" content="AI with Alex">
+<meta property="article:tag" content="AI Agent">
+<meta property="article:tag" content="OpenClaw">
+<meta property="article:tag" content="Multi-Agent">
+<meta property="article:tag" content="Self-Hosted">
+<meta property="article:tag" content="Open Source">
+<meta property="article:tag" content="AI Automation">
+<meta property="article:tag" content="Digital Employee">
+<meta property="article:tag" content="Tutorial">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://bodysuperman.github.io/a1.png">
+
+<link rel="canonical" href="https://bodysuperman.github.io/zh-CN/2026/03/08/OpenClaw-CookBook/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>OpenClaw 使用指南 - 完整教程 | AI with Alex's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="AI with Alex's Blog" type="application/atom+xml">
+<link rel="alternate" href="/rss.xml" title="AI with Alex's Blog" type="application/rss+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+
+
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">AI with Alex's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+  <div class="site-lang-switcher">
+    <span class="lang-item lang-current">简体中文</span>
+      <a class="lang-item lang-link" href="/2026/03/08/OpenClaw-CookBook/" rel="section" title="English">
+        <i class="fa fa-language"></i> English
+      </a>
+  </div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+   
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://bodysuperman.github.io/zh-CN/2026/03/08/OpenClaw-CookBook/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+      <meta itemprop="name" content="AI with Alex">
+      <meta itemprop="description" content="Attention(Q,K,V)=softmax(QK^T/sqrt(d_k))V">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="AI with Alex's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          OpenClaw 使用指南 - 完整教程
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2026-03-08 09:37:33" itemprop="dateCreated datePublished" datetime="2026-03-08T09:37:33+08:00">2026-03-08</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2026-03-17 10:23:00" itemprop="dateModified" datetime="2026-03-17T10:23:00+08:00">2026-03-17</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/AI-Agent/" itemprop="url" rel="index"><span itemprop="name">AI Agent</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/AI-Agent/Tutorials/" itemprop="url" rel="index"><span itemprop="name">Tutorials</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>13k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>12 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <ul>
+<li><a href="#1-understanding-openclaw">1. 了解 OpenClaw</a><ul>
+<li><a href="#11-what-is-openclaw">1.1 什么是 OpenClaw？</a></li>
+<li><a href="#12-core-capabilities">1.2 核心能力</a></li>
+<li><a href="#13-architecture-overview">1.3 架构概览</a></li>
+</ul>
+</li>
+<li><a href="#2-quick-start">2. 快速开始</a><ul>
+<li><a href="#21-system-requirements">2.1 系统要求</a></li>
+<li><a href="#22-one-click-installation">2.2 一键安装</a></li>
+<li><a href="#23-verify-installation">2.3 验证安装</a></li>
+<li><a href="#24-5-minute-quick-experience">2.4 五分钟快速体验</a></li>
+</ul>
+</li>
+<li><a href="#3-installation--deployment">3. 安装与部署</a><ul>
+<li><a href="#31-installation-methods-comparison">3.1 安装方式对比</a></li>
+<li><a href="#32-manual-installation-npm">3.2 手动安装（npm）</a></li>
+<li><a href="#33-configure-path-if-needed">3.3 配置 PATH（如需要）</a></li>
+<li><a href="#34-docker-deployment">3.4 Docker 部署</a></li>
+<li><a href="#35-version-updates">3.5 版本更新</a><span id="more"></span></li>
+</ul>
+</li>
+<li><a href="#4-channel-integration">4. 渠道集成</a><ul>
+<li><a href="#41-channel-difficulty-comparison">4.1 渠道难度对比</a></li>
+<li><a href="#42-telegram-integration-recommended-for-beginners">4.2 Telegram 集成（推荐新手）</a></li>
+<li><a href="#43-feishu-integration">4.3 飞书集成</a></li>
+<li><a href="#44-multi-channel-configuration">4.4 多渠道配置</a></li>
+</ul>
+</li>
+<li><a href="#5-configuration-guide">5. 配置指南</a><ul>
+<li><a href="#51-configuration-file-locations">5.1 配置文件位置</a></li>
+<li><a href="#52-model-configuration">5.2 模型配置</a></li>
+<li><a href="#53-recommended-models">5.3 推荐模型</a></li>
+<li><a href="#54-gateway-configuration">5.4 网关配置</a></li>
+<li><a href="#55-authentication-modes">5.5 认证模式</a></li>
+</ul>
+</li>
+<li><a href="#6-multi-agent-configuration">6. 多 Agent 配置</a><ul>
+<li><a href="#61-what-is-multi-agent">6.1 什么是多 Agent？</a></li>
+<li><a href="#62-built-in-agent-types">6.2 内置 Agent 类型</a></li>
+<li><a href="#63-creating-custom-agents">6.3 创建自定义 Agent</a></li>
+<li><a href="#64-assign-agents-to-different-tasks">6.4 为不同任务分配 Agent</a></li>
+<li><a href="#65-agent-routing-configuration">6.5 Agent 路由配置</a></li>
+<li><a href="#66-multi-agent-best-practices">6.6 多 Agent 最佳实践</a></li>
+<li><a href="#67-view-and-manage-agents">6.7 查看和管理 Agent</a></li>
+<li><a href="#68-multi-agent-architecture-example">6.8 多 Agent 架构示例</a></li>
+</ul>
+</li>
+<li><a href="#7-skills-system">7. 技能系统</a><ul>
+<li><a href="#71-what-are-skills">7.1 什么是技能？</a></li>
+<li><a href="#72-installing-skills">7.2 安装技能</a></li>
+<li><a href="#73-popular-skills">7.3 热门技能</a></li>
+<li><a href="#74-creating-custom-skills">7.4 创建自定义技能</a></li>
+</ul>
+</li>
+<li><a href="#8-memory-system">8. 记忆系统</a><ul>
+<li><a href="#81-memory-types">8.1 记忆类型</a></li>
+<li><a href="#82-memory-file-locations">8.2 记忆文件位置</a></li>
+<li><a href="#83-search-memory">8.3 搜索记忆</a></li>
+<li><a href="#84-memory-maintenance">8.4 记忆维护</a></li>
+</ul>
+</li>
+<li><a href="#9-scheduled-tasks">9. 定时任务</a><ul>
+<li><a href="#91-cron-basics">9.1 Cron 基础</a></li>
+<li><a href="#92-cron-expressions">9.2 Cron 表达式</a></li>
+<li><a href="#93-heartbeat-tasks">9.3 心跳任务</a></li>
+<li><a href="#94-practical-cron-examples">9.4 实用 Cron 示例</a></li>
+</ul>
+</li>
+<li><a href="#10-common-commands">10. 常用命令</a><ul>
+<li><a href="#101-gateway-management">10.1 网关管理</a></li>
+<li><a href="#102-configuration-management">10.2 配置管理</a></li>
+<li><a href="#103-model-management">10.3 模型管理</a></li>
+<li><a href="#104-channel-management">10.4 渠道管理</a></li>
+<li><a href="#105-agent-management">10.5 Agent 管理</a></li>
+<li><a href="#106-memory-operations">10.6 记忆操作</a></li>
+<li><a href="#107-session-management">10.7 会话管理</a></li>
+</ul>
+</li>
+<li><a href="#11-troubleshooting">11. 故障排除</a><ul>
+<li><a href="#111-common-issues">11.1 常见问题</a></li>
+<li><a href="#112-viewing-logs">11.2 查看日志</a></li>
+<li><a href="#113-diagnostic-commands">11.3 诊断命令</a></li>
+<li><a href="#114-reset--recovery">11.4 重置与恢复</a></li>
+</ul>
+</li>
+<li><a href="#appendix">附录</a><ul>
+<li><a href="#a-resource-links">A. 资源链接</a></li>
+<li><a href="#b-version-information">B. 版本信息</a></li>
+<li><a href="#c-contributors">C. 贡献者</a></li>
+</ul>
+</li>
+</ul>
+<hr>
+<p><a name="1-understanding-openclaw"></a></p>
+<h2 id="了解-OpenClaw"><a href="#了解-OpenClaw" class="headerlink" title="了解 OpenClaw"></a>了解 OpenClaw</h2><p><a name="11-what-is-openclaw"></a></p>
+<h3 id="什么是-OpenClaw？"><a href="#什么是-OpenClaw？" class="headerlink" title="什么是 OpenClaw？"></a>什么是 OpenClaw？</h3><p>OpenClaw 是一个<strong>开源、自托管的 AI Agent 系统</strong>，将 AI 从”聊天工具”转变为”能够自主执行任务的数字员工”。</p>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>ChatGPT</th>
+<th>OpenClaw</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>定位</td>
+<td>问答顾问</td>
+<td>数字员工</td>
+</tr>
+<tr>
+<td>部署</td>
+<td>云端 SaaS</td>
+<td>本地自托管</td>
+</tr>
+<tr>
+<td>交互</td>
+<td>网页聊天</td>
+<td>20+ 聊天渠道</td>
+</tr>
+<tr>
+<td>能力</td>
+<td>回答问题</td>
+<td>执行任务</td>
+</tr>
+<tr>
+<td>数据</td>
+<td>云端存储</td>
+<td>本地掌控</td>
+</tr>
+</tbody></table>
+<p><a name="12-core-capabilities"></a></p>
+<h3 id="核心能力"><a href="#核心能力" class="headerlink" title="核心能力"></a>核心能力</h3><ul>
+<li>✅ <strong>多渠道连接</strong>：Telegram、WhatsApp、飞书、钉钉、Discord 等</li>
+<li>✅ <strong>持久记忆</strong>：记住你的偏好、项目、联系人</li>
+<li>✅ <strong>技能扩展</strong>：通过技能系统无限扩展能力</li>
+<li>✅ <strong>主动工作</strong>：定时任务、心跳检查、自动提醒</li>
+<li>✅ <strong>本地数据</strong>：所有数据存储在你的设备上</li>
+<li>✅ <strong>多 Agent 协作</strong>：为不同任务配置专用 Agent</li>
+</ul>
+<p><a name="13-architecture-overview"></a></p>
+<h3 id="架构概览"><a href="#架构概览" class="headerlink" title="架构概览"></a>架构概览</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">┌─────────────────────────────────────────────────────────┐</span><br><span class="line">│                    User Chat Channels                   │</span><br><span class="line">│   Telegram / WhatsApp / Feishu / DingTalk / Discord ... │</span><br><span class="line">└────────────────────┬────────────────────────────────────┘</span><br><span class="line">                     │</span><br><span class="line">                     ▼</span><br><span class="line">┌─────────────────────────────────────────────────────────┐</span><br><span class="line">│                   Gateway Core Service                  │</span><br><span class="line">│  - Message Routing  - Session Management  - Event Processing  - Task Scheduling │</span><br><span class="line">└────────────────────┬────────────────────────────────────┘</span><br><span class="line">                     │</span><br><span class="line">                     ▼</span><br><span class="line">┌─────────────────────────────────────────────────────────┐</span><br><span class="line">│                    Agent System                         │</span><br><span class="line">│  main / chat / coding / Custom Agents                   │</span><br><span class="line">└────────────────────┬────────────────────────────────────┘</span><br><span class="line">                     │</span><br><span class="line">                     ▼</span><br><span class="line">┌─────────────────────────────────────────────────────────┐</span><br><span class="line">│                   Tools &amp; Skills                        │</span><br><span class="line">│  Skills / Plugins / Tools / Memory / Cron               │</span><br><span class="line">└─────────────────────────────────────────────────────────┘</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p><a name="2-quick-start"></a></p>
+<h2 id="快速开始"><a href="#快速开始" class="headerlink" title="快速开始"></a>快速开始</h2><p><a name="21-system-requirements"></a></p>
+<h3 id="系统要求"><a href="#系统要求" class="headerlink" title="系统要求"></a>系统要求</h3><table>
+<thead>
+<tr>
+<th>要求</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Node.js</td>
+<td>v22.0.0 或更高版本</td>
+</tr>
+<tr>
+<td>操作系统</td>
+<td>macOS &#x2F; Linux &#x2F; Windows (WSL2)</td>
+</tr>
+<tr>
+<td>内存</td>
+<td>最低 2GB，推荐 4GB+</td>
+</tr>
+<tr>
+<td>存储</td>
+<td>最低 1GB 可用空间</td>
+</tr>
+</tbody></table>
+<p><a name="22-one-click-installation"></a></p>
+<h3 id="一键安装"><a href="#一键安装" class="headerlink" title="一键安装"></a>一键安装</h3><p><strong>macOS &#x2F; Linux：</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -fsSL https://openclaw.bot/install.sh | bash</span><br></pre></td></tr></table></figure>
+
+<p><strong>Windows (PowerShell)：</strong></p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">iwr</span> <span class="literal">-useb</span> https://openclaw.ai/install.ps1 | <span class="built_in">iex</span></span><br></pre></td></tr></table></figure>
+
+<p><a name="23-verify-installation"></a></p>
+<h3 id="验证安装"><a href="#验证安装" class="headerlink" title="验证安装"></a>验证安装</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Check version</span></span><br><span class="line">openclaw --version</span><br><span class="line"></span><br><span class="line"><span class="comment"># Run diagnostics</span></span><br><span class="line">openclaw doctor</span><br><span class="line"></span><br><span class="line"><span class="comment"># Check status</span></span><br><span class="line">openclaw status</span><br></pre></td></tr></table></figure>
+
+<p><a name="24-5-minute-quick-experience"></a></p>
+<h3 id="五分钟快速体验"><a href="#五分钟快速体验" class="headerlink" title="五分钟快速体验"></a>五分钟快速体验</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 1. Install</span></span><br><span class="line">npm i -g openclaw</span><br><span class="line"></span><br><span class="line"><span class="comment"># 2. Run setup wizard</span></span><br><span class="line">openclaw onboard</span><br><span class="line"></span><br><span class="line"><span class="comment"># 3. Start Gateway</span></span><br><span class="line">openclaw gateway start</span><br><span class="line"></span><br><span class="line"><span class="comment"># 4. Open dashboard</span></span><br><span class="line">openclaw dashboard</span><br><span class="line"></span><br><span class="line"><span class="comment"># 5. Start chatting in your browser!</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<p><a name="3-installation--deployment"></a></p>
+<h2 id="安装与部署"><a href="#安装与部署" class="headerlink" title="安装与部署"></a>安装与部署</h2><p><a name="31-installation-methods-comparison"></a></p>
+<h3 id="安装方式对比"><a href="#安装方式对比" class="headerlink" title="安装方式对比"></a>安装方式对比</h3><table>
+<thead>
+<tr>
+<th>方式</th>
+<th>难度</th>
+<th>适用场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>一键脚本</td>
+<td>⭐</td>
+<td>推荐新手使用</td>
+</tr>
+<tr>
+<td>npm 手动安装</td>
+<td>⭐⭐</td>
+<td>熟悉 Node.js</td>
+</tr>
+<tr>
+<td>Docker</td>
+<td>⭐⭐</td>
+<td>容器化部署</td>
+</tr>
+<tr>
+<td>源码编译</td>
+<td>⭐⭐⭐⭐</td>
+<td>开发者</td>
+</tr>
+</tbody></table>
+<p><a name="32-manual-installation-npm"></a></p>
+<h3 id="手动安装（npm）"><a href="#手动安装（npm）" class="headerlink" title="手动安装（npm）"></a>手动安装（npm）</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Check Node.js version</span></span><br><span class="line">node -v  <span class="comment"># Requires &gt;= 22.0.0</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Global installation</span></span><br><span class="line">npm install -g openclaw@latest</span><br><span class="line"></span><br><span class="line"><span class="comment"># If encountering sharp module errors</span></span><br><span class="line">SHARP_IGNORE_GLOBAL_LIBVIPS=1 npm install -g openclaw@latest</span><br></pre></td></tr></table></figure>
+
+<p><a name="33-configure-path-if-needed"></a></p>
+<h3 id="配置-PATH（如需要）"><a href="#配置-PATH（如需要）" class="headerlink" title="配置 PATH（如需要）"></a>配置 PATH（如需要）</h3><p>如果遇到 <code>openclaw: command not found</code>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Find npm global path</span></span><br><span class="line">npm prefix -g</span><br><span class="line"></span><br><span class="line"><span class="comment"># Add to ~/.bashrc or ~/.zshrc</span></span><br><span class="line"><span class="built_in">export</span> PATH=<span class="string">&quot;<span class="subst">$(npm prefix -g)</span>/bin:<span class="variable">$PATH</span>&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Apply changes</span></span><br><span class="line"><span class="built_in">source</span> ~/.bashrc</span><br></pre></td></tr></table></figure>
+
+<p><a name="34-docker-deployment"></a></p>
+<h3 id="Docker-部署"><a href="#Docker-部署" class="headerlink" title="Docker 部署"></a>Docker 部署</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">docker run -d \</span><br><span class="line">  --name openclaw \</span><br><span class="line">  -v ~/openclaw-data:/root/.openclaw \</span><br><span class="line">  -p 18789:18789 \</span><br><span class="line">  openclaw/openclaw:latest</span><br></pre></td></tr></table></figure>
+
+<p><a name="35-version-updates"></a></p>
+<h3 id="版本更新"><a href="#版本更新" class="headerlink" title="版本更新"></a>版本更新</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Update to stable version (recommended)</span></span><br><span class="line">openclaw update --channel stable</span><br><span class="line"></span><br><span class="line"><span class="comment"># Update to beta version</span></span><br><span class="line">openclaw update --channel beta</span><br><span class="line"></span><br><span class="line"><span class="comment"># Update to dev version</span></span><br><span class="line">openclaw update --channel dev</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p><a name="4-channel-integration"></a></p>
+<h2 id="渠道集成"><a href="#渠道集成" class="headerlink" title="渠道集成"></a>渠道集成</h2><p><a name="41-channel-difficulty-comparison"></a></p>
+<h3 id="渠道难度对比"><a href="#渠道难度对比" class="headerlink" title="渠道难度对比"></a>渠道难度对比</h3><table>
+<thead>
+<tr>
+<th>梯队</th>
+<th>平台</th>
+<th>时间</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>第一梯队</td>
+<td>Telegram、QQ</td>
+<td>5-10 分钟</td>
+<td>最简单，零门槛</td>
+</tr>
+<tr>
+<td>第二梯队</td>
+<td>Discord、飞书</td>
+<td>15-20 分钟</td>
+<td>文档完善</td>
+</tr>
+<tr>
+<td>第三梯队</td>
+<td>WhatsApp、Slack、钉钉</td>
+<td>25-40 分钟</td>
+<td>配置较多</td>
+</tr>
+<tr>
+<td>第四梯队</td>
+<td>iMessage、微信</td>
+<td>1+ 小时</td>
+<td>有额外要求</td>
+</tr>
+</tbody></table>
+<p><a name="42-telegram-integration-recommended-for-beginners"></a></p>
+<h3 id="Telegram-集成（推荐新手）"><a href="#Telegram-集成（推荐新手）" class="headerlink" title="Telegram 集成（推荐新手）"></a>Telegram 集成（推荐新手）</h3><p><strong>第一步：创建 Bot</strong></p>
+<ol>
+<li>在 Telegram 中搜索 <code>@BotFather</code></li>
+<li>发送 <code>/newbot</code> 命令</li>
+<li>设置 bot 名称（必须以 <code>bot</code> 结尾）</li>
+<li>保存返回的 Bot Token</li>
+</ol>
+<p><strong>第二步：配置 OpenClaw</strong></p>
+<p>编辑 <code>~/.openclaw/openclaw.json</code>：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;channels&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;telegram&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;enabled&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;botToken&quot;</span><span class="punctuation">:</span> <span class="string">&quot;YOUR_BOT_TOKEN&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;dmPolicy&quot;</span><span class="punctuation">:</span> <span class="string">&quot;pairing&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;allowFrom&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">&quot;tg:YOUR_USER_ID&quot;</span><span class="punctuation">]</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>第三步：启动并配对</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Restart Gateway</span></span><br><span class="line">openclaw gateway restart</span><br><span class="line"></span><br><span class="line"><span class="comment"># Send a message to the bot in Telegram</span></span><br><span class="line"><span class="comment"># You&#x27;ll receive a pairing verification code</span></span><br></pre></td></tr></table></figure>
+
+<p><a name="43-feishu-integration"></a></p>
+<h3 id="飞书集成"><a href="#飞书集成" class="headerlink" title="飞书集成"></a>飞书集成</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Run configuration wizard</span></span><br><span class="line">openclaw configure --section feishu</span><br></pre></td></tr></table></figure>
+
+<p>你需要在飞书开放平台创建企业自建应用，获取 App ID 和 App Secret。</p>
+<p><a name="44-multi-channel-configuration"></a></p>
+<h3 id="多渠道配置"><a href="#多渠道配置" class="headerlink" title="多渠道配置"></a>多渠道配置</h3><p>你可以同时配置多个渠道：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;channels&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;telegram&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span> <span class="attr">&quot;enabled&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span> <span class="attr">&quot;botToken&quot;</span><span class="punctuation">:</span> <span class="string">&quot;...&quot;</span> <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;feishu&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span> <span class="attr">&quot;enabled&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span> <span class="attr">&quot;appId&quot;</span><span class="punctuation">:</span> <span class="string">&quot;...&quot;</span><span class="punctuation">,</span> <span class="attr">&quot;appSecret&quot;</span><span class="punctuation">:</span> <span class="string">&quot;...&quot;</span> <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;discord&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span> <span class="attr">&quot;enabled&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span> <span class="attr">&quot;botToken&quot;</span><span class="punctuation">:</span> <span class="string">&quot;...&quot;</span> <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<p><a name="5-configuration-guide"></a></p>
+<h2 id="配置指南"><a href="#配置指南" class="headerlink" title="配置指南"></a>配置指南</h2><p><a name="51-configuration-file-locations"></a></p>
+<h3 id="配置文件位置"><a href="#配置文件位置" class="headerlink" title="配置文件位置"></a>配置文件位置</h3><table>
+<thead>
+<tr>
+<th>文件</th>
+<th>路径</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>主配置</td>
+<td><code>~/.openclaw/openclaw.json</code></td>
+<td>网关、渠道、模型</td>
+</tr>
+<tr>
+<td>Agent 配置</td>
+<td><code>~/.openclaw/agents/*/agent/</code></td>
+<td>各 Agent 独立配置</td>
+</tr>
+<tr>
+<td>工作空间</td>
+<td><code>~/.openclaw/workspace-*/</code></td>
+<td>Agent 工作空间</td>
+</tr>
+</tbody></table>
+<p><a name="52-model-configuration"></a></p>
+<h3 id="模型配置"><a href="#模型配置" class="headerlink" title="模型配置"></a>模型配置</h3><p>编辑 <code>~/.openclaw/openclaw.json</code>：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;models&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;mode&quot;</span><span class="punctuation">:</span> <span class="string">&quot;merge&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;providers&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;bailian&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;baseUrl&quot;</span><span class="punctuation">:</span> <span class="string">&quot;https://dashscope.aliyuncs.com/compatible-mode/v1&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;apiKey&quot;</span><span class="punctuation">:</span> <span class="string">&quot;sk-YOUR_API_KEY&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;api&quot;</span><span class="punctuation">:</span> <span class="string">&quot;openai-completions&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;models&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">          <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;qwen3.5-plus&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;qwen3.5-plus&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;contextWindow&quot;</span><span class="punctuation">:</span> <span class="number">1000000</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;maxTokens&quot;</span><span class="punctuation">:</span> <span class="number">65536</span></span><br><span class="line">          <span class="punctuation">&#125;</span></span><br><span class="line">        <span class="punctuation">]</span></span><br><span class="line">      <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;agents&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;defaults&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;model&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;primary&quot;</span><span class="punctuation">:</span> <span class="string">&quot;bailian/qwen3.5-plus&quot;</span></span><br><span class="line">      <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p><a name="53-recommended-models"></a></p>
+<h3 id="推荐模型"><a href="#推荐模型" class="headerlink" title="推荐模型"></a>推荐模型</h3><table>
+<thead>
+<tr>
+<th>提供商</th>
+<th>模型</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>阿里云</td>
+<td>qwen3.5-plus</td>
+<td>通用任务，性价比高</td>
+</tr>
+<tr>
+<td>Anthropic</td>
+<td>Claude Opus 4.6</td>
+<td>编程、代码生成</td>
+</tr>
+<tr>
+<td>智谱</td>
+<td>glm-5</td>
+<td>针对中文任务优化</td>
+</tr>
+<tr>
+<td>月之暗面</td>
+<td>kimi-k2.5</td>
+<td>长文本处理</td>
+</tr>
+</tbody></table>
+<p><a name="54-gateway-configuration"></a></p>
+<h3 id="5-4-网关配置"><a href="#5-4-网关配置" class="headerlink" title="5.4 网关配置"></a>5.4 网关配置</h3><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;gateway&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;port&quot;</span><span class="punctuation">:</span> <span class="number">18789</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;mode&quot;</span><span class="punctuation">:</span> <span class="string">&quot;local&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;bind&quot;</span><span class="punctuation">:</span> <span class="string">&quot;lan&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;auth&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;mode&quot;</span><span class="punctuation">:</span> <span class="string">&quot;token&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;token&quot;</span><span class="punctuation">:</span> <span class="string">&quot;your-secure-token&quot;</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;controlUi&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;allowedOrigins&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">&quot;http://192.168.1.100:18789&quot;</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;allowInsecureAuth&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p><a name="55-authentication-modes"></a></p>
+<h3 id="认证模式"><a href="#认证模式" class="headerlink" title="认证模式"></a>认证模式</h3><p><strong>Token 认证（推荐用于 API 集成）：</strong></p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;gateway&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;auth&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;mode&quot;</span><span class="punctuation">:</span> <span class="string">&quot;token&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;token&quot;</span><span class="punctuation">:</span> <span class="string">&quot;your-token&quot;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>密码认证（推荐用于 Web UI）：</strong></p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;gateway&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;auth&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;mode&quot;</span><span class="punctuation">:</span> <span class="string">&quot;password&quot;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<p><a name="6-multi-agent-configuration"></a></p>
+<h2 id="多-Agent-配置"><a href="#多-Agent-配置" class="headerlink" title="多 Agent 配置"></a>多 Agent 配置</h2><p><a name="61-what-is-multi-agent"></a></p>
+<h3 id="什么是多-Agent？"><a href="#什么是多-Agent？" class="headerlink" title="什么是多 Agent？"></a>什么是多 Agent？</h3><p>OpenClaw 支持运行多个独立的 Agent 实例，每个 Agent 可以：</p>
+<ul>
+<li>使用不同的模型配置</li>
+<li>拥有独立的工作空间和记忆</li>
+<li>专注于特定类型的任务</li>
+<li>独立配置技能和工具</li>
+</ul>
+<p><a name="62-built-in-agent-types"></a></p>
+<h3 id="内置-Agent-类型"><a href="#内置-Agent-类型" class="headerlink" title="内置 Agent 类型"></a>内置 Agent 类型</h3><table>
+<thead>
+<tr>
+<th>Agent</th>
+<th>用途</th>
+<th>推荐模型</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>main</strong></td>
+<td>主对话 Agent，处理日常任务</td>
+<td>qwen3.5-plus</td>
+</tr>
+<tr>
+<td><strong>chat</strong></td>
+<td>纯聊天 Agent，闲聊对话</td>
+<td>qwen3.5-plus</td>
+</tr>
+<tr>
+<td><strong>coding</strong></td>
+<td>编程 Agent，代码生成&#x2F;审查</td>
+<td>Claude Opus 4.6</td>
+</tr>
+<tr>
+<td><strong>analysis</strong></td>
+<td>数据分析 Agent</td>
+<td>qwen3.5-plus</td>
+</tr>
+</tbody></table>
+<p><a name="63-creating-custom-agents"></a></p>
+<h3 id="创建自定义-Agent"><a href="#创建自定义-Agent" class="headerlink" title="创建自定义 Agent"></a>创建自定义 Agent</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Create new Agent</span></span><br><span class="line">openclaw agents create my-agent</span><br><span class="line"></span><br><span class="line"><span class="comment"># Set dedicated model</span></span><br><span class="line">openclaw agents config my-agent --model glm-5</span><br><span class="line"></span><br><span class="line"><span class="comment"># Configure workspace</span></span><br><span class="line">openclaw agents workspace my-agent --path ~/projects/my-agent</span><br><span class="line"></span><br><span class="line"><span class="comment"># Start Agent</span></span><br><span class="line">openclaw agents start my-agent</span><br></pre></td></tr></table></figure>
+
+<p><a name="64-assign-agents-to-different-tasks"></a></p>
+<h3 id="为不同任务分配-Agent"><a href="#为不同任务分配-Agent" class="headerlink" title="为不同任务分配 Agent"></a>为不同任务分配 Agent</h3><table>
+<thead>
+<tr>
+<th>任务类型</th>
+<th>推荐 Agent</th>
+<th>调用方式</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>日常对话、问答</td>
+<td>main</td>
+<td>默认</td>
+</tr>
+<tr>
+<td>编写代码、调试</td>
+<td>coding</td>
+<td><code>/agent coding</code></td>
+</tr>
+<tr>
+<td>数据分析、报告</td>
+<td>analysis</td>
+<td><code>/agent analysis</code></td>
+</tr>
+<tr>
+<td>创意写作</td>
+<td>chat</td>
+<td><code>/agent chat</code></td>
+</tr>
+<tr>
+<td>领域特定任务</td>
+<td>自定义 Agent</td>
+<td><code>/agent &lt;name&gt;</code></td>
+</tr>
+</tbody></table>
+<p><a name="65-agent-routing-configuration"></a></p>
+<h3 id="Agent-路由配置"><a href="#Agent-路由配置" class="headerlink" title="Agent 路由配置"></a>Agent 路由配置</h3><p><strong>方式一：命令前缀</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">/agent coding Help me write a Python script</span><br><span class="line">/agent analysis Analyze this data</span><br></pre></td></tr></table></figure>
+
+<p><strong>方式二：自动路由（基于关键词）</strong></p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;routing&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;rules&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">      <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;keywords&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">&quot;code&quot;</span><span class="punctuation">,</span> <span class="string">&quot;programming&quot;</span><span class="punctuation">,</span> <span class="string">&quot;python&quot;</span><span class="punctuation">,</span> <span class="string">&quot;javascript&quot;</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;agent&quot;</span><span class="punctuation">:</span> <span class="string">&quot;coding&quot;</span></span><br><span class="line">      <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;keywords&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">&quot;analyze&quot;</span><span class="punctuation">,</span> <span class="string">&quot;data&quot;</span><span class="punctuation">,</span> <span class="string">&quot;chart&quot;</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;agent&quot;</span><span class="punctuation">:</span> <span class="string">&quot;analysis&quot;</span></span><br><span class="line">      <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">]</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>方式三：渠道绑定</strong></p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;channels&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;telegram&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;defaultAgent&quot;</span><span class="punctuation">:</span> <span class="string">&quot;main&quot;</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;discord&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;defaultAgent&quot;</span><span class="punctuation">:</span> <span class="string">&quot;chat&quot;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p><a name="66-multi-agent-best-practices"></a></p>
+<h3 id="多-Agent-最佳实践"><a href="#多-Agent-最佳实践" class="headerlink" title="多 Agent 最佳实践"></a>多 Agent 最佳实践</h3><p><strong>✅ 推荐：</strong></p>
+<ul>
+<li>为高频任务创建专用 Agent</li>
+<li>编程时使用独立 Agent（避免上下文污染）</li>
+<li>为不同项目创建独立的 Agent 实例</li>
+<li>定期清理不活跃的 Agent</li>
+</ul>
+<p><strong>❌ 避免：</strong></p>
+<ul>
+<li>创建过多 Agent（建议 ≤5 个）</li>
+<li>所有 Agent 使用同一模型（浪费资源）</li>
+<li>忽略 Agent 之间的记忆隔离</li>
+</ul>
+<p><a name="67-view-and-manage-agents"></a></p>
+<h3 id="查看和管理-Agent"><a href="#查看和管理-Agent" class="headerlink" title="查看和管理 Agent"></a>查看和管理 Agent</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># List all Agents</span></span><br><span class="line">openclaw agents list</span><br><span class="line"></span><br><span class="line"><span class="comment"># Check Agent status</span></span><br><span class="line">openclaw agents status my-agent</span><br><span class="line"></span><br><span class="line"><span class="comment"># View Agent configuration</span></span><br><span class="line">openclaw agents config my-agent --show</span><br><span class="line"></span><br><span class="line"><span class="comment"># Stop Agent</span></span><br><span class="line">openclaw agents stop my-agent</span><br><span class="line"></span><br><span class="line"><span class="comment"># Delete Agent</span></span><br><span class="line">openclaw agents delete my-agent</span><br></pre></td></tr></table></figure>
+
+<p><a name="68-multi-agent-architecture-example"></a></p>
+<h3 id="多-Agent-架构示例"><a href="#多-Agent-架构示例" class="headerlink" title="多 Agent 架构示例"></a>多 Agent 架构示例</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">┌─────────────────────────────────────────────────────────┐</span><br><span class="line">│                    User Message                         │</span><br><span class="line">└────────────────────┬────────────────────────────────────┘</span><br><span class="line">                     │</span><br><span class="line">                     ▼</span><br><span class="line">┌─────────────────────────────────────────────────────────┐</span><br><span class="line">│              Routing Layer (distributes by rules)       │</span><br><span class="line">│   Keyword Matching / Command Prefix / Channel Binding   │</span><br><span class="line">└──────────┬──────────────┬──────────────┬────────────────┘</span><br><span class="line">           │              │              │</span><br><span class="line">           ▼              ▼              ▼</span><br><span class="line">    ┌──────────┐   ┌──────────┐   ┌──────────┐</span><br><span class="line">    │   main   │   │  coding  │   │ analysis │</span><br><span class="line">    │  Agent   │   │  Agent   │   │  Agent   │</span><br><span class="line">    └────┬─────┘   └────┬─────┘   └────┬─────┘</span><br><span class="line">         │              │              │</span><br><span class="line">         ▼              ▼              ▼</span><br><span class="line">    ┌──────────┐   ┌──────────┐   ┌──────────┐</span><br><span class="line">    │ General  │   │  Code    │   │   Data   │</span><br><span class="line">    │  Memory  │   │  Skills  │   │  Tools   │</span><br><span class="line">    │ Qwen3.5  │   │  Claude  │   │  Pandas  │</span><br><span class="line">    └──────────┘   └──────────┘   └──────────┘</span><br></pre></td></tr></table></figure>
+<p>以下是我配置了不同 Agent 角色的 Telegram Bot：</p>
+<p><img src="/a1.png" alt="pic"></p>
+<p><a name="7-skills-system"></a></p>
+<h2 id="技能系统"><a href="#技能系统" class="headerlink" title="技能系统"></a>技能系统</h2><p><a name="71-what-are-skills"></a></p>
+<h3 id="什么是技能？"><a href="#什么是技能？" class="headerlink" title="什么是技能？"></a>什么是技能？</h3><p>技能是 OpenClaw 的插件系统，使 AI 能够：</p>
+<ul>
+<li>访问外部 API（天气、新闻、股票）</li>
+<li>操作本地资源（文件、摄像头）</li>
+<li>执行特定任务（GitHub、日历、邮件）</li>
+</ul>
+<p><a name="72-installing-skills"></a></p>
+<h3 id="安装技能"><a href="#安装技能" class="headerlink" title="安装技能"></a>安装技能</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Install from ClawHub</span></span><br><span class="line">openclaw skill install &lt;skill-slug&gt;</span><br><span class="line"></span><br><span class="line"><span class="comment"># Search Skills</span></span><br><span class="line">openclaw skill search &lt;keyword&gt;</span><br><span class="line"></span><br><span class="line"><span class="comment"># List installed</span></span><br><span class="line">openclaw skill list</span><br><span class="line"></span><br><span class="line"><span class="comment"># Update Skills</span></span><br><span class="line">openclaw skill update</span><br></pre></td></tr></table></figure>
+
+<p><a name="73-popular-skills"></a></p>
+<h3 id="热门技能"><a href="#热门技能" class="headerlink" title="热门技能"></a>热门技能</h3><table>
+<thead>
+<tr>
+<th>技能</th>
+<th>功能</th>
+<th>安装命令</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>weather</td>
+<td>天气预报</td>
+<td><code>openclaw skills install weather</code></td>
+</tr>
+<tr>
+<td>github</td>
+<td>GitHub 操作</td>
+<td><code>openclaw skills install github</code></td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://github.com/BODYsuperman/world-news-aggregator-skill">news-aggregator</a></td>
+<td>新闻聚合</td>
+<td><code>npx skills add https://github.com/BODYsuperman/world-news-aggregator-skill</code></td>
+</tr>
+<tr>
+<td>pinchtab-browser</td>
+<td>浏览器自动化</td>
+<td><code>openclaw skills install pinchtab-browser</code></td>
+</tr>
+</tbody></table>
+<p><a name="74-creating-custom-skills"></a></p>
+<h3 id="创建自定义技能"><a href="#创建自定义技能" class="headerlink" title="创建自定义技能"></a>创建自定义技能</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Create Skill directory</span></span><br><span class="line"><span class="built_in">mkdir</span> -p ~/.openclaw/workspace-main/skills/my-skill</span><br><span class="line"></span><br><span class="line"><span class="comment"># Create SKILL.md</span></span><br><span class="line"><span class="built_in">cat</span> &gt; ~/.openclaw/workspace-main/skills/my-skill/SKILL.md &lt;&lt; <span class="string">&#x27;EOF&#x27;</span></span><br><span class="line"><span class="comment"># my-skill</span></span><br><span class="line"></span><br><span class="line"><span class="comment">## Description</span></span><br><span class="line">My custom skill</span><br><span class="line"></span><br><span class="line"><span class="comment">## Usage</span></span><br><span class="line">/MyCommand [arguments]</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p><a name="8-memory-system"></a></p>
+<h2 id="记忆系统"><a href="#记忆系统" class="headerlink" title="记忆系统"></a>记忆系统</h2><p><a name="81-memory-types"></a></p>
+<h3 id="记忆类型"><a href="#记忆类型" class="headerlink" title="记忆类型"></a>记忆类型</h3><table>
+<thead>
+<tr>
+<th>类型</th>
+<th>文件</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>长期记忆</td>
+<td><code>MEMORY.md</code></td>
+<td>精选的重要信息</td>
+</tr>
+<tr>
+<td>每日记忆</td>
+<td><code>memory/YYYY-MM-DD.md</code></td>
+<td>原始日志</td>
+</tr>
+<tr>
+<td>身份设定</td>
+<td><code>IDENTITY.md</code></td>
+<td>AI 人格设置</td>
+</tr>
+<tr>
+<td>用户信息</td>
+<td><code>USER.md</code></td>
+<td>用户信息</td>
+</tr>
+<tr>
+<td>行为准则</td>
+<td><code>SOUL.md</code></td>
+<td>行为指南</td>
+</tr>
+</tbody></table>
+<p><a name="82-memory-file-locations"></a></p>
+<h3 id="记忆文件位置"><a href="#记忆文件位置" class="headerlink" title="记忆文件位置"></a>记忆文件位置</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">~/.openclaw/workspace-main/</span><br><span class="line">├── MEMORY.md              # Long-term memory</span><br><span class="line">├── IDENTITY.md            # Identity settings</span><br><span class="line">├── USER.md                # User information</span><br><span class="line">├── SOUL.md                # Behavioral guidelines</span><br><span class="line">├── AGENTS.md              # Workspace description</span><br><span class="line">├── TOOLS.md               # Tool notes</span><br><span class="line">├── HEARTBEAT.md           # Heartbeat tasks</span><br><span class="line">└── memory/</span><br><span class="line">    ├── 2026-03-16.md      # Daily memory</span><br><span class="line">    └── 2026-03-15.md</span><br></pre></td></tr></table></figure>
+
+<p><a name="83-search-memory"></a></p>
+<h3 id="搜索记忆"><a href="#搜索记忆" class="headerlink" title="搜索记忆"></a>搜索记忆</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Semantic search</span></span><br><span class="line">openclaw memory search <span class="string">&quot;project mentioned last time&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Search by date</span></span><br><span class="line">openclaw memory search --<span class="built_in">date</span> 2026-03-15 <span class="string">&quot;meeting&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p><a name="84-memory-maintenance"></a></p>
+<h3 id="记忆维护"><a href="#记忆维护" class="headerlink" title="记忆维护"></a>记忆维护</h3><p>建议定期（每周）审查 MEMORY.md：</p>
+<ul>
+<li>删除过时信息</li>
+<li>添加新的决策和上下文</li>
+<li>整理每日记忆文件中的要点</li>
+</ul>
+<hr>
+<p><a name="9-scheduled-tasks"></a></p>
+<h2 id="定时任务"><a href="#定时任务" class="headerlink" title="定时任务"></a>定时任务</h2><p><a name="91-cron-basics"></a></p>
+<h3 id="Cron-基础"><a href="#Cron-基础" class="headerlink" title="Cron 基础"></a>Cron 基础</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Add scheduled task</span></span><br><span class="line">openclaw cron add --schedule <span class="string">&quot;0 9 * * *&quot;</span> --message <span class="string">&quot;Good morning! Today&#x27;s tasks:&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># List tasks</span></span><br><span class="line">openclaw cron list</span><br><span class="line"></span><br><span class="line"><span class="comment"># Run task</span></span><br><span class="line">openclaw cron run &lt;job-id&gt;</span><br><span class="line"></span><br><span class="line"><span class="comment"># Remove task</span></span><br><span class="line">openclaw cron remove &lt;job-id&gt;</span><br></pre></td></tr></table></figure>
+
+<p><a name="92-cron-expressions"></a></p>
+<h3 id="Cron-表达式"><a href="#Cron-表达式" class="headerlink" title="Cron 表达式"></a>Cron 表达式</h3><table>
+<thead>
+<tr>
+<th>表达式</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>0 9 * * *</code></td>
+<td>每天 9:00</td>
+</tr>
+<tr>
+<td><code>0 9 * * 1</code></td>
+<td>每周一 9:00</td>
+</tr>
+<tr>
+<td><code>*/30 * * * *</code></td>
+<td>每 30 分钟</td>
+</tr>
+<tr>
+<td><code>0 0 1 * *</code></td>
+<td>每月 1 日 0:00</td>
+</tr>
+</tbody></table>
+<p><a name="93-heartbeat-tasks"></a></p>
+<h3 id="心跳任务"><a href="#心跳任务" class="headerlink" title="心跳任务"></a>心跳任务</h3><p>编辑 <code>HEARTBEAT.md</code>：</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="section"># HEARTBEAT.md</span></span><br><span class="line"></span><br><span class="line"><span class="bullet">-</span> [ ] Check unread emails</span><br><span class="line"><span class="bullet">-</span> [ ] View calendar (within 24 hours)</span><br><span class="line"><span class="bullet">-</span> [ ] Check weather (if going out)</span><br><span class="line"><span class="bullet">-</span> [ ] Review memory files (weekly)</span><br></pre></td></tr></table></figure>
+
+<p><a name="94-practical-cron-examples"></a></p>
+<h3 id="实用-Cron-示例"><a href="#实用-Cron-示例" class="headerlink" title="实用 Cron 示例"></a>实用 Cron 示例</h3><p><strong>每日新闻简报：</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">openclaw cron add \</span><br><span class="line">  --name <span class="string">&quot;daily-news&quot;</span> \</span><br><span class="line">  --schedule <span class="string">&quot;0 8 * * *&quot;</span> \</span><br><span class="line">  --message <span class="string">&quot;Execute news-aggregator skill, send daily news&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>每周备份：</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">openclaw cron add \</span><br><span class="line">  --name <span class="string">&quot;weekly-backup&quot;</span> \</span><br><span class="line">  --schedule <span class="string">&quot;0 2 * * 0&quot;</span> \</span><br><span class="line">  --message <span class="string">&quot;Backup workspace and memory directories&quot;</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<p><a name="10-common-commands"></a></p>
+<h2 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h2><p><a name="101-gateway-management"></a></p>
+<h3 id="网关管理"><a href="#网关管理" class="headerlink" title="网关管理"></a>网关管理</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">openclaw gateway start      <span class="comment"># Start</span></span><br><span class="line">openclaw gateway stop       <span class="comment"># Stop</span></span><br><span class="line">openclaw gateway restart    <span class="comment"># Restart</span></span><br><span class="line">openclaw gateway status     <span class="comment"># Status</span></span><br><span class="line">openclaw gateway install    <span class="comment"># Install as system service</span></span><br><span class="line">openclaw gateway uninstall  <span class="comment"># Uninstall service</span></span><br></pre></td></tr></table></figure>
+
+<p><a name="102-configuration-management"></a></p>
+<h3 id="配置管理"><a href="#配置管理" class="headerlink" title="配置管理"></a>配置管理</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">openclaw onboard            <span class="comment"># Initial setup wizard</span></span><br><span class="line">openclaw configure          <span class="comment"># Configure channels</span></span><br><span class="line">openclaw doctor             <span class="comment"># Health check</span></span><br><span class="line">openclaw status             <span class="comment"># Check status</span></span><br><span class="line">openclaw dashboard          <span class="comment"># Open web dashboard</span></span><br><span class="line">openclaw tui                <span class="comment"># Terminal interface</span></span><br></pre></td></tr></table></figure>
+
+<p><a name="103-model-management"></a></p>
+<h3 id="模型管理"><a href="#模型管理" class="headerlink" title="模型管理"></a>模型管理</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">openclaw models status      <span class="comment"># Model status</span></span><br><span class="line">openclaw models list        <span class="comment"># List models</span></span><br><span class="line">openclaw models add         <span class="comment"># Add model</span></span><br></pre></td></tr></table></figure>
+
+<p><a name="104-channel-management"></a></p>
+<h3 id="渠道管理"><a href="#渠道管理" class="headerlink" title="渠道管理"></a>渠道管理</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">openclaw channels list      <span class="comment"># List channels</span></span><br><span class="line">openclaw channels add       <span class="comment"># Add channel</span></span><br><span class="line">openclaw channels remove    <span class="comment"># Remove channel</span></span><br></pre></td></tr></table></figure>
+
+<p><a name="105-agent-management"></a></p>
+<h3 id="Agent-管理"><a href="#Agent-管理" class="headerlink" title="Agent 管理"></a>Agent 管理</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">openclaw agents list            <span class="comment"># List Agents</span></span><br><span class="line">openclaw agents create &lt;name&gt;   <span class="comment"># Create Agent</span></span><br><span class="line">openclaw agents config &lt;name&gt;   <span class="comment"># Configure Agent</span></span><br><span class="line">openclaw agents start &lt;name&gt;    <span class="comment"># Start Agent</span></span><br><span class="line">openclaw agents stop &lt;name&gt;     <span class="comment"># Stop Agent</span></span><br><span class="line">openclaw agents delete &lt;name&gt;   <span class="comment"># Delete Agent</span></span><br></pre></td></tr></table></figure>
+
+<p><a name="106-memory-operations"></a></p>
+<h3 id="记忆操作"><a href="#记忆操作" class="headerlink" title="记忆操作"></a>记忆操作</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">openclaw memory search &lt;query&gt;   <span class="comment"># Search memory</span></span><br><span class="line">openclaw memory list             <span class="comment"># List memory files</span></span><br><span class="line">openclaw memory edit             <span class="comment"># Edit memory</span></span><br></pre></td></tr></table></figure>
+
+<p><a name="107-session-management"></a></p>
+<h3 id="会话管理"><a href="#会话管理" class="headerlink" title="会话管理"></a>会话管理</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">openclaw sessions list           <span class="comment"># List sessions</span></span><br><span class="line">openclaw sessions <span class="built_in">history</span> &lt;key&gt;  <span class="comment"># View history</span></span><br><span class="line">openclaw sessions send           <span class="comment"># Send message to session</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<p><a name="11-troubleshooting"></a></p>
+<h2 id="故障排除"><a href="#故障排除" class="headerlink" title="故障排除"></a>故障排除</h2><p><a name="111-common-issues"></a></p>
+<h3 id="常见问题"><a href="#常见问题" class="headerlink" title="常见问题"></a>常见问题</h3><p><strong>问题 1：<code>openclaw: command not found</code></strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Find npm global path</span></span><br><span class="line">npm prefix -g</span><br><span class="line"></span><br><span class="line"><span class="comment"># Add to PATH</span></span><br><span class="line"><span class="built_in">export</span> PATH=<span class="string">&quot;<span class="subst">$(npm prefix -g)</span>/bin:<span class="variable">$PATH</span>&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Add to ~/.bashrc permanently</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;export PATH=&quot;$(npm prefix -g)/bin:$PATH&quot;&#x27;</span> &gt;&gt; ~/.bashrc</span><br><span class="line"><span class="built_in">source</span> ~/.bashrc</span><br></pre></td></tr></table></figure>
+
+<p><strong>问题 2：网关启动失败</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Check port usage</span></span><br><span class="line">lsof -i :18789</span><br><span class="line"></span><br><span class="line"><span class="comment"># View logs</span></span><br><span class="line">journalctl --user -u openclaw-gateway.service -n 50</span><br><span class="line"></span><br><span class="line"><span class="comment"># Restart service</span></span><br><span class="line">systemctl --user restart openclaw-gateway.service</span><br></pre></td></tr></table></figure>
+
+<p><strong>问题 3：收不到 Telegram 消息</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Check if Bot Token is correct</span></span><br><span class="line"><span class="built_in">cat</span> ~/.openclaw/openclaw.json | grep botToken</span><br><span class="line"></span><br><span class="line"><span class="comment"># Check if offset is updated</span></span><br><span class="line"><span class="built_in">cat</span> ~/.openclaw/telegram/update-offset-*.json</span><br><span class="line"></span><br><span class="line"><span class="comment"># View Gateway logs</span></span><br><span class="line">journalctl -t gateway-start.sh -n 30 | grep telegram</span><br></pre></td></tr></table></figure>
+
+<p><strong>问题 4：模型 API 调用失败</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Check API Key</span></span><br><span class="line">openclaw models status</span><br><span class="line"></span><br><span class="line"><span class="comment"># Test connection</span></span><br><span class="line">curl -H <span class="string">&quot;Authorization: Bearer YOUR_API_KEY&quot;</span> \</span><br><span class="line">  https://api.example.com/v1/models</span><br><span class="line"></span><br><span class="line"><span class="comment"># Check network</span></span><br><span class="line">ping api.example.com</span><br></pre></td></tr></table></figure>
+
+<p><a name="112-viewing-logs"></a></p>
+<h3 id="查看日志"><a href="#查看日志" class="headerlink" title="查看日志"></a>查看日志</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Gateway logs</span></span><br><span class="line">journalctl --user -u openclaw-gateway.service -f</span><br><span class="line"></span><br><span class="line"><span class="comment"># Last 50 entries</span></span><br><span class="line">journalctl --user -u openclaw-gateway.service -n 50</span><br><span class="line"></span><br><span class="line"><span class="comment"># Specific time range</span></span><br><span class="line">journalctl --user -u openclaw-gateway.service \</span><br><span class="line">  --since <span class="string">&quot;2026-03-16 10:00:00&quot;</span> --<span class="keyword">until</span> <span class="string">&quot;2026-03-16 12:00:00&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p><a name="113-diagnostic-commands"></a></p>
+<h3 id="诊断命令"><a href="#诊断命令" class="headerlink" title="诊断命令"></a>诊断命令</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Full diagnostics</span></span><br><span class="line">openclaw doctor</span><br><span class="line"></span><br><span class="line"><span class="comment"># Check system</span></span><br><span class="line">openclaw status</span><br><span class="line"></span><br><span class="line"><span class="comment"># Check configuration</span></span><br><span class="line">openclaw config list</span><br></pre></td></tr></table></figure>
+
+<p><a name="114-reset--recovery"></a></p>
+<h3 id="11-4-重置与恢复"><a href="#11-4-重置与恢复" class="headerlink" title="11.4 重置与恢复"></a>11.4 重置与恢复</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Reset configuration (use with caution)</span></span><br><span class="line">openclaw onboard --reset</span><br><span class="line"></span><br><span class="line"><span class="comment"># Reinstall Gateway</span></span><br><span class="line">openclaw gateway uninstall</span><br><span class="line">openclaw gateway install</span><br><span class="line"></span><br><span class="line"><span class="comment"># Clear cache</span></span><br><span class="line"><span class="built_in">rm</span> -rf ~/.openclaw/browser</span><br><span class="line"><span class="built_in">rm</span> -rf ~/.openclaw/cron</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p><a name="appendix"></a></p>
+<h2 id="附录"><a href="#附录" class="headerlink" title="附录"></a>附录</h2><p><a name="a-resource-links"></a></p>
+<h3 id="A-资源链接"><a href="#A-资源链接" class="headerlink" title="A. 资源链接"></a>A. 资源链接</h3><table>
+<thead>
+<tr>
+<th>资源</th>
+<th>链接</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>OpenClaw-Cookbook</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/BODYsuperman/OpenClaw-Cookbook">https://github.com/BODYsuperman/OpenClaw-Cookbook</a></td>
+</tr>
+</tbody></table>
+<p><a name="b-version-information"></a></p>
+<h3 id="B-版本信息"><a href="#B-版本信息" class="headerlink" title="B. 版本信息"></a>B. 版本信息</h3><ul>
+<li>文档版本：v1.1</li>
+<li>适用 OpenClaw 版本：v2026.3.11+</li>
+<li>最后更新：2026-03-17</li>
+</ul>
+<p><a name="c-contributors"></a></p>
+<h3 id="C-贡献者"><a href="#C-贡献者" class="headerlink" title="C. 贡献者"></a>C. 贡献者</h3><p>本文档整合了以下内容来源：</p>
+<ul>
+<li>OpenClaw 橙皮书（华书）</li>
+<li>Datawhale OpenClaw 教程</li>
+<li>APIFox OpenClaw 使用指南</li>
+<li>OpenClaw 官方文档</li>
+</ul>
+<hr>
+<p><em>如有疑问或建议，请向 OpenClaw 社区提供反馈。</em></p>
+<link rel="stylesheet" href="/css/folder.css" type="text/css"><script src="/js/folder.js" type="text/javascript" async></script>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/AI-Agent/" rel="tag"># AI Agent</a>
+              <a href="/tags/OpenClaw/" rel="tag"># OpenClaw</a>
+              <a href="/tags/Multi-Agent/" rel="tag"># Multi-Agent</a>
+              <a href="/tags/Self-Hosted/" rel="tag"># Self-Hosted</a>
+              <a href="/tags/Open-Source/" rel="tag"># Open Source</a>
+              <a href="/tags/AI-Automation/" rel="tag"># AI Automation</a>
+              <a href="/tags/Digital-Employee/" rel="tag"># Digital Employee</a>
+              <a href="/tags/Tutorial/" rel="tag"># Tutorial</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2026/03/08/OpenClaw-CookBook/" rel="prev" title="OpenClaw User Guide - Complete Tutorial">
+      <i class="fa fa-chevron-left"></i> OpenClaw User Guide - Complete Tutorial
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/zh-CN/2026/04/12/Backtracking-Algorithm/" rel="next" title="回溯算法">
+      回溯算法 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+
+            
+            <div class="post-copyright" style="margin: 0 0 10px 0;">
+              <p class="post-copyright-author" style="margin: 0 0 5px 0 !important;"><strong>Author:</strong> <a href="https://github.com/BODYsuperman" target="_blank">Alex</a></p>
+              <p class="post-copyright-link" style="margin: 0 0 5px 0 !important;"><strong>Article Link:</strong> <a href="https://bodysuperman.github.io/zh-CN/2026/03/08/OpenClaw-CookBook/" target="_blank">https://bodysuperman.github.io/zh-CN/2026/03/08/OpenClaw-CookBook/</a></p>
+              <p class="post-copyright-license" style="margin: 0 !important;"><strong>License:</strong> This article is licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a>. Please credit the original author and include the source link when reposting.</p>
+            </div>
+
+          </div>
+          
+    <div class="comments" id="gitalk-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%86%E8%A7%A3-OpenClaw"><span class="nav-number">1.</span> <span class="nav-text">了解 OpenClaw</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF-OpenClaw%EF%BC%9F"><span class="nav-number">1.1.</span> <span class="nav-text">什么是 OpenClaw？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E8%83%BD%E5%8A%9B"><span class="nav-number">1.2.</span> <span class="nav-text">核心能力</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9E%B6%E6%9E%84%E6%A6%82%E8%A7%88"><span class="nav-number">1.3.</span> <span class="nav-text">架构概览</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BF%AB%E9%80%9F%E5%BC%80%E5%A7%8B"><span class="nav-number">2.</span> <span class="nav-text">快速开始</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E8%A6%81%E6%B1%82"><span class="nav-number">2.1.</span> <span class="nav-text">系统要求</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%80%E9%94%AE%E5%AE%89%E8%A3%85"><span class="nav-number">2.2.</span> <span class="nav-text">一键安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%AA%8C%E8%AF%81%E5%AE%89%E8%A3%85"><span class="nav-number">2.3.</span> <span class="nav-text">验证安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%94%E5%88%86%E9%92%9F%E5%BF%AB%E9%80%9F%E4%BD%93%E9%AA%8C"><span class="nav-number">2.4.</span> <span class="nav-text">五分钟快速体验</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E4%B8%8E%E9%83%A8%E7%BD%B2"><span class="nav-number">3.</span> <span class="nav-text">安装与部署</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E6%96%B9%E5%BC%8F%E5%AF%B9%E6%AF%94"><span class="nav-number">3.1.</span> <span class="nav-text">安装方式对比</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%89%8B%E5%8A%A8%E5%AE%89%E8%A3%85%EF%BC%88npm%EF%BC%89"><span class="nav-number">3.2.</span> <span class="nav-text">手动安装（npm）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE-PATH%EF%BC%88%E5%A6%82%E9%9C%80%E8%A6%81%EF%BC%89"><span class="nav-number">3.3.</span> <span class="nav-text">配置 PATH（如需要）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Docker-%E9%83%A8%E7%BD%B2"><span class="nav-number">3.4.</span> <span class="nav-text">Docker 部署</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%89%88%E6%9C%AC%E6%9B%B4%E6%96%B0"><span class="nav-number">3.5.</span> <span class="nav-text">版本更新</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B8%A0%E9%81%93%E9%9B%86%E6%88%90"><span class="nav-number">4.</span> <span class="nav-text">渠道集成</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B8%A0%E9%81%93%E9%9A%BE%E5%BA%A6%E5%AF%B9%E6%AF%94"><span class="nav-number">4.1.</span> <span class="nav-text">渠道难度对比</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Telegram-%E9%9B%86%E6%88%90%EF%BC%88%E6%8E%A8%E8%8D%90%E6%96%B0%E6%89%8B%EF%BC%89"><span class="nav-number">4.2.</span> <span class="nav-text">Telegram 集成（推荐新手）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%A3%9E%E4%B9%A6%E9%9B%86%E6%88%90"><span class="nav-number">4.3.</span> <span class="nav-text">飞书集成</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%9A%E6%B8%A0%E9%81%93%E9%85%8D%E7%BD%AE"><span class="nav-number">4.4.</span> <span class="nav-text">多渠道配置</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E6%8C%87%E5%8D%97"><span class="nav-number">5.</span> <span class="nav-text">配置指南</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E4%BD%8D%E7%BD%AE"><span class="nav-number">5.1.</span> <span class="nav-text">配置文件位置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A8%A1%E5%9E%8B%E9%85%8D%E7%BD%AE"><span class="nav-number">5.2.</span> <span class="nav-text">模型配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8E%A8%E8%8D%90%E6%A8%A1%E5%9E%8B"><span class="nav-number">5.3.</span> <span class="nav-text">推荐模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-4-%E7%BD%91%E5%85%B3%E9%85%8D%E7%BD%AE"><span class="nav-number">5.4.</span> <span class="nav-text">5.4 网关配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%A4%E8%AF%81%E6%A8%A1%E5%BC%8F"><span class="nav-number">5.5.</span> <span class="nav-text">认证模式</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%9A-Agent-%E9%85%8D%E7%BD%AE"><span class="nav-number">6.</span> <span class="nav-text">多 Agent 配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E5%A4%9A-Agent%EF%BC%9F"><span class="nav-number">6.1.</span> <span class="nav-text">什么是多 Agent？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%85%E7%BD%AE-Agent-%E7%B1%BB%E5%9E%8B"><span class="nav-number">6.2.</span> <span class="nav-text">内置 Agent 类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E8%87%AA%E5%AE%9A%E4%B9%89-Agent"><span class="nav-number">6.3.</span> <span class="nav-text">创建自定义 Agent</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BA%E4%B8%8D%E5%90%8C%E4%BB%BB%E5%8A%A1%E5%88%86%E9%85%8D-Agent"><span class="nav-number">6.4.</span> <span class="nav-text">为不同任务分配 Agent</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Agent-%E8%B7%AF%E7%94%B1%E9%85%8D%E7%BD%AE"><span class="nav-number">6.5.</span> <span class="nav-text">Agent 路由配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%9A-Agent-%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5"><span class="nav-number">6.6.</span> <span class="nav-text">多 Agent 最佳实践</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E5%92%8C%E7%AE%A1%E7%90%86-Agent"><span class="nav-number">6.7.</span> <span class="nav-text">查看和管理 Agent</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%9A-Agent-%E6%9E%B6%E6%9E%84%E7%A4%BA%E4%BE%8B"><span class="nav-number">6.8.</span> <span class="nav-text">多 Agent 架构示例</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8A%80%E8%83%BD%E7%B3%BB%E7%BB%9F"><span class="nav-number">7.</span> <span class="nav-text">技能系统</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E6%8A%80%E8%83%BD%EF%BC%9F"><span class="nav-number">7.1.</span> <span class="nav-text">什么是技能？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E6%8A%80%E8%83%BD"><span class="nav-number">7.2.</span> <span class="nav-text">安装技能</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%83%AD%E9%97%A8%E6%8A%80%E8%83%BD"><span class="nav-number">7.3.</span> <span class="nav-text">热门技能</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E8%87%AA%E5%AE%9A%E4%B9%89%E6%8A%80%E8%83%BD"><span class="nav-number">7.4.</span> <span class="nav-text">创建自定义技能</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%B0%E5%BF%86%E7%B3%BB%E7%BB%9F"><span class="nav-number">8.</span> <span class="nav-text">记忆系统</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%B0%E5%BF%86%E7%B1%BB%E5%9E%8B"><span class="nav-number">8.1.</span> <span class="nav-text">记忆类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%B0%E5%BF%86%E6%96%87%E4%BB%B6%E4%BD%8D%E7%BD%AE"><span class="nav-number">8.2.</span> <span class="nav-text">记忆文件位置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%90%9C%E7%B4%A2%E8%AE%B0%E5%BF%86"><span class="nav-number">8.3.</span> <span class="nav-text">搜索记忆</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%B0%E5%BF%86%E7%BB%B4%E6%8A%A4"><span class="nav-number">8.4.</span> <span class="nav-text">记忆维护</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1"><span class="nav-number">9.</span> <span class="nav-text">定时任务</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Cron-%E5%9F%BA%E7%A1%80"><span class="nav-number">9.1.</span> <span class="nav-text">Cron 基础</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Cron-%E8%A1%A8%E8%BE%BE%E5%BC%8F"><span class="nav-number">9.2.</span> <span class="nav-text">Cron 表达式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BF%83%E8%B7%B3%E4%BB%BB%E5%8A%A1"><span class="nav-number">9.3.</span> <span class="nav-text">心跳任务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E7%94%A8-Cron-%E7%A4%BA%E4%BE%8B"><span class="nav-number">9.4.</span> <span class="nav-text">实用 Cron 示例</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4"><span class="nav-number">10.</span> <span class="nav-text">常用命令</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BD%91%E5%85%B3%E7%AE%A1%E7%90%86"><span class="nav-number">10.1.</span> <span class="nav-text">网关管理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E7%AE%A1%E7%90%86"><span class="nav-number">10.2.</span> <span class="nav-text">配置管理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A8%A1%E5%9E%8B%E7%AE%A1%E7%90%86"><span class="nav-number">10.3.</span> <span class="nav-text">模型管理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B8%A0%E9%81%93%E7%AE%A1%E7%90%86"><span class="nav-number">10.4.</span> <span class="nav-text">渠道管理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Agent-%E7%AE%A1%E7%90%86"><span class="nav-number">10.5.</span> <span class="nav-text">Agent 管理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%B0%E5%BF%86%E6%93%8D%E4%BD%9C"><span class="nav-number">10.6.</span> <span class="nav-text">记忆操作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BC%9A%E8%AF%9D%E7%AE%A1%E7%90%86"><span class="nav-number">10.7.</span> <span class="nav-text">会话管理</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%85%E9%9A%9C%E6%8E%92%E9%99%A4"><span class="nav-number">11.</span> <span class="nav-text">故障排除</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98"><span class="nav-number">11.1.</span> <span class="nav-text">常见问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E6%97%A5%E5%BF%97"><span class="nav-number">11.2.</span> <span class="nav-text">查看日志</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AF%8A%E6%96%AD%E5%91%BD%E4%BB%A4"><span class="nav-number">11.3.</span> <span class="nav-text">诊断命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#11-4-%E9%87%8D%E7%BD%AE%E4%B8%8E%E6%81%A2%E5%A4%8D"><span class="nav-number">11.4.</span> <span class="nav-text">11.4 重置与恢复</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%99%84%E5%BD%95"><span class="nav-number">12.</span> <span class="nav-text">附录</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#A-%E8%B5%84%E6%BA%90%E9%93%BE%E6%8E%A5"><span class="nav-number">12.1.</span> <span class="nav-text">A. 资源链接</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#B-%E7%89%88%E6%9C%AC%E4%BF%A1%E6%81%AF"><span class="nav-number">12.2.</span> <span class="nav-text">B. 版本信息</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#C-%E8%B4%A1%E7%8C%AE%E8%80%85"><span class="nav-number">12.3.</span> <span class="nav-text">C. 贡献者</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="AI with Alex"
+      src="/uploads/avatar.jpg">
+  <p class="site-author-name" itemprop="name">AI with Alex</p>
+  <div class="site-description" itemprop="description">Attention(Q,K,V)=softmax(QK^T/sqrt(d_k))V</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">62</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">35</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">88</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/BODYsuperman" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;BODYsuperman" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/atom.xml" title="RSS Feed → &#x2F;atom.xml"><i class="fas fa-rss fa-fw"></i>RSS Feed</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:meijiaping6@gmail.com" title="Email → mailto:meijiaping6@gmail.com" rel="noopener" target="_blank"><i class="fas fa-envelope fa-fw"></i>Email</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://stackoverflow.com/users/9644964/alexandar-may-msft?tab=answers&sort=votes" title="StackOverflow → https:&#x2F;&#x2F;stackoverflow.com&#x2F;users&#x2F;9644964&#x2F;alexandar-may-msft?tab&#x3D;answers&amp;sort&#x3D;votes" rel="noopener" target="_blank"><i class="fab fa-stack-overflow fa-fw"></i>StackOverflow</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">AI with Alex</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">Symbols count total: </span>
+    <span title="Symbols count total">840k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">Reading time total &asymp;</span>
+    <span title="Reading time total">12:43</span>
+    
+    <!--
+    
+    -->
+</div>
+
+<!--
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a>
+   </div>
+--><script color="0,0,255" opacity="0.5" zIndex="-1" count="99" src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1/dist/canvas-nest.js"></script>
+
+
+
+
+
+
+        
+
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv"  >
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv"  >
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : 'Ov23liVJTzqy1rzaDXXM',
+      clientSecret: '5e785a7d46e69f7509e6c2f7730855a55944df33',
+      repo        : 'blog-comment',
+      owner       : 'BODYsuperman',
+      admin       : ['BODYsuperman'],
+      id          : '319de0328ca9a9030dd4ff34b28e633e',
+        language: '',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+
+</body>
+</html>

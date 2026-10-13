@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en,zh-CN,default">
 <head>
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
@@ -116,6 +116,16 @@
     </div>
   </div>
 </div>
+
+
+
+
+  <div class="site-lang-switcher">
+    <span class="lang-item lang-current">English</span>
+      <a class="lang-item lang-link" href="/zh-CN/2026/06/10/Building-AI-Agents-From-Context-to-Memory/" rel="section" title="简体中文">
+        <i class="fa fa-language"></i> 简体中文
+      </a>
+  </div>
 
 
 
@@ -621,7 +631,7 @@
 </tbody></table>
 <p><a name="four-storage-formats-from-simple-notes-to-advanced-json-cards"></a></p>
 <h3 id="Four-Storage-Formats-From-Simple-Notes-to-Advanced-JSON-Cards"><a href="#Four-Storage-Formats-From-Simple-Notes-to-Advanced-JSON-Cards" class="headerlink" title="Four Storage Formats: From Simple Notes to Advanced JSON Cards"></a>Four Storage Formats: From Simple Notes to Advanced JSON Cards</h3><p>The same piece of user information can be represented with different granularities:</p>
-<p><strong>Simple Notes</strong> — Each memory is a minimal, indivisible fact (“User email: <a href="mailto:&#x6a;&#x6f;&#104;&#x6e;&#64;&#x65;&#120;&#x61;&#109;&#112;&#x6c;&#x65;&#x2e;&#x63;&#x6f;&#109;">&#x6a;&#x6f;&#104;&#x6e;&#64;&#x65;&#120;&#x61;&#109;&#112;&#x6c;&#x65;&#x2e;&#x63;&#x6f;&#109;</a>“). Minimal overhead, but associations between facts are lost entirely. “Works as Senior Engineer at TechCorp on recommendation systems” becomes three disconnected fragments.</p>
+<p><strong>Simple Notes</strong> — Each memory is a minimal, indivisible fact (“User email: <a href="mailto:&#106;&#111;&#104;&#x6e;&#x40;&#x65;&#x78;&#97;&#109;&#112;&#108;&#101;&#x2e;&#x63;&#x6f;&#109;">&#106;&#111;&#104;&#x6e;&#x40;&#x65;&#x78;&#97;&#109;&#112;&#108;&#101;&#x2e;&#x63;&#x6f;&#109;</a>“). Minimal overhead, but associations between facts are lost entirely. “Works as Senior Engineer at TechCorp on recommendation systems” becomes three disconnected fragments.</p>
 <p><strong>Enhanced Notes</strong> — Each memory is a paragraph with complete context. Preserves narrative structure, but suffers from storage redundancy, update complexity, and paragraphs too long for accurate retrieval.</p>
 <p><strong>JSON Cards</strong> — A three-level nested structure (Category → Subcategory → Key-Value), mimicking how humans categorize. Supports partial updates, but forces information into single categories.</p>
 <p><strong>Advanced JSON Cards</strong> — Each card records facts plus narrative context (backstory), subject identity (person), and relationship. Solves disambiguation: “Dr. Zhang” could be the user’s dentist or the user’s father’s cardiologist.</p>
@@ -892,12 +902,12 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2026/05/18/LangChain-Runtime-Middleware-Core-Principles-and-more/" rel="prev" title="LangChain Runtime & Middleware: Core Principles and Practical Guide">
-      <i class="fa fa-chevron-left"></i> LangChain Runtime & Middleware: Core Principles and Practical Guide
+    <a href="/zh-CN/2026/06/10/Building-AI-Agents-From-Context-to-Memory/" rel="prev" title="构建 AI Agent：从上下文到记忆">
+      <i class="fa fa-chevron-left"></i> 构建 AI Agent：从上下文到记忆
     </a></div>
       <div class="post-nav-item">
-    <a href="/2026/06/17/From-Capability-to-Intelligence-Tools-Coding-and-Evaluation-in-AI-Agents/" rel="next" title="From Capability to Intelligence: Tools, Coding, and Evaluation in AI Agents">
-      From Capability to Intelligence: Tools, Coding, and Evaluation in AI Agents <i class="fa fa-chevron-right"></i>
+    <a href="/zh-CN/2026/06/17/From-Capability-to-Intelligence-Tools-Coding-and-Evaluation-in-AI-Agents/" rel="next" title="从能力到智能：AI Agent 的工具、编程与评估">
+      从能力到智能：AI Agent 的工具、编程与评估 <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
@@ -982,7 +992,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">31</span>
+          <span class="site-state-item-count">62</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -1031,8 +1041,6 @@
       <div class="footer-inner">
         
 
-        
-
 <div class="copyright">
   
   &copy; 
@@ -1046,13 +1054,13 @@
       <i class="fa fa-chart-area"></i>
     </span>
       <span class="post-meta-item-text">Symbols count total: </span>
-    <span title="Symbols count total">498k</span>
+    <span title="Symbols count total">840k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">Reading time total &asymp;</span>
-    <span title="Reading time total">7:33</span>
+    <span title="Reading time total">12:43</span>
     
     <!--
     

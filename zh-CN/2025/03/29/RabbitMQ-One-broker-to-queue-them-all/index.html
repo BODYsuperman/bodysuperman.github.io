@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en,zh-CN,default">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/logo-180.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/logo-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/logo-16.png">
+  <link rel="mask-icon" href="/images/logo-512.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|monospace:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"bodysuperman.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null,"use":"Gitalk","text":true},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="什么是 RabbitMQ 核心概念   环境搭建 Docker（推荐）   管理用户和权限 场景：生产者发送消息，消费者接收消息 生产者代码 消费者代码 运行测试   高级特性：确保消息可靠投递 消息持久化 发布者确认（Publisher Confirms） 消费者手动确认（Manual Acknowledgment）   最佳实践 消息格式 监控">
+<meta property="og:type" content="article">
+<meta property="og:title" content="RabbitMQ：一个消息中间件统领所有队列">
+<meta property="og:url" content="https://bodysuperman.github.io/zh-CN/2025/03/29/RabbitMQ-One-broker-to-queue-them-all/index.html">
+<meta property="og:site_name" content="AI with Alex&#39;s Blog">
+<meta property="og:description" content="什么是 RabbitMQ 核心概念   环境搭建 Docker（推荐）   管理用户和权限 场景：生产者发送消息，消费者接收消息 生产者代码 消费者代码 运行测试   高级特性：确保消息可靠投递 消息持久化 发布者确认（Publisher Confirms） 消费者手动确认（Manual Acknowledgment）   最佳实践 消息格式 监控">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://bodysuperman.github.io/rabbit07.png">
+<meta property="og:image" content="https://bodysuperman.github.io/rabbit06.png">
+<meta property="og:image" content="https://bodysuperman.github.io/rabbit04.png">
+<meta property="og:image" content="https://bodysuperman.github.io/rabbit05.png">
+<meta property="og:image" content="https://bodysuperman.github.io/rabbit08.png">
+<meta property="og:image" content="https://bodysuperman.github.io/rabbit09.png">
+<meta property="article:published_time" content="2025-03-29T08:48:27.000Z">
+<meta property="article:modified_time" content="2025-03-29T10:04:19.000Z">
+<meta property="article:author" content="AI with Alex">
+<meta property="article:tag" content="RabbitMQ">
+<meta property="article:tag" content="MessageQueue">
+<meta property="article:tag" content="MiddleWare">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://bodysuperman.github.io/rabbit07.png">
+
+<link rel="canonical" href="https://bodysuperman.github.io/zh-CN/2025/03/29/RabbitMQ-One-broker-to-queue-them-all/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>RabbitMQ：一个消息中间件统领所有队列 | AI with Alex's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="AI with Alex's Blog" type="application/atom+xml">
+<link rel="alternate" href="/rss.xml" title="AI with Alex's Blog" type="application/rss+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+
+
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">AI with Alex's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+  <div class="site-lang-switcher">
+    <span class="lang-item lang-current">简体中文</span>
+      <a class="lang-item lang-link" href="/2025/03/29/RabbitMQ-One-broker-to-queue-them-all/" rel="section" title="English">
+        <i class="fa fa-language"></i> English
+      </a>
+  </div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+   
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://bodysuperman.github.io/zh-CN/2025/03/29/RabbitMQ-One-broker-to-queue-them-all/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+      <meta itemprop="name" content="AI with Alex">
+      <meta itemprop="description" content="Attention(Q,K,V)=softmax(QK^T/sqrt(d_k))V">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="AI with Alex's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          RabbitMQ：一个消息中间件统领所有队列
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2025-03-29 16:48:27 / 修改时间：18:04:19" itemprop="dateCreated datePublished" datetime="2025-03-29T16:48:27+08:00">2025-03-29</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/C-NET/" itemprop="url" rel="index"><span itemprop="name">C#/.NET</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>4.6k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>4 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <ol>
+<li><a href="#introduction">什么是 RabbitMQ</a><ul>
+<li><a href="#core">核心概念</a></li>
+</ul>
+</li>
+<li><a href="#setup">环境搭建</a><ul>
+<li><a href="#docker">Docker（推荐）</a></li>
+</ul>
+</li>
+<li><a href="#user">管理用户和权限</a></li>
+<li><a href="#simple">场景：生产者发送消息，消费者接收消息</a><ul>
+<li><a href="#producer">生产者代码</a></li>
+<li><a href="#consumer">消费者代码</a></li>
+<li><a href="#test">运行测试</a></li>
+</ul>
+</li>
+<li><a href="#ensure">高级特性：确保消息可靠投递</a><ul>
+<li><a href="#persistence">消息持久化</a></li>
+<li><a href="#pub">发布者确认（Publisher Confirms）</a></li>
+<li><a href="#ack">消费者手动确认（Manual Acknowledgment）</a></li>
+</ul>
+</li>
+<li><a href="#best">最佳实践</a><ul>
+<li><a href="#msg">消息格式</a></li>
+<li><a href="#m">监控</a><span id="more"></span></li>
+</ul>
+</li>
+</ol>
+<h2 id="什么是-RabbitMQ？"><a href="#什么是-RabbitMQ？" class="headerlink" title="什么是 RabbitMQ？"></a>什么是 RabbitMQ？<a name="introduction"></a></h2><p><strong>RabbitMQ</strong> 是一款开源消息中间件，实现了 <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Advanced_Message_Queuing_Protocol">AMQP</a> 协议（高级消息队列协议），专为分布式系统中的异步通信而设计。它促进应用程序之间的异步通信，实现解耦和可扩展架构。它支持多种编程语言，提供消息持久化、流量控制和集群部署等功能，广泛应用于微服务架构、异步任务处理和系统解耦。</p>
+<h3 id="核心概念"><a href="#核心概念" class="headerlink" title="核心概念"></a>核心概念<a name="core"></a></h3><table>
+<thead>
+<tr>
+<th><strong>概念</strong></th>
+<th><strong>描述</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>生产者（Producer）</strong></td>
+<td>向交换机发送消息的应用程序。</td>
+</tr>
+<tr>
+<td><strong>消费者（Consumer）</strong></td>
+<td>从队列接收消息并处理的应用程序。</td>
+</tr>
+<tr>
+<td><strong>交换机（Exchange）</strong></td>
+<td>确定消息路由规则的组件，根据绑定将消息分发到队列。</td>
+</tr>
+<tr>
+<td><strong>队列（Queue）</strong></td>
+<td>存储消息的容器，消费者从中拉取消息。</td>
+</tr>
+<tr>
+<td><strong>绑定（Binding）</strong></td>
+<td>建立交换机和队列之间的关系，定义路由条件（如路由键）。</td>
+</tr>
+<tr>
+<td><strong>AMQP</strong></td>
+<td>定义通信标准的应用层协议，用于可靠的消息传递。</td>
+</tr>
+</tbody></table>
+<p><img src="/rabbit07.png" alt="pic"></p>
+<h2 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a>环境搭建<a name="setup"></a></h2><h3 id="Docker（推荐）："><a href="#Docker（推荐）：" class="headerlink" title="Docker（推荐）： "></a>Docker（推荐）： <a name="docker"></a></h3><p>拉取 RabbitMQ Docker 镜像</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull rabbitmq:management</span><br></pre></td></tr></table></figure>
+<p>启动一个 RabbitMQ 实例，并将主机上的自定义配置文件挂载到容器中。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">docker run -id --name=rabbitmq -v rabbitmq-home:/var/lib/rabbitmq</span><br><span class="line">-p 15672:15672</span><br><span class="line">-p 5672:5672</span><br><span class="line">-e RABBITMQ_DEFAULT_USER=***</span><br><span class="line">-e RABBITMQ_DEFAULT_PASS=***</span><br><span class="line">rabbitmq:management</span><br></pre></td></tr></table></figure>
+<ul>
+<li>-d 以分离模式运行容器。</li>
+<li>–name 为容器分配一个名称。</li>
+<li>-p 将容器端口映射到宿主机。端口 5672 用于 RabbitMQ 服务，15672 用于管理界面。<br>访问 RabbitMQ 管理控制台：</li>
+<li>打开浏览器，访问 <a target="_blank" rel="noopener" href="http://localhost:15672/%E3%80%82">http://localhost:15672/。</a><br><img src="/rabbit06.png" alt="pic"></li>
+<li>使用你在上述命令中设置的默认用户名和密码登录。</li>
+</ul>
+<h2 id="管理用户和权限"><a href="#管理用户和权限" class="headerlink" title="管理用户和权限"></a>管理用户和权限<a name="user"></a></h2><p>要添加用户，使用 rabbitmqctl add_user。<br><img src="/rabbit04.png" alt="pic"></p>
+<p>要为用户在虚拟主机中授予权限，使用 rabbitmqctl set_permissions：<br><img src="/rabbit05.png" alt="pic"><br>要列出集群中的用户，使用 rabbitmqctl list_users：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rabbitmqctl list_users</span><br></pre></td></tr></table></figure>
+<p>要删除用户，使用 rabbitmqctl delete_user：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rabbitmqctl delete_user &#x27;username&#x27;</span><br></pre></td></tr></table></figure>
+<p>要撤销用户在虚拟主机中的权限，使用 rabbitmqctl clear_permissions：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rabbitmqctl clear_permissions -p &quot;custom-vhost&quot; &quot;username&quot;</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="场景：生产者发送消息，消费者接收消息"><a href="#场景：生产者发送消息，消费者接收消息" class="headerlink" title="场景：生产者发送消息，消费者接收消息"></a>场景：生产者发送消息，消费者接收消息<a name="simple"></a></h2><h3 id="生产者代码"><a href="#生产者代码" class="headerlink" title="生产者代码"></a>生产者代码<a name="producer"></a></h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">class Producer</span><br><span class="line">&#123;</span><br><span class="line">    private const string QueueName = &quot;simple_queue&quot;;</span><br><span class="line"></span><br><span class="line">    public static void SendMessage(string message)</span><br><span class="line">    &#123;</span><br><span class="line">        var factory = new ConnectionFactory() &#123;</span><br><span class="line">            HostName = &quot;***&quot;,</span><br><span class="line">            VirtualHost = &quot;visual_knitting&quot;,</span><br><span class="line">            UserName = &quot;admin&quot;,</span><br><span class="line">            Password = &quot;123456&quot;,</span><br><span class="line">            Port = 5672</span><br><span class="line">         &#125;;</span><br><span class="line">        using (var connection = factory.CreateConnection())</span><br><span class="line">        using (var channel = connection.CreateModel())</span><br><span class="line">        &#123;</span><br><span class="line">            channel.QueueDeclare(</span><br><span class="line">                queue: QueueName,</span><br><span class="line">                durable: false,  // Store in memory (non-persistent)</span><br><span class="line">                exclusive: false, // Non-exclusive queue</span><br><span class="line">                autoDelete: false, // Do not auto-delete when empty</span><br><span class="line">                arguments: null</span><br><span class="line">            );</span><br><span class="line"></span><br><span class="line">            var body = Encoding.UTF8.GetBytes(message);</span><br><span class="line">            channel.BasicPublish(</span><br><span class="line">                exchange: &quot;&quot;,       // Use default exchange (direct to queue)</span><br><span class="line">                routingKey: QueueName, // Routing key matches queue name</span><br><span class="line">                basicProperties: null,</span><br><span class="line">                body: body</span><br><span class="line">            );</span><br><span class="line">            Console.WriteLine($&quot;[Producer] Sent: &#123;message&#125;&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="消费者代码"><a href="#消费者代码" class="headerlink" title="消费者代码"></a>消费者代码<a name="consumer"></a></h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">class Consumer</span><br><span class="line">&#123;</span><br><span class="line">    private const string QueueName = &quot;simple_queue&quot;;</span><br><span class="line"></span><br><span class="line">    public static void StartListening()</span><br><span class="line">    &#123;</span><br><span class="line">        var factory = new ConnectionFactory() &#123;</span><br><span class="line"></span><br><span class="line">            var factory = new ConnectionFactory() &#123;</span><br><span class="line">            HostName = &quot;***&quot;,</span><br><span class="line">            VirtualHost = &quot;visual_knitting&quot;,</span><br><span class="line">            UserName = &quot;admin&quot;,</span><br><span class="line">            Password = &quot;123456&quot;,</span><br><span class="line">            Port = 5672</span><br><span class="line">         &#125;;</span><br><span class="line">         &#125;;</span><br><span class="line">        using (var connection = factory.CreateConnection())</span><br><span class="line">        using (var channel = connection.CreateModel())</span><br><span class="line">        &#123;</span><br><span class="line">            channel.QueueDeclare(QueueName, false, false, false, null);</span><br><span class="line"></span><br><span class="line">            var consumer = new EventingBasicConsumer(channel);</span><br><span class="line">            consumer.Received += (model, ea) =&gt;</span><br><span class="line">            &#123;</span><br><span class="line">                var body = ea.Body.ToArray();</span><br><span class="line">                var message = Encoding.UTF8.GetString(body);</span><br><span class="line">                Console.WriteLine($&quot;[Consumer] Received: &#123;message&#125;&quot;);</span><br><span class="line">            &#125;;</span><br><span class="line"></span><br><span class="line">            channel.BasicConsume(</span><br><span class="line">                queue: QueueName,</span><br><span class="line">                autoAck: true,  // Auto-acknowledge messages upon receipt</span><br><span class="line">                consumer: consumer</span><br><span class="line">            );</span><br><span class="line"></span><br><span class="line">            Console.WriteLine(&quot;Consumer is waiting for messages. Press any key to exit.&quot;);</span><br><span class="line">            Console.ReadKey();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="运行测试："><a href="#运行测试：" class="headerlink" title="运行测试："></a>运行测试：<a name="test"></a></h3><p>从生产者发送消息：<br> <img src="/rabbit08.png" alt="pic"><br>消费者输出：<br> <img src="/rabbit09.png" alt="pic"></p>
+<h2 id="高级特性：确保消息可靠投递"><a href="#高级特性：确保消息可靠投递" class="headerlink" title="高级特性：确保消息可靠投递"></a>高级特性：确保消息可靠投递<a name="ensure"></a></h2><h3 id="消息持久化"><a href="#消息持久化" class="headerlink" title="消息持久化"></a>消息持久化<a name="persistence"></a></h3><p><strong>场景：防止 RabbitMQ 重启时消息丢失</strong></p>
+<ul>
+<li>队列持久化：声明队列时设置 durable: true。</li>
+<li>消息持久化：设置 BasicProperties.Persistent &#x3D; true。<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">// Producer code for persistence</span><br><span class="line">channel.QueueDeclare(QueueName, durable: true, ...);</span><br><span class="line"></span><br><span class="line">var properties = channel.CreateBasicProperties();</span><br><span class="line">properties.Persistent = true; // Make messages persistent</span><br><span class="line">channel.BasicPublish(..., basicProperties: properties, ...);</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="发布者确认（Publisher-Confirms）"><a href="#发布者确认（Publisher-Confirms）" class="headerlink" title="发布者确认（Publisher Confirms）"></a>发布者确认（Publisher Confirms）<a name="pub"></a></h3><p><strong>场景：确保消息成功到达 RabbitMQ 服务器</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">// Enable publisher confirms</span><br><span class="line">channel.ConfirmSelect();</span><br><span class="line"></span><br><span class="line">channel.BasicPublish(...);</span><br><span class="line">if (channel.WaitForConfirms(TimeSpan.FromSeconds(5)))</span><br><span class="line">&#123;</span><br><span class="line">    Console.WriteLine(&quot;Message confirmed by server.&quot;);</span><br><span class="line">&#125;</span><br><span class="line">else</span><br><span class="line">&#123;</span><br><span class="line">    Console.WriteLine(&quot;Message confirmation timed out.&quot;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="消费者手动确认（Manual-Acknowledgment）"><a href="#消费者手动确认（Manual-Acknowledgment）" class="headerlink" title="消费者手动确认（Manual Acknowledgment）"></a>消费者手动确认（Manual Acknowledgment）<a name="ack"></a></h3><p><strong>场景：避免丢失未处理的消息（例如消费者崩溃时）</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">// Consumer code with manual acknowledgment (autoAck: false)</span><br><span class="line">channel.BasicConsume(</span><br><span class="line">    queue: QueueName,</span><br><span class="line">    autoAck: false,  // Disable auto-acknowledgment</span><br><span class="line">    consumer: consumer</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line">consumer.Received += (model, ea) =&gt;</span><br><span class="line">&#123;</span><br><span class="line">    var deliveryTag = ea.DeliveryTag;</span><br><span class="line">    try</span><br><span class="line">    &#123;</span><br><span class="line">        // Process the message...</span><br><span class="line">        channel.BasicAck(deliveryTag, multiple: false); // Acknowledge single message</span><br><span class="line">    &#125;</span><br><span class="line">    catch (Exception)</span><br><span class="line">    &#123;</span><br><span class="line">        channel.BasicNack(deliveryTag, multiple: false, requeue: true); // Requeue the message</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h2 id="最佳实践"><a href="#最佳实践" class="headerlink" title="最佳实践"></a>最佳实践<a name="best"></a></h2><h3 id="消息格式"><a href="#消息格式" class="headerlink" title="消息格式"></a>消息格式<a name="msg"></a></h3><p>使用 JSON 格式处理结构化数据，例如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    &quot;MessageId&quot;: &quot;12**&quot;,</span><br><span class="line">    &quot;Content&quot;: &quot;Order created&quot;,</span><br><span class="line">    &quot;Timestamp&quot;: &quot;2025-03-22T12:00:00&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="监控"><a href="#监控" class="headerlink" title="监控"></a>监控<a name="m"></a></h3><ul>
+<li>使用 RabbitMQ 管理仪表板检查队列状态、连接和资源使用情况。</li>
+<li>使用 dotnet trace 或 Prometheus + Grafana 等工具监控性能。</li>
+</ul>
+<link rel="stylesheet" href="/css/folder.css" type="text/css"><script src="/js/folder.js" type="text/javascript" async></script>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/RabbitMQ/" rel="tag"># RabbitMQ</a>
+              <a href="/tags/MessageQueue/" rel="tag"># MessageQueue</a>
+              <a href="/tags/MiddleWare/" rel="tag"># MiddleWare</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/zh-CN/2025/03/22/Dynamic-Programming/" rel="prev" title="动态规划">
+      <i class="fa fa-chevron-left"></i> 动态规划
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2025/03/29/RabbitMQ-One-broker-to-queue-them-all/" rel="next" title="RabbitMQ:One broker to queue them all">
+      RabbitMQ:One broker to queue them all <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+
+            
+            <div class="post-copyright" style="margin: 0 0 10px 0;">
+              <p class="post-copyright-author" style="margin: 0 0 5px 0 !important;"><strong>Author:</strong> <a href="https://github.com/BODYsuperman" target="_blank">Alex</a></p>
+              <p class="post-copyright-link" style="margin: 0 0 5px 0 !important;"><strong>Article Link:</strong> <a href="https://bodysuperman.github.io/zh-CN/2025/03/29/RabbitMQ-One-broker-to-queue-them-all/" target="_blank">https://bodysuperman.github.io/zh-CN/2025/03/29/RabbitMQ-One-broker-to-queue-them-all/</a></p>
+              <p class="post-copyright-license" style="margin: 0 !important;"><strong>License:</strong> This article is licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a>. Please credit the original author and include the source link when reposting.</p>
+            </div>
+
+          </div>
+          
+    <div class="comments" id="gitalk-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF-RabbitMQ%EF%BC%9F"><span class="nav-number">1.</span> <span class="nav-text">什么是 RabbitMQ？</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5"><span class="nav-number">1.1.</span> <span class="nav-text">核心概念</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA"><span class="nav-number">2.</span> <span class="nav-text">环境搭建</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Docker%EF%BC%88%E6%8E%A8%E8%8D%90%EF%BC%89%EF%BC%9A"><span class="nav-number">2.1.</span> <span class="nav-text">Docker（推荐）： </span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AE%A1%E7%90%86%E7%94%A8%E6%88%B7%E5%92%8C%E6%9D%83%E9%99%90"><span class="nav-number">3.</span> <span class="nav-text">管理用户和权限</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9C%BA%E6%99%AF%EF%BC%9A%E7%94%9F%E4%BA%A7%E8%80%85%E5%8F%91%E9%80%81%E6%B6%88%E6%81%AF%EF%BC%8C%E6%B6%88%E8%B4%B9%E8%80%85%E6%8E%A5%E6%94%B6%E6%B6%88%E6%81%AF"><span class="nav-number">4.</span> <span class="nav-text">场景：生产者发送消息，消费者接收消息</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%9F%E4%BA%A7%E8%80%85%E4%BB%A3%E7%A0%81"><span class="nav-number">4.1.</span> <span class="nav-text">生产者代码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B6%88%E8%B4%B9%E8%80%85%E4%BB%A3%E7%A0%81"><span class="nav-number">4.2.</span> <span class="nav-text">消费者代码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%90%E8%A1%8C%E6%B5%8B%E8%AF%95%EF%BC%9A"><span class="nav-number">4.3.</span> <span class="nav-text">运行测试：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%AB%98%E7%BA%A7%E7%89%B9%E6%80%A7%EF%BC%9A%E7%A1%AE%E4%BF%9D%E6%B6%88%E6%81%AF%E5%8F%AF%E9%9D%A0%E6%8A%95%E9%80%92"><span class="nav-number">5.</span> <span class="nav-text">高级特性：确保消息可靠投递</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B6%88%E6%81%AF%E6%8C%81%E4%B9%85%E5%8C%96"><span class="nav-number">5.1.</span> <span class="nav-text">消息持久化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%91%E5%B8%83%E8%80%85%E7%A1%AE%E8%AE%A4%EF%BC%88Publisher-Confirms%EF%BC%89"><span class="nav-number">5.2.</span> <span class="nav-text">发布者确认（Publisher Confirms）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B6%88%E8%B4%B9%E8%80%85%E6%89%8B%E5%8A%A8%E7%A1%AE%E8%AE%A4%EF%BC%88Manual-Acknowledgment%EF%BC%89"><span class="nav-number">5.3.</span> <span class="nav-text">消费者手动确认（Manual Acknowledgment）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5"><span class="nav-number">6.</span> <span class="nav-text">最佳实践</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B6%88%E6%81%AF%E6%A0%BC%E5%BC%8F"><span class="nav-number">6.1.</span> <span class="nav-text">消息格式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9B%91%E6%8E%A7"><span class="nav-number">6.2.</span> <span class="nav-text">监控</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="AI with Alex"
+      src="/uploads/avatar.jpg">
+  <p class="site-author-name" itemprop="name">AI with Alex</p>
+  <div class="site-description" itemprop="description">Attention(Q,K,V)=softmax(QK^T/sqrt(d_k))V</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">62</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">35</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">88</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/BODYsuperman" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;BODYsuperman" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/atom.xml" title="RSS Feed → &#x2F;atom.xml"><i class="fas fa-rss fa-fw"></i>RSS Feed</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:meijiaping6@gmail.com" title="Email → mailto:meijiaping6@gmail.com" rel="noopener" target="_blank"><i class="fas fa-envelope fa-fw"></i>Email</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://stackoverflow.com/users/9644964/alexandar-may-msft?tab=answers&sort=votes" title="StackOverflow → https:&#x2F;&#x2F;stackoverflow.com&#x2F;users&#x2F;9644964&#x2F;alexandar-may-msft?tab&#x3D;answers&amp;sort&#x3D;votes" rel="noopener" target="_blank"><i class="fab fa-stack-overflow fa-fw"></i>StackOverflow</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">AI with Alex</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">Symbols count total: </span>
+    <span title="Symbols count total">840k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">Reading time total &asymp;</span>
+    <span title="Reading time total">12:43</span>
+    
+    <!--
+    
+    -->
+</div>
+
+<!--
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a>
+   </div>
+--><script color="0,0,255" opacity="0.5" zIndex="-1" count="99" src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1/dist/canvas-nest.js"></script>
+
+
+
+
+
+
+        
+
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv"  >
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv"  >
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : 'Ov23liVJTzqy1rzaDXXM',
+      clientSecret: '5e785a7d46e69f7509e6c2f7730855a55944df33',
+      repo        : 'blog-comment',
+      owner       : 'BODYsuperman',
+      admin       : ['BODYsuperman'],
+      id          : '7ee12f6a732c0cdbf8486656d89b4d9b',
+        language: '',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+
+</body>
+</html>

@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="en,zh-CN,default">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/logo-180.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/logo-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/logo-16.png">
+  <link rel="mask-icon" href="/images/logo-512.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|monospace:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"bodysuperman.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null,"use":"Gitalk","text":true},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="引言：多设备协作的必要性 Hexo 多设备同步的核心原理 Hexo 目录结构与版本控制策略 Git 分支分工模型   旧电脑操作指南：搭建远程同步基础 创建和配置远程分支 本地环境与远程仓库同步 .gitignore 关键配置   新电脑环境搭建：从远程仓库恢复博客 SSH Key 配置与环境依赖安装 远程仓库克隆与依赖恢复 首次运行验证与配置检查   日常更新工作流：双分支协同操作 源码更新与">
+<meta property="og:type" content="article">
+<meta property="og:title" content="基于 Git 分支策略的 Hexo 博客多设备同步与管理指南">
+<meta property="og:url" content="https://bodysuperman.github.io/zh-CN/2025/05/03/Hexo-Blog-Multi-Device-Synchronization-and-Management-Guide-Based-on-Git-Branch-Strategy/index.html">
+<meta property="og:site_name" content="AI with Alex&#39;s Blog">
+<meta property="og:description" content="引言：多设备协作的必要性 Hexo 多设备同步的核心原理 Hexo 目录结构与版本控制策略 Git 分支分工模型   旧电脑操作指南：搭建远程同步基础 创建和配置远程分支 本地环境与远程仓库同步 .gitignore 关键配置   新电脑环境搭建：从远程仓库恢复博客 SSH Key 配置与环境依赖安装 远程仓库克隆与依赖恢复 首次运行验证与配置检查   日常更新工作流：双分支协同操作 源码更新与">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-05-03T01:52:39.000Z">
+<meta property="article:modified_time" content="2025-05-03T11:04:19.000Z">
+<meta property="article:author" content="AI with Alex">
+<meta property="article:tag" content="Git">
+<meta property="article:tag" content="Hexo">
+<meta property="article:tag" content="Multi-Device Synchronization">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://bodysuperman.github.io/zh-CN/2025/05/03/Hexo-Blog-Multi-Device-Synchronization-and-Management-Guide-Based-on-Git-Branch-Strategy/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>基于 Git 分支策略的 Hexo 博客多设备同步与管理指南 | AI with Alex's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="AI with Alex's Blog" type="application/atom+xml">
+<link rel="alternate" href="/rss.xml" title="AI with Alex's Blog" type="application/rss+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+
+
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">AI with Alex's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+  <div class="site-lang-switcher">
+    <span class="lang-item lang-current">简体中文</span>
+      <a class="lang-item lang-link" href="/2025/05/03/Hexo-Blog-Multi-Device-Synchronization-and-Management-Guide-Based-on-Git-Branch-Strategy/" rel="section" title="English">
+        <i class="fa fa-language"></i> English
+      </a>
+  </div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+   
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://bodysuperman.github.io/zh-CN/2025/05/03/Hexo-Blog-Multi-Device-Synchronization-and-Management-Guide-Based-on-Git-Branch-Strategy/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+      <meta itemprop="name" content="AI with Alex">
+      <meta itemprop="description" content="Attention(Q,K,V)=softmax(QK^T/sqrt(d_k))V">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="AI with Alex's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          基于 Git 分支策略的 Hexo 博客多设备同步与管理指南
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2025-05-03 09:52:39 / 修改时间：19:04:19" itemprop="dateCreated datePublished" datetime="2025-05-03T09:52:39+08:00">2025-05-03</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Blog/" itemprop="url" rel="index"><span itemprop="name">Blog</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Blog/Hexo/" itemprop="url" rel="index"><span itemprop="name">Hexo</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>6.8k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>6 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <ul>
+<li><a href="#introduction-the-necessity">引言：多设备协作的必要性</a></li>
+<li><a href="#core-principles-of-hexo">Hexo 多设备同步的核心原理</a><ul>
+<li><a href="#hexo-directory">Hexo 目录结构与版本控制策略</a></li>
+<li><a href="#git-branch">Git 分支分工模型</a></li>
+</ul>
+</li>
+<li><a href="#old-computer-operation">旧电脑操作指南：搭建远程同步基础</a><ul>
+<li><a href="#creating-and-configuring-remote-branches">创建和配置远程分支</a></li>
+<li><a href="#local-environment">本地环境与远程仓库同步</a></li>
+<li><a href="#gitignore-key-configuration">.gitignore 关键配置</a></li>
+</ul>
+</li>
+<li><a href="#new-computer-environment">新电脑环境搭建：从远程仓库恢复博客</a><ul>
+<li><a href="#ssh-key-configuration">SSH Key 配置与环境依赖安装</a></li>
+<li><a href="#remote-repository">远程仓库克隆与依赖恢复</a></li>
+<li><a href="#first-run-verification">首次运行验证与配置检查</a></li>
+</ul>
+</li>
+<li><a href="#daily-update-workflow">日常更新工作流：双分支协同操作</a><ul>
+<li><a href="#source-code">源码更新与提交流程</a></li>
+<li><a href="#static-file">静态文件部署与分支同步</a></li>
+<li><a href="#automation-script">自动化脚本优化工作流</a></li>
+</ul>
+</li>
+<li><a href="#common-problems">常见问题与解决方案</a><ul>
+<li><a href="#branch-switching">分支切换冲突处理</a></li>
+<li><a href="#environment-dependency">环境依赖不一致问题</a></li>
+<li><a href="#theme-and-pluginy">主题和插件同步异常</a></li>
+</ul>
+</li>
+<li><a href="#advanced-tips-private">进阶技巧：私有仓库与多分支策略</a><ul>
+<li><a href="#private-repositories">私有仓库保护源码安全</a></li>
+<li><a href="#multi-branch-collaborative-development-model">多分支协同开发模型</a></li>
+</ul>
+</li>
+<li><a href="#conclusion-best-practices">结语：多设备同步的最佳实践</a><span id="more"></span></li>
+</ul>
+<h2 id="引言：多设备协作的必要性"><a href="#引言：多设备协作的必要性" class="headerlink" title="引言：多设备协作的必要性"></a>引言：多设备协作的必要性<a name="introduction-the-necessity"></a></h2><p>前几天，我在思考是否能用多台设备（如家用电脑、办公电脑、笔记本电脑）来更新博客，这在我看来已经成为常态。作为一款高效的静态博客生成器，Hexo 的默认部署机制仅将静态文件推送到 GitHub Pages，但源码文件（Markdown 文章、主题配置、插件）并未同步，导致多设备协作存在以下痛点：</p>
+<ul>
+<li>源码存储分散，无法统一管理</li>
+<li>重复搭建环境配置，效率低下</li>
+<li>突发情况（如电脑故障）导致源码丢失</li>
+</ul>
+<p>因此我写了这篇文章，通过 Git 分支策略构建一套完整的 Hexo 多设备同步方案，实现源码跨设备的无缝同步和管理。</p>
+<h2 id="Hexo-多设备同步的核心原理"><a href="#Hexo-多设备同步的核心原理" class="headerlink" title="Hexo 多设备同步的核心原理"></a>Hexo 多设备同步的核心原理<a name="core-principles-of-hexo"></a></h2><h3 id="Hexo-目录结构与版本控制策略"><a href="#Hexo-目录结构与版本控制策略" class="headerlink" title="Hexo 目录结构与版本控制策略"></a>Hexo 目录结构与版本控制策略<a name="hexo-directory"></a></h3><p>在 Hexo 博客目录结构中，以下<code>文件/目录</code>需要特别关注：</p>
+<table>
+<thead>
+<tr>
+<th>目录&#x2F;文件</th>
+<th>功能</th>
+<th>版本控制策略</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>node_modules/</code></td>
+<td>依赖包目录</td>
+<td>忽略（通过 <code>package.json</code> 重新生成）</td>
+</tr>
+<tr>
+<td><code>themes/</code></td>
+<td>主题文件</td>
+<td>必须同步（包含自定义配置）</td>
+</tr>
+<tr>
+<td><code>public/</code></td>
+<td>静态生成文件</td>
+<td>忽略（由 <code>hexo g</code> 生成）</td>
+</tr>
+<tr>
+<td><code>source/</code></td>
+<td>博客源码（Markdown）</td>
+<td>必须同步</td>
+</tr>
+<tr>
+<td><code>_config.yml</code></td>
+<td>全局配置文件</td>
+<td>必须同步</td>
+</tr>
+<tr>
+<td><code>package.json</code></td>
+<td>依赖描述文件</td>
+<td>必须同步</td>
+</tr>
+</tbody></table>
+<h3 id="Git-分支分工模型"><a href="#Git-分支分工模型" class="headerlink" title="Git 分支分工模型"></a>Git 分支分工模型<a name="git-branch"></a></h3><p>强烈推荐使用双分支策略：</p>
+<ul>
+<li><strong>源码分支（如 <code>hexo01</code> 或 <code>source</code>）</strong>：存储 Hexo 源码（Markdown、主题、配置）</li>
+<li><strong>部署分支（如 <code>master</code> 或 <code>gh-pages</code>）</strong>：存储静态生成文件（由 <code>hexo deploy</code> 自动推送）</li>
+</ul>
+<h4 id="核心逻辑："><a href="#核心逻辑：" class="headerlink" title="核心逻辑："></a>核心逻辑：</h4><ol>
+<li>源码分支作为”开发分支”，所有手动修改都在此完成。</li>
+<li>部署分支作为”生产分支”，仅接收静态生成文件。使用 <code>git push origin hexo01</code> 推送到”开发分支”时，”生产分支”将自动同步。</li>
+<li>两个分支通过 <code>.gitignore</code> 配置进行隔离。</li>
+</ol>
+<h2 id="旧电脑操作指南："><a href="#旧电脑操作指南：" class="headerlink" title="旧电脑操作指南："></a>旧电脑操作指南：</h2><h3 id="创建和配置远程分支"><a href="#创建和配置远程分支" class="headerlink" title="创建和配置远程分支"></a>创建和配置远程分支<a name="creating-and-configuring-remote-branches"></a></h3><ol>
+<li><strong>远程仓库准备</strong><br>在 GitHub 上创建仓库 <code>username.github.io</code>，并执行以下操作：<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Create hexo source branch</span></span><br><span class="line">git branch hexo</span><br><span class="line"><span class="comment"># Set hexo as the default branch, this is a key step!</span></span><br><span class="line">git branch --set-upstream-to=origin/hexo hexo</span><br></pre></td></tr></table></figure></li>
+<li><strong>本地环境初始化</strong><br>  在博客根目录执行：<br>  初始化 Git 仓库<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git init</span><br><span class="line"><span class="comment"># Add remote repository</span></span><br><span class="line">git remote add origin git@github.com:username/username.github.io.git</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h3 id="本地环境与远程仓库同步"><a href="#本地环境与远程仓库同步" class="headerlink" title="本地环境与远程仓库同步"></a>本地环境与远程仓库同步<a name="local-environmen"></a></h3><ol>
+<li>清理并复制文件<br>保留 <strong>.git</strong> 文件夹，删除其他文件<br>将原始 Hexo 目录（除 .deploy_git&#x2F; 外）复制到当前目录<br>将源码提交到远程分支<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Add all files</span></span><br><span class="line">git add .</span><br><span class="line"><span class="comment"># Commit changes</span></span><br><span class="line">git commit -m <span class="string">&quot;Init hexo source branch&quot;</span></span><br><span class="line"><span class="comment"># Push to the remote hexo branch</span></span><br><span class="line">git push origin hexo</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h3 id="gitignore-关键配置"><a href="#gitignore-关键配置" class="headerlink" title=".gitignore 关键配置 "></a>.gitignore 关键配置 <a name="gitignore-key-configuratio"></a></h3><p>在项目根目录创建 <strong>.gitignore</strong> 文件，内容如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">.DS_Store</span><br><span class="line">Thumbs.db</span><br><span class="line">db.json</span><br><span class="line">*.log</span><br><span class="line">node_modules/</span><br><span class="line">public/</span><br><span class="line">.deploy*/</span><br></pre></td></tr></table></figure>
+<h2 id="新电脑环境搭建"><a href="#新电脑环境搭建" class="headerlink" title="新电脑环境搭建 "></a>新电脑环境搭建 <a name="new-computer-environment"></a></h2><h3 id="SSH-Key-配置与环境依赖安装"><a href="#SSH-Key-配置与环境依赖安装" class="headerlink" title="SSH Key 配置与环境依赖安装 "></a>SSH Key 配置与环境依赖安装 <a name="ssh-key-configuratio"></a></h3><ol>
+<li>生成并添加 SSH key<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh-keygen -t rsa -C <span class="string">&quot;your_email@example.com&quot;</span></span><br></pre></td></tr></table></figure></li>
+<li>将生成的公钥（如 <strong>id_rsa.pub</strong>）添加到 <code>GitHub 的 Settings &gt; SSH and GPG Keys</code>，Mac 下路径为 <code>~/.ssh</code>，Windows 下路径为 <code>C:\Users\username\.ssh</code></li>
+<li>配置 Git 全局信息<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git config --global user.name <span class="string">&quot;YourName&quot;</span></span><br><span class="line">git config --global user.email <span class="string">&quot;your_email@example.com&quot;</span></span><br></pre></td></tr></table></figure></li>
+</ol>
+<h3 id="远程仓库克隆与依赖恢复"><a href="#远程仓库克隆与依赖恢复" class="headerlink" title="远程仓库克隆与依赖恢复 "></a>远程仓库克隆与依赖恢复 <a name="remote-repository"></a></h3><ol>
+<li>克隆源码分支<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> -b hexo git@github.com:username/username.github.io.git blog</span><br><span class="line"><span class="built_in">cd</span> blog</span><br></pre></td></tr></table></figure>
+2.安装依赖<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Install Hexo CLI</span></span><br><span class="line">npm install -g hexo-cli</span><br><span class="line"><span class="comment"># Install project dependencies</span></span><br><span class="line">npm install</span><br><span class="line"><span class="comment"># Install deployment plugins</span></span><br><span class="line">npm install hexo-deployer-git</span><br></pre></td></tr></table></figure>
+<strong>注意</strong>：请确保使用相同版本的 (Node.js)[<a target="_blank" rel="noopener" href="https://nodejs.org/en/download]">https://nodejs.org/en/download]</a> 来安装以上工具，否则可能会出现兼容性问题。</li>
+</ol>
+<h3 id="首次运行验证与配置检查"><a href="#首次运行验证与配置检查" class="headerlink" title="首次运行验证与配置检查 "></a>首次运行验证与配置检查 <a name="first-run-verification"></a></h3><p>本地预览验证</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hexo clean</span><br><span class="line">hexo g &amp;&amp; hexo s</span><br></pre></td></tr></table></figure>
+<p>访问 <a target="_blank" rel="noopener" href="http://localhost:4000/">http://localhost:4000</a> 确认博客正常运行<br>部署配置检查<br>确保 <code>_config.yml</code> 中的部署配置指向 <code>master</code> 分支：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">deploy:</span></span><br><span class="line">  <span class="attr">type:</span> <span class="string">git</span></span><br><span class="line">  <span class="attr">repo:</span> <span class="string">git@github.com:username/username.github.io.git</span></span><br><span class="line">  <span class="attr">branch:</span> <span class="string">master</span></span><br></pre></td></tr></table></figure>
+<h2 id="日常更新工作流：双分支协同操作"><a href="#日常更新工作流：双分支协同操作" class="headerlink" title="日常更新工作流：双分支协同操作 "></a>日常更新工作流：双分支协同操作 <a name="daily-update-workflow"></a></h2><h3 id="源码更新与提交流程"><a href="#源码更新与提交流程" class="headerlink" title="源码更新与提交流程 "></a>源码更新与提交流程 <a name="source-cod"></a></h3><ol>
+<li>拉取最新源码<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git pull origin hexo</span><br></pre></td></tr></table></figure></li>
+<li>修改并提交<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Add a new article</span></span><br><span class="line">hexo new <span class="string">&quot;New Article&quot;</span></span><br><span class="line"><span class="comment"># Commit changes</span></span><br><span class="line">git add .</span><br><span class="line">git commit -m <span class="string">&quot;Update blog content&quot;</span></span><br><span class="line"><span class="comment"># Push to the remote source branch</span></span><br><span class="line">git push origin hexo</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h3 id="自动化脚本优化工作流"><a href="#自动化脚本优化工作流" class="headerlink" title="自动化脚本优化工作流 "></a>自动化脚本优化工作流 <a name="automation-script"></a></h3><p>创建一个 <code>deploy.sh</code> 脚本来简化流程：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"><span class="comment"># ================ Hexo Automated Deployment Script (hexo01 branch) ================</span></span><br><span class="line"><span class="comment"># Usage: Execute in the blog root directory with ./deploy.sh &quot;Commit message&quot;</span></span><br><span class="line"><span class="comment"># If no commit message is provided, a default timestamp message will be used</span></span><br><span class="line"><span class="comment"># ================================================================</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Define color output</span></span><br><span class="line">COLOR_RED=<span class="string">&quot;\033[31m&quot;</span></span><br><span class="line">COLOR_GREEN=<span class="string">&quot;\033[32m&quot;</span></span><br><span class="line">COLOR_YELLOW=<span class="string">&quot;\033[33m&quot;</span></span><br><span class="line">COLOR_RESET=<span class="string">&quot;\033[0m&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Check if commit message is provided, otherwise use default</span></span><br><span class="line">COMMIT_MSG=<span class="variable">$&#123;1:-&quot;Auto deploy at $(date +&#x27;%Y-%m-%d %H:%M:%S&#x27;)&quot;&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">&quot;<span class="variable">$&#123;COLOR_YELLOW&#125;</span>==== Starting Hexo Blog Deployment ====<span class="variable">$&#123;COLOR_RESET&#125;</span>&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Step 0: Pull latest source code (hexo01 branch)</span></span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">&quot;<span class="variable">$&#123;COLOR_GREEN&#125;</span>[0/4] Pulling latest source code...<span class="variable">$&#123;COLOR_RESET&#125;</span>&quot;</span></span><br><span class="line">git pull origin hexo01</span><br><span class="line"><span class="keyword">if</span> [ $? -ne 0 ]; <span class="keyword">then</span></span><br><span class="line">    <span class="built_in">echo</span> -e <span class="string">&quot;<span class="variable">$&#123;COLOR_RED&#125;</span>Failed to pull source code! Please resolve conflicts manually and retry.<span class="variable">$&#123;COLOR_RESET&#125;</span>&quot;</span></span><br><span class="line">    <span class="built_in">exit</span> 1</span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Step 1: Clean and generate static files</span></span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">&quot;<span class="variable">$&#123;COLOR_GREEN&#125;</span>[1/4] Cleaning and generating static files...<span class="variable">$&#123;COLOR_RESET&#125;</span>&quot;</span></span><br><span class="line">hexo clean &amp;&amp; hexo generate</span><br><span class="line"><span class="keyword">if</span> [ $? -ne 0 ]; <span class="keyword">then</span></span><br><span class="line">    <span class="built_in">echo</span> -e <span class="string">&quot;<span class="variable">$&#123;COLOR_RED&#125;</span>Failed to generate static files!<span class="variable">$&#123;COLOR_RESET&#125;</span>&quot;</span></span><br><span class="line">    <span class="built_in">exit</span> 1</span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"><span class="comment"># Step 2: Deploy to GitHub Pages</span></span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">&quot;<span class="variable">$&#123;COLOR_GREEN&#125;</span>[2/4] Deploying to GitHub Pages...<span class="variable">$&#123;COLOR_RESET&#125;</span>&quot;</span></span><br><span class="line">hexo deploy</span><br><span class="line"><span class="keyword">if</span> [ $? -ne 0 ]; <span class="keyword">then</span></span><br><span class="line">    <span class="built_in">echo</span> -e <span class="string">&quot;<span class="variable">$&#123;COLOR_RED&#125;</span>Failed to deploy to GitHub Pages!<span class="variable">$&#123;COLOR_RESET&#125;</span>&quot;</span></span><br><span class="line">    <span class="built_in">exit</span> 1</span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"><span class="comment"># Step 3: Commit source code changes to hexo01 branch</span></span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">&quot;<span class="variable">$&#123;COLOR_GREEN&#125;</span>[3/4] Committing source code changes...<span class="variable">$&#123;COLOR_RESET&#125;</span>&quot;</span></span><br><span class="line">git add .</span><br><span class="line">git commit -m <span class="string">&quot;<span class="variable">$COMMIT_MSG</span>&quot;</span></span><br><span class="line"><span class="keyword">if</span> [ $? -ne 0 ]; <span class="keyword">then</span></span><br><span class="line">    <span class="built_in">echo</span> -e <span class="string">&quot;<span class="variable">$&#123;COLOR_YELLOW&#125;</span>No changes to commit.<span class="variable">$&#123;COLOR_RESET&#125;</span>&quot;</span></span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">    <span class="comment"># Step 4: Push source code to GitHub</span></span><br><span class="line">    <span class="built_in">echo</span> -e <span class="string">&quot;<span class="variable">$&#123;COLOR_GREEN&#125;</span>[4/4] Pushing source code to GitHub (hexo01 branch)...<span class="variable">$&#123;COLOR_RESET&#125;</span>&quot;</span></span><br><span class="line">    git push origin hexo01</span><br><span class="line">    <span class="keyword">if</span> [ $? -ne 0 ]; <span class="keyword">then</span></span><br><span class="line">        <span class="built_in">echo</span> -e <span class="string">&quot;<span class="variable">$&#123;COLOR_RED&#125;</span>Failed to push source code to GitHub!<span class="variable">$&#123;COLOR_RESET&#125;</span>&quot;</span></span><br><span class="line">        <span class="built_in">exit</span> 1</span><br><span class="line">    <span class="keyword">fi</span></span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">&quot;<span class="variable">$&#123;COLOR_YELLOW&#125;</span>==== Hexo Blog Deployment Completed ====<span class="variable">$&#123;COLOR_RESET&#125;</span>&quot;</span></span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">&quot;<span class="variable">$&#123;COLOR_GREEN&#125;</span>View blog: https://your-username.github.io<span class="variable">$&#123;COLOR_GREEN&#125;</span>&quot;</span></span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">&quot;<span class="variable">$&#123;COLOR_GREEN&#125;</span>View source: https://github.com/your-username/your-repo/tree/hexo01<span class="variable">$&#123;COLOR_RESET&#125;</span>&quot;</span></span><br></pre></td></tr></table></figure>
+<p>授予执行权限并运行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">chmod</span> +x deploy.sh</span><br><span class="line">./deploy.sh <span class="string">&quot;Update description&quot;</span></span><br></pre></td></tr></table></figure>
+<h2 id="常见问题与解决方案"><a href="#常见问题与解决方案" class="headerlink" title="常见问题与解决方案 "></a>常见问题与解决方案 <a name="automation-script"></a></h2><h3 id="分支切换冲突处理"><a href="#分支切换冲突处理" class="headerlink" title="分支切换冲突处理 "></a>分支切换冲突处理 <a name="branch-switchin"></a></h3><p>切换分支导致 node_modules 冲突时，执行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Stash current changes</span></span><br><span class="line">git stash</span><br><span class="line"><span class="comment"># Switch branches</span></span><br><span class="line">git checkout hexo</span><br><span class="line"><span class="comment"># Restore changes</span></span><br><span class="line">git stash pop</span><br><span class="line"><span class="comment"># Clean untracked files</span></span><br><span class="line">git clean -fdx</span><br><span class="line"><span class="comment"># Reinstall dependencies</span></span><br><span class="line">npm install</span><br></pre></td></tr></table></figure>
+<p>如果你在 <strong>Mac</strong> 上无法运行 <code>hexo s</code> 等 hexo 命令，这是因为 Mac 的默认终端是 zsh（可以通过 echo $SHELL 命令查询），用户环境变量文件是 ~&#x2F;.zshrc。执行以下命令后，环境变量配置即生效：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;PATH=&quot;$PATH:./node_modules/.bin&quot;&#x27;</span> &gt;&gt; ~/.zshrc</span><br></pre></td></tr></table></figure>
+<h3 id="环境依赖不一致问题"><a href="#环境依赖不一致问题" class="headerlink" title="环境依赖不一致问题 "></a>环境依赖不一致问题 <a name="environment-dependenc"></a></h3><p>确保各设备的 <code>Node.js</code> 版本一致，可通过 <code>package.json</code> 锁定：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">&quot;engines&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;node&quot;</span><span class="punctuation">:</span> <span class="string">&quot;14.x&quot;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+<p>在新设备上执行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install --no-save</span><br></pre></td></tr></table></figure>
+
+<h3 id="主题和插件同步异常"><a href="#主题和插件同步异常" class="headerlink" title="主题和插件同步异常"></a>主题和插件同步异常<a name="theme-and-pluginy"></a></h3><ol>
+<li>检查主题中是否嵌套了 Git<br>删除主题目录中的 .git 文件夹：<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find themes/ -<span class="built_in">type</span> d -name <span class="string">&quot;.git&quot;</span> -<span class="built_in">exec</span> <span class="built_in">rm</span> -rf &#123;&#125; \;</span><br></pre></td></tr></table></figure></li>
+<li>手动同步主题更新<br>如果主题有更新，可通过 Git submodule 管理：<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git submodule add &lt;theme-repo&gt; themes/&lt;theme-name&gt;</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h2 id="进阶技巧：私有仓库与多分支策略"><a href="#进阶技巧：私有仓库与多分支策略" class="headerlink" title="进阶技巧：私有仓库与多分支策略 "></a>进阶技巧：私有仓库与多分支策略 <a name="advanced-tips-private"></a></h2><h3 id="私有仓库保护源码安全"><a href="#私有仓库保护源码安全" class="headerlink" title="私有仓库保护源码安全 "></a>私有仓库保护源码安全 <a name="private-repositories"></a></h3><ol>
+<li>创建私有仓库<br>在 GitHub 上新建私有仓库 <code>hexo-source</code> 用于存储源码</li>
+<li>迁移源码分支<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Remove old remote</span></span><br><span class="line">git remote remove origin</span><br><span class="line"><span class="comment"># Add new private repository</span></span><br><span class="line">git remote add origin git@github.com:username/hexo-source.git</span><br><span class="line"><span class="comment"># Push the source branch</span></span><br><span class="line">git push -u origin hexo</span><br></pre></td></tr></table></figure></li>
+<li>配置双重部署目标<br>在 _config.yml 中添加：<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">deploy:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">type:</span> <span class="string">git</span></span><br><span class="line">    <span class="attr">repo:</span> <span class="string">git@github.com:username/hexo-source.git</span></span><br><span class="line">    <span class="attr">branch:</span> <span class="string">hexo</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">type:</span> <span class="string">git</span></span><br><span class="line">    <span class="attr">repo:</span> <span class="string">git@github.com:username/username.github.io.git</span></span><br><span class="line">    <span class="attr">branch:</span> <span class="string">main</span></span><br></pre></td></tr></table></figure></li>
+</ol>
+<h3 id="多分支协同开发模型"><a href="#多分支协同开发模型" class="headerlink" title="多分支协同开发模型"></a>多分支协同开发模型<a name="multi-branch-collaborative-development-model"></a></h3><ol>
+<li>功能分支工作流<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Create a feature branch</span></span><br><span class="line">git checkout -b feature/new-theme</span><br><span class="line"><span class="comment"># After development, merge into the hexo branch</span></span><br><span class="line">git checkout hexo</span><br><span class="line">git merge feature/new-theme</span><br><span class="line">git push origin hexo</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h2 id="多设备同步的最佳实践"><a href="#多设备同步的最佳实践" class="headerlink" title="多设备同步的最佳实践"></a>多设备同步的最佳实践<a name="conclusion-best-practices"></a></h2><ol>
+<li>核心原则：<br>- 源码与静态文件分开存储<br>- 通过 package.json 管理依赖<br>- 提交前务必先拉取，避免冲突</li>
+<li>操作清单：<br>- 新设备：<code>git clone -b hexo + npm install</code><br>- 日常更新：<code>git pull</code> → 编辑 → <code>git push</code> → <code>hexo deploy</code>（必须先 git pull）<br>- 环境迁移：只需 Git 克隆 + 安装依赖，无需重新初始化</li>
+<li>进阶建议：<br>- 使用 GitHub Actions 实现自动化部署<br>- 定期将源码分支备份到其他云存储<br>- 采用分支保护策略以实现团队协作</li>
+</ol>
+<link rel="stylesheet" href="/css/folder.css" type="text/css"><script src="/js/folder.js" type="text/javascript" async></script>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Git/" rel="tag"># Git</a>
+              <a href="/tags/Hexo/" rel="tag"># Hexo</a>
+              <a href="/tags/Multi-Device-Synchronization/" rel="tag"># Multi-Device Synchronization</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/04/26/Common-Binary-Tree-Problems/" rel="prev" title="Common Binary Tree Problems">
+      <i class="fa fa-chevron-left"></i> Common Binary Tree Problems
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2025/05/03/Hexo-Blog-Multi-Device-Synchronization-and-Management-Guide-Based-on-Git-Branch-Strategy/" rel="next" title="Hexo Blog Multi-Device Synchronization and Management Guide Based on Git Branch Strategy">
+      Hexo Blog Multi-Device Synchronization and Management Guide Based on Git Branch Strategy <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+
+            
+            <div class="post-copyright" style="margin: 0 0 10px 0;">
+              <p class="post-copyright-author" style="margin: 0 0 5px 0 !important;"><strong>Author:</strong> <a href="https://github.com/BODYsuperman" target="_blank">Alex</a></p>
+              <p class="post-copyright-link" style="margin: 0 0 5px 0 !important;"><strong>Article Link:</strong> <a href="https://bodysuperman.github.io/zh-CN/2025/05/03/Hexo-Blog-Multi-Device-Synchronization-and-Management-Guide-Based-on-Git-Branch-Strategy/" target="_blank">https://bodysuperman.github.io/zh-CN/2025/05/03/Hexo-Blog-Multi-Device-Synchronization-and-Management-Guide-Based-on-Git-Branch-Strategy/</a></p>
+              <p class="post-copyright-license" style="margin: 0 !important;"><strong>License:</strong> This article is licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a>. Please credit the original author and include the source link when reposting.</p>
+            </div>
+
+          </div>
+          
+    <div class="comments" id="gitalk-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%95%E8%A8%80%EF%BC%9A%E5%A4%9A%E8%AE%BE%E5%A4%87%E5%8D%8F%E4%BD%9C%E7%9A%84%E5%BF%85%E8%A6%81%E6%80%A7"><span class="nav-number">1.</span> <span class="nav-text">引言：多设备协作的必要性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Hexo-%E5%A4%9A%E8%AE%BE%E5%A4%87%E5%90%8C%E6%AD%A5%E7%9A%84%E6%A0%B8%E5%BF%83%E5%8E%9F%E7%90%86"><span class="nav-number">2.</span> <span class="nav-text">Hexo 多设备同步的核心原理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Hexo-%E7%9B%AE%E5%BD%95%E7%BB%93%E6%9E%84%E4%B8%8E%E7%89%88%E6%9C%AC%E6%8E%A7%E5%88%B6%E7%AD%96%E7%95%A5"><span class="nav-number">2.1.</span> <span class="nav-text">Hexo 目录结构与版本控制策略</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Git-%E5%88%86%E6%94%AF%E5%88%86%E5%B7%A5%E6%A8%A1%E5%9E%8B"><span class="nav-number">2.2.</span> <span class="nav-text">Git 分支分工模型</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E9%80%BB%E8%BE%91%EF%BC%9A"><span class="nav-number">2.2.1.</span> <span class="nav-text">核心逻辑：</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%97%A7%E7%94%B5%E8%84%91%E6%93%8D%E4%BD%9C%E6%8C%87%E5%8D%97%EF%BC%9A"><span class="nav-number">3.</span> <span class="nav-text">旧电脑操作指南：</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E5%92%8C%E9%85%8D%E7%BD%AE%E8%BF%9C%E7%A8%8B%E5%88%86%E6%94%AF"><span class="nav-number">3.1.</span> <span class="nav-text">创建和配置远程分支</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%AC%E5%9C%B0%E7%8E%AF%E5%A2%83%E4%B8%8E%E8%BF%9C%E7%A8%8B%E4%BB%93%E5%BA%93%E5%90%8C%E6%AD%A5"><span class="nav-number">3.2.</span> <span class="nav-text">本地环境与远程仓库同步</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#gitignore-%E5%85%B3%E9%94%AE%E9%85%8D%E7%BD%AE"><span class="nav-number">3.3.</span> <span class="nav-text">.gitignore 关键配置 </span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%B0%E7%94%B5%E8%84%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA"><span class="nav-number">4.</span> <span class="nav-text">新电脑环境搭建 </span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#SSH-Key-%E9%85%8D%E7%BD%AE%E4%B8%8E%E7%8E%AF%E5%A2%83%E4%BE%9D%E8%B5%96%E5%AE%89%E8%A3%85"><span class="nav-number">4.1.</span> <span class="nav-text">SSH Key 配置与环境依赖安装 </span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%9C%E7%A8%8B%E4%BB%93%E5%BA%93%E5%85%8B%E9%9A%86%E4%B8%8E%E4%BE%9D%E8%B5%96%E6%81%A2%E5%A4%8D"><span class="nav-number">4.2.</span> <span class="nav-text">远程仓库克隆与依赖恢复 </span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%A6%96%E6%AC%A1%E8%BF%90%E8%A1%8C%E9%AA%8C%E8%AF%81%E4%B8%8E%E9%85%8D%E7%BD%AE%E6%A3%80%E6%9F%A5"><span class="nav-number">4.3.</span> <span class="nav-text">首次运行验证与配置检查 </span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%97%A5%E5%B8%B8%E6%9B%B4%E6%96%B0%E5%B7%A5%E4%BD%9C%E6%B5%81%EF%BC%9A%E5%8F%8C%E5%88%86%E6%94%AF%E5%8D%8F%E5%90%8C%E6%93%8D%E4%BD%9C"><span class="nav-number">5.</span> <span class="nav-text">日常更新工作流：双分支协同操作 </span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%BA%90%E7%A0%81%E6%9B%B4%E6%96%B0%E4%B8%8E%E6%8F%90%E4%BA%A4%E6%B5%81%E7%A8%8B"><span class="nav-number">5.1.</span> <span class="nav-text">源码更新与提交流程 </span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%87%AA%E5%8A%A8%E5%8C%96%E8%84%9A%E6%9C%AC%E4%BC%98%E5%8C%96%E5%B7%A5%E4%BD%9C%E6%B5%81"><span class="nav-number">5.2.</span> <span class="nav-text">自动化脚本优化工作流 </span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E4%B8%8E%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="nav-number">6.</span> <span class="nav-text">常见问题与解决方案 </span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E6%94%AF%E5%88%87%E6%8D%A2%E5%86%B2%E7%AA%81%E5%A4%84%E7%90%86"><span class="nav-number">6.1.</span> <span class="nav-text">分支切换冲突处理 </span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%8E%AF%E5%A2%83%E4%BE%9D%E8%B5%96%E4%B8%8D%E4%B8%80%E8%87%B4%E9%97%AE%E9%A2%98"><span class="nav-number">6.2.</span> <span class="nav-text">环境依赖不一致问题 </span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BB%E9%A2%98%E5%92%8C%E6%8F%92%E4%BB%B6%E5%90%8C%E6%AD%A5%E5%BC%82%E5%B8%B8"><span class="nav-number">6.3.</span> <span class="nav-text">主题和插件同步异常</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%9B%E9%98%B6%E6%8A%80%E5%B7%A7%EF%BC%9A%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93%E4%B8%8E%E5%A4%9A%E5%88%86%E6%94%AF%E7%AD%96%E7%95%A5"><span class="nav-number">7.</span> <span class="nav-text">进阶技巧：私有仓库与多分支策略 </span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93%E4%BF%9D%E6%8A%A4%E6%BA%90%E7%A0%81%E5%AE%89%E5%85%A8"><span class="nav-number">7.1.</span> <span class="nav-text">私有仓库保护源码安全 </span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%9A%E5%88%86%E6%94%AF%E5%8D%8F%E5%90%8C%E5%BC%80%E5%8F%91%E6%A8%A1%E5%9E%8B"><span class="nav-number">7.2.</span> <span class="nav-text">多分支协同开发模型</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%9A%E8%AE%BE%E5%A4%87%E5%90%8C%E6%AD%A5%E7%9A%84%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5"><span class="nav-number">8.</span> <span class="nav-text">多设备同步的最佳实践</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="AI with Alex"
+      src="/uploads/avatar.jpg">
+  <p class="site-author-name" itemprop="name">AI with Alex</p>
+  <div class="site-description" itemprop="description">Attention(Q,K,V)=softmax(QK^T/sqrt(d_k))V</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">62</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">35</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">88</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/BODYsuperman" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;BODYsuperman" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/atom.xml" title="RSS Feed → &#x2F;atom.xml"><i class="fas fa-rss fa-fw"></i>RSS Feed</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:meijiaping6@gmail.com" title="Email → mailto:meijiaping6@gmail.com" rel="noopener" target="_blank"><i class="fas fa-envelope fa-fw"></i>Email</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://stackoverflow.com/users/9644964/alexandar-may-msft?tab=answers&sort=votes" title="StackOverflow → https:&#x2F;&#x2F;stackoverflow.com&#x2F;users&#x2F;9644964&#x2F;alexandar-may-msft?tab&#x3D;answers&amp;sort&#x3D;votes" rel="noopener" target="_blank"><i class="fab fa-stack-overflow fa-fw"></i>StackOverflow</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">AI with Alex</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">Symbols count total: </span>
+    <span title="Symbols count total">840k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">Reading time total &asymp;</span>
+    <span title="Reading time total">12:43</span>
+    
+    <!--
+    
+    -->
+</div>
+
+<!--
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a>
+   </div>
+--><script color="0,0,255" opacity="0.5" zIndex="-1" count="99" src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1/dist/canvas-nest.js"></script>
+
+
+
+
+
+
+        
+
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv"  >
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv"  >
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : 'Ov23liVJTzqy1rzaDXXM',
+      clientSecret: '5e785a7d46e69f7509e6c2f7730855a55944df33',
+      repo        : 'blog-comment',
+      owner       : 'BODYsuperman',
+      admin       : ['BODYsuperman'],
+      id          : 'b3f29e63d81d378ca783327e07a84860',
+        language: '',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+
+</body>
+</html>

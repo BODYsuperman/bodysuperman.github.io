@@ -1194,7 +1194,7 @@ pre .javascript .function {
 }
 .links-of-author a::before,
 .links-of-author span.exturl::before {
-  background: #8cffff;
+  background: #6c67ff;
   border-radius: 50%;
   content: ' ';
   display: inline-block;
@@ -2666,4 +2666,32 @@ copy.bg_content {
   text-align: center;
   max-width: 620px;
   width: 100%;
+}
+.site-lang-switcher {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 0 8px;
+  font-size: 13px;
+}
+.site-lang-switcher .lang-item {
+  padding: 2px 12px;
+  border: 1px solid #ccc;
+  border-radius: 14px;
+  line-height: 1.8;
+}
+.site-lang-switcher .lang-current {
+  background: #666;
+  border-color: #666;
+  color: #fff;
+}
+.site-lang-switcher .lang-link {
+  color: #555;
+  transition: all 0.2s ease-in-out;
+}
+.site-lang-switcher .lang-link:hover {
+  background: #222;
+  border-color: #222;
+  color: #fff;
 }

@@ -1,0 +1,1207 @@
+<!DOCTYPE html>
+<html lang="en,zh-CN,default">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/logo-180.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/logo-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/logo-16.png">
+  <link rel="mask-icon" href="/images/logo-512.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|monospace:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"bodysuperman.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null,"use":"Gitalk","text":true},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="Attention(Q,K,V)&#x3D;softmax(QK^T&#x2F;sqrt(d_k))V">
+<meta property="og:type" content="website">
+<meta property="og:title" content="AI with Alex&#39;s Blog">
+<meta property="og:url" content="https://bodysuperman.github.io/zh-CN/index.html">
+<meta property="og:site_name" content="AI with Alex&#39;s Blog">
+<meta property="og:description" content="Attention(Q,K,V)&#x3D;softmax(QK^T&#x2F;sqrt(d_k))V">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:author" content="AI with Alex">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://bodysuperman.github.io/zh-CN/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : true,
+    isPost : false,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>AI with Alex's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="AI with Alex's Blog" type="application/atom+xml">
+<link rel="alternate" href="/rss.xml" title="AI with Alex's Blog" type="application/rss+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+
+
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">AI with Alex's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+  <div class="site-lang-switcher">
+    <span class="lang-item lang-current">简体中文</span>
+      <a class="lang-item lang-link" href="/" rel="section" title="English">
+        <i class="fa fa-language"></i> English
+      </a>
+  </div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content index posts-expand">
+   
+            
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://bodysuperman.github.io/zh-CN/2026/08/30/Build-your-own-AI-Skills/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+      <meta itemprop="name" content="AI with Alex">
+      <meta itemprop="description" content="Attention(Q,K,V)=softmax(QK^T/sqrt(d_k))V">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="AI with Alex's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/zh-CN/2026/08/30/Build-your-own-AI-Skills/" class="post-title-link" itemprop="url">搭建属于你自己的AI技能</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2026-08-30 09:32:54" itemprop="dateCreated datePublished" datetime="2026-08-30T09:32:54+08:00">2026-08-30</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2026-09-26 00:00:00" itemprop="dateModified" datetime="2026-09-26T00:00:00+08:00">2026-09-26</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/AI/" itemprop="url" rel="index"><span itemprop="name">AI</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>16k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>15 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <ul>
+<li><a href="#introduction">引言</a></li>
+<li><a href="#what-is-a-skill">什么是技能（Skill）</a></li>
+<li><a href="#why-skills-matter">为什么技能很重要</a></li>
+<li><a href="#anatomy-of-a-skill">技能的解剖结构</a><ul>
+<li><a href="#the-skill-md-file">SKILL.md 文件</a></li>
+<li><a href="#the-supporting-cast">配角阵容</a></li>
+</ul>
+</li>
+<li><a href="#build-your-own-from-simple-to-complete">动手搭建：从简单到完整</a><ul>
+<li><a href="#git-commit-messages-just-skill-md">Git 提交信息：只要一个 SKILL.md</a></li>
+<li><a href="#api-endpoint-generator-add-a-config">API 端点生成器：加一份配置</a></li>
+<li><a href="#react-component-generator-scripts-and-templates">React 组件生成器：脚本与模板</a></li>
+<li><a href="#security-audit-reference-documents">安全审计：参考文档</a></li>
+<li><a href="#which-structure-do-you-need">你需要哪种结构？</a></li>
+</ul>
+</li>
+<li><a href="#find-ready-made-skills">寻找现成的技能</a><ul>
+<li><a href="#official-libraries">官方技能库</a></li>
+<li><a href="#the-skills-cli">Skills CLI</a></li>
+<li><a href="#community-libraries">社区技能库</a></li>
+<li><a href="#safety-before-you-install">安装前的安全检查</a></li>
+</ul>
+</li>
+<li><a href="#integrating-skills-into-your-workflow">将技能融入你的工作流</a></li>
+<li><a href="#iterating-and-versioning">迭代与版本管理</a></li>
+<li><a href="#best-practices">最佳实践</a></li>
+<li><a href="#faq">常见问题</a></li>
+<li><a href="#summary">总结</a></li>
+</ul>
+        
+      
+    </div>
+
+    
+    
+    
+      <!--noindex-->
+      <div class="post-button">
+        <a class="btn" href="/zh-CN/2026/08/30/Build-your-own-AI-Skills/#more" rel="contents">
+          阅读全文 &raquo;
+        </a>
+      </div>
+      <!--/noindex-->
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://bodysuperman.github.io/zh-CN/2026/08/23/Deep%E2%80%91Dive-Advanced-Tips-for-Claude-Code/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+      <meta itemprop="name" content="AI with Alex">
+      <meta itemprop="description" content="Attention(Q,K,V)=softmax(QK^T/sqrt(d_k))V">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="AI with Alex's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/zh-CN/2026/08/23/Deep%E2%80%91Dive-Advanced-Tips-for-Claude-Code/" class="post-title-link" itemprop="url">深入理解与进阶技巧：Claude Code</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2026-08-23 12:48:28" itemprop="dateCreated datePublished" datetime="2026-08-23T12:48:28+08:00">2026-08-23</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2026-09-02 00:00:00" itemprop="dateModified" datetime="2026-09-02T00:00:00+08:00">2026-09-02</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/AI/" itemprop="url" rel="index"><span itemprop="name">AI</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>19k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>17 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <ul>
+<li><a href="#introduction">引言</a></li>
+<li><a href="#the-big-picture-seven-layers-of-extension">全局视角：七层扩展体系</a></li>
+<li><a href="#choosing-the-right-model">选择合适的模型</a><ul>
+<li><a href="#model-comparison">模型对比</a></li>
+<li><a href="#four-ways-to-switch-models">四种切换模型的方式</a></li>
+<li><a href="#settings-file-hierarchy">配置文件层级</a></li>
+</ul>
+</li>
+<li><a href="#core-configuration">核心配置</a><ul>
+<li><a href="#settings-json-permissions-and-defaults">settings.json：权限与默认设置</a></li>
+<li><a href="#claude-md-the-project-handbook">CLAUDE.md：项目手册</a></li>
+<li><a href="#three-layers-of-memory">三层记忆系统</a></li>
+<li><a href="#claudeignore">.claudeignore</a></li>
+</ul>
+</li>
+<li><a href="#daily-commands-and-interactions">日常命令与交互</a><ul>
+<li><a href="#slash-command-cheat-sheet">斜杠命令速查表</a></li>
+<li><a href="#the-four-commands-you-must-master">必须掌握的四个命令</a></li>
+<li><a href="#keyboard-shortcuts">快捷键</a></li>
+<li><a href="#power-interactions">高级交互：!、@ 与图片</a></li>
+</ul>
+</li>
+<li><a href="#the-right-workflow-explore-plan-implement-commit">正确的工作流：探索、规划、实现、提交</a><ul>
+<li><a href="#plan-mode-and-the-three-operating-modes">Plan 模式与三种运行模式</a></li>
+<li><a href="#when-to-plan-and-when-to-just-do-it">何时规划，何时直接动手</a></li>
+<li><a href="#walkthrough-building-a-hello-api-with-express">实战演练：用 Express 构建一个 Hello API</a></li>
+</ul>
+</li>
+<li><a href="#best-practices">最佳实践</a><ul>
+<li><a href="#prompt-writing-principles">提示词编写原则</a></li>
+<li><a href="#context-management">上下文管理</a></li>
+<li><a href="#git-is-your-save-point">Git 是你的存档点</a></li>
+<li><a href="#controlling-costs">控制成本</a></li>
+<li><a href="#working-in-large-codebases">在大型代码库中工作</a></li>
+<li><a href="#three-overlooked-advanced-tips">三个容易被忽视的进阶技巧</a></li>
+</ul>
+</li>
+<li><a href="#starter-kit-for-new-projects">新项目启动套件</a></li>
+<li><a href="#faq">常见问题</a></li>
+<li><a href="#summary">总结</a></li>
+</ul>
+        
+      
+    </div>
+
+    
+    
+    
+      <!--noindex-->
+      <div class="post-button">
+        <a class="btn" href="/zh-CN/2026/08/23/Deep%E2%80%91Dive-Advanced-Tips-for-Claude-Code/#more" rel="contents">
+          阅读全文 &raquo;
+        </a>
+      </div>
+      <!--/noindex-->
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://bodysuperman.github.io/zh-CN/2026/08/06/Six-money-saving-tips-for-Claude-Code/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+      <meta itemprop="name" content="AI with Alex">
+      <meta itemprop="description" content="Attention(Q,K,V)=softmax(QK^T/sqrt(d_k))V">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="AI with Alex's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/zh-CN/2026/08/06/Six-money-saving-tips-for-Claude-Code/" class="post-title-link" itemprop="url">六个节省 Claude Code 开支的技巧</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2026-08-06 16:15:59" itemprop="dateCreated datePublished" datetime="2026-08-06T16:15:59+08:00">2026-08-06</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2026-08-16 18:04:19" itemprop="dateModified" datetime="2026-08-16T18:04:19+08:00">2026-08-16</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/AI-Engineering/" itemprop="url" rel="index"><span itemprop="name">AI Engineering</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/AI-Engineering/Developer-Tools/" itemprop="url" rel="index"><span itemprop="name">Developer Tools</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>648</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>Anthropic 发布了一篇博客，分享了六个节省 Claude Code 开支的技巧：完成任务后用 <code>/clear</code> 清除对话；在开始时锁定模型和推理强度，避免中途切换导致提示缓存失效；用 <code>@</code> 引用文件而非手动输入路径；为产生大量输出的命令添加静默参数；离开前运行 <code>/compact</code>；将大输出量的任务分配给子代理。</p>
+<p><img src="/pic01.png" alt="pic"></p>
+        
+      
+    </div>
+
+    
+    
+    
+      <!--noindex-->
+      <div class="post-button">
+        <a class="btn" href="/zh-CN/2026/08/06/Six-money-saving-tips-for-Claude-Code/#more" rel="contents">
+          阅读全文 &raquo;
+        </a>
+      </div>
+      <!--/noindex-->
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://bodysuperman.github.io/zh-CN/2026/06/25/From-Post-Training-to-Real-Time-Perception-Self-Evolving-Agents-and-Multimodal-Interaction/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+      <meta itemprop="name" content="AI with Alex">
+      <meta itemprop="description" content="Attention(Q,K,V)=softmax(QK^T/sqrt(d_k))V">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="AI with Alex's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/zh-CN/2026/06/25/From-Post-Training-to-Real-Time-Perception-Self-Evolving-Agents-and-Multimodal-Interaction/" class="post-title-link" itemprop="url">从后训练到实时感知：自进化智能体与多模态交互</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2026-06-25 15:09:38" itemprop="dateCreated datePublished" datetime="2026-06-25T15:09:38+08:00">2026-06-25</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2026-07-25 15:09:38" itemprop="dateModified" datetime="2026-07-25T15:09:38+08:00">2026-07-25</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/AI-Agent/" itemprop="url" rel="index"><span itemprop="name">AI Agent</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/AI-Agent/AI-Engineering/" itemprop="url" rel="index"><span itemprop="name">AI Engineering</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>13k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>12 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <ul>
+<li><a href="#introduction">引言</a><ul>
+<li><a href="#capability-paradox">能力悖论</a></li>
+<li><a href="#three-acts">本文三幕</a></li>
+</ul>
+</li>
+<li><a href="#post-training">后训练：将能力烘焙进参数</a><ul>
+<li><a href="#three-stage-pipeline">三阶段流水线</a></li>
+<li><a href="#sft-rl-comparison">SFT 记忆，RL 泛化</a></li>
+<li><a href="#sft-vs-rl-decision">何时选择 SFT 还是 RL</a></li>
+<li><a href="#reward-design">奖励设计：从标量到生成式</a></li>
+<li><a href="#rlvp">RLVP：奖励结果，惩罚路径</a></li>
+<li><a href="#data-environment">数据和环境比算法更重要</a></li>
+<li><a href="#practical-takeaway-post-training">实践要点</a></li>
+</ul>
+</li>
+<li><a href="#self-evolving">自进化智能体：从经验中学习</a><ul>
+<li><a href="#preserving-vs-learning">保存经验不等于学习</a></li>
+<li><a href="#three-layer-verification">三层验证</a></li>
+<li><a href="#four-update-carriers">四种更新载体</a></li>
+<li><a href="#dual-loop-architecture">双循环架构</a></li>
+<li><a href="#done-not-progress">完成不等于进步</a></li>
+<li><a href="#safety-boundaries">持续进化的安全边界</a></li>
+</ul>
+</li>
+<li><a href="#realtime-multimodal">实时感知与多模态交互</a><ul>
+<li><a href="#why-realtime">为什么实时性改变一切</a></li>
+<li><a href="#voice-evolution">语音：从级联到端到端再到全双工</a></li>
+<li><a href="#computer-use">计算机操作：感知-思考-行动循环</a></li>
+<li><a href="#robotics">机器人：VLA、动作分块与 Sim2Real</a></li>
+<li><a href="#fast-slow">统一主题：快-慢架构</a></li>
+</ul>
+</li>
+<li><a href="#full-stack">整合：现代智能体的全栈</a></li>
+<li><a href="#best-practices">最佳实践</a></li>
+<li><a href="#faq">常见问题</a></li>
+<li><a href="#summary">总结</a></li>
+</ul>
+        
+      
+    </div>
+
+    
+    
+    
+      <!--noindex-->
+      <div class="post-button">
+        <a class="btn" href="/zh-CN/2026/06/25/From-Post-Training-to-Real-Time-Perception-Self-Evolving-Agents-and-Multimodal-Interaction/#more" rel="contents">
+          阅读全文 &raquo;
+        </a>
+      </div>
+      <!--/noindex-->
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://bodysuperman.github.io/zh-CN/2026/06/17/From-Capability-to-Intelligence-Tools-Coding-and-Evaluation-in-AI-Agents/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+      <meta itemprop="name" content="AI with Alex">
+      <meta itemprop="description" content="Attention(Q,K,V)=softmax(QK^T/sqrt(d_k))V">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="AI with Alex's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/zh-CN/2026/06/17/From-Capability-to-Intelligence-Tools-Coding-and-Evaluation-in-AI-Agents/" class="post-title-link" itemprop="url">从能力到智能：AI Agent 的工具、编程与评估</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2026-06-17 15:09:38" itemprop="dateCreated datePublished" datetime="2026-06-17T15:09:38+08:00">2026-06-17</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2026-07-24 15:09:38" itemprop="dateModified" datetime="2026-07-24T15:09:38+08:00">2026-07-24</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/AI-Agent/" itemprop="url" rel="index"><span itemprop="name">AI Agent</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/AI-Agent/AI-Engineering/" itemprop="url" rel="index"><span itemprop="name">AI Engineering</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>13k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>12 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <ul>
+<li><a href="#introduction">引言</a></li>
+<li><a href="#what-the-three-layer-model-of-agent-intelligence">是什么：Agent 智能的三层模型</a></li>
+<li><a href="#tools-the-agents-hands-feet-and-senses">工具：Agent 的手脚与感官</a><ul>
+<li><a href="#tool-classification-five-categories">工具分类：五大类别</a></li>
+<li><a href="#universal-principles-of-tool-design">工具设计的通用原则</a></li>
+<li><a href="#the-mcp-ecosystem-and-the-challenge-of-tool-selection">MCP 生态与工具选择的挑战</a></li>
+<li><a href="#execution-security-proposer-reviewer-and-sidecar">执行安全：提案者-审核者与 Sidecar</a></li>
+<li><a href="#event-driven-asynchronous-agents">事件驱动的异步 Agent</a></li>
+<li><a href="#proactive-tool-discovery-and-skills">主动工具发现与技能</a></li>
+</ul>
+</li>
+<li><a href="#coding-agent-code-as-the-meta-capability">编程 Agent：代码作为元能力</a><ul>
+<li><a href="#the-seven-core-tools-and-the-file-system-hub">七大核心工具与文件系统枢纽</a></li>
+<li><a href="#security-the-lethal-triad-and-trust-boundaries">安全：致命三角与信任边界</a></li>
+<li><a href="#harness-engineering-for-coding-agents">编程 Agent 的 Harness 工程</a></li>
+<li><a href="#failure-and-error-recovery">失败与错误恢复</a></li>
+<li><a href="#six-directions-of-code-as-meta-capability">代码作为元能力的六个方向</a></li>
+</ul>
+</li>
+<li><a href="#evaluation-knowing-whether-it-actually-works">评估：如何知道它到底行不行</a><ul>
+<li><a href="#a-concrete-example">一个具体例子</a></li>
+<li><a href="#automated-evaluation-environments">自动化评估环境</a></li>
+<li><a href="#designing-evaluation-datasets">设计评估数据集</a></li>
+<li><a href="#the-metrics-system-passk-vs-passk">指标体系：Pass@k 与 Pass^k</a></li>
+<li><a href="#llm-as-a-judge-and-rubrics">LLM-as-a-Judge 与评分标准</a></li>
+<li><a href="#pairwise-comparison-and-model-ranking">成对比较与模型排名</a></li>
+<li><a href="#statistical-significance">统计显著性</a></li>
+<li><a href="#from-benchmark-to-system-improvement">从基准测试到系统改进</a></li>
+</ul>
+</li>
+<li><a href="#example-an-end-to-end-mini-case">示例：一个端到端的迷你案例</a></li>
+<li><a href="#best-practices">最佳实践</a></li>
+<li><a href="#faq">常见问题</a></li>
+<li><a href="#summary">总结</a></li>
+<li><a href="#appendix">附录</a></li>
+</ul>
+        
+      
+    </div>
+
+    
+    
+    
+      <!--noindex-->
+      <div class="post-button">
+        <a class="btn" href="/zh-CN/2026/06/17/From-Capability-to-Intelligence-Tools-Coding-and-Evaluation-in-AI-Agents/#more" rel="contents">
+          阅读全文 &raquo;
+        </a>
+      </div>
+      <!--/noindex-->
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://bodysuperman.github.io/zh-CN/2026/06/10/Building-AI-Agents-From-Context-to-Memory/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+      <meta itemprop="name" content="AI with Alex">
+      <meta itemprop="description" content="Attention(Q,K,V)=softmax(QK^T/sqrt(d_k))V">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="AI with Alex's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/zh-CN/2026/06/10/Building-AI-Agents-From-Context-to-Memory/" class="post-title-link" itemprop="url">构建 AI Agent：从上下文到记忆</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2026-06-10 15:09:38" itemprop="dateCreated datePublished" datetime="2026-06-10T15:09:38+08:00">2026-06-10</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2026-07-23 15:09:38" itemprop="dateModified" datetime="2026-07-23T15:09:38+08:00">2026-07-23</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/AI/" itemprop="url" rel="index"><span itemprop="name">AI</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/AI/AI-Agent/" itemprop="url" rel="index"><span itemprop="name">AI Agent</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>17k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>16 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <ul>
+<li><a href="#introduction">引言</a></li>
+<li><a href="#what-is-an-ai-agent">什么是 AI Agent</a><ul>
+<li><a href="#the-core-formula-llm-context-tools">核心公式：LLM + 上下文 + 工具</a></li>
+<li><a href="#the-react-loop-how-agents-actually-work">ReAct 循环：Agent 的实际运作方式</a></li>
+</ul>
+</li>
+<li><a href="#context-engineering-the-ceiling-of-agent-capability">上下文工程：Agent 能力的天花板</a><ul>
+<li><a href="#context-at-the-api-level-static-prefix-dynamic-trajectory">API 层面的上下文：静态前缀 + 动态轨迹</a></li>
+<li><a href="#kv-cache-why-prefix-stability-matters">KV Cache：为什么前缀稳定性至关重要</a></li>
+<li><a href="#prompt-engineering-writing-the-agents-operating-manual">提示词工程：编写 Agent 的操作手册</a></li>
+<li><a href="#agent-skills-load-knowledge-on-demand">Agent 技能：按需加载知识</a></li>
+<li><a href="#agent-status-bar-from-implicit-state-to-explicit-knowledge">Agent 状态栏：从隐式状态到显式知识</a></li>
+<li><a href="#context-compression-when-less-is-more">上下文压缩：少即是多</a></li>
+</ul>
+</li>
+<li><a href="#from-context-to-memory-making-agents-remember">从上下文到记忆：让 Agent 拥有记忆力</a><ul>
+<li><a href="#user-memory-building-a-model-of-the-user">用户记忆：构建用户模型</a></li>
+<li><a href="#four-storage-formats-from-simple-notes-to-advanced-json-cards">四种存储格式：从简单笔记到高级 JSON 卡片</a></li>
+<li><a href="#rag-giving-agents-a-knowledge-base">RAG：为 Agent 赋予知识库</a></li>
+<li><a href="#beyond-flat-text-structured-indexing-and-agentic-rag">超越扁平文本：结构化索引与 Agentic RAG</a></li>
+<li><a href="#contextual-retrieval-fixing-chunking-at-the-root">上下文检索：从根源解决分块问题</a></li>
+<li><a href="#the-two-tier-memory-architecture">两层记忆架构</a></li>
+</ul>
+</li>
+<li><a href="#harness-engineering-reliability-beyond-the-demo">Harness 工程：超越 Demo 的可靠性</a><ul>
+<li><a href="#constrain-verify-correct-the-three-safety-layers">约束、验证、纠正：三层安全保障</a></li>
+<li><a href="#workflow-vs-autonomous-choosing-the-right-pattern">工作流 vs. 自主模式：选择正确的模式</a></li>
+</ul>
+</li>
+<li><a href="#best-practices">最佳实践</a></li>
+<li><a href="#faq">常见问题</a></li>
+<li><a href="#summary">总结</a></li>
+</ul>
+        
+      
+    </div>
+
+    
+    
+    
+      <!--noindex-->
+      <div class="post-button">
+        <a class="btn" href="/zh-CN/2026/06/10/Building-AI-Agents-From-Context-to-Memory/#more" rel="contents">
+          阅读全文 &raquo;
+        </a>
+      </div>
+      <!--/noindex-->
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+
+  
+  <nav class="pagination">
+    <span class="page-number current">1</span><a class="page-number" href="/zh-CN/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/zh-CN/page/6/">6</a><a class="extend next" rel="next" href="/zh-CN/page/2/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+  </nav>
+
+
+
+
+            
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="AI with Alex"
+      src="/uploads/avatar.jpg">
+  <p class="site-author-name" itemprop="name">AI with Alex</p>
+  <div class="site-description" itemprop="description">Attention(Q,K,V)=softmax(QK^T/sqrt(d_k))V</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">62</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">35</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">88</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/BODYsuperman" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;BODYsuperman" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/atom.xml" title="RSS Feed → &#x2F;atom.xml"><i class="fas fa-rss fa-fw"></i>RSS Feed</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:meijiaping6@gmail.com" title="Email → mailto:meijiaping6@gmail.com" rel="noopener" target="_blank"><i class="fas fa-envelope fa-fw"></i>Email</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://stackoverflow.com/users/9644964/alexandar-may-msft?tab=answers&sort=votes" title="StackOverflow → https:&#x2F;&#x2F;stackoverflow.com&#x2F;users&#x2F;9644964&#x2F;alexandar-may-msft?tab&#x3D;answers&amp;sort&#x3D;votes" rel="noopener" target="_blank"><i class="fab fa-stack-overflow fa-fw"></i>StackOverflow</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">AI with Alex</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">Symbols count total: </span>
+    <span title="Symbols count total">840k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">Reading time total &asymp;</span>
+    <span title="Reading time total">12:43</span>
+    
+    <!--
+    
+    -->
+</div>
+
+<!--
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a>
+   </div>
+--><script color="0,0,255" opacity="0.5" zIndex="-1" count="99" src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1/dist/canvas-nest.js"></script>
+
+
+
+
+
+
+        
+
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv"  >
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv"  >
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+
+</body>
+</html>

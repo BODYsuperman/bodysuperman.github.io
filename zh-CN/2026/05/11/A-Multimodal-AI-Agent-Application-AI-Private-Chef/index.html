@@ -1,0 +1,990 @@
+<!DOCTYPE html>
+<html lang="en,zh-CN,default">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/logo-180.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/logo-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/logo-16.png">
+  <link rel="mask-icon" href="/images/logo-512.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|monospace:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"bodysuperman.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null,"use":"Gitalk","text":true},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="引言 我们要构建什么？ 功能概览 架构概览   实现策略 模型选择 工具选择 记忆策略 系统提示词设计   在 Jupyter 中制作原型 环境配置 依赖 加载配置 定义工具 初始化多模态模型 记忆管理 创建 Agent 图片输入测试 对话记忆测试   使用 LangGraph 与 LangSmith 部署 LangSmith 配置 开发 Agent 使用 LangGraph CLI 本地部署">
+<meta property="og:type" content="article">
+<meta property="og:title" content="多模态 AI Agent 应用实战：AI 私厨">
+<meta property="og:url" content="https://bodysuperman.github.io/zh-CN/2026/05/11/A-Multimodal-AI-Agent-Application-AI-Private-Chef/index.html">
+<meta property="og:site_name" content="AI with Alex&#39;s Blog">
+<meta property="og:description" content="引言 我们要构建什么？ 功能概览 架构概览   实现策略 模型选择 工具选择 记忆策略 系统提示词设计   在 Jupyter 中制作原型 环境配置 依赖 加载配置 定义工具 初始化多模态模型 记忆管理 创建 Agent 图片输入测试 对话记忆测试   使用 LangGraph 与 LangSmith 部署 LangSmith 配置 开发 Agent 使用 LangGraph CLI 本地部署">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-05-11T04:48:28.000Z">
+<meta property="article:modified_time" content="2026-06-09T16:00:00.000Z">
+<meta property="article:author" content="AI with Alex">
+<meta property="article:tag" content="LangChain">
+<meta property="article:tag" content="LangSmith">
+<meta property="article:tag" content="LangGraph">
+<meta property="article:tag" content="AI Agent">
+<meta property="article:tag" content="LLM">
+<meta property="article:tag" content="MultiModal">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://bodysuperman.github.io/zh-CN/2026/05/11/A-Multimodal-AI-Agent-Application-AI-Private-Chef/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>多模态 AI Agent 应用实战：AI 私厨 | AI with Alex's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="AI with Alex's Blog" type="application/atom+xml">
+<link rel="alternate" href="/rss.xml" title="AI with Alex's Blog" type="application/rss+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+
+
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">AI with Alex's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+  <div class="site-lang-switcher">
+    <span class="lang-item lang-current">简体中文</span>
+      <a class="lang-item lang-link" href="/2026/05/11/A-Multimodal-AI-Agent-Application-AI-Private-Chef/" rel="section" title="English">
+        <i class="fa fa-language"></i> English
+      </a>
+  </div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+   
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://bodysuperman.github.io/zh-CN/2026/05/11/A-Multimodal-AI-Agent-Application-AI-Private-Chef/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+      <meta itemprop="name" content="AI with Alex">
+      <meta itemprop="description" content="Attention(Q,K,V)=softmax(QK^T/sqrt(d_k))V">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="AI with Alex's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          多模态 AI Agent 应用实战：AI 私厨
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2026-05-11 12:48:28" itemprop="dateCreated datePublished" datetime="2026-05-11T12:48:28+08:00">2026-05-11</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2026-06-10 00:00:00" itemprop="dateModified" datetime="2026-06-10T00:00:00+08:00">2026-06-10</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Python/AI/" itemprop="url" rel="index"><span itemprop="name">AI</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>20k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>19 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <ul>
+<li><a href="#introduction">引言</a></li>
+<li><a href="#what-are-we-building">我们要构建什么？</a><ul>
+<li><a href="#feature-overview">功能概览</a></li>
+<li><a href="#architecture-overview">架构概览</a></li>
+</ul>
+</li>
+<li><a href="#implementation-strategy">实现策略</a><ul>
+<li><a href="#model-selection">模型选择</a></li>
+<li><a href="#tool-selection">工具选择</a></li>
+<li><a href="#memory-strategy">记忆策略</a></li>
+<li><a href="#system-prompt-design">系统提示词设计</a></li>
+</ul>
+</li>
+<li><a href="#prototyping-in-jupyter">在 Jupyter 中制作原型</a><ul>
+<li><a href="#environment-configuration">环境配置</a></li>
+<li><a href="#dependencies">依赖</a></li>
+<li><a href="#loading-configuration">加载配置</a></li>
+<li><a href="#defining-tools">定义工具</a></li>
+<li><a href="#initializing-the-multimodal-model">初始化多模态模型</a></li>
+<li><a href="#memory-management">记忆管理</a></li>
+<li><a href="#creating-the-agent">创建 Agent</a></li>
+<li><a href="#testing-with-image-input">图片输入测试</a></li>
+<li><a href="#testing-conversation-memory">对话记忆测试</a></li>
+</ul>
+</li>
+<li><a href="#deploying-with-langgraph-and-langsmith">使用 LangGraph 与 LangSmith 部署</a><ul>
+<li><a href="#langsmith-setup">LangSmith 配置</a></li>
+<li><a href="#developing-the-agent">开发 Agent</a></li>
+<li><a href="#local-deployment-with-langgraph-cli">使用 LangGraph CLI 本地部署</a></li>
+<li><a href="#testing-in-langsmith-studio">在 LangSmith Studio 中测试</a><span id="more"></span></li>
+</ul>
+</li>
+<li><a href="#building-the-production-application">构建生产级应用</a><ul>
+<li><a href="#why-not-base64-the-oss-approach">为什么不用 Base64？OSS 方案</a></li>
+<li><a href="#fastapi-server">FastAPI 服务端</a></li>
+<li><a href="#alibaba-cloud-oss-configuration">阿里云 OSS 配置</a></li>
+<li><a href="#adding-checkpointer">添加 Checkpointer</a></li>
+<li><a href="#implementing-api-endpoints">实现 API 端点</a></li>
+<li><a href="#end-to-end-testing">端到端测试</a></li>
+</ul>
+</li>
+<li><a href="#best-practices">最佳实践</a></li>
+<li><a href="#faq">常见问题</a></li>
+<li><a href="#summary">总结</a></li>
+</ul>
+<hr>
+<p><a name="introduction"></a></p>
+<h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>在上一篇文章中，我们介绍了 LangChain 的核心组件：<strong>模型（Models）、消息（Messages）、提示词（Prompts）、工具（Tools）和记忆（Memory）</strong>。每个组件各司其职——模型负责推理，工具负责执行，记忆负责保留上下文。</p>
+<p>现在，是时候把它们组合起来了。</p>
+<p>这篇文章将完整走一遍构建多模态 AI Agent 应用的过程：<strong>AI 私厨</strong>。你只需拍一张冰箱的照片，Agent 就能识别出食材、搜索菜谱，并按营养价值和烹饪难度进行排序推荐。</p>
+<p>我们将从 Jupyter 中的原始原型开始，到用 LangGraph 部署 Agent，最终构建一个生产级的 FastAPI 应用，并使用阿里云 OSS 处理文件上传。</p>
+<p><a name="what-are-we-building"></a></p>
+<h2 id="我们要构建什么？"><a href="#我们要构建什么？" class="headerlink" title="我们要构建什么？"></a>我们要构建什么？</h2><p>AI 私厨是一个由多模态 AI 驱动的菜谱推荐 Agent。用户上传一张食材照片（或直接输入食材清单），Agent 会：</p>
+<ol>
+<li>从图片中识别食材</li>
+<li>在网上搜索匹配的菜谱</li>
+<li>按营养和难度对菜谱进行评分排序</li>
+<li>返回结构化的推荐报告</li>
+</ol>
+<p><a name="feature-overview"></a></p>
+<h3 id="功能概览"><a href="#功能概览" class="headerlink" title="功能概览"></a>功能概览</h3><table>
+<thead>
+<tr>
+<th>功能</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>📸 图像识别</td>
+<td>上传美食照片，自动识别食材</td>
+</tr>
+<tr>
+<td>🔍 智能搜索</td>
+<td>基于识别出的食材搜索菜谱</td>
+</tr>
+<tr>
+<td>🍽️ 智能排序</td>
+<td>按营养评分和难度对菜谱排序</td>
+</tr>
+<tr>
+<td>💡 创意建议</td>
+<td>没有精确匹配时，给出创意搭配建议</td>
+</tr>
+<tr>
+<td>💬 聊天界面</td>
+<td>支持图片 + 文字输入的对话式 UI</td>
+</tr>
+</tbody></table>
+<p><a name="architecture-overview"></a></p>
+<h3 id="架构概览"><a href="#架构概览" class="headerlink" title="架构概览"></a>架构概览</h3><p>整个应用遵循一条清晰的流水线：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">User (image + text)</span><br><span class="line">       ↓</span><br><span class="line">   Multimodal Model (qwen3.5-plus)</span><br><span class="line">       ↓</span><br><span class="line">  Identify Ingredients</span><br><span class="line">       ↓</span><br><span class="line">   Tavily Web Search</span><br><span class="line">       ↓</span><br><span class="line"> Score &amp; Rank Recipes</span><br><span class="line">       ↓</span><br><span class="line"> Structured Report Output</span><br></pre></td></tr></table></figure>
+
+<p>在生产部署中，架构会扩展为包含文件上传和持久化：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">Frontend (Next.js)</span><br><span class="line">       ↓</span><br><span class="line">FastAPI Gateway (port 8001)</span><br><span class="line">  ├── POST /chat/stream    →  Stream agent responses</span><br><span class="line">  ├── GET  /chat/messages   →  Fetch conversation history</span><br><span class="line">  ├── DELETE /chat/messages →  Clear conversation history</span><br><span class="line">  └── POST /oss/upload-url  →  Generate OSS presigned URL</span><br><span class="line">       ↓</span><br><span class="line">Alibaba Cloud OSS  ←  Frontend uploads files directly</span><br><span class="line">       ↓</span><br><span class="line">LangChain Agent (model + tools + memory)</span><br></pre></td></tr></table></figure>
+
+<p><a name="implementation-strategy"></a></p>
+<h2 id="实现策略"><a href="#实现策略" class="headerlink" title="实现策略"></a>实现策略</h2><p>在写任何代码之前，先把关键的设计决策确定下来。</p>
+<p><a name="model-selection"></a></p>
+<h3 id="模型选择"><a href="#模型选择" class="headerlink" title="模型选择"></a>模型选择</h3><p>由于 Agent 必须处理图片，我们需要一个支持图像输入的<strong>多模态模型</strong>。一个不错的选择是阿里云 DashScope 平台的 <strong>qwen3.5-plus</strong>——它支持图像、文本、音频和视频。</p>
+<p>我们通过 DashScope 提供的 OpenAI 兼容 API 访问它，使用 <code>init_chat_model</code> 并设置 <code>model_provider=&quot;openai&quot;</code>。</p>
+<p><a name="tool-selection"></a></p>
+<h3 id="工具选择"><a href="#工具选择" class="headerlink" title="工具选择"></a>工具选择</h3><p>Agent 需要在网上搜索菜谱。<strong>Tavily</strong> 是一个为 AI Agent 优化的搜索 API——它返回结构化结果，便于模型解析。</p>
+<p>LangChain 通过 <code>langchain-tavily</code> 提供了内置集成。</p>
+<p><a name="memory-strategy"></a></p>
+<h3 id="记忆策略"><a href="#记忆策略" class="headerlink" title="记忆策略"></a>记忆策略</h3><p>在原型阶段，我们使用 <strong>SqliteSaver</strong> 作为 checkpointer（检查点持久化组件）来保存对话记忆。每个会话由一个 <code>thread_id</code> 标识。</p>
+<p>使用 LangGraph 部署时，记忆会自动处理——无需自己添加 checkpointer。</p>
+<p><a name="system-prompt-design"></a></p>
+<h3 id="系统提示词设计"><a href="#系统提示词设计" class="headerlink" title="系统提示词设计"></a>系统提示词设计</h3><p>系统提示词是影响 Agent 行为的最重要因素。经过测试，下面这个版本效果很好：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">system_prompt = <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">You are a private chef. When receiving a user&#x27;s ingredient photo or list, follow these steps:</span></span><br><span class="line"><span class="string">1. Identify and evaluate ingredients: If the user provides a photo, identify all visible ingredients first. Assess freshness and available quantity based on appearance, then compile a &quot;Current Available Ingredients List&quot;.</span></span><br><span class="line"><span class="string">2. Smart recipe search: Prioritize calling the web_search tool using the &quot;Available Ingredients List&quot; as core keywords to find feasible recipes.</span></span><br><span class="line"><span class="string">3. Multi-dimensional evaluation and ranking: Score candidate recipes from two dimensions — nutritional value and preparation difficulty — then rank by score. Simpler and more nutritious recipes rank higher.</span></span><br><span class="line"><span class="string">4. Structured output: Organize the ranked recipes into a clear recommendation report including recipe information, scores, reasons for recommendation, and reference images.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">Strictly follow the process. Prioritize calling the web_search tool to search for recipes. Only improvise when search returns no results.</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>关键设计要点：</p>
+<ul>
+<li><strong>分步指令</strong> —— 模型遵循清晰的流水线，而不是随意发挥</li>
+<li><strong>工具优先</strong> —— 明确告诉 Agent 先搜索，不要靠猜</li>
+<li><strong>结构化输出</strong> —— 要求报告格式，让结果可读</li>
+</ul>
+<p><a name="prototyping-in-jupyter"></a></p>
+<h2 id="在-Jupyter-中制作原型"><a href="#在-Jupyter-中制作原型" class="headerlink" title="在 Jupyter 中制作原型"></a>在 Jupyter 中制作原型</h2><p>先在 Jupyter notebook 里验证 Agent 逻辑。</p>
+<p><a name="environment-configuration"></a></p>
+<h3 id="环境配置"><a href="#环境配置" class="headerlink" title="环境配置"></a>环境配置</h3><p>在项目根目录创建 <code>.env</code> 文件：</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Alibaba Cloud DashScope</span></span><br><span class="line"><span class="attr">DASHSCOPE_API_KEY</span>=<span class="string">sk-your-dashscope-api-key</span></span><br><span class="line"><span class="attr">DASHSCOPE_BASE_URL</span>=<span class="string">https://dashscope.aliyuncs.com/compatible-mode/v1</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"># Tavily Web Search</span></span><br><span class="line"><span class="attr">TAVILY_API_KEY</span>=<span class="string">tvly-dev-your-tavily-api-key</span></span><br></pre></td></tr></table></figure>
+
+<p><a name="dependencies"></a></p>
+<h3 id="依赖"><a href="#依赖" class="headerlink" title="依赖"></a>依赖</h3><p>把以下内容加入 <code>pyproject.toml</code>：</p>
+<figure class="highlight toml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[project]</span></span><br><span class="line"><span class="attr">name</span> = <span class="string">&quot;food-recipe-recommender&quot;</span></span><br><span class="line"><span class="attr">version</span> = <span class="string">&quot;0.1.0&quot;</span></span><br><span class="line"><span class="attr">description</span> = <span class="string">&quot;AI-powered recipe recommender based on uploaded food images&quot;</span></span><br><span class="line"><span class="attr">readme</span> = <span class="string">&quot;README.md&quot;</span></span><br><span class="line"><span class="attr">requires-python</span> = <span class="string">&quot;&gt;=3.10&quot;</span></span><br><span class="line"><span class="attr">dependencies</span> = [</span><br><span class="line">    <span class="string">&quot;langchain&gt;=0.3.0&quot;</span>,</span><br><span class="line">    <span class="string">&quot;langchain-community&gt;=0.3.0&quot;</span>,</span><br><span class="line">    <span class="string">&quot;langchain-openai&gt;=0.2.0&quot;</span>,</span><br><span class="line">    <span class="string">&quot;langchain-core&gt;=0.3.0&quot;</span>,</span><br><span class="line">    <span class="string">&quot;streamlit&gt;=1.40.0&quot;</span>,</span><br><span class="line">    <span class="string">&quot;pillow&gt;=11.0.0&quot;</span>,</span><br><span class="line">    <span class="string">&quot;python-dotenv&gt;=1.0.0&quot;</span>,</span><br><span class="line">    <span class="string">&quot;tavily-python&gt;=0.5.0&quot;</span>,</span><br><span class="line">    <span class="string">&quot;langchain-tavily&gt;=0.1.0&quot;</span>,</span><br><span class="line">    <span class="string">&quot;fastapi&gt;=0.109.0&quot;</span>,</span><br><span class="line">    <span class="string">&quot;uvicorn&gt;=0.27.0&quot;</span>,</span><br><span class="line">    <span class="string">&quot;python-multipart&gt;=0.0.6&quot;</span>,</span><br><span class="line">    <span class="string">&quot;alibabacloud-oss-v2&gt;=1.2.4&quot;</span>,</span><br><span class="line">    <span class="string">&quot;langgraph-checkpoint-sqlite&gt;=3.0.3&quot;</span>,</span><br><span class="line">]</span><br><span class="line"></span><br><span class="line"><span class="section">[tool.uv]</span></span><br><span class="line"><span class="attr">dev-dependencies</span> = [</span><br><span class="line">    <span class="string">&quot;pytest&gt;=8.0.0&quot;</span>,</span><br><span class="line">    <span class="string">&quot;black&gt;=24.0.0&quot;</span>,</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+<p><a name="loading-configuration"></a></p>
+<h3 id="加载配置"><a href="#加载配置" class="headerlink" title="加载配置"></a>加载配置</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Load environment variables</span></span><br><span class="line"><span class="keyword">from</span> dotenv <span class="keyword">import</span> load_dotenv</span><br><span class="line"></span><br><span class="line">load_dotenv()</span><br></pre></td></tr></table></figure>
+
+<p><a name="defining-tools"></a></p>
+<h3 id="定义工具"><a href="#定义工具" class="headerlink" title="定义工具"></a>定义工具</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> langchain_tavily <span class="keyword">import</span> TavilySearch</span><br><span class="line"></span><br><span class="line"><span class="comment"># Web search tool using Tavily</span></span><br><span class="line">web_search = TavilySearch(</span><br><span class="line">    max_results=<span class="number">5</span>,</span><br><span class="line">    topic=<span class="string">&quot;general&quot;</span>,</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p>就这么简单——一行代码定义一个网络搜索工具。Tavily 负责 API 调用、结果解析和格式化。</p>
+<p><a name="initializing-the-multimodal-model"></a></p>
+<h3 id="初始化多模态模型"><a href="#初始化多模态模型" class="headerlink" title="初始化多模态模型"></a>初始化多模态模型</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> langchain.chat_models <span class="keyword">import</span> init_chat_model</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"></span><br><span class="line">model = init_chat_model(</span><br><span class="line">    model=<span class="string">&quot;qwen3.5-plus&quot;</span>,       <span class="comment"># Multimodal model supporting images</span></span><br><span class="line">    model_provider=<span class="string">&quot;openai&quot;</span>,     <span class="comment"># DashScope is OpenAI-compatible</span></span><br><span class="line">    base_url=os.getenv(<span class="string">&quot;DASHSCOPE_BASE_URL&quot;</span>),</span><br><span class="line">    api_key=os.getenv(<span class="string">&quot;DASHSCOPE_API_KEY&quot;</span>)</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p>由于 DashScope 不是 LangChain 原生的 provider，我们设置 <code>model_provider=&quot;openai&quot;</code> 来使用 OpenAI 兼容的 API 格式，并手动提供 <code>base_url</code> 和 <code>api_key</code>。</p>
+<p><a name="memory-management"></a></p>
+<h3 id="记忆管理"><a href="#记忆管理" class="headerlink" title="记忆管理"></a>记忆管理</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> langgraph.checkpoint.sqlite <span class="keyword">import</span> SqliteSaver</span><br><span class="line"><span class="keyword">import</span> sqlite3</span><br><span class="line"></span><br><span class="line"><span class="comment"># Connect to SQLite</span></span><br><span class="line">connection = sqlite3.connect(<span class="string">&quot;resources/personal_chief.db&quot;</span>, check_same_thread=<span class="literal">False</span>)</span><br><span class="line"><span class="comment"># Initialize checkpointer</span></span><br><span class="line">checkpointer = SqliteSaver(connection)</span><br><span class="line"><span class="comment"># Auto-create tables</span></span><br><span class="line">checkpointer.setup()</span><br></pre></td></tr></table></figure>
+
+<p><a name="creating-the-agent"></a></p>
+<h3 id="创建-Agent"><a href="#创建-Agent" class="headerlink" title="创建 Agent"></a>创建 Agent</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> langchain.agents <span class="keyword">import</span> create_agent</span><br><span class="line"></span><br><span class="line">system_prompt = <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">You are a private chef. When receiving a user&#x27;s ingredient photo or list, follow these steps:</span></span><br><span class="line"><span class="string">1. Identify and evaluate ingredients: If the user provides a photo, identify all visible ingredients first. Assess freshness and available quantity based on appearance, then compile a &quot;Current Available Ingredients List&quot;.</span></span><br><span class="line"><span class="string">2. Smart recipe search: Prioritize calling the web_search tool using the &quot;Available Ingredients List&quot; as core keywords to find feasible recipes.</span></span><br><span class="line"><span class="string">3. Multi-dimensional evaluation and ranking: Score candidate recipes from two dimensions — nutritional value and preparation difficulty — then rank by score. Simpler and more nutritious recipes rank higher.</span></span><br><span class="line"><span class="string">4. Structured output: Organize the ranked recipes into a clear recommendation report including recipe information, scores, reasons for recommendation, and reference images.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">Strictly follow the process. Prioritize calling the web_search tool to search for recipes. Only improvise when search returns no results.</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;</span></span><br><span class="line"></span><br><span class="line">agent = create_agent(</span><br><span class="line">    model=model,</span><br><span class="line">    tools=[web_search],</span><br><span class="line">    system_prompt=system_prompt,</span><br><span class="line">    checkpointer=checkpointer</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p><a name="testing-with-image-input"></a></p>
+<h3 id="图片输入测试"><a href="#图片输入测试" class="headerlink" title="图片输入测试"></a>图片输入测试</h3><p>用一张网上的冰箱照片来测试：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> langchain.messages <span class="keyword">import</span> HumanMessage</span><br><span class="line"></span><br><span class="line"><span class="comment"># Prepare multimodal message — online image URL + text prompt</span></span><br><span class="line">multimodal_message = HumanMessage(</span><br><span class="line">    content=[</span><br><span class="line">        &#123;<span class="string">&quot;type&quot;</span>: <span class="string">&quot;image&quot;</span>,</span><br><span class="line">         <span class="string">&quot;url&quot;</span>: <span class="string">&quot;https://img.freepik.com/free-photo/arrangement-different-foods-organized-fridge_23-2149099882.jpg&quot;</span>&#125;,</span><br><span class="line">        &#123;<span class="string">&quot;type&quot;</span>: <span class="string">&quot;text&quot;</span>, <span class="string">&quot;text&quot;</span>: <span class="string">&quot;What can I make with these ingredients?&quot;</span>&#125;</span><br><span class="line">    ])</span><br><span class="line"></span><br><span class="line">config = &#123;<span class="string">&quot;configurable&quot;</span>: &#123;<span class="string">&quot;thread_id&quot;</span>: <span class="string">&quot;6&quot;</span>&#125;&#125;</span><br><span class="line"></span><br><span class="line">response = agent.invoke(&#123;<span class="string">&quot;messages&quot;</span>: [multimodal_message]&#125;, config)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Friendly print</span></span><br><span class="line"><span class="keyword">for</span> message <span class="keyword">in</span> response[<span class="string">&#x27;messages&#x27;</span>]:</span><br><span class="line">    message.pretty_print()</span><br></pre></td></tr></table></figure>
+
+<p>Agent 识别出食材（蘑菇、番茄、三文鱼、鸡胸肉、西兰花、生菜、红椒、胡萝卜、花菜），搜索菜谱，并返回排序后的结果：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">================================ Human Message =================================</span><br><span class="line">[&#123;&#x27;type&#x27;: &#x27;image&#x27;, &#x27;url&#x27;: &#x27;https://img.freepik.com/...&#x27;&#125;, &#123;&#x27;type&#x27;: &#x27;text&#x27;, &#x27;text&#x27;: &#x27;What can I make with these ingredients?&#x27;&#125;]</span><br><span class="line">================================== Ai Message ==================================</span><br><span class="line">These ingredients are very rich... I will search for recipes based on these ingredients.</span><br><span class="line">Tool Calls:</span><br><span class="line">  tavily_search (call_5f30eac22b4b4f8c8b7927)</span><br><span class="line">  Args:</span><br><span class="line">    query: recipes with mushrooms, tomatoes, salmon, chicken breast, broccoli...</span><br><span class="line">================================= Tool Message =================================</span><br><span class="line">Name: tavily_search</span><br><span class="line">&#123;&quot;query&quot;: &quot;recipes with mushrooms, tomatoes, salmon...&quot;, &quot;results&quot;: [...]&#125;</span><br><span class="line">================================== Ai Message ==================================</span><br><span class="line">### 1. Salmon Broccoli Roast</span><br><span class="line">- Ingredients: salmon, broccoli, red pepper, mushrooms, carrots</span><br><span class="line">- Nutritional value: 9/10, Difficulty: 3/10</span><br><span class="line">- ...</span><br><span class="line"></span><br><span class="line">### 2. Chicken Broccoli Fried Rice</span><br><span class="line">- Ingredients: chicken breast, broccoli, mushrooms, red pepper, carrots</span><br><span class="line">- ...</span><br></pre></td></tr></table></figure>
+
+<p><a name="testing-conversation-memory"></a></p>
+<h3 id="对话记忆测试"><a href="#对话记忆测试" class="headerlink" title="对话记忆测试"></a>对话记忆测试</h3><p>现在追问一个问题：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">response = agent.invoke(</span><br><span class="line">    &#123;<span class="string">&quot;messages&quot;</span>: [HumanMessage(content=<span class="string">&quot;I like the first recipe. Can you give me more details?&quot;</span>)]&#125;,</span><br><span class="line">    config</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">response[<span class="string">&#x27;messages&#x27;</span>][-<span class="number">1</span>].pretty_print()</span><br></pre></td></tr></table></figure>
+
+<p>Agent 记得之前的对话，并围绕第一个菜谱展开详细步骤、技巧和营养信息——这证明 checkpointer 正常工作。</p>
+<p><a name="deploying-with-langgraph-and-langsmith"></a></p>
+<h2 id="使用-LangGraph-与-LangSmith-部署"><a href="#使用-LangGraph-与-LangSmith-部署" class="headerlink" title="使用 LangGraph 与 LangSmith 部署"></a>使用 LangGraph 与 LangSmith 部署</h2><p>原型跑通了。现在来专业地部署它。</p>
+<p>LangChain Agent 底层构建在 <strong>LangGraph</strong> 之上，它自带服务器部署能力和完整的 REST API——无需额外工作。而 <strong>LangSmith</strong> 提供了用于调试、监控和一键云端部署的图形界面。</p>
+<p><a name="langsmith-setup"></a></p>
+<h3 id="LangSmith-配置"><a href="#LangSmith-配置" class="headerlink" title="LangSmith 配置"></a>LangSmith 配置</h3><ol>
+<li>在 <a target="_blank" rel="noopener" href="https://smith.langchain.com/">smith.langchain.com</a> 注册</li>
+<li>进入 <strong>Settings → API Keys</strong> 创建一个 key</li>
+<li>添加到 <code>.env</code>：</li>
+</ol>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># LangSmith</span></span><br><span class="line"><span class="attr">LANGSMITH_API_KEY</span>=<span class="string">lsv2_pt_your-langsmith-api-key</span></span><br><span class="line"><span class="attr">LANGSMITH_TRACING</span>=<span class="string">true</span></span><br><span class="line"><span class="attr">LANGSMITH_PROJECT</span>=<span class="string">lc-course</span></span><br></pre></td></tr></table></figure>
+
+<p>就这样——不需要任何额外代码。LangChain 会自动把 trace 发送到 LangSmith。</p>
+<p><a name="developing-the-agent"></a></p>
+<h3 id="开发-Agent"><a href="#开发-Agent" class="headerlink" title="开发 Agent"></a>开发 Agent</h3><p>创建 <code>app/agents/personal_chief.py</code>：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> langchain.chat_models <span class="keyword">import</span> init_chat_model</span><br><span class="line"><span class="keyword">from</span> langchain_tavily <span class="keyword">import</span> TavilySearch</span><br><span class="line"><span class="keyword">from</span> langchain.agents <span class="keyword">import</span> create_agent</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"></span><br><span class="line"><span class="comment"># 1. Load environment variables</span></span><br><span class="line"><span class="keyword">from</span> dotenv <span class="keyword">import</span> load_dotenv</span><br><span class="line">load_dotenv()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 2. Web search tool</span></span><br><span class="line">web_search = TavilySearch(</span><br><span class="line">    max_results=<span class="number">5</span>,</span><br><span class="line">    topic=<span class="string">&quot;general&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 3. Multimodal model</span></span><br><span class="line">model = init_chat_model(</span><br><span class="line">    model=<span class="string">&quot;qwen3.5-plus&quot;</span>,</span><br><span class="line">    model_provider=<span class="string">&quot;openai&quot;</span>,</span><br><span class="line">    base_url=os.getenv(<span class="string">&quot;DASHSCOPE_BASE_URL&quot;</span>),</span><br><span class="line">    api_key=os.getenv(<span class="string">&quot;DASHSCOPE_API_KEY&quot;</span>)</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 4. System prompt</span></span><br><span class="line">system_prompt = <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">You are a private chef. When receiving a user&#x27;s ingredient photo or list, follow these steps:</span></span><br><span class="line"><span class="string">1. Identify and evaluate ingredients: If the user provides a photo, identify all visible ingredients first. Based on their appearance, assess freshness and available quantity, then compile a &quot;Current Available Ingredients List&quot;.</span></span><br><span class="line"><span class="string">2. Smart recipe search: Prioritize calling the web_search tool using the &quot;Available Ingredients List&quot; as core keywords to find feasible recipes.</span></span><br><span class="line"><span class="string">3. Multi-dimensional evaluation and ranking: Score candidate recipes on two dimensions — nutritional value and preparation difficulty — then rank by score. Simpler and more nutritious recipes rank higher.</span></span><br><span class="line"><span class="string">4. Structured output: Organize the ranked recipes into a clear recommendation report including recipe information, scores, reasons for recommendation, and reference images.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">Strictly follow the process. Prioritize calling the web_search tool. Only improvise when search returns no results.</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 5. Create agent</span></span><br><span class="line">agent = create_agent(</span><br><span class="line">    model=model,</span><br><span class="line">    tools=[web_search],</span><br><span class="line">    system_prompt=system_prompt</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p>与 Jupyter 原型的两个重要区别：</p>
+<ul>
+<li><strong>没有 checkpointer</strong> —— LangGraph 会自动管理记忆</li>
+<li><strong>职责分离</strong> —— Agent 定义独立成模块</li>
+</ul>
+<p><a name="local-deployment-with-langgraph-cli"></a></p>
+<h3 id="使用-LangGraph-CLI-本地部署"><a href="#使用-LangGraph-CLI-本地部署" class="headerlink" title="使用 LangGraph CLI 本地部署"></a>使用 LangGraph CLI 本地部署</h3><p>安装 LangGraph CLI：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">uv add langgraph-cli[inmem]</span><br></pre></td></tr></table></figure>
+
+<p>在项目根目录创建 <code>langgraph.json</code>：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;dependencies&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">&quot;.&quot;</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;graphs&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;chief_agent&quot;</span><span class="punctuation">:</span> <span class="string">&quot;./app/agents/personal_chief.py:agent&quot;</span></span><br><span class="line">  <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;env&quot;</span><span class="punctuation">:</span> <span class="string">&quot;.env&quot;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>graph 配置格式为 <code>[file_path]:[variable_name]</code>。这里 <code>agent</code> 是 <code>personal_chief.py</code> 中的变量名。</p>
+<p>启动服务器：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">uv run langgraph dev</span><br></pre></td></tr></table></figure>
+
+<p>你会看到确认 Agent 正在运行的输出。LangGraph 提供了完整的 REST API——访问 <code>http://127.0.0.1:2024/docs</code> 可以浏览所有端点。</p>
+<p><a name="testing-in-langsmith-studio"></a></p>
+<h3 id="在-LangSmith-Studio-中测试"><a href="#在-LangSmith-Studio-中测试" class="headerlink" title="在 LangSmith Studio 中测试"></a>在 LangSmith Studio 中测试</h3><p>由于我们已经配置了 LangSmith，打开：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://smith.langchain.com/studio/?baseUrl=http://127.0.0.1:2024</span><br></pre></td></tr></table></figure>
+
+<p>LangSmith Studio 提供了一个 GUI 聊天界面，可以交互式地测试你的 Agent。你可以：</p>
+<ul>
+<li><strong>与 Agent 对话</strong> —— 直接发送消息和图片</li>
+<li><strong>查看执行 trace</strong> —— 看到每一次模型调用、工具调用和中间步骤</li>
+<li><strong>调试问题</strong> —— 精确定位 Agent 出错的环节</li>
+</ul>
+<p>LangSmith 也提供一键云端部署，但需要付费套餐。对大多数开发者来说，开发阶段用 LangSmith 做测试和调试就足够了——生产环境部署到别处。</p>
+<p><a name="building-the-production-application"></a></p>
+<h2 id="构建生产级应用"><a href="#构建生产级应用" class="headerlink" title="构建生产级应用"></a>构建生产级应用</h2><p>LangGraph 部署非常适合测试，但真实用户需要定制的前端和完善的文件处理。还剩两个问题：</p>
+<ol>
+<li><strong>图片处理</strong>：把图片 Base64 编码进消息里，内存开销大、速度慢</li>
+<li><strong>用户体验</strong>：没有定制的前端</li>
+</ol>
+<p><a name="why-not-base64-the-oss-approach"></a></p>
+<h3 id="为什么不用-Base64？OSS-方案"><a href="#为什么不用-Base64？OSS-方案" class="headerlink" title="为什么不用 Base64？OSS 方案"></a>为什么不用 Base64？OSS 方案</h3><p>给多模态模型发送图片有两种方式：</p>
+<table>
+<thead>
+<tr>
+<th>方案</th>
+<th>工作原理</th>
+<th>优点</th>
+<th>缺点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Base64</td>
+<td>把图片字节编码进消息</td>
+<td>简单，无需外部服务</td>
+<td>内存占用高、消息臃肿、速度慢</td>
+</tr>
+<tr>
+<td>OSS URL</td>
+<td>把图片上传到对象存储，发送 URL</td>
+<td>消息干净、CDN 友好、可扩展</td>
+<td>需要配置 OSS</td>
+</tr>
+</tbody></table>
+<p>标准的生产方案：</p>
+<ol>
+<li>前端向服务端请求一个预签名上传 URL</li>
+<li>前端把文件直接上传到 OSS（不占用服务端带宽）</li>
+<li>前端把 OSS URL 发给 Agent</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Frontend → Server (request upload URL)</span><br><span class="line">Frontend → OSS (upload file directly)</span><br><span class="line">Frontend → Server (send message with OSS URL)</span><br><span class="line">Server   → Agent (process with image URL)</span><br></pre></td></tr></table></figure>
+
+<p><a name="fastapi-server"></a></p>
+<h3 id="FastAPI-服务端"><a href="#FastAPI-服务端" class="headerlink" title="FastAPI 服务端"></a>FastAPI 服务端</h3><p>生产服务端暴露以下端点：</p>
+<table>
+<thead>
+<tr>
+<th>方法</th>
+<th>路径</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>POST</td>
+<td><code>/chat/stream</code></td>
+<td>流式返回 Agent 响应（SSE）</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/chat/messages</code></td>
+<td>获取对话历史</td>
+</tr>
+<tr>
+<td>DELETE</td>
+<td><code>/chat/messages</code></td>
+<td>清空对话历史</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/oss/upload-url</code></td>
+<td>生成 OSS 预签名上传 URL</td>
+</tr>
+</tbody></table>
+<p>项目结构：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">app/</span><br><span class="line">├── main.py                    # FastAPI entry point</span><br><span class="line">├── agents/</span><br><span class="line">│   └── personal_chief.py      # Agent logic</span><br><span class="line">├── api/</span><br><span class="line">│   └── v1/</span><br><span class="line">│       ├── chat.py            # Chat endpoints</span><br><span class="line">│       └── oss.py             # OSS upload signing</span><br><span class="line">├── models/</span><br><span class="line">│   └── schemas.py             # Pydantic request/response models</span><br><span class="line">├── common/</span><br><span class="line">│   └── logger.py              # Logging configuration</span><br><span class="line">└── static/                    # Compiled frontend assets</span><br><span class="line">    ├── index.html</span><br><span class="line">    └── _next/</span><br></pre></td></tr></table></figure>
+
+<p><a name="alibaba-cloud-oss-configuration"></a></p>
+<h3 id="阿里云-OSS-配置"><a href="#阿里云-OSS-配置" class="headerlink" title="阿里云 OSS 配置"></a>阿里云 OSS 配置</h3><p>配置 OSS 分三步：</p>
+<p><strong>第 1 步：注册并创建 Bucket</strong></p>
+<ol>
+<li>打开 <a target="_blank" rel="noopener" href="https://oss.console.aliyun.com/overview">oss.console.aliyun.com</a></li>
+<li>如果还没开通 OSS，先开通（按量付费，非常便宜）</li>
+<li>创建一个名称唯一的 Bucket</li>
+</ol>
+<p><strong>第 2 步：配置权限</strong></p>
+<p>开发阶段，把 Bucket 设为<strong>公共读</strong>，这样上传的图片可以直接通过 URL 访问：</p>
+<blockquote>
+<p>⚠️ <strong>重要</strong>：生产环境中，Bucket 必须保持<strong>私有</strong>，通过 CDN 或签名 URL 访问。公共读只用于测试——测试完记得关闭！</p>
+</blockquote>
+<p>同时配置 <strong>CORS 规则</strong>，允许你的前端域名上传。</p>
+<p><strong>第 3 步：创建 API 凭证</strong></p>
+<ol>
+<li>打开 <a target="_blank" rel="noopener" href="https://ram.console.aliyun.com/overview">RAM 访问控制</a></li>
+<li>创建一个具有<strong>编程访问</strong>权限的新用户</li>
+<li>保存 <strong>AccessKey ID</strong> 和 <strong>AccessKey Secret</strong></li>
+<li>给该用户授予 <code>AliyunOSSFullAccess</code> 权限</li>
+<li>把凭证添加到 <code>.env</code>：</li>
+</ol>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Alibaba Cloud OSS</span></span><br><span class="line"><span class="attr">OSS_ACCESS_KEY_ID</span>=<span class="string">your-access-key-id</span></span><br><span class="line"><span class="attr">OSS_ACCESS_KEY_SECRET</span>=<span class="string">your-access-key-secret</span></span><br><span class="line"><span class="attr">OSS_BUCKET</span>=<span class="string">your-bucket-name</span></span><br></pre></td></tr></table></figure>
+
+<p><a name="adding-checkpointer"></a></p>
+<h3 id="添加-Checkpointer"><a href="#添加-Checkpointer" class="headerlink" title="添加 Checkpointer"></a>添加 Checkpointer</h3><p>由于我们不再使用 LangGraph 的托管部署，需要自己处理记忆。添加 SqliteSaver checkpointer：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> langchain.chat_models <span class="keyword">import</span> init_chat_model</span><br><span class="line"><span class="keyword">from</span> langchain_tavily <span class="keyword">import</span> TavilySearch</span><br><span class="line"><span class="keyword">from</span> langchain.agents <span class="keyword">import</span> create_agent</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">from</span> langgraph.checkpoint.sqlite <span class="keyword">import</span> SqliteSaver</span><br><span class="line"><span class="keyword">import</span> sqlite3</span><br><span class="line"></span><br><span class="line"><span class="comment"># Load environment variables</span></span><br><span class="line"><span class="keyword">from</span> dotenv <span class="keyword">import</span> load_dotenv</span><br><span class="line">load_dotenv()</span><br><span class="line"></span><br><span class="line"><span class="comment"># Web search tool</span></span><br><span class="line">web_search = TavilySearch(</span><br><span class="line">    max_results=<span class="number">5</span>,</span><br><span class="line">    topic=<span class="string">&quot;general&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Multimodal model</span></span><br><span class="line">model = init_chat_model(</span><br><span class="line">    model=<span class="string">&quot;qwen3.5-plus&quot;</span>,</span><br><span class="line">    model_provider=<span class="string">&quot;openai&quot;</span>,</span><br><span class="line">    base_url=os.getenv(<span class="string">&quot;DASHSCOPE_BASE_URL&quot;</span>),</span><br><span class="line">    api_key=os.getenv(<span class="string">&quot;DASHSCOPE_API_KEY&quot;</span>)</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Initialize checkpointer</span></span><br><span class="line">connection = sqlite3.connect(<span class="string">&quot;db/personal_chief.db&quot;</span>, check_same_thread=<span class="literal">False</span>)</span><br><span class="line">checkpointer = SqliteSaver(connection)</span><br><span class="line">checkpointer.setup()</span><br><span class="line"></span><br><span class="line"><span class="comment"># System prompt</span></span><br><span class="line">system_prompt = <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">You are a private chef. When receiving a user&#x27;s ingredient photo or list, follow these steps:</span></span><br><span class="line"><span class="string">1. Identify and evaluate ingredients: If the user provides a photo, identify all visible ingredients first. Based on appearance, assess freshness and available quantity, then compile a &quot;Current Available Ingredients List&quot;.</span></span><br><span class="line"><span class="string">2. Smart recipe search: Prioritize calling the web_search tool using the &quot;Available Ingredients List&quot; as core keywords to find feasible recipes.</span></span><br><span class="line"><span class="string">3. Multi-dimensional evaluation and ranking: Score candidate recipes on two dimensions — nutritional value and preparation difficulty — then rank by score. Simpler and more nutritious recipes rank higher.</span></span><br><span class="line"><span class="string">4. Structured output: Organize the ranked recipes into a clear recommendation report including recipe information, scores, reasons for recommendation, and reference images.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">Strictly follow the process. Prioritize calling the web_search tool. Only improvise when search returns no results.</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Create agent with checkpointer</span></span><br><span class="line">agent = create_agent(</span><br><span class="line">    model=model,</span><br><span class="line">    tools=[web_search],</span><br><span class="line">    checkpointer=checkpointer,</span><br><span class="line">    system_prompt=system_prompt</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p><a name="implementing-api-endpoints"></a></p>
+<h3 id="实现-API-端点"><a href="#实现-API-端点" class="headerlink" title="实现 API 端点"></a>实现 API 端点</h3><p>现在在 <code>agents/personal_chief.py</code> 中实现三个核心功能：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> langchain_core.messages <span class="keyword">import</span> HumanMessage, AIMessageChunk, AIMessage</span><br><span class="line"><span class="keyword">from</span> langchain_tavily <span class="keyword">import</span> TavilySearch</span><br><span class="line"><span class="keyword">from</span> langchain.agents <span class="keyword">import</span> create_agent</span><br><span class="line"><span class="keyword">from</span> app.common.logger <span class="keyword">import</span> logger</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">from</span> langgraph.checkpoint.sqlite <span class="keyword">import</span> SqliteSaver</span><br><span class="line"><span class="keyword">import</span> sqlite3</span><br><span class="line"></span><br><span class="line"><span class="comment"># Load environment variables</span></span><br><span class="line"><span class="keyword">from</span> dotenv <span class="keyword">import</span> load_dotenv</span><br><span class="line">load_dotenv()</span><br><span class="line"></span><br><span class="line"><span class="comment"># Web search tool</span></span><br><span class="line">tavily = TavilySearch(</span><br><span class="line">    max_results=<span class="number">5</span>,</span><br><span class="line">    topic=<span class="string">&quot;general&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Multimodal model</span></span><br><span class="line">model = init_chat_model(</span><br><span class="line">    model=<span class="string">&quot;qwen3-omni-flash&quot;</span>,</span><br><span class="line">    model_provider=<span class="string">&quot;openai&quot;</span>,</span><br><span class="line">    base_url=os.getenv(<span class="string">&quot;DASHSCOPE_BASE_URL&quot;</span>),</span><br><span class="line">    api_key=os.getenv(<span class="string">&quot;DASHSCOPE_API_KEY&quot;</span>)</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Checkpointer</span></span><br><span class="line">checkpointer = SqliteSaver(sqlite3.connect(<span class="string">&quot;db/personal_chief.db&quot;</span>, check_same_thread=<span class="literal">False</span>))</span><br><span class="line">checkpointer.setup()</span><br><span class="line"></span><br><span class="line"><span class="comment"># System prompt</span></span><br><span class="line">system_prompt = <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">You are a private chef. When receiving a user&#x27;s ingredient photo or list, follow these steps:</span></span><br><span class="line"><span class="string">1. Identify and evaluate ingredients: If the user provides a photo, identify all visible ingredients first. Based on appearance, assess freshness and available quantity, then compile a &quot;Current Available Ingredients List&quot;.</span></span><br><span class="line"><span class="string">2. Smart recipe search: Prioritize calling the web_search tool using the &quot;Available Ingredients List&quot; as core keywords to find feasible recipes.</span></span><br><span class="line"><span class="string">3. Multi-dimensional evaluation and ranking: Score candidate recipes on two dimensions — nutritional value and preparation difficulty — then rank by score. Simpler and more nutritious recipes rank higher.</span></span><br><span class="line"><span class="string">4. Structured output: Organize the ranked recipes into a clear recommendation report including recipe information, scores, reasons for recommendation, and reference images.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">Strictly follow the process. Prioritize calling the web_search tool. Only improvise when search returns no results.</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Create agent</span></span><br><span class="line">agent = create_agent(</span><br><span class="line">    model=model,</span><br><span class="line">    tools=[tavily],</span><br><span class="line">    checkpointer=checkpointer,</span><br><span class="line">    system_prompt=system_prompt</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># Stream chat</span></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">def</span> <span class="title function_">search_recipes</span>(<span class="params">prompt: <span class="built_in">str</span>, image: <span class="built_in">str</span>, thread_id: <span class="built_in">str</span></span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;Call agent to search for recipes&quot;&quot;&quot;</span></span><br><span class="line">    logger.info(<span class="string">f&quot;[User]: <span class="subst">&#123;prompt&#125;</span>, image: <span class="subst">&#123;image&#125;</span>, thread_id: <span class="subst">&#123;thread_id&#125;</span>&quot;</span>)</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        <span class="comment"># Different message format depending on whether image is provided</span></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> image <span class="keyword">or</span> image.strip() == <span class="string">&quot;&quot;</span>:</span><br><span class="line">            message = HumanMessage(content=prompt)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            message = HumanMessage(content=[</span><br><span class="line">                &#123;<span class="string">&quot;type&quot;</span>: <span class="string">&quot;image&quot;</span>, <span class="string">&quot;url&quot;</span>: image&#125;,</span><br><span class="line">                &#123;<span class="string">&quot;type&quot;</span>: <span class="string">&quot;text&quot;</span>, <span class="string">&quot;text&quot;</span>: prompt&#125;</span><br><span class="line">            ])</span><br><span class="line"></span><br><span class="line">        <span class="comment"># Stream agent response</span></span><br><span class="line">        <span class="keyword">for</span> chunk, metadata <span class="keyword">in</span> agent.stream(</span><br><span class="line">            &#123;<span class="string">&quot;messages&quot;</span>: [message]&#125;,</span><br><span class="line">            &#123;<span class="string">&quot;configurable&quot;</span>: &#123;<span class="string">&quot;thread_id&quot;</span>: thread_id&#125;&#125;,</span><br><span class="line">            stream_mode=<span class="string">&quot;messages&quot;</span></span><br><span class="line">        ):</span><br><span class="line">            <span class="keyword">if</span> <span class="built_in">isinstance</span>(chunk, AIMessageChunk) <span class="keyword">and</span> chunk.content:</span><br><span class="line">                <span class="keyword">yield</span> chunk.content</span><br><span class="line"></span><br><span class="line">    <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">        logger.error(<span class="string">f&quot;\n[Error]: <span class="subst">&#123;<span class="built_in">str</span>(e)&#125;</span>&quot;</span>)</span><br><span class="line">        <span class="keyword">yield</span> <span class="string">&quot;Search failed. Try typing your ingredient list manually?&quot;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># Clear conversation</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">clear_messages</span>(<span class="params">thread_id: <span class="built_in">str</span></span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;Clear conversation history&quot;&quot;&quot;</span></span><br><span class="line">    logger.info(<span class="string">f&quot;Clearing history, thread_id: <span class="subst">&#123;thread_id&#125;</span>&quot;</span>)</span><br><span class="line">    checkpointer.delete_thread(thread_id)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># Get conversation history</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">get_messages</span>(<span class="params">thread_id: <span class="built_in">str</span></span>) -&gt; <span class="built_in">list</span>[<span class="built_in">dict</span>[<span class="built_in">str</span>, <span class="built_in">str</span>]]:</span><br><span class="line">    <span class="string">&quot;&quot;&quot;Get conversation history&quot;&quot;&quot;</span></span><br><span class="line">    logger.info(<span class="string">f&quot;Fetching history, thread_id: <span class="subst">&#123;thread_id&#125;</span>&quot;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Query checkpoint by thread_id</span></span><br><span class="line">    checkpoint = checkpointer.get(&#123;<span class="string">&quot;configurable&quot;</span>: &#123;<span class="string">&quot;thread_id&quot;</span>: thread_id&#125;&#125;)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> checkpoint:</span><br><span class="line">        <span class="keyword">return</span> []</span><br><span class="line"></span><br><span class="line">    channel_values = checkpoint.get(<span class="string">&quot;channel_values&quot;</span>)</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> channel_values:</span><br><span class="line">        <span class="keyword">return</span> []</span><br><span class="line"></span><br><span class="line">    messages = channel_values.get(<span class="string">&quot;messages&quot;</span>, [])</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> messages:</span><br><span class="line">        <span class="keyword">return</span> []</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Convert message format</span></span><br><span class="line">    result = []</span><br><span class="line">    <span class="keyword">for</span> msg <span class="keyword">in</span> messages:</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> msg.content:</span><br><span class="line">            <span class="keyword">continue</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">isinstance</span>(msg, HumanMessage):</span><br><span class="line">            result.append(&#123;<span class="string">&quot;role&quot;</span>: <span class="string">&quot;user&quot;</span>, <span class="string">&quot;content&quot;</span>: msg.content&#125;)</span><br><span class="line">        <span class="keyword">elif</span> <span class="built_in">isinstance</span>(msg, AIMessage):</span><br><span class="line">            result.append(&#123;<span class="string">&quot;role&quot;</span>: <span class="string">&quot;assistant&quot;</span>, <span class="string">&quot;content&quot;</span>: msg.content&#125;)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> result</span><br></pre></td></tr></table></figure>
+
+<p>然后把它们接入 <code>api/v1/chat.py</code> 的 FastAPI 路由：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> fastapi <span class="keyword">import</span> APIRouter</span><br><span class="line"><span class="keyword">from</span> app.models.schemas <span class="keyword">import</span> ChatRequest</span><br><span class="line"><span class="keyword">from</span> fastapi.responses <span class="keyword">import</span> StreamingResponse</span><br><span class="line"><span class="keyword">from</span> app.agents.personal_chief <span class="keyword">import</span> search_recipes, get_messages, clear_messages</span><br><span class="line"></span><br><span class="line">router = APIRouter()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@router.post(<span class="params"><span class="string">&quot;/chat/stream&quot;</span></span>)</span></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">def</span> <span class="title function_">chat_endpoint</span>(<span class="params">request: ChatRequest</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;Stream chat response&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">return</span> StreamingResponse(</span><br><span class="line">        search_recipes(request.message, request.image_url, request.thread_id),</span><br><span class="line">        media_type=<span class="string">&quot;text/event-stream&quot;</span></span><br><span class="line">    )</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@router.get(<span class="params"><span class="string">&quot;/chat/messages&quot;</span></span>)</span></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">def</span> <span class="title function_">get_chat_messages</span>(<span class="params">thread_id: <span class="built_in">str</span></span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;Get conversation history&quot;&quot;&quot;</span></span><br><span class="line">    messages = get_messages(thread_id)</span><br><span class="line">    <span class="keyword">return</span> &#123;<span class="string">&quot;messages&quot;</span>: messages&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@router.delete(<span class="params"><span class="string">&quot;/chat/messages&quot;</span></span>)</span></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">def</span> <span class="title function_">clear_chat_messages</span>(<span class="params">thread_id: <span class="built_in">str</span></span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;Clear conversation history&quot;&quot;&quot;</span></span><br><span class="line">    clear_messages(thread_id)</span><br><span class="line">    <span class="keyword">return</span> &#123;<span class="string">&quot;success&quot;</span>: <span class="literal">True</span>&#125;</span><br></pre></td></tr></table></figure>
+
+<p><a name="end-to-end-testing"></a></p>
+<h3 id="端到端测试"><a href="#端到端测试" class="headerlink" title="端到端测试"></a>端到端测试</h3><p>启动服务器：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python -m app.main</span><br></pre></td></tr></table></figure>
+
+<p>访问 <code>http://localhost:8001</code>。你应该能够：</p>
+<ol>
+<li>上传一张食材照片（会先传到 OSS）</li>
+<li>看到图片预览</li>
+<li>发送消息并收到流式返回的菜谱推荐</li>
+<li>通过追问继续对话</li>
+</ol>
+<p>实际效果请看下面的演示：</p>
+<!--
+![pic1](img1.png) -->
+
+<!-- <video controls width="100%" preload="metadata" poster="/A-Multimodal-AI-Agent-Application-AI-Private-Chef/img1.png">
+  <source src="/A-Multimodal-AI-Agent-Application-AI-Private-Chef/aichief.mp4" type="video/mp4">
+  你的浏览器不支持 MP4 播放
+</video> -->
+
+<!-- <video
+  controls
+  preload="metadata"
+  poster="/videos/img1.png"
+  width="100%">
+
+  <source src="/videos/aichief.mp4" type="video/mp4">
+</video> -->
+
+<video controls style="width:100%;" preload="metadata">
+<source src="/videos/aichief.mp4" type="video/mp4">
+</video>
+
+<p><a name="best-practices"></a></p>
+<h2 id="最佳实践"><a href="#最佳实践" class="headerlink" title="最佳实践"></a>最佳实践</h2><table>
+<thead>
+<tr>
+<th>领域</th>
+<th>建议</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>图片处理</strong></td>
+<td>先上传到 OSS，把 URL 发给模型——永远不要把 base64 塞进消息里</td>
+</tr>
+<tr>
+<td><strong>记忆</strong></td>
+<td>开发用 SqliteSaver，生产用 PostgresSaver</td>
+</tr>
+<tr>
+<td><strong>系统提示词</strong></td>
+<td>明确工具的优先级——告诉 Agent 先搜索、后猜测</td>
+</tr>
+<tr>
+<td><strong>工具设计</strong></td>
+<td>工具描述保持简洁；像 TavilySearch 这样的复杂工具可以包装成更简单的 <code>@tool</code> 函数</td>
+</tr>
+<tr>
+<td><strong>OSS 安全</strong></td>
+<td>上传用预签名 URL；生产环境 Bucket 保持私有；开发阶段配置 CORS 规则</td>
+</tr>
+<tr>
+<td><strong>LangSmith</strong></td>
+<td>开发阶段用它做 trace 和调试；生产环境关闭 <code>LANGSMITH_TRACING</code> 以减少开销</td>
+</tr>
+<tr>
+<td><strong>错误处理</strong></td>
+<td>在流式生成器中捕获异常，返回用户友好的兜底消息</td>
+</tr>
+</tbody></table>
+<p><a name="faq"></a></p>
+<h2 id="常见问题"><a href="#常见问题" class="headerlink" title="常见问题"></a>常见问题</h2><p><strong>问：为什么选 qwen3.5-plus 而不是 GPT-4o 或 Claude？</strong><br>答：qwen3.5-plus 是可以通过阿里云 DashScope API 使用的强大多模态模型。对中文场景来说性价比很高，并且开箱即用地支持图像。你可以轻松换用其他模型——只需修改 <code>init_chat_model</code> 的 <code>model</code> 参数。</p>
+<p><strong>问：可以不用 Tavily，换别的搜索工具吗？</strong><br>答：可以。LangChain 支持多种搜索集成（SerpAPI、Google Search 等）。推荐 Tavily 是因为它为 AI Agent 做了优化——结果干净、结构化，还带相关性评分。</p>
+<p><strong>问：对话太长会发生什么？</strong><br>答：上下文窗口有限制。对于长对话，可以使用 LangChain 的 <code>SummarizationMiddleware</code> 自动摘要旧消息，同时保留最近的消息。详见 LangChain 关于记忆管理策略的文档。</p>
+<p><strong>问：为什么不直接用 LangGraph cloud 部署？</strong><br>答：LangGraph 云端部署方便但昂贵。生产环境下，把 FastAPI 服务器部署在自己的基础设施上（配合 Docker），可控性更强、成本更低。</p>
+<p><strong>问：OSS Bucket 设成公共读真的安全吗？</strong><br>答：不安全！公共读意味着任何人都能访问上传的文件。只在开发阶段使用。生产环境中，Bucket 保持私有，通过 CDN 分发文件或生成限时签名 URL。</p>
+<p><a name="summary"></a></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>我们从零构建了一个完整的多模态 AI Agent：</p>
+<ol>
+<li><strong>原型</strong> —— 在 Jupyter 中用 <code>create_agent</code>、多模态模型、Tavily 搜索和 SqliteSaver 验证了整条流水线</li>
+<li><strong>LangGraph 部署</strong> —— 用 <code>langgraph dev</code> 部署，并通过 LangSmith Studio 测试</li>
+<li><strong>生产应用</strong> —— 构建了带 OSS 文件上传、流式响应和持久化记忆的 FastAPI 网关</li>
+</ol>
+<p>关键要点：</p>
+<ul>
+<li>一个能用的 Agent 只需要<strong>模型 + 工具 + 提示词 + 记忆</strong>——仅此而已</li>
+<li><strong>系统提示词</strong>是控制 Agent 行为最有影响力的杠杆</li>
+<li><strong>OSS 上传</strong>是生产环境处理图片的正确方式——而不是 base64</li>
+<li><strong>LangSmith</strong> 对开发阶段的调试极其有价值，但生产环境你需要自己的部署</li>
+</ul>
+<link rel="stylesheet" href="/css/folder.css" type="text/css"><script src="/js/folder.js" type="text/javascript" async></script>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/LangChain/" rel="tag"># LangChain</a>
+              <a href="/tags/LangSmith/" rel="tag"># LangSmith</a>
+              <a href="/tags/LangGraph/" rel="tag"># LangGraph</a>
+              <a href="/tags/AI-Agent/" rel="tag"># AI Agent</a>
+              <a href="/tags/LLM/" rel="tag"># LLM</a>
+              <a href="/tags/MultiModal/" rel="tag"># MultiModal</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2026/05/04/LangChain-Core-Components%EF%BC%9AMode-Message-Prompt-Tool-Memory/" rel="prev" title="LangChain Core Components: Model, Message, Prompt, Tool, Memory">
+      <i class="fa fa-chevron-left"></i> LangChain Core Components: Model, Message, Prompt, Tool, Memory
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2026/05/11/A-Multimodal-AI-Agent-Application-AI-Private-Chef/" rel="next" title="A Multimodal AI Agent Application: AI Private Chef">
+      A Multimodal AI Agent Application: AI Private Chef <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+
+            
+            <div class="post-copyright" style="margin: 0 0 10px 0;">
+              <p class="post-copyright-author" style="margin: 0 0 5px 0 !important;"><strong>Author:</strong> <a href="https://github.com/BODYsuperman" target="_blank">Alex</a></p>
+              <p class="post-copyright-link" style="margin: 0 0 5px 0 !important;"><strong>Article Link:</strong> <a href="https://bodysuperman.github.io/zh-CN/2026/05/11/A-Multimodal-AI-Agent-Application-AI-Private-Chef/" target="_blank">https://bodysuperman.github.io/zh-CN/2026/05/11/A-Multimodal-AI-Agent-Application-AI-Private-Chef/</a></p>
+              <p class="post-copyright-license" style="margin: 0 !important;"><strong>License:</strong> This article is licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a>. Please credit the original author and include the source link when reposting.</p>
+            </div>
+
+          </div>
+          
+    <div class="comments" id="gitalk-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%95%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">引言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%88%91%E4%BB%AC%E8%A6%81%E6%9E%84%E5%BB%BA%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="nav-number">2.</span> <span class="nav-text">我们要构建什么？</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8A%9F%E8%83%BD%E6%A6%82%E8%A7%88"><span class="nav-number">2.1.</span> <span class="nav-text">功能概览</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9E%B6%E6%9E%84%E6%A6%82%E8%A7%88"><span class="nav-number">2.2.</span> <span class="nav-text">架构概览</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0%E7%AD%96%E7%95%A5"><span class="nav-number">3.</span> <span class="nav-text">实现策略</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A8%A1%E5%9E%8B%E9%80%89%E6%8B%A9"><span class="nav-number">3.1.</span> <span class="nav-text">模型选择</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B7%A5%E5%85%B7%E9%80%89%E6%8B%A9"><span class="nav-number">3.2.</span> <span class="nav-text">工具选择</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%B0%E5%BF%86%E7%AD%96%E7%95%A5"><span class="nav-number">3.3.</span> <span class="nav-text">记忆策略</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E6%8F%90%E7%A4%BA%E8%AF%8D%E8%AE%BE%E8%AE%A1"><span class="nav-number">3.4.</span> <span class="nav-text">系统提示词设计</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9C%A8-Jupyter-%E4%B8%AD%E5%88%B6%E4%BD%9C%E5%8E%9F%E5%9E%8B"><span class="nav-number">4.</span> <span class="nav-text">在 Jupyter 中制作原型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE"><span class="nav-number">4.1.</span> <span class="nav-text">环境配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BE%9D%E8%B5%96"><span class="nav-number">4.2.</span> <span class="nav-text">依赖</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8A%A0%E8%BD%BD%E9%85%8D%E7%BD%AE"><span class="nav-number">4.3.</span> <span class="nav-text">加载配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89%E5%B7%A5%E5%85%B7"><span class="nav-number">4.4.</span> <span class="nav-text">定义工具</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9D%E5%A7%8B%E5%8C%96%E5%A4%9A%E6%A8%A1%E6%80%81%E6%A8%A1%E5%9E%8B"><span class="nav-number">4.5.</span> <span class="nav-text">初始化多模态模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%B0%E5%BF%86%E7%AE%A1%E7%90%86"><span class="nav-number">4.6.</span> <span class="nav-text">记忆管理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA-Agent"><span class="nav-number">4.7.</span> <span class="nav-text">创建 Agent</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9B%BE%E7%89%87%E8%BE%93%E5%85%A5%E6%B5%8B%E8%AF%95"><span class="nav-number">4.8.</span> <span class="nav-text">图片输入测试</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%B9%E8%AF%9D%E8%AE%B0%E5%BF%86%E6%B5%8B%E8%AF%95"><span class="nav-number">4.9.</span> <span class="nav-text">对话记忆测试</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8-LangGraph-%E4%B8%8E-LangSmith-%E9%83%A8%E7%BD%B2"><span class="nav-number">5.</span> <span class="nav-text">使用 LangGraph 与 LangSmith 部署</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#LangSmith-%E9%85%8D%E7%BD%AE"><span class="nav-number">5.1.</span> <span class="nav-text">LangSmith 配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%80%E5%8F%91-Agent"><span class="nav-number">5.2.</span> <span class="nav-text">开发 Agent</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8-LangGraph-CLI-%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2"><span class="nav-number">5.3.</span> <span class="nav-text">使用 LangGraph CLI 本地部署</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9C%A8-LangSmith-Studio-%E4%B8%AD%E6%B5%8B%E8%AF%95"><span class="nav-number">5.4.</span> <span class="nav-text">在 LangSmith Studio 中测试</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9E%84%E5%BB%BA%E7%94%9F%E4%BA%A7%E7%BA%A7%E5%BA%94%E7%94%A8"><span class="nav-number">6.</span> <span class="nav-text">构建生产级应用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E4%B8%8D%E7%94%A8-Base64%EF%BC%9FOSS-%E6%96%B9%E6%A1%88"><span class="nav-number">6.1.</span> <span class="nav-text">为什么不用 Base64？OSS 方案</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#FastAPI-%E6%9C%8D%E5%8A%A1%E7%AB%AF"><span class="nav-number">6.2.</span> <span class="nav-text">FastAPI 服务端</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%98%BF%E9%87%8C%E4%BA%91-OSS-%E9%85%8D%E7%BD%AE"><span class="nav-number">6.3.</span> <span class="nav-text">阿里云 OSS 配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B7%BB%E5%8A%A0-Checkpointer"><span class="nav-number">6.4.</span> <span class="nav-text">添加 Checkpointer</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0-API-%E7%AB%AF%E7%82%B9"><span class="nav-number">6.5.</span> <span class="nav-text">实现 API 端点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AB%AF%E5%88%B0%E7%AB%AF%E6%B5%8B%E8%AF%95"><span class="nav-number">6.6.</span> <span class="nav-text">端到端测试</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5"><span class="nav-number">7.</span> <span class="nav-text">最佳实践</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98"><span class="nav-number">8.</span> <span class="nav-text">常见问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">9.</span> <span class="nav-text">总结</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="AI with Alex"
+      src="/uploads/avatar.jpg">
+  <p class="site-author-name" itemprop="name">AI with Alex</p>
+  <div class="site-description" itemprop="description">Attention(Q,K,V)=softmax(QK^T/sqrt(d_k))V</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">62</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">35</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">88</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/BODYsuperman" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;BODYsuperman" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/atom.xml" title="RSS Feed → &#x2F;atom.xml"><i class="fas fa-rss fa-fw"></i>RSS Feed</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:meijiaping6@gmail.com" title="Email → mailto:meijiaping6@gmail.com" rel="noopener" target="_blank"><i class="fas fa-envelope fa-fw"></i>Email</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://stackoverflow.com/users/9644964/alexandar-may-msft?tab=answers&sort=votes" title="StackOverflow → https:&#x2F;&#x2F;stackoverflow.com&#x2F;users&#x2F;9644964&#x2F;alexandar-may-msft?tab&#x3D;answers&amp;sort&#x3D;votes" rel="noopener" target="_blank"><i class="fab fa-stack-overflow fa-fw"></i>StackOverflow</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">AI with Alex</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">Symbols count total: </span>
+    <span title="Symbols count total">840k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">Reading time total &asymp;</span>
+    <span title="Reading time total">12:43</span>
+    
+    <!--
+    
+    -->
+</div>
+
+<!--
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a>
+   </div>
+--><script color="0,0,255" opacity="0.5" zIndex="-1" count="99" src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1/dist/canvas-nest.js"></script>
+
+
+
+
+
+
+        
+
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv"  >
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv"  >
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : 'Ov23liVJTzqy1rzaDXXM',
+      clientSecret: '5e785a7d46e69f7509e6c2f7730855a55944df33',
+      repo        : 'blog-comment',
+      owner       : 'BODYsuperman',
+      admin       : ['BODYsuperman'],
+      id          : '9f2e74efac50986594ec9ad052af8202',
+        language: '',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+
+</body>
+</html>
