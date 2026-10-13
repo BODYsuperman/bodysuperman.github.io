@@ -90,3 +90,36 @@ copy.bg_content {
   max-width: 620px;
   width: 100%;
 }
+// Language switcher (between brand area and menu in sidebar)
+.site-lang-switcher {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 0 8px;
+  font-size: 13px;
+
+  .lang-item {
+    padding: 2px 12px;
+    border: 1px solid #ccc;
+    border-radius: 14px;
+    line-height: 1.8;
+  }
+
+  .lang-current {
+    background: #666;
+    border-color: #666;
+    color: #fff;
+  }
+
+  .lang-link {
+    color: #555;
+    transition: all .2s ease-in-out;
+
+    &:hover {
+      background: #222;
+      border-color: #222;
+      color: #fff;
+    }
+  }
+}

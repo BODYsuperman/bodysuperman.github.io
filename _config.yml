@@ -8,7 +8,9 @@ subtitle: ""
 description: "Attention(Q,K,V)=softmax(QK^T/sqrt(d_k))V"
 keywords:
 author: AI with Alex
-language: en
+language:
+  - en
+  - zh-CN
 timezone: "Asia/Shanghai"
 
 # URL
