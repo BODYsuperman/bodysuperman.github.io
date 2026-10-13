@@ -27,19 +27,19 @@
 <meta property="og:site_name" content="AI with Alex&#39;s Blog">
 <meta property="og:description" content="1. 引言： 1.1 欢迎来到机器学习的世界 1.2 什么是机器学习？ 1.3 监督学习 1.4 无监督学习   2. 单变量线性回归 2.1 模型表示 2.2 代价函数 2.2.1 代价函数的定义   2.3 代价函数的直观理解（一） 2.4 代价函数的直观理解（二）：等高线图 2.5 梯度下降 2.6 梯度下降的直观理解 2.7 线性回归的梯度下降">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://bodysuperman.github.io/ml1.1.png">
-<meta property="og:image" content="https://bodysuperman.github.io/ml1.2.png">
-<meta property="og:image" content="https://bodysuperman.github.io/ml1.3.png">
-<meta property="og:image" content="https://bodysuperman.github.io/ml1.4.png">
-<meta property="og:image" content="https://bodysuperman.github.io/ml1.5.png">
-<meta property="og:image" content="https://bodysuperman.github.io/ml2.1.png">
-<meta property="og:image" content="https://bodysuperman.github.io/ml2.2.png">
-<meta property="og:image" content="https://bodysuperman.github.io/ml2.3.png">
-<meta property="og:image" content="https://bodysuperman.github.io/ml2.5.png">
-<meta property="og:image" content="https://bodysuperman.github.io/ml2.6.png">
-<meta property="og:image" content="https://bodysuperman.github.io/ml2.7.png">
-<meta property="og:image" content="https://bodysuperman.github.io/ml2.8.png">
-<meta property="og:image" content="https://bodysuperman.github.io/ml2.9.png">
+<meta property="og:image" content="https://bodysuperman.github.io/2025/10/19/CS229-Notes-Part-1-Mathematical-Basics-of-Linear-Regression-%E2%80%94-From-Model-Formulation-to-Gradient-Descent/ml1.1.png">
+<meta property="og:image" content="https://bodysuperman.github.io/2025/10/19/CS229-Notes-Part-1-Mathematical-Basics-of-Linear-Regression-%E2%80%94-From-Model-Formulation-to-Gradient-Descent/ml1.2.png">
+<meta property="og:image" content="https://bodysuperman.github.io/2025/10/19/CS229-Notes-Part-1-Mathematical-Basics-of-Linear-Regression-%E2%80%94-From-Model-Formulation-to-Gradient-Descent/ml1.3.png">
+<meta property="og:image" content="https://bodysuperman.github.io/2025/10/19/CS229-Notes-Part-1-Mathematical-Basics-of-Linear-Regression-%E2%80%94-From-Model-Formulation-to-Gradient-Descent/ml1.4.png">
+<meta property="og:image" content="https://bodysuperman.github.io/2025/10/19/CS229-Notes-Part-1-Mathematical-Basics-of-Linear-Regression-%E2%80%94-From-Model-Formulation-to-Gradient-Descent/ml1.5.png">
+<meta property="og:image" content="https://bodysuperman.github.io/2025/10/19/CS229-Notes-Part-1-Mathematical-Basics-of-Linear-Regression-%E2%80%94-From-Model-Formulation-to-Gradient-Descent/ml2.1.png">
+<meta property="og:image" content="https://bodysuperman.github.io/2025/10/19/CS229-Notes-Part-1-Mathematical-Basics-of-Linear-Regression-%E2%80%94-From-Model-Formulation-to-Gradient-Descent/ml2.2.png">
+<meta property="og:image" content="https://bodysuperman.github.io/2025/10/19/CS229-Notes-Part-1-Mathematical-Basics-of-Linear-Regression-%E2%80%94-From-Model-Formulation-to-Gradient-Descent/ml2.3.png">
+<meta property="og:image" content="https://bodysuperman.github.io/2025/10/19/CS229-Notes-Part-1-Mathematical-Basics-of-Linear-Regression-%E2%80%94-From-Model-Formulation-to-Gradient-Descent/ml2.5.png">
+<meta property="og:image" content="https://bodysuperman.github.io/2025/10/19/CS229-Notes-Part-1-Mathematical-Basics-of-Linear-Regression-%E2%80%94-From-Model-Formulation-to-Gradient-Descent/ml2.6.png">
+<meta property="og:image" content="https://bodysuperman.github.io/2025/10/19/CS229-Notes-Part-1-Mathematical-Basics-of-Linear-Regression-%E2%80%94-From-Model-Formulation-to-Gradient-Descent/ml2.7.png">
+<meta property="og:image" content="https://bodysuperman.github.io/2025/10/19/CS229-Notes-Part-1-Mathematical-Basics-of-Linear-Regression-%E2%80%94-From-Model-Formulation-to-Gradient-Descent/ml2.8.png">
+<meta property="og:image" content="https://bodysuperman.github.io/2025/10/19/CS229-Notes-Part-1-Mathematical-Basics-of-Linear-Regression-%E2%80%94-From-Model-Formulation-to-Gradient-Descent/ml2.9.png">
 <meta property="article:published_time" content="2025-10-19T05:53:06.000Z">
 <meta property="article:modified_time" content="2025-10-19T11:04:19.000Z">
 <meta property="article:author" content="AI with Alex">
@@ -47,7 +47,7 @@
 <meta property="article:tag" content="Gradient Descent">
 <meta property="article:tag" content="Cost Function">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://bodysuperman.github.io/ml1.1.png">
+<meta name="twitter:image" content="https://bodysuperman.github.io/2025/10/19/CS229-Notes-Part-1-Mathematical-Basics-of-Linear-Regression-%E2%80%94-From-Model-Formulation-to-Gradient-Descent/ml1.1.png">
 
 <link rel="canonical" href="https://bodysuperman.github.io/zh-CN/2025/10/19/CS229-Notes-Part-1-Mathematical-Basics-of-Linear-Regression-%E2%80%94-From-Model-Formulation-to-Gradient-Descent/">
 
@@ -367,7 +367,7 @@
 <li>房价</li>
 <li>温度</li>
 <li>销售额<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">示例：房价预测</span><br><span class="line">输入：房屋面积（750平方英尺）</span><br><span class="line">输出：预测价格（$150,000）</span><br><span class="line">特点：输出为连续数值，可取任意实数</span><br></pre></td></tr></table></figure>
-<img src="/ml1.1.png" alt="pic"></li>
+<img src="/2025/10/19/CS229-Notes-Part-1-Mathematical-Basics-of-Linear-Regression-%E2%80%94-From-Model-Formulation-to-Gradient-Descent/ml1.1.png" alt="pic"></li>
 </ul>
 <ol start="2">
 <li><strong>✅ 分类问题</strong> - 预测离散类别</li>
@@ -377,15 +377,15 @@
 <li>垃圾邮件 &#x2F; 非垃圾邮件</li>
 <li>患病 &#x2F; 健康</li>
 <li>图像类别<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">示例：肿瘤诊断</span><br><span class="line">输入：肿瘤特征（大小、密度等）</span><br><span class="line">输出：良性(0) / 恶性(1)</span><br><span class="line">特点：输出为有限离散值集合</span><br></pre></td></tr></table></figure>
-<img src="/ml1.2.png" alt="pic"></li>
+<img src="/2025/10/19/CS229-Notes-Part-1-Mathematical-Basics-of-Linear-Regression-%E2%80%94-From-Model-Formulation-to-Gradient-Descent/ml1.2.png" alt="pic"></li>
 </ul>
-<p><img src="/ml1.3.png" alt="pic"></p>
+<p><img src="/2025/10/19/CS229-Notes-Part-1-Mathematical-Basics-of-Linear-Regression-%E2%80%94-From-Model-Formulation-to-Gradient-Descent/ml1.3.png" alt="pic"></p>
 <p><strong>监督学习的本质</strong>：</p>
 <blockquote>
 <p>从带标签的数据中学习，使模型能够对新样本做出预测。</p>
 </blockquote>
 <h3 id="无监督学习"><a href="#无监督学习" class="headerlink" title="无监督学习"></a>无监督学习<a name="ul"></a></h3><p>无监督学习与监督学习的核心区别在于<strong>训练数据没有标签</strong>。算法需要自主发现数据中的潜在结构。无监督学习的典型代表是<strong>聚类算法</strong>。</p>
-<p><img src="/ml1.4.png" alt="pic"><br><strong>特征</strong>：</p>
+<p><img src="/2025/10/19/CS229-Notes-Part-1-Mathematical-Basics-of-Linear-Regression-%E2%80%94-From-Model-Formulation-to-Gradient-Descent/ml1.4.png" alt="pic"><br><strong>特征</strong>：</p>
 <ul>
 <li>只有输入数据 x</li>
 <li>没有标签 y</li>
@@ -408,7 +408,7 @@
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">% Audio separation achieved with just one line of code</span><br><span class="line">[W,s,v] = svd((repmat(sum(x.*x,1),size(x,1),1).*x)*x&#x27;);</span><br></pre></td></tr></table></figure>
 <ul>
 <li>从混合声音中分离不同说话者的音频</li>
-<li>展示了使用合适工具的重要性<br><img src="/ml1.5.png" alt="pic"><br><strong>直观理解</strong>：<blockquote>
+<li>展示了使用合适工具的重要性<br><img src="/2025/10/19/CS229-Notes-Part-1-Mathematical-Basics-of-Linear-Regression-%E2%80%94-From-Model-Formulation-to-Gradient-Descent/ml1.5.png" alt="pic"><br><strong>直观理解</strong>：<blockquote>
 <p>我们事先不知道类别，但希望算法自行发现相似的群组。</p>
 </blockquote>
 </li>
@@ -433,8 +433,8 @@
 <td align="center">发现结构</td>
 </tr>
 </tbody></table>
-<h2 id="单变量线性回归"><a href="#单变量线性回归" class="headerlink" title="单变量线性回归 "></a>单变量线性回归 <a name="lr"></a></h2><h3 id="模型表示"><a href="#模型表示" class="headerlink" title="模型表示"></a>模型表示<a name="mp"></a></h3><p>单变量线性回归是一个入门级的机器学习算法，用于解决单特征回归问题（例如，用房屋面积预测房价）。<br>让我们从一个例子开始：这个例子是关于预测房价的，我们将使用一个包含俄勒冈州波特兰市房价的数据集。在这里，我将根据不同的房屋面积和对应的售出价格绘制我们的数据集。<br>例如，如果你朋友的房子面积为1250平方英尺，你想告诉他们能卖多少钱。你可以做的事情之一就是建立一个模型——比如一条直线——从这个模型中，你可以告诉你朋友这套房子大约能卖22万美元。<br>这是一个监督学习算法的例子。<br><img src="/ml2.1.png" alt="pic"></p>
-<p>训练集：<br><img src="/ml2.2.png" alt="pic"></p>
+<h2 id="单变量线性回归"><a href="#单变量线性回归" class="headerlink" title="单变量线性回归 "></a>单变量线性回归 <a name="lr"></a></h2><h3 id="模型表示"><a href="#模型表示" class="headerlink" title="模型表示"></a>模型表示<a name="mp"></a></h3><p>单变量线性回归是一个入门级的机器学习算法，用于解决单特征回归问题（例如，用房屋面积预测房价）。<br>让我们从一个例子开始：这个例子是关于预测房价的，我们将使用一个包含俄勒冈州波特兰市房价的数据集。在这里，我将根据不同的房屋面积和对应的售出价格绘制我们的数据集。<br>例如，如果你朋友的房子面积为1250平方英尺，你想告诉他们能卖多少钱。你可以做的事情之一就是建立一个模型——比如一条直线——从这个模型中，你可以告诉你朋友这套房子大约能卖22万美元。<br>这是一个监督学习算法的例子。<br><img src="/2025/10/19/CS229-Notes-Part-1-Mathematical-Basics-of-Linear-Regression-%E2%80%94-From-Model-Formulation-to-Gradient-Descent/ml2.1.png" alt="pic"></p>
+<p>训练集：<br><img src="/2025/10/19/CS229-Notes-Part-1-Mathematical-Basics-of-Linear-Regression-%E2%80%94-From-Model-Formulation-to-Gradient-Descent/ml2.2.png" alt="pic"></p>
 <p>符号说明：</p>
 <ul>
 <li>m：训练样本数量</li>
@@ -449,7 +449,7 @@
 <li><code>θ₁</code> 是斜率，表示特征 x 对目标 y 的影响程度</li>
 </ul>
 <p>目标：<br>找到 <code>θ₀</code> 和 <code>θ₁</code>，使得这条直线尽可能好地拟合数据。</p>
-<p><img src="/ml2.3.png" alt="pic"></p>
+<p><img src="/2025/10/19/CS229-Notes-Part-1-Mathematical-Basics-of-Linear-Regression-%E2%80%94-From-Model-Formulation-to-Gradient-Descent/ml2.3.png" alt="pic"></p>
 <h3 id="代价函数"><a href="#代价函数" class="headerlink" title="代价函数"></a>代价函数<a name="cf"></a></h3><p>为了衡量假设函数的预测误差，我们需要定义一个代价函数（Cost Function），它主要计算预测值与实际值之间的误差平方和。</p>
 <h4 id="代价函数的定义"><a href="#代价函数的定义" class="headerlink" title="代价函数的定义"></a>代价函数的定义<a name="dcf"></a></h4><p>单变量线性回归使用均方误差（MSE）作为代价函数，定义公式如下：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">J(θ₀, θ₁) = (1 / 2m) * Σ (hθ(x⁽ⁱ⁾) - y⁽ⁱ⁾)²</span><br></pre></td></tr></table></figure>
@@ -459,7 +459,7 @@
 <li>Σ (hθ(x⁽ⁱ⁾) - y⁽ⁱ⁾)²：所有样本的预测误差平方和</li>
 <li>J(θ₀, θ₁)： 代价函数的值越小，说明模型的预测精度越高</li>
 </ul>
-<p><img src="/ml2.5.png" alt="pic"><br>含义：<br>将误差平方<br>对所有训练样本求平均<br>越小越好</p>
+<p><img src="/2025/10/19/CS229-Notes-Part-1-Mathematical-Basics-of-Linear-Regression-%E2%80%94-From-Model-Formulation-to-Gradient-Descent/ml2.5.png" alt="pic"><br>含义：<br>将误差平方<br>对所有训练样本求平均<br>越小越好</p>
 <p>👉 我们的目标：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">minimize J(θ₀, θ₁)</span><br></pre></td></tr></table></figure>
 
@@ -492,11 +492,11 @@
 <li><p>有些很好地拟合数据 → 误差小 → J 小</p>
 </li>
 </ul>
-<p>所以 J 告诉我们：<br>👉 <strong>平均而言，这条直线拟合数据的程度有多差</strong>。<br><img src="/ml2.6.png" alt="pic"></p>
+<p>所以 J 告诉我们：<br>👉 <strong>平均而言，这条直线拟合数据的程度有多差</strong>。<br><img src="/2025/10/19/CS229-Notes-Part-1-Mathematical-Basics-of-Linear-Regression-%E2%80%94-From-Model-Formulation-to-Gradient-Descent/ml2.6.png" alt="pic"></p>
 <h3 id="代价函数的直观理解（二）：等高线图"><a href="#代价函数的直观理解（二）：等高线图" class="headerlink" title="代价函数的直观理解（二）：等高线图"></a>代价函数的直观理解（二）：等高线图<a name="plot"></a></h3><p>如果我们把 <code>θ₀</code> 和 <code>θ₁</code> 作为坐标轴，<code>J(θ₀, θ₁)</code> 作为高度：</p>
 <ul>
 <li>我们会得到一个碗形曲面</li>
-<li>最低点对应最优参数<br><img src="/ml2.7.png" alt="pic"></li>
+<li>最低点对应最优参数<br><img src="/2025/10/19/CS229-Notes-Part-1-Mathematical-Basics-of-Linear-Regression-%E2%80%94-From-Model-Formulation-to-Gradient-Descent/ml2.7.png" alt="pic"></li>
 </ul>
 <p>等高线图显示：</p>
 <ul>
@@ -504,7 +504,7 @@
 <li>越往内层，J 值越小</li>
 </ul>
 <p>👉 学习的过程就像：<br><strong>在误差地形上不断下坡，直到到达最低点。</strong></p>
-<p><img src="/ml2.8.png" alt="pic"></p>
+<p><img src="/2025/10/19/CS229-Notes-Part-1-Mathematical-Basics-of-Linear-Regression-%E2%80%94-From-Model-Formulation-to-Gradient-Descent/ml2.8.png" alt="pic"></p>
 <h3 id="梯度下降"><a href="#梯度下降" class="headerlink" title="梯度下降"></a>梯度下降<a name="gd"></a></h3><p>梯度下降是一种用于最小化函数的通用算法。</p>
 <p>核心思想：</p>
 <blockquote>
@@ -521,7 +521,7 @@
 <li>α 是学习率（步长）</li>
 <li>:&#x3D; 表示赋值，即先计算右侧的值，再更新左侧的参数</li>
 </ul>
-<p>👉 类比：<br>蒙着眼睛下山走，总是朝着最陡的方向迈步。<br><img src="/ml2.9.png" alt="pic"></p>
+<p>👉 类比：<br>蒙着眼睛下山走，总是朝着最陡的方向迈步。<br><img src="/2025/10/19/CS229-Notes-Part-1-Mathematical-Basics-of-Linear-Regression-%E2%80%94-From-Model-Formulation-to-Gradient-Descent/ml2.9.png" alt="pic"></p>
 <h3 id="梯度下降的直观理解"><a href="#梯度下降的直观理解" class="headerlink" title="梯度下降的直观理解"></a>梯度下降的直观理解<a name="gdi"></a></h3><p>梯度下降的核心在于<strong>学习率</strong> α 和<strong>梯度方向</strong>的协调配合，可以用单参数示例来直观理解：</p>
 <ol>
 <li><strong>梯度的作用</strong></li>
@@ -580,12 +580,12 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2025/05/03/Hexo-Blog-Multi-Device-Synchronization-and-Management-Guide-Based-on-Git-Branch-Strategy/" rel="prev" title="Hexo Blog Multi-Device Synchronization and Management Guide Based on Git Branch Strategy">
-      <i class="fa fa-chevron-left"></i> Hexo Blog Multi-Device Synchronization and Management Guide Based on Git Branch Strategy
+    <a href="/2025/10/19/CS229-Notes-Part-1-Mathematical-Basics-of-Linear-Regression-%E2%80%94-From-Model-Formulation-to-Gradient-Descent/" rel="prev" title="CS229 Notes (Part 1): Mathematical Basics of Linear Regression — From Model Formulation to Gradient Descent">
+      <i class="fa fa-chevron-left"></i> CS229 Notes (Part 1): Mathematical Basics of Linear Regression — From Model Formulation to Gradient Descent
     </a></div>
       <div class="post-nav-item">
-    <a href="/2025/10/19/CS229-Notes-Part-1-Mathematical-Basics-of-Linear-Regression-%E2%80%94-From-Model-Formulation-to-Gradient-Descent/" rel="next" title="CS229 Notes (Part 1): Mathematical Basics of Linear Regression — From Model Formulation to Gradient Descent">
-      CS229 Notes (Part 1): Mathematical Basics of Linear Regression — From Model Formulation to Gradient Descent <i class="fa fa-chevron-right"></i>
+    <a href="/zh-CN/2025/10/26/CSS3-Core-Technologies-study-note/" rel="next" title="CSS3 核心技术学习笔记">
+      CSS3 核心技术学习笔记 <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>

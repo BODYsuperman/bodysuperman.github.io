@@ -27,12 +27,12 @@
 <meta property="og:site_name" content="AI with Alex&#39;s Blog">
 <meta property="og:description" content="什么是 RabbitMQ 核心概念   环境搭建 Docker（推荐）   管理用户和权限 场景：生产者发送消息，消费者接收消息 生产者代码 消费者代码 运行测试   高级特性：确保消息可靠投递 消息持久化 发布者确认（Publisher Confirms） 消费者手动确认（Manual Acknowledgment）   最佳实践 消息格式 监控">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://bodysuperman.github.io/rabbit07.png">
-<meta property="og:image" content="https://bodysuperman.github.io/rabbit06.png">
-<meta property="og:image" content="https://bodysuperman.github.io/rabbit04.png">
-<meta property="og:image" content="https://bodysuperman.github.io/rabbit05.png">
-<meta property="og:image" content="https://bodysuperman.github.io/rabbit08.png">
-<meta property="og:image" content="https://bodysuperman.github.io/rabbit09.png">
+<meta property="og:image" content="https://bodysuperman.github.io/2025/03/29/RabbitMQ-One-broker-to-queue-them-all/rabbit07.png">
+<meta property="og:image" content="https://bodysuperman.github.io/2025/03/29/RabbitMQ-One-broker-to-queue-them-all/rabbit06.png">
+<meta property="og:image" content="https://bodysuperman.github.io/2025/03/29/RabbitMQ-One-broker-to-queue-them-all/rabbit04.png">
+<meta property="og:image" content="https://bodysuperman.github.io/2025/03/29/RabbitMQ-One-broker-to-queue-them-all/rabbit05.png">
+<meta property="og:image" content="https://bodysuperman.github.io/2025/03/29/RabbitMQ-One-broker-to-queue-them-all/rabbit08.png">
+<meta property="og:image" content="https://bodysuperman.github.io/2025/03/29/RabbitMQ-One-broker-to-queue-them-all/rabbit09.png">
 <meta property="article:published_time" content="2025-03-29T08:48:27.000Z">
 <meta property="article:modified_time" content="2025-03-29T10:04:19.000Z">
 <meta property="article:author" content="AI with Alex">
@@ -40,7 +40,7 @@
 <meta property="article:tag" content="MessageQueue">
 <meta property="article:tag" content="MiddleWare">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://bodysuperman.github.io/rabbit07.png">
+<meta name="twitter:image" content="https://bodysuperman.github.io/2025/03/29/RabbitMQ-One-broker-to-queue-them-all/rabbit07.png">
 
 <link rel="canonical" href="https://bodysuperman.github.io/zh-CN/2025/03/29/RabbitMQ-One-broker-to-queue-them-all/">
 
@@ -348,7 +348,7 @@
 <td>定义通信标准的应用层协议，用于可靠的消息传递。</td>
 </tr>
 </tbody></table>
-<p><img src="/rabbit07.png" alt="pic"></p>
+<p><img src="/2025/03/29/RabbitMQ-One-broker-to-queue-them-all/rabbit07.png" alt="pic"></p>
 <h2 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a>环境搭建<a name="setup"></a></h2><h3 id="Docker（推荐）："><a href="#Docker（推荐）：" class="headerlink" title="Docker（推荐）： "></a>Docker（推荐）： <a name="docker"></a></h3><p>拉取 RabbitMQ Docker 镜像</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull rabbitmq:management</span><br></pre></td></tr></table></figure>
 <p>启动一个 RabbitMQ 实例，并将主机上的自定义配置文件挂载到容器中。</p>
@@ -357,11 +357,11 @@
 <li>-d 以分离模式运行容器。</li>
 <li>–name 为容器分配一个名称。</li>
 <li>-p 将容器端口映射到宿主机。端口 5672 用于 RabbitMQ 服务，15672 用于管理界面。<br>访问 RabbitMQ 管理控制台：</li>
-<li>打开浏览器，访问 <a target="_blank" rel="noopener" href="http://localhost:15672/%E3%80%82">http://localhost:15672/。</a><br><img src="/rabbit06.png" alt="pic"></li>
+<li>打开浏览器，访问 <a target="_blank" rel="noopener" href="http://localhost:15672/%E3%80%82">http://localhost:15672/。</a><br><img src="/2025/03/29/RabbitMQ-One-broker-to-queue-them-all/rabbit06.png" alt="pic"></li>
 <li>使用你在上述命令中设置的默认用户名和密码登录。</li>
 </ul>
-<h2 id="管理用户和权限"><a href="#管理用户和权限" class="headerlink" title="管理用户和权限"></a>管理用户和权限<a name="user"></a></h2><p>要添加用户，使用 rabbitmqctl add_user。<br><img src="/rabbit04.png" alt="pic"></p>
-<p>要为用户在虚拟主机中授予权限，使用 rabbitmqctl set_permissions：<br><img src="/rabbit05.png" alt="pic"><br>要列出集群中的用户，使用 rabbitmqctl list_users：</p>
+<h2 id="管理用户和权限"><a href="#管理用户和权限" class="headerlink" title="管理用户和权限"></a>管理用户和权限<a name="user"></a></h2><p>要添加用户，使用 rabbitmqctl add_user。<br><img src="/2025/03/29/RabbitMQ-One-broker-to-queue-them-all/rabbit04.png" alt="pic"></p>
+<p>要为用户在虚拟主机中授予权限，使用 rabbitmqctl set_permissions：<br><img src="/2025/03/29/RabbitMQ-One-broker-to-queue-them-all/rabbit05.png" alt="pic"><br>要列出集群中的用户，使用 rabbitmqctl list_users：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rabbitmqctl list_users</span><br></pre></td></tr></table></figure>
 <p>要删除用户，使用 rabbitmqctl delete_user：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rabbitmqctl delete_user &#x27;username&#x27;</span><br></pre></td></tr></table></figure>
@@ -372,7 +372,7 @@
 <h2 id="场景：生产者发送消息，消费者接收消息"><a href="#场景：生产者发送消息，消费者接收消息" class="headerlink" title="场景：生产者发送消息，消费者接收消息"></a>场景：生产者发送消息，消费者接收消息<a name="simple"></a></h2><h3 id="生产者代码"><a href="#生产者代码" class="headerlink" title="生产者代码"></a>生产者代码<a name="producer"></a></h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">class Producer</span><br><span class="line">&#123;</span><br><span class="line">    private const string QueueName = &quot;simple_queue&quot;;</span><br><span class="line"></span><br><span class="line">    public static void SendMessage(string message)</span><br><span class="line">    &#123;</span><br><span class="line">        var factory = new ConnectionFactory() &#123;</span><br><span class="line">            HostName = &quot;***&quot;,</span><br><span class="line">            VirtualHost = &quot;visual_knitting&quot;,</span><br><span class="line">            UserName = &quot;admin&quot;,</span><br><span class="line">            Password = &quot;123456&quot;,</span><br><span class="line">            Port = 5672</span><br><span class="line">         &#125;;</span><br><span class="line">        using (var connection = factory.CreateConnection())</span><br><span class="line">        using (var channel = connection.CreateModel())</span><br><span class="line">        &#123;</span><br><span class="line">            channel.QueueDeclare(</span><br><span class="line">                queue: QueueName,</span><br><span class="line">                durable: false,  // Store in memory (non-persistent)</span><br><span class="line">                exclusive: false, // Non-exclusive queue</span><br><span class="line">                autoDelete: false, // Do not auto-delete when empty</span><br><span class="line">                arguments: null</span><br><span class="line">            );</span><br><span class="line"></span><br><span class="line">            var body = Encoding.UTF8.GetBytes(message);</span><br><span class="line">            channel.BasicPublish(</span><br><span class="line">                exchange: &quot;&quot;,       // Use default exchange (direct to queue)</span><br><span class="line">                routingKey: QueueName, // Routing key matches queue name</span><br><span class="line">                basicProperties: null,</span><br><span class="line">                body: body</span><br><span class="line">            );</span><br><span class="line">            Console.WriteLine($&quot;[Producer] Sent: &#123;message&#125;&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h3 id="消费者代码"><a href="#消费者代码" class="headerlink" title="消费者代码"></a>消费者代码<a name="consumer"></a></h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">class Consumer</span><br><span class="line">&#123;</span><br><span class="line">    private const string QueueName = &quot;simple_queue&quot;;</span><br><span class="line"></span><br><span class="line">    public static void StartListening()</span><br><span class="line">    &#123;</span><br><span class="line">        var factory = new ConnectionFactory() &#123;</span><br><span class="line"></span><br><span class="line">            var factory = new ConnectionFactory() &#123;</span><br><span class="line">            HostName = &quot;***&quot;,</span><br><span class="line">            VirtualHost = &quot;visual_knitting&quot;,</span><br><span class="line">            UserName = &quot;admin&quot;,</span><br><span class="line">            Password = &quot;123456&quot;,</span><br><span class="line">            Port = 5672</span><br><span class="line">         &#125;;</span><br><span class="line">         &#125;;</span><br><span class="line">        using (var connection = factory.CreateConnection())</span><br><span class="line">        using (var channel = connection.CreateModel())</span><br><span class="line">        &#123;</span><br><span class="line">            channel.QueueDeclare(QueueName, false, false, false, null);</span><br><span class="line"></span><br><span class="line">            var consumer = new EventingBasicConsumer(channel);</span><br><span class="line">            consumer.Received += (model, ea) =&gt;</span><br><span class="line">            &#123;</span><br><span class="line">                var body = ea.Body.ToArray();</span><br><span class="line">                var message = Encoding.UTF8.GetString(body);</span><br><span class="line">                Console.WriteLine($&quot;[Consumer] Received: &#123;message&#125;&quot;);</span><br><span class="line">            &#125;;</span><br><span class="line"></span><br><span class="line">            channel.BasicConsume(</span><br><span class="line">                queue: QueueName,</span><br><span class="line">                autoAck: true,  // Auto-acknowledge messages upon receipt</span><br><span class="line">                consumer: consumer</span><br><span class="line">            );</span><br><span class="line"></span><br><span class="line">            Console.WriteLine(&quot;Consumer is waiting for messages. Press any key to exit.&quot;);</span><br><span class="line">            Console.ReadKey();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h3 id="运行测试："><a href="#运行测试：" class="headerlink" title="运行测试："></a>运行测试：<a name="test"></a></h3><p>从生产者发送消息：<br> <img src="/rabbit08.png" alt="pic"><br>消费者输出：<br> <img src="/rabbit09.png" alt="pic"></p>
+<h3 id="运行测试："><a href="#运行测试：" class="headerlink" title="运行测试："></a>运行测试：<a name="test"></a></h3><p>从生产者发送消息：<br> <img src="/2025/03/29/RabbitMQ-One-broker-to-queue-them-all/rabbit08.png" alt="pic"><br>消费者输出：<br> <img src="/2025/03/29/RabbitMQ-One-broker-to-queue-them-all/rabbit09.png" alt="pic"></p>
 <h2 id="高级特性：确保消息可靠投递"><a href="#高级特性：确保消息可靠投递" class="headerlink" title="高级特性：确保消息可靠投递"></a>高级特性：确保消息可靠投递<a name="ensure"></a></h2><h3 id="消息持久化"><a href="#消息持久化" class="headerlink" title="消息持久化"></a>消息持久化<a name="persistence"></a></h3><p><strong>场景：防止 RabbitMQ 重启时消息丢失</strong></p>
 <ul>
 <li>队列持久化：声明队列时设置 durable: true。</li>
@@ -408,8 +408,8 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/zh-CN/2025/03/22/Dynamic-Programming/" rel="prev" title="动态规划">
-      <i class="fa fa-chevron-left"></i> 动态规划
+    <a href="/2025/03/22/Dynamic-Programming/" rel="prev" title="Dynamic Programming">
+      <i class="fa fa-chevron-left"></i> Dynamic Programming
     </a></div>
       <div class="post-nav-item">
     <a href="/2025/03/29/RabbitMQ-One-broker-to-queue-them-all/" rel="next" title="RabbitMQ:One broker to queue them all">

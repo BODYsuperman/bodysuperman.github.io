@@ -27,21 +27,21 @@
 <meta property="og:site_name" content="AI with Alex&#39;s Blog">
 <meta property="og:description" content="简介   设计模式的类型   设计模式的主要特征   创建型模式   工厂模式   抽象工厂模式   建造者模式   单例模式   结构型模式   适配器模式   桥接模式   组合模式 装饰器模式   外观模式   享元模式 代理模式   行为型模式   观察者模式   迭代器模式   命令模式 策略模式   状态模式">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://bodysuperman.github.io/1-1.png">
-<meta property="og:image" content="https://bodysuperman.github.io/1-2.png">
-<meta property="og:image" content="https://bodysuperman.github.io/1-3.png">
-<meta property="og:image" content="https://bodysuperman.github.io/1-5.png">
-<meta property="og:image" content="https://bodysuperman.github.io/2-1.png">
-<meta property="og:image" content="https://bodysuperman.github.io/2-2.png">
-<meta property="og:image" content="https://bodysuperman.github.io/2-3.png">
-<meta property="og:image" content="https://bodysuperman.github.io/2-7.jpg">
-<meta property="og:image" content="https://bodysuperman.github.io/2-4.png">
-<meta property="og:image" content="https://bodysuperman.github.io/2-5.png">
-<meta property="og:image" content="https://bodysuperman.github.io/2-6.png">
-<meta property="og:image" content="https://bodysuperman.github.io/3-1.png">
-<meta property="og:image" content="https://bodysuperman.github.io/3-2.png">
-<meta property="og:image" content="https://bodysuperman.github.io/3-3.png">
-<meta property="og:image" content="https://bodysuperman.github.io/3-7.png">
+<meta property="og:image" content="https://bodysuperman.github.io/2025/04/19/Design-Patterns/1-1.png">
+<meta property="og:image" content="https://bodysuperman.github.io/2025/04/19/Design-Patterns/1-2.png">
+<meta property="og:image" content="https://bodysuperman.github.io/2025/04/19/Design-Patterns/1-3.png">
+<meta property="og:image" content="https://bodysuperman.github.io/2025/04/19/Design-Patterns/1-5.png">
+<meta property="og:image" content="https://bodysuperman.github.io/2025/04/19/Design-Patterns/2-1.png">
+<meta property="og:image" content="https://bodysuperman.github.io/2025/04/19/Design-Patterns/2-2.png">
+<meta property="og:image" content="https://bodysuperman.github.io/2025/04/19/Design-Patterns/2-3.png">
+<meta property="og:image" content="https://bodysuperman.github.io/2025/04/19/Design-Patterns/2-7.jpg">
+<meta property="og:image" content="https://bodysuperman.github.io/2025/04/19/Design-Patterns/2-4.png">
+<meta property="og:image" content="https://bodysuperman.github.io/2025/04/19/Design-Patterns/2-5.png">
+<meta property="og:image" content="https://bodysuperman.github.io/2025/04/19/Design-Patterns/2-6.png">
+<meta property="og:image" content="https://bodysuperman.github.io/2025/04/19/Design-Patterns/3-1.png">
+<meta property="og:image" content="https://bodysuperman.github.io/2025/04/19/Design-Patterns/3-2.png">
+<meta property="og:image" content="https://bodysuperman.github.io/2025/04/19/Design-Patterns/3-3.png">
+<meta property="og:image" content="https://bodysuperman.github.io/2025/04/19/Design-Patterns/3-7.png">
 <meta property="article:published_time" content="2025-04-19T08:05:17.000Z">
 <meta property="article:modified_time" content="2025-04-19T11:04:19.000Z">
 <meta property="article:author" content="AI with Alex">
@@ -52,7 +52,7 @@
 <meta property="article:tag" content="Structural Patterns">
 <meta property="article:tag" content="Behavioral Patterns">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://bodysuperman.github.io/1-1.png">
+<meta name="twitter:image" content="https://bodysuperman.github.io/2025/04/19/Design-Patterns/1-1.png">
 
 <link rel="canonical" href="https://bodysuperman.github.io/zh-CN/2025/04/19/Design-Patterns/">
 
@@ -349,9 +349,9 @@
 <li><strong>灵活性</strong>：模式是抽象的解决方案&#x2F;模板，可以根据各种场景和需求进行调整。</li>
 </ul>
 <h2 id="创建型模式"><a href="#创建型模式" class="headerlink" title="创建型模式"></a>创建型模式</h2><p>核心目的：封装对象创建逻辑，将对象的创建与使用解耦。</p>
-<h3 id="工厂模式"><a href="#工厂模式" class="headerlink" title="工厂模式"></a>工厂模式<a name="factoryp"></a></h3><p><img src="/1-1.png" alt="pic"><br>定义：使用工厂类来封装对象创建，隐藏实现细节。<br>案例：在电商平台中创建不同的支付方式。</p>
+<h3 id="工厂模式"><a href="#工厂模式" class="headerlink" title="工厂模式"></a>工厂模式<a name="factoryp"></a></h3><p><img src="/2025/04/19/Design-Patterns/1-1.png" alt="pic"><br>定义：使用工厂类来封装对象创建，隐藏实现细节。<br>案例：在电商平台中创建不同的支付方式。</p>
 <figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Abstract Product: Payment interface  </span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title">IPayment</span></span><br><span class="line">&#123;</span><br><span class="line">   <span class="function"><span class="keyword">void</span> <span class="title">Pay</span>(<span class="params"><span class="built_in">decimal</span> amnout</span>)</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Concrete Product: Alipay Payment  </span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">AlipayPayment</span>: <span class="title">IPayment</span></span><br><span class="line">&#123;</span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Pay</span>(<span class="params"><span class="built_in">decimal</span> amount</span>)</span></span><br><span class="line">   &#123;</span><br><span class="line">       Console.WriteLine(<span class="string">$&quot;Alipay Payment: <span class="subst">&#123;amount:C&#125;</span>&quot;</span>);</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">PaypalPayment</span>: <span class="title">IPayment</span></span><br><span class="line">&#123;</span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Pay</span>(<span class="params"><span class="built_in">decimal</span> amount</span>)</span></span><br><span class="line">   &#123;</span><br><span class="line">      Console.WriteLine(<span class="string">$&quot;Paypal Payment: <span class="subst">&#123;amount:C&#125;</span>&quot;</span>);</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Factory Class  </span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">PaymentFactory</span></span><br><span class="line">&#123;</span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> IPayment <span class="title">CreatePayment</span>(<span class="params"><span class="built_in">string</span> type</span>)</span></span><br><span class="line">   &#123;</span><br><span class="line">      <span class="keyword">if</span> (type == <span class="string">&quot;Alipay&quot;</span>)</span><br><span class="line">      &#123;</span><br><span class="line">         <span class="keyword">return</span> <span class="keyword">new</span> AlipayPayment();</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">else</span> <span class="keyword">if</span> (type == <span class="string">&quot;Paypal&quot;</span>)</span><br><span class="line">      &#123;</span><br><span class="line">         <span class="comment">// Assuming a PaypalPayment class exists and implements IPayment  </span></span><br><span class="line">         <span class="keyword">return</span> <span class="keyword">new</span> PaypalPayment();</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">else</span></span><br><span class="line">      &#123;</span><br><span class="line">         <span class="keyword">throw</span> <span class="keyword">new</span> ArgumentException(<span class="string">&quot;Unsupported payment type&quot;</span>);</span><br><span class="line">      &#125;</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//usage</span></span><br><span class="line"><span class="keyword">var</span> pay = PaymentFactory.CreatePayment(<span class="string">&quot;Paypal&quot;</span>);</span><br><span class="line">pay.Pay(<span class="number">199.99</span>m);<span class="comment">// Output: Paypal Payment: $199.99  </span></span><br></pre></td></tr></table></figure>
-<h3 id="抽象工厂"><a href="#抽象工厂" class="headerlink" title="抽象工厂"></a>抽象工厂<a name="afactory"></a></h3><p><img src="/1-2.png" alt="pic"><br><strong>抽象工厂模式（Abstract Factory Pattern）</strong> 是一种创建型设计模式，它提供了一个接口，用于创建一系列相关或相互依赖的对象，而无需指定它们的具体类。它封装了一组具有共同主题的独立工厂，确保产品的兼容性，并将客户端代码与实现细节解耦。<br>核心概念：</p>
+<h3 id="抽象工厂"><a href="#抽象工厂" class="headerlink" title="抽象工厂"></a>抽象工厂<a name="afactory"></a></h3><p><img src="/2025/04/19/Design-Patterns/1-2.png" alt="pic"><br><strong>抽象工厂模式（Abstract Factory Pattern）</strong> 是一种创建型设计模式，它提供了一个接口，用于创建一系列相关或相互依赖的对象，而无需指定它们的具体类。它封装了一组具有共同主题的独立工厂，确保产品的兼容性，并将客户端代码与实现细节解耦。<br>核心概念：</p>
 <ol>
 <li><strong>抽象工厂（Abstract Factory）</strong>：定义创建抽象产品的接口。</li>
 <li><strong>具体工厂（Concrete Factories）</strong>：实现抽象工厂以生产特定的产品族。</li>
@@ -370,7 +370,7 @@
 <li><strong>数据库访问</strong>：在 SQL Server、MySQL 等之间切换。</li>
 <li><strong>UI 框架</strong>：生成主题化组件（浅色&#x2F;深色模式）。</li>
 </ul>
-<h3 id="建造者模式"><a href="#建造者模式" class="headerlink" title="建造者模式"></a>建造者模式<a name="factoryp"></a></h3><p><img src="/1-3.png" alt="pic"><br><strong>建造者模式（Builder Pattern）</strong> 是一种创建型设计模式，它将复杂对象的构建过程与其表示分离。这使得相同的构建过程可以创建不同的表示，非常适合具有多个可选参数或复杂装配步骤的对象。<br>核心概念：</p>
+<h3 id="建造者模式"><a href="#建造者模式" class="headerlink" title="建造者模式"></a>建造者模式<a name="factoryp"></a></h3><p><img src="/2025/04/19/Design-Patterns/1-3.png" alt="pic"><br><strong>建造者模式（Builder Pattern）</strong> 是一种创建型设计模式，它将复杂对象的构建过程与其表示分离。这使得相同的构建过程可以创建不同的表示，非常适合具有多个可选参数或复杂装配步骤的对象。<br>核心概念：</p>
 <ol>
 <li><strong>产品（Product）</strong>：正在构建的复杂对象（例如汽车、用户资料）。</li>
 <li><strong>抽象建造者（Abstract Builder）</strong>：定义构建产品各部分的接口。</li>
@@ -389,7 +389,7 @@
 <li><strong>有顺序依赖的对象组装</strong>：当各部分必须按特定顺序添加时（例如在最终组装之前初始化组件）。</li>
 <li><strong>流式接口（Fluent Interface）</strong>：常用于创建可读性强的流畅 API（例如 .NET 中的 StringBuilder）。</li>
 </ol>
-<h3 id="单例模式"><a href="#单例模式" class="headerlink" title="单例模式"></a>单例模式<a name="singleton-pattern"></a></h3><p><img src="/1-5.png" alt="pic"><br><strong>单例模式（Singleton Pattern）</strong> 是一种创建型设计模式，它确保一个类只有一个实例，并提供一个全局访问点。该模式适用于系统中恰好需要一个实例来协调操作的场景，例如数据库连接池、日志服务或配置管理器。<br>核心概念：</p>
+<h3 id="单例模式"><a href="#单例模式" class="headerlink" title="单例模式"></a>单例模式<a name="singleton-pattern"></a></h3><p><img src="/2025/04/19/Design-Patterns/1-5.png" alt="pic"><br><strong>单例模式（Singleton Pattern）</strong> 是一种创建型设计模式，它确保一个类只有一个实例，并提供一个全局访问点。该模式适用于系统中恰好需要一个实例来协调操作的场景，例如数据库连接池、日志服务或配置管理器。<br>核心概念：</p>
 <ol>
 <li><strong>私有构造函数</strong>：防止外部直接实例化该类。</li>
 <li><strong>静态实例</strong>：持有该类的唯一实例。</li>
@@ -408,7 +408,7 @@
 <li><strong>图形管理器</strong>：控制渲染或显示资源。</li>
 </ul>
 <h2 id="结构型模式"><a href="#结构型模式" class="headerlink" title="结构型模式"></a>结构型模式<a name="sp"></a></h2><p>结构型设计模式阐释了如何将对象和类组装成更大的结构，同时保持这些结构的灵活性和高效性。</p>
-<h3 id="适配器模式"><a href="#适配器模式" class="headerlink" title="适配器模式"></a>适配器模式<a name="factoryp"></a></h3><p><img src="/2-1.png" alt="pic"><br><strong>适配器模式（Adapter Pattern）</strong> 是一种结构型设计模式，它允许接口不兼容的对象之间进行协作。它充当两个不兼容接口之间的桥梁，将一个类的接口转换为客户端期望的另一个接口。该模式对于集成遗留代码、第三方库或不匹配的组件非常有用，且无需修改其原始结构。<br>核心概念：</p>
+<h3 id="适配器模式"><a href="#适配器模式" class="headerlink" title="适配器模式"></a>适配器模式<a name="factoryp"></a></h3><p><img src="/2025/04/19/Design-Patterns/2-1.png" alt="pic"><br><strong>适配器模式（Adapter Pattern）</strong> 是一种结构型设计模式，它允许接口不兼容的对象之间进行协作。它充当两个不兼容接口之间的桥梁，将一个类的接口转换为客户端期望的另一个接口。该模式对于集成遗留代码、第三方库或不匹配的组件非常有用，且无需修改其原始结构。<br>核心概念：</p>
 <ol>
 <li><strong>目标接口（Target）</strong>：客户端期望交互的接口。</li>
 <li><strong>被适配者（Adaptee）</strong>：具有不兼容接口的现有类。</li>
@@ -427,7 +427,7 @@
 <li><strong>Java</strong>：java.util.Arrays.asList() 将数组适配为 List。</li>
 <li><strong>Web API</strong>：将 REST API 响应转换为内部数据模型。</li>
 </ul>
-<h3 id="桥接模式"><a href="#桥接模式" class="headerlink" title="桥接模式"></a>桥接模式<a name="bridge-pattern"></a></h3><p><img src="/2-2.png" alt="pic"><br><strong>桥接模式（Bridge Pattern）</strong> 是一种结构型设计模式，它将抽象与实现解耦，使两者可以独立变化。它通过将层次化的抽象（系统做什么）与实现（如何做）分离，并通过桥接接口连接来实现。该模式对于避免在处理多个变化维度时出现”类爆炸”特别有用。<br>核心概念：</p>
+<h3 id="桥接模式"><a href="#桥接模式" class="headerlink" title="桥接模式"></a>桥接模式<a name="bridge-pattern"></a></h3><p><img src="/2025/04/19/Design-Patterns/2-2.png" alt="pic"><br><strong>桥接模式（Bridge Pattern）</strong> 是一种结构型设计模式，它将抽象与实现解耦，使两者可以独立变化。它通过将层次化的抽象（系统做什么）与实现（如何做）分离，并通过桥接接口连接来实现。该模式对于避免在处理多个变化维度时出现”类爆炸”特别有用。<br>核心概念：</p>
 <ol>
 <li><strong>抽象（Abstraction）</strong>：定义高层接口，并依赖于实现接口。</li>
 <li><strong>扩展抽象（Refined Abstraction）</strong>：扩展抽象而不影响实现。</li>
@@ -443,7 +443,7 @@
 <li><strong>数据库驱动</strong>：使用通用接口连接不同的数据库（SQL Server、MySQL）。</li>
 <li><strong>游戏开发</strong>：使用不同的 API（DirectX、OpenGL）渲染图形。</li>
 </ul>
-<h3 id="组合模式"><a href="#组合模式" class="headerlink" title="组合模式"></a>组合模式<a name="composite-pattern"></a></h3><p><img src="/2-3.png" alt="pic"><br><strong>组合模式（Composite Pattern）</strong> 是一种结构型设计模式，它允许你将对象组合成树形结构来表示”部分-整体”的层次结构。它使客户端能够统一地对待单个对象（叶节点）和对象组合（组合节点），通过通用接口简化代码。<br>核心概念：</p>
+<h3 id="组合模式"><a href="#组合模式" class="headerlink" title="组合模式"></a>组合模式<a name="composite-pattern"></a></h3><p><img src="/2025/04/19/Design-Patterns/2-3.png" alt="pic"><br><strong>组合模式（Composite Pattern）</strong> 是一种结构型设计模式，它允许你将对象组合成树形结构来表示”部分-整体”的层次结构。它使客户端能够统一地对待单个对象（叶节点）和对象组合（组合节点），通过通用接口简化代码。<br>核心概念：</p>
 <ol>
 <li><strong>组件（Component）</strong>：定义叶节点和组合节点的通用接口。</li>
 <li><strong>叶节点（Leaf）</strong>：表示单个对象（没有子节点）。</li>
@@ -459,7 +459,7 @@
 <li><strong>组织结构图</strong>：部门（组合节点）和员工（叶节点）。</li>
 <li><strong>树形数据结构</strong>：XML&#x2F;JSON 解析、语法树。</li>
 </ul>
-<h3 id="装饰器模式"><a href="#装饰器模式" class="headerlink" title="装饰器模式"></a>装饰器模式<a name="decorator-pattern"></a></h3><p><img src="/2-7.jpg" alt="pic"><br><strong>装饰器模式（Decorator Pattern）</strong> 是一种结构型设计模式，它允许你通过将对象放入特殊的包装类中，动态地为对象添加新行为。它提供了子类化的灵活替代方案来扩展功能，允许在运行时添加或移除行为。<br>核心概念：</p>
+<h3 id="装饰器模式"><a href="#装饰器模式" class="headerlink" title="装饰器模式"></a>装饰器模式<a name="decorator-pattern"></a></h3><p><img src="/2025/04/19/Design-Patterns/2-7.jpg" alt="pic"><br><strong>装饰器模式（Decorator Pattern）</strong> 是一种结构型设计模式，它允许你通过将对象放入特殊的包装类中，动态地为对象添加新行为。它提供了子类化的灵活替代方案来扩展功能，允许在运行时添加或移除行为。<br>核心概念：</p>
 <ol>
 <li><strong>组件（Component）</strong>：定义可以被装饰的对象的通用接口。</li>
 <li><strong>具体组件（Concrete Component）</strong>：实现组件的基础功能。</li>
@@ -471,7 +471,7 @@
 <p>输出：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Espresso = $1.99  </span><br><span class="line">Espresso, Mocha, Mocha, Whip = $2.39  </span><br></pre></td></tr></table></figure>
 <p>使用场景：<br><strong>GUI 组件</strong>：为控件添加边框、滚动条或提示框。<br><strong>I&#x2F;O 流</strong>：使用缓冲、加密或压缩来包装流。<br><strong>日志记录</strong>：为日志消息添加时间戳、元数据或格式化。<br><strong>安全性</strong>：为请求添加身份验证或授权层。</p>
-<h3 id="外观模式"><a href="#外观模式" class="headerlink" title="外观模式"></a>外观模式<a name="facade-pattern"></a></h3><p><img src="/2-4.png" alt="pic"><br><strong>外观模式（Facade Pattern）</strong> 是一种结构型设计模式，它为复杂的类、库或 API 系统提供一个简化的接口。它隐藏了底层的复杂性，只暴露高层功能，使系统更易于使用和维护。该模式通常用于将客户端与复杂的子系统解耦。<br>核心概念：</p>
+<h3 id="外观模式"><a href="#外观模式" class="headerlink" title="外观模式"></a>外观模式<a name="facade-pattern"></a></h3><p><img src="/2025/04/19/Design-Patterns/2-4.png" alt="pic"><br><strong>外观模式（Facade Pattern）</strong> 是一种结构型设计模式，它为复杂的类、库或 API 系统提供一个简化的接口。它隐藏了底层的复杂性，只暴露高层功能，使系统更易于使用和维护。该模式通常用于将客户端与复杂的子系统解耦。<br>核心概念：</p>
 <ol>
 <li><strong>外观（Facade）</strong>：为子系统提供简化的接口。</li>
 <li><strong>子系统类（Subsystem Classes）</strong>：实现复杂的功能，但不感知外观的存在。</li>
@@ -486,7 +486,7 @@
 <li><strong>跨层通信</strong>：桥接应用程序中的不同层（例如 UI 和业务逻辑）。</li>
 <li><strong>测试</strong>：创建外观以在单元测试中模拟复杂的子系统。</li>
 </ul>
-<h3 id="享元模式"><a href="#享元模式" class="headerlink" title="享元模式"></a>享元模式<a name="flyweight-pattern"></a></h3><p><img src="/2-5.png" alt="pic"><br><strong>享元模式（Flyweight Pattern）</strong> 是一种结构型设计模式，它通过在相似对象之间尽可能多地共享数据来最小化内存使用。它通过将内在（共享）状态与外在（特定于上下文）状态分离来实现，使对象可以在不同的上下文中被复用。该模式对于在需要处理大量相似对象时优化内存特别有用。<br>核心概念：</p>
+<h3 id="享元模式"><a href="#享元模式" class="headerlink" title="享元模式"></a>享元模式<a name="flyweight-pattern"></a></h3><p><img src="/2025/04/19/Design-Patterns/2-5.png" alt="pic"><br><strong>享元模式（Flyweight Pattern）</strong> 是一种结构型设计模式，它通过在相似对象之间尽可能多地共享数据来最小化内存使用。它通过将内在（共享）状态与外在（特定于上下文）状态分离来实现，使对象可以在不同的上下文中被复用。该模式对于在需要处理大量相似对象时优化内存特别有用。<br>核心概念：</p>
 <ol>
 <li><strong>享元（Flyweight）</strong>：定义共享对象的接口，管理内在状态。</li>
 <li><strong>具体享元（Concrete Flyweight）</strong>：实现享元接口并存储内在状态。</li>
@@ -502,7 +502,7 @@
 <li><strong>文档编辑器</strong>：复用字符、字体或格式化样式。</li>
 <li><strong>数据库连接</strong>：池化并复用连接对象。</li>
 </ul>
-<h3 id="代理模式"><a href="#代理模式" class="headerlink" title="代理模式"></a>代理模式<a name="proxy-pattern"></a></h3><p><img src="/2-6.png" alt="pic"><br><strong>代理模式（Proxy Pattern）</strong> 是一种结构型设计模式，它为另一个对象提供一个替代或占位符来控制对它的访问。代理充当客户端和真实对象之间的中介，允许在不改变真实对象接口的情况下添加额外功能（例如延迟加载、访问控制、日志记录）。<br>核心概念</p>
+<h3 id="代理模式"><a href="#代理模式" class="headerlink" title="代理模式"></a>代理模式<a name="proxy-pattern"></a></h3><p><img src="/2025/04/19/Design-Patterns/2-6.png" alt="pic"><br><strong>代理模式（Proxy Pattern）</strong> 是一种结构型设计模式，它为另一个对象提供一个替代或占位符来控制对它的访问。代理充当客户端和真实对象之间的中介，允许在不改变真实对象接口的情况下添加额外功能（例如延迟加载、访问控制、日志记录）。<br>核心概念</p>
 <ol>
 <li><strong>主题（Subject）</strong>：定义 RealSubject 和 Proxy 的通用接口。</li>
 <li><strong>真实主题（RealSubject）</strong>：实现主题接口，包含实际的业务逻辑。</li>
@@ -534,7 +534,7 @@
 <li><strong>.NET 事件</strong>：System.EventHandler 和事件订阅者。</li>
 <li><strong>RxJava&#x2F;Rx.NET</strong>：Reactive Extensions 使用观察者模式处理异步流。</li>
 </ul>
-<h3 id="迭代器模式"><a href="#迭代器模式" class="headerlink" title="迭代器模式"></a>迭代器模式<a name="iterator-pattern"></a></h3><p><img src="/3-1.png" alt="pic"><br><strong>迭代器模式（Iterator Pattern）</strong> 是一种行为型设计模式，它提供了一种顺序访问聚合对象（例如集合）元素的方法，而无需暴露其底层表示。它将遍历逻辑与集合解耦，允许不同的遍历算法或同时进行多次遍历。<br>核心概念：</p>
+<h3 id="迭代器模式"><a href="#迭代器模式" class="headerlink" title="迭代器模式"></a>迭代器模式<a name="iterator-pattern"></a></h3><p><img src="/2025/04/19/Design-Patterns/3-1.png" alt="pic"><br><strong>迭代器模式（Iterator Pattern）</strong> 是一种行为型设计模式，它提供了一种顺序访问聚合对象（例如集合）元素的方法，而无需暴露其底层表示。它将遍历逻辑与集合解耦，允许不同的遍历算法或同时进行多次遍历。<br>核心概念：</p>
 <ol>
 <li><strong>迭代器（Iterator）</strong>：定义访问和遍历元素的接口。</li>
 <li><strong>具体迭代器（Concrete Iterator）</strong>：实现迭代器接口，跟踪集合中的当前位置。</li>
@@ -549,7 +549,7 @@
 <li><strong>文件系统导航</strong>：遍历目录和文件。</li>
 <li><strong>并行处理</strong>：将遍历任务拆分到多个线程。</li>
 </ul>
-<h3 id="命令模式"><a href="#命令模式" class="headerlink" title="命令模式"></a>命令模式<a name="command-pattern"></a></h3><p><img src="/3-2.png" alt="pic"><br><strong>命令模式（Command Pattern）</strong> 是一种行为型设计模式，它将请求转化为一个独立的对象，其中包含有关请求的所有信息。这将发送者（调用者）与接收者（执行者）解耦，允许请求被参数化、排队、记录或撤销。<br>核心概念：</p>
+<h3 id="命令模式"><a href="#命令模式" class="headerlink" title="命令模式"></a>命令模式<a name="command-pattern"></a></h3><p><img src="/2025/04/19/Design-Patterns/3-2.png" alt="pic"><br><strong>命令模式（Command Pattern）</strong> 是一种行为型设计模式，它将请求转化为一个独立的对象，其中包含有关请求的所有信息。这将发送者（调用者）与接收者（执行者）解耦，允许请求被参数化、排队、记录或撤销。<br>核心概念：</p>
 <ol>
 <li><strong>命令（Command）</strong>：定义执行操作的接口。</li>
 <li><strong>具体命令（Concrete Command）</strong>：实现命令接口，将接收者与操作绑定。</li>
@@ -570,7 +570,7 @@
 <li><strong>.NET 委托</strong>：将方法调用封装为对象。</li>
 <li><strong>GUI 框架</strong>：Action 类（例如 Java 中的 javax.swing.Action）。</li>
 </ul>
-<h3 id="策略模式"><a href="#策略模式" class="headerlink" title="策略模式"></a>策略模式<a name="strategy-pattern"></a></h3><p><img src="/3-3.png" alt="pic"><br><strong>策略模式（Strategy Pattern）</strong> 是一种行为型设计模式，它定义了一系列算法，将每个算法封装起来，并使它们可以互换。它让算法独立于使用它的客户端而变化，提高了灵活性和可维护性。<br>核心概念：</p>
+<h3 id="策略模式"><a href="#策略模式" class="headerlink" title="策略模式"></a>策略模式<a name="strategy-pattern"></a></h3><p><img src="/2025/04/19/Design-Patterns/3-3.png" alt="pic"><br><strong>策略模式（Strategy Pattern）</strong> 是一种行为型设计模式，它定义了一系列算法，将每个算法封装起来，并使它们可以互换。它让算法独立于使用它的客户端而变化，提高了灵活性和可维护性。<br>核心概念：</p>
 <ol>
 <li><strong>策略（Strategy）</strong>：定义所有具体算法的通用接口。</li>
 <li><strong>具体策略（Concrete Strategies）</strong>：使用特定算法实现策略接口。</li>
@@ -588,7 +588,7 @@
 <li><strong>支付处理</strong>：支持多种支付方式（信用卡、PayPal、Apple Pay）。</li>
 <li><strong>游戏 AI</strong>：为角色实现不同的行为（进攻、防守、被动）。</li>
 </ul>
-<h3 id="状态模式"><a href="#状态模式" class="headerlink" title="状态模式"></a>状态模式<a name="state-pattern"></a></h3><p><img src="/3-7.png" alt="pic"><br><strong>状态模式（State Pattern）</strong> 是一种行为型设计模式，它允许对象在内部状态改变时改变其行为。对象看起来像是改变了它的类，因为该模式将特定于状态的行为封装到独立的状态类中，并委托给当前状态。这简化了复杂的依赖于状态的逻辑，并遵循开闭原则。<br>核心概念：</p>
+<h3 id="状态模式"><a href="#状态模式" class="headerlink" title="状态模式"></a>状态模式<a name="state-pattern"></a></h3><p><img src="/2025/04/19/Design-Patterns/3-7.png" alt="pic"><br><strong>状态模式（State Pattern）</strong> 是一种行为型设计模式，它允许对象在内部状态改变时改变其行为。对象看起来像是改变了它的类，因为该模式将特定于状态的行为封装到独立的状态类中，并委托给当前状态。这简化了复杂的依赖于状态的逻辑，并遵循开闭原则。<br>核心概念：</p>
 <ol>
 <li><strong>上下文（Context）</strong>：维护一个具体状态的实例，表示其当前状态。</li>
 <li><strong>状态接口（State Interface）</strong>：定义所有具体状态的通用接口。</li>

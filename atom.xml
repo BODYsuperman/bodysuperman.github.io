@@ -274,68 +274,10 @@
     <published>2026-08-06T08:15:59.000Z</published>
     <summary>
       <![CDATA[<p>Anthropic 发布了一篇博客，分享了六个节省 Claude Code 开支的技巧：完成任务后用 <code>/clear</code> 清除对话；在开始时锁定模型和推理强度，避免中途切换导致提示缓存失效；用 <code>@</code> 引用文件而非手动输入路径；为产生大量输出的命令添加静默参数；离开前运行 <code>/compact</code>；将大输出量的任务分配给子代理。</p>
-<p><img src="/pic01.png" alt="pic"></p>]]>
+<p><img src="/2026/08/06/Six-money-saving-tips-for-Claude-Code/pic01.png" alt="pic"></p>]]>
     </summary>
     <title>六个节省 Claude Code 开支的技巧</title>
     <updated>2026-08-16T10:04:19.000Z</updated>
-  </entry>
-  <entry>
-    <author>
-      <name>AI with Alex</name>
-    </author>
-    <category term="AI Agent" scheme="https://bodysuperman.github.io/categories/AI-Agent/"/>
-    <category term="AI Engineering" scheme="https://bodysuperman.github.io/categories/AI-Agent/AI-Engineering/"/>
-    <category term="LLM" scheme="https://bodysuperman.github.io/tags/LLM/"/>
-    <category term="Post Training" scheme="https://bodysuperman.github.io/tags/Post-Training/"/>
-    <category term="Agent Evolution" scheme="https://bodysuperman.github.io/tags/Agent-Evolution/"/>
-    <category term="Multimodal AI" scheme="https://bodysuperman.github.io/tags/Multimodal-AI/"/>
-    <category term="Autonomous Agents" scheme="https://bodysuperman.github.io/tags/Autonomous-Agents/"/>
-    <category term="Generative AI" scheme="https://bodysuperman.github.io/tags/Generative-AI/"/>
-    <id>https://bodysuperman.github.io/zh-CN/2026/06/25/From-Post-Training-to-Real-Time-Perception-Self-Evolving-Agents-and-Multimodal-Interaction/</id>
-    <link href="https://bodysuperman.github.io/zh-CN/2026/06/25/From-Post-Training-to-Real-Time-Perception-Self-Evolving-Agents-and-Multimodal-Interaction/"/>
-    <published>2026-06-25T07:09:38.000Z</published>
-    <summary>
-      <![CDATA[<ul>
-<li><a href="#introduction">引言</a><ul>
-<li><a href="#capability-paradox">能力悖论</a></li>
-<li><a href="#three-acts">本文三幕</a></li>
-</ul>
-</li>
-<li><a href="#post-training">后训练：将能力烘焙进参数</a><ul>
-<li><a href="#three-stage-pipeline">三阶段流水线</a></li>
-<li><a href="#sft-rl-comparison">SFT 记忆，RL 泛化</a></li>
-<li><a href="#sft-vs-rl-decision">何时选择 SFT 还是 RL</a></li>
-<li><a href="#reward-design">奖励设计：从标量到生成式</a></li>
-<li><a href="#rlvp">RLVP：奖励结果，惩罚路径</a></li>
-<li><a href="#data-environment">数据和环境比算法更重要</a></li>
-<li><a href="#practical-takeaway-post-training">实践要点</a></li>
-</ul>
-</li>
-<li><a href="#self-evolving">自进化智能体：从经验中学习</a><ul>
-<li><a href="#preserving-vs-learning">保存经验不等于学习</a></li>
-<li><a href="#three-layer-verification">三层验证</a></li>
-<li><a href="#four-update-carriers">四种更新载体</a></li>
-<li><a href="#dual-loop-architecture">双循环架构</a></li>
-<li><a href="#done-not-progress">完成不等于进步</a></li>
-<li><a href="#safety-boundaries">持续进化的安全边界</a></li>
-</ul>
-</li>
-<li><a href="#realtime-multimodal">实时感知与多模态交互</a><ul>
-<li><a href="#why-realtime">为什么实时性改变一切</a></li>
-<li><a href="#voice-evolution">语音：从级联到端到端再到全双工</a></li>
-<li><a href="#computer-use">计算机操作：感知-思考-行动循环</a></li>
-<li><a href="#robotics">机器人：VLA、动作分块与 Sim2Real</a></li>
-<li><a href="#fast-slow">统一主题：快-慢架构</a></li>
-</ul>
-</li>
-<li><a href="#full-stack">整合：现代智能体的全栈</a></li>
-<li><a href="#best-practices">最佳实践</a></li>
-<li><a href="#faq">常见问题</a></li>
-<li><a href="#summary">总结</a></li>
-</ul>]]>
-    </summary>
-    <title>从后训练到实时感知：自进化智能体与多模态交互</title>
-    <updated>2026-07-25T07:09:38.000Z</updated>
   </entry>
   <entry>
     <author>
@@ -393,6 +335,64 @@
 </ul>]]>
     </summary>
     <title>From Post-Training to Real-Time Perception: Self-Evolving Agents and Multimodal Interaction</title>
+    <updated>2026-07-25T07:09:38.000Z</updated>
+  </entry>
+  <entry>
+    <author>
+      <name>AI with Alex</name>
+    </author>
+    <category term="AI Agent" scheme="https://bodysuperman.github.io/categories/AI-Agent/"/>
+    <category term="AI Engineering" scheme="https://bodysuperman.github.io/categories/AI-Agent/AI-Engineering/"/>
+    <category term="LLM" scheme="https://bodysuperman.github.io/tags/LLM/"/>
+    <category term="Post Training" scheme="https://bodysuperman.github.io/tags/Post-Training/"/>
+    <category term="Agent Evolution" scheme="https://bodysuperman.github.io/tags/Agent-Evolution/"/>
+    <category term="Multimodal AI" scheme="https://bodysuperman.github.io/tags/Multimodal-AI/"/>
+    <category term="Autonomous Agents" scheme="https://bodysuperman.github.io/tags/Autonomous-Agents/"/>
+    <category term="Generative AI" scheme="https://bodysuperman.github.io/tags/Generative-AI/"/>
+    <id>https://bodysuperman.github.io/zh-CN/2026/06/25/From-Post-Training-to-Real-Time-Perception-Self-Evolving-Agents-and-Multimodal-Interaction/</id>
+    <link href="https://bodysuperman.github.io/zh-CN/2026/06/25/From-Post-Training-to-Real-Time-Perception-Self-Evolving-Agents-and-Multimodal-Interaction/"/>
+    <published>2026-06-25T07:09:38.000Z</published>
+    <summary>
+      <![CDATA[<ul>
+<li><a href="#introduction">引言</a><ul>
+<li><a href="#capability-paradox">能力悖论</a></li>
+<li><a href="#three-acts">本文三幕</a></li>
+</ul>
+</li>
+<li><a href="#post-training">后训练：将能力烘焙进参数</a><ul>
+<li><a href="#three-stage-pipeline">三阶段流水线</a></li>
+<li><a href="#sft-rl-comparison">SFT 记忆，RL 泛化</a></li>
+<li><a href="#sft-vs-rl-decision">何时选择 SFT 还是 RL</a></li>
+<li><a href="#reward-design">奖励设计：从标量到生成式</a></li>
+<li><a href="#rlvp">RLVP：奖励结果，惩罚路径</a></li>
+<li><a href="#data-environment">数据和环境比算法更重要</a></li>
+<li><a href="#practical-takeaway-post-training">实践要点</a></li>
+</ul>
+</li>
+<li><a href="#self-evolving">自进化智能体：从经验中学习</a><ul>
+<li><a href="#preserving-vs-learning">保存经验不等于学习</a></li>
+<li><a href="#three-layer-verification">三层验证</a></li>
+<li><a href="#four-update-carriers">四种更新载体</a></li>
+<li><a href="#dual-loop-architecture">双循环架构</a></li>
+<li><a href="#done-not-progress">完成不等于进步</a></li>
+<li><a href="#safety-boundaries">持续进化的安全边界</a></li>
+</ul>
+</li>
+<li><a href="#realtime-multimodal">实时感知与多模态交互</a><ul>
+<li><a href="#why-realtime">为什么实时性改变一切</a></li>
+<li><a href="#voice-evolution">语音：从级联到端到端再到全双工</a></li>
+<li><a href="#computer-use">计算机操作：感知-思考-行动循环</a></li>
+<li><a href="#robotics">机器人：VLA、动作分块与 Sim2Real</a></li>
+<li><a href="#fast-slow">统一主题：快-慢架构</a></li>
+</ul>
+</li>
+<li><a href="#full-stack">整合：现代智能体的全栈</a></li>
+<li><a href="#best-practices">最佳实践</a></li>
+<li><a href="#faq">常见问题</a></li>
+<li><a href="#summary">总结</a></li>
+</ul>]]>
+    </summary>
+    <title>从后训练到实时感知：自进化智能体与多模态交互</title>
     <updated>2026-07-25T07:09:38.000Z</updated>
   </entry>
   <entry>
@@ -832,63 +832,6 @@
     <category term="AI Agent" scheme="https://bodysuperman.github.io/tags/AI-Agent/"/>
     <category term="LLM" scheme="https://bodysuperman.github.io/tags/LLM/"/>
     <category term="MultiModal" scheme="https://bodysuperman.github.io/tags/MultiModal/"/>
-    <id>https://bodysuperman.github.io/2026/05/04/LangChain-Core-Components%EF%BC%9AMode-Message-Prompt-Tool-Memory/</id>
-    <link href="https://bodysuperman.github.io/2026/05/04/LangChain-Core-Components%EF%BC%9AMode-Message-Prompt-Tool-Memory/"/>
-    <published>2026-05-04T04:48:28.000Z</published>
-    <summary>
-      <![CDATA[<ul>
-<li><a href="#what-is-langchain">What is LangChain?</a><ul>
-<li><a href="#the-platform">The Platform</a></li>
-<li><a href="#what-is-an-agent">What is an Agent?</a></li>
-<li><a href="#llm-vs-agent-the-difference">LLM vs Agent: The Difference</a></li>
-</ul>
-</li>
-<li><a href="#models--the-brain">Models — The Brain</a><ul>
-<li><a href="#initializing-a-model">Initializing a Model</a></li>
-<li><a href="#custom-models-and-parameters">Custom Models and Parameters</a></li>
-<li><a href="#using-model-classes">Using Model Classes</a></li>
-<li><a href="#calling-the-model-invoke-vs-stream">Calling the Model: invoke vs stream</a></li>
-<li><a href="#using-models-in-an-agent">Using Models in an Agent</a></li>
-</ul>
-</li>
-<li><a href="#messages--the-building-blocks-of-conversation">Messages — The Building Blocks of Conversation</a><ul>
-<li><a href="#message-types">Message Types</a></li>
-<li><a href="#multimodal-messages">Multimodal Messages</a></li>
-</ul>
-</li>
-<li><a href="#prompts--steering-the-output">Prompts — Steering the Output</a><ul>
-<li><a href="#system-prompts">System Prompts</a></li>
-<li><a href="#prompt-engineering">Prompt Engineering</a></li>
-<li><a href="#structured-output">Structured Output</a></li>
-</ul>
-</li>
-<li><a href="#tools--the-hands">Tools — The Hands</a><ul>
-<li><a href="#defining-tools">Defining Tools</a></li>
-<li><a href="#custom-tools">Custom Tools</a></li>
-<li><a href="#predefined-tools-tavily-search">Predefined Tools: Tavily Search</a></li>
-<li><a href="#combining-tools-with-an-agent">Combining Tools with an Agent</a></li>
-</ul>
-</li>
-<li><a href="#memory--making-the-agent-remember">Memory — Making the Agent Remember</a><ul>
-<li><a href="#short-term-vs-long-term-memory">Short-Term vs Long-Term Memory</a></li>
-<li><a href="#short-term-memory-with-inmemorysaver">Short-Term Memory with InMemorySaver</a></li>
-<li><a href="#persistent-memory-optional">Persistent Memory (Optional)</a></li>
-<li><a href="#memory-management-strategies">Memory Management Strategies</a>]]>
-    </summary>
-    <title>LangChain Core Components: Model, Message, Prompt, Tool, Memory</title>
-    <updated>2026-06-05T16:00:00.000Z</updated>
-  </entry>
-  <entry>
-    <author>
-      <name>AI with Alex</name>
-    </author>
-    <category term="Python" scheme="https://bodysuperman.github.io/categories/Python/"/>
-    <category term="AI" scheme="https://bodysuperman.github.io/categories/Python/AI/"/>
-    <category term="LangChain" scheme="https://bodysuperman.github.io/tags/LangChain/"/>
-    <category term="LangSmith" scheme="https://bodysuperman.github.io/tags/LangSmith/"/>
-    <category term="AI Agent" scheme="https://bodysuperman.github.io/tags/AI-Agent/"/>
-    <category term="LLM" scheme="https://bodysuperman.github.io/tags/LLM/"/>
-    <category term="MultiModal" scheme="https://bodysuperman.github.io/tags/MultiModal/"/>
     <id>https://bodysuperman.github.io/zh-CN/2026/05/04/LangChain-Core-Components%EF%BC%9AMode-Message-Prompt-Tool-Memory/</id>
     <link href="https://bodysuperman.github.io/zh-CN/2026/05/04/LangChain-Core-Components%EF%BC%9AMode-Message-Prompt-Tool-Memory/"/>
     <published>2026-05-04T04:48:28.000Z</published>
@@ -939,15 +882,72 @@
     <author>
       <name>AI with Alex</name>
     </author>
+    <category term="Python" scheme="https://bodysuperman.github.io/categories/Python/"/>
+    <category term="AI" scheme="https://bodysuperman.github.io/categories/Python/AI/"/>
+    <category term="LangChain" scheme="https://bodysuperman.github.io/tags/LangChain/"/>
+    <category term="LangSmith" scheme="https://bodysuperman.github.io/tags/LangSmith/"/>
+    <category term="AI Agent" scheme="https://bodysuperman.github.io/tags/AI-Agent/"/>
+    <category term="LLM" scheme="https://bodysuperman.github.io/tags/LLM/"/>
+    <category term="MultiModal" scheme="https://bodysuperman.github.io/tags/MultiModal/"/>
+    <id>https://bodysuperman.github.io/2026/05/04/LangChain-Core-Components%EF%BC%9AMode-Message-Prompt-Tool-Memory/</id>
+    <link href="https://bodysuperman.github.io/2026/05/04/LangChain-Core-Components%EF%BC%9AMode-Message-Prompt-Tool-Memory/"/>
+    <published>2026-05-04T04:48:28.000Z</published>
+    <summary>
+      <![CDATA[<ul>
+<li><a href="#what-is-langchain">What is LangChain?</a><ul>
+<li><a href="#the-platform">The Platform</a></li>
+<li><a href="#what-is-an-agent">What is an Agent?</a></li>
+<li><a href="#llm-vs-agent-the-difference">LLM vs Agent: The Difference</a></li>
+</ul>
+</li>
+<li><a href="#models--the-brain">Models — The Brain</a><ul>
+<li><a href="#initializing-a-model">Initializing a Model</a></li>
+<li><a href="#custom-models-and-parameters">Custom Models and Parameters</a></li>
+<li><a href="#using-model-classes">Using Model Classes</a></li>
+<li><a href="#calling-the-model-invoke-vs-stream">Calling the Model: invoke vs stream</a></li>
+<li><a href="#using-models-in-an-agent">Using Models in an Agent</a></li>
+</ul>
+</li>
+<li><a href="#messages--the-building-blocks-of-conversation">Messages — The Building Blocks of Conversation</a><ul>
+<li><a href="#message-types">Message Types</a></li>
+<li><a href="#multimodal-messages">Multimodal Messages</a></li>
+</ul>
+</li>
+<li><a href="#prompts--steering-the-output">Prompts — Steering the Output</a><ul>
+<li><a href="#system-prompts">System Prompts</a></li>
+<li><a href="#prompt-engineering">Prompt Engineering</a></li>
+<li><a href="#structured-output">Structured Output</a></li>
+</ul>
+</li>
+<li><a href="#tools--the-hands">Tools — The Hands</a><ul>
+<li><a href="#defining-tools">Defining Tools</a></li>
+<li><a href="#custom-tools">Custom Tools</a></li>
+<li><a href="#predefined-tools-tavily-search">Predefined Tools: Tavily Search</a></li>
+<li><a href="#combining-tools-with-an-agent">Combining Tools with an Agent</a></li>
+</ul>
+</li>
+<li><a href="#memory--making-the-agent-remember">Memory — Making the Agent Remember</a><ul>
+<li><a href="#short-term-vs-long-term-memory">Short-Term vs Long-Term Memory</a></li>
+<li><a href="#short-term-memory-with-inmemorysaver">Short-Term Memory with InMemorySaver</a></li>
+<li><a href="#persistent-memory-optional">Persistent Memory (Optional)</a></li>
+<li><a href="#memory-management-strategies">Memory Management Strategies</a>]]>
+    </summary>
+    <title>LangChain Core Components: Model, Message, Prompt, Tool, Memory</title>
+    <updated>2026-06-05T16:00:00.000Z</updated>
+  </entry>
+  <entry>
+    <author>
+      <name>AI with Alex</name>
+    </author>
     <category term="Java" scheme="https://bodysuperman.github.io/categories/Java/"/>
     <category term="AI" scheme="https://bodysuperman.github.io/categories/Java/AI/"/>
     <category term="Spring Boot" scheme="https://bodysuperman.github.io/categories/Java/AI/Spring-Boot/"/>
     <category term="LLM" scheme="https://bodysuperman.github.io/tags/LLM/"/>
     <category term="RAG" scheme="https://bodysuperman.github.io/tags/RAG/"/>
+    <category term="Spring Boot" scheme="https://bodysuperman.github.io/tags/Spring-Boot/"/>
     <category term="LangChain4J" scheme="https://bodysuperman.github.io/tags/LangChain4J/"/>
     <category term="OpenAI" scheme="https://bodysuperman.github.io/tags/OpenAI/"/>
     <category term="Function Calling" scheme="https://bodysuperman.github.io/tags/Function-Calling/"/>
-    <category term="Spring Boot" scheme="https://bodysuperman.github.io/tags/Spring-Boot/"/>
     <id>https://bodysuperman.github.io/zh-CN/2026/04/27/LangChain4J-in-Action-Building-a-Medical-AI-Assistant-Agent/</id>
     <link href="https://bodysuperman.github.io/zh-CN/2026/04/27/LangChain4J-in-Action-Building-a-Medical-AI-Assistant-Agent/"/>
     <published>2026-04-27T04:48:28.000Z</published>
@@ -991,10 +991,10 @@
     <category term="Spring Boot" scheme="https://bodysuperman.github.io/categories/Java/AI/Spring-Boot/"/>
     <category term="LLM" scheme="https://bodysuperman.github.io/tags/LLM/"/>
     <category term="RAG" scheme="https://bodysuperman.github.io/tags/RAG/"/>
+    <category term="Spring Boot" scheme="https://bodysuperman.github.io/tags/Spring-Boot/"/>
     <category term="LangChain4J" scheme="https://bodysuperman.github.io/tags/LangChain4J/"/>
     <category term="OpenAI" scheme="https://bodysuperman.github.io/tags/OpenAI/"/>
     <category term="Function Calling" scheme="https://bodysuperman.github.io/tags/Function-Calling/"/>
-    <category term="Spring Boot" scheme="https://bodysuperman.github.io/tags/Spring-Boot/"/>
     <id>https://bodysuperman.github.io/2026/04/27/LangChain4J-in-Action-Building-a-Medical-AI-Assistant-Agent/</id>
     <link href="https://bodysuperman.github.io/2026/04/27/LangChain4J-in-Action-Building-a-Medical-AI-Assistant-Agent/"/>
     <published>2026-04-27T04:48:28.000Z</published>

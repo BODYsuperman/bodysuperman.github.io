@@ -27,7 +27,7 @@
 <meta property="og:site_name" content="AI with Alex&#39;s Blog">
 <meta property="og:description" content="引言 全局视角：七层扩展体系 选择合适的模型 模型对比 四种切换模型的方式 配置文件层级   核心配置 settings.json：权限与默认设置 CLAUDE.md：项目手册 三层记忆系统 .claudeignore   日常命令与交互 斜杠命令速查表 必须掌握的四个命令 快捷键 高级交互：!、@ 与图片   正确的工作流：探索、规划、实现、提交 Plan 模式与三种运行模式 何时规划，何时直">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://bodysuperman.github.io/cl-1.png">
+<meta property="og:image" content="https://bodysuperman.github.io/2026/08/23/Deep%E2%80%91Dive-Advanced-Tips-for-Claude-Code/cl-1.png">
 <meta property="article:published_time" content="2026-08-23T04:48:28.000Z">
 <meta property="article:modified_time" content="2026-09-01T16:00:00.000Z">
 <meta property="article:author" content="AI with Alex">
@@ -38,7 +38,7 @@
 <meta property="article:tag" content="Coding Agent">
 <meta property="article:tag" content="MCP‑Protocol">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://bodysuperman.github.io/cl-1.png">
+<meta name="twitter:image" content="https://bodysuperman.github.io/2026/08/23/Deep%E2%80%91Dive-Advanced-Tips-for-Claude-Code/cl-1.png">
 
 <link rel="canonical" href="https://bodysuperman.github.io/zh-CN/2026/08/23/Deep%E2%80%91Dive-Advanced-Tips-for-Claude-Code/">
 
@@ -356,7 +356,7 @@
 <h2 id="全局视角：七层扩展体系"><a href="#全局视角：七层扩展体系" class="headerlink" title="全局视角：七层扩展体系"></a>全局视角：七层扩展体系</h2><p>在深入细节之前，先看一下 Claude Code 项目的典型目录结构：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">your-project/</span><br><span class="line">├── CLAUDE.md ← 团队共享指令，提交到 git</span><br><span class="line">├── CLAUDE.local.md ← 个人覆盖，git 忽略</span><br><span class="line">└── .claude/</span><br><span class="line"> ├── settings.json ← 权限 + 配置，提交到 git</span><br><span class="line"> ├── settings.local.json ← 个人权限，git 忽略</span><br><span class="line"> ├── commands/ ← 自定义斜杠命令</span><br><span class="line"> │ ├── review.md → /project:review</span><br><span class="line"> │ ├── fix-issue.md → /project:fix-issue</span><br><span class="line"> │ └── deploy.md → /project:deploy</span><br><span class="line"> ├── rules/ ← 模块化指令文件（全局生效）</span><br><span class="line"> │ ├── code-style.md</span><br><span class="line"> │ ├── testing.md</span><br><span class="line"> │ └── api-conventions.md</span><br><span class="line"> ├── skills/ ← 自动调用的工作流</span><br><span class="line"> │ ├── security-review/</span><br><span class="line"> │ │ └── SKILL.md</span><br><span class="line"> │ └── deploy/</span><br><span class="line"> │ └── SKILL.md</span><br><span class="line"> └── agents/ ← 子代理角色定义</span><br><span class="line"> ├── code-reviewer.md</span><br><span class="line"> └── security-auditor.md</span><br></pre></td></tr></table></figure>
 
-<p><img src="/cl-1.png" alt="pic"></p>
+<p><img src="/2026/08/23/Deep%E2%80%91Dive-Advanced-Tips-for-Claude-Code/cl-1.png" alt="pic"></p>
 <p>本质上，Claude Code 的能力被组织为 <strong>7 个扩展层</strong>（官方术语叫 _Harness_）：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Layer 7  Subagents      独立上下文并行工作</span><br><span class="line">Layer 6  MCP            连接外部工具和数据源</span><br><span class="line">Layer 5  LSP            IDE 级别的代码导航</span><br><span class="line">Layer 4  Plugins        将 Skills + Hooks + MCP 打包分发</span><br><span class="line">Layer 3  Skills         按需加载的知识包</span><br><span class="line">Layer 2  Hooks          在特定时刻运行的事件触发器</span><br><span class="line">Layer 1  CLAUDE.md      项目手册，每次会话都会加载</span><br></pre></td></tr></table></figure>
 
