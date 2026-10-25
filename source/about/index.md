@@ -23,6 +23,10 @@ date: 2025-02-18 11:29:25
 
 [![World News Aggregator](https://img.shields.io/badge/World%20News%20Aggregator-4285F4?style=flat-square&logo=googlenews&logoColor=white)](https://clawhub.ai/bodysuperman/world-news-aggregator-skill)
 
+[![article-translator](https://img.shields.io/badge/article--translator-4285F4?style=flat-square&logo=googlenews&logoColor=white)](https://github.com/BODYsuperman/AI-Skills/tree/main)
+
+[![readme-file-generator](https://img.shields.io/badge/readme--file--generator-4285F4?style=flat-square&logo=googlenews&logoColor=white)](https://github.com/BODYsuperman/AI-Skills/tree/main)
+
 ### 🏗️ Microservices Architecture
 
 ![Spring Cloud](https://img.shields.io/badge/Spring%20Cloud%20Alibaba-6DB33F?style=flat-square&logo=spring&logoColor=white)
