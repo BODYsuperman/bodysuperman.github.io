@@ -361,58 +361,6 @@
       <pubDate>Thu, 25 Jun 2026 07:09:38 GMT</pubDate>
     </item>
     <item>
-      <title>From Capability to Intelligence: Tools, Coding, and Evaluation in AI Agents</title>
-      <link>https://bodysuperman.github.io/2026/06/17/From-Capability-to-Intelligence-Tools-Coding-and-Evaluation-in-AI-Agents/</link>
-      <description>
-        <![CDATA[<ul>
-<li><a href="#introduction">Introduction</a></li>
-<li><a href="#what-the-three-layer-model-of-agent-intelligence">What: The Three-Layer Model of Agent Intelligence</a></li>
-<li><a href="#tools-the-agents-hands-feet-and-senses">Tools: The Agent’s Hands, Feet, and Senses</a><ul>
-<li><a href="#tool-classification-five-categories">Tool Classification: Five Categories</a></li>
-<li><a href="#universal-principles-of-tool-design">Universal Principles of Tool Design</a></li>
-<li><a href="#the-mcp-ecosystem-and-the-challenge-of-tool-selection">The MCP Ecosystem and the Challenge of Tool Selection</a></li>
-<li><a href="#execution-security-proposer-reviewer-and-sidecar">Execution Security: Proposer-Reviewer and Sidecar</a></li>
-<li><a href="#event-driven-asynchronous-agents">Event-Driven Asynchronous Agents</a></li>
-<li><a href="#proactive-tool-discovery-and-skills">Proactive Tool Discovery and Skills</a></li>
-</ul>
-</li>
-<li><a href="#coding-agent-code-as-the-meta-capability">Coding Agent: Code as the Meta-Capability</a><ul>
-<li><a href="#the-seven-core-tools-and-the-file-system-hub">The Seven Core Tools and the File System Hub</a></li>
-<li><a href="#security-the-lethal-triad-and-trust-boundaries">Security: The Lethal Triad and Trust Boundaries</a></li>
-<li><a href="#harness-engineering-for-coding-agents">Harness Engineering for Coding Agents</a></li>
-<li><a href="#failure-and-error-recovery">Failure and Error Recovery</a></li>
-<li><a href="#six-directions-of-code-as-meta-capability">Six Directions of Code as Meta-Capability</a></li>
-</ul>
-</li>
-<li><a href="#evaluation-knowing-whether-it-actually-works">Evaluation: Knowing Whether It Actually Works</a><ul>
-<li><a href="#a-concrete-example">A Concrete Example</a></li>
-<li><a href="#automated-evaluation-environments">Automated Evaluation Environments</a></li>
-<li><a href="#designing-evaluation-datasets">Designing Evaluation Datasets</a></li>
-<li><a href="#the-metrics-system-passk-vs-passk">The Metrics System: Pass@k vs Pass^k</a></li>
-<li><a href="#llm-as-a-judge-and-rubrics">LLM-as-a-Judge and Rubrics</a></li>
-<li><a href="#pairwise-comparison-and-model-ranking">Pairwise Comparison and Model Ranking</a></li>
-<li><a href="#statistical-significance">Statistical Significance</a></li>
-<li><a href="#from-benchmark-to-system-improvement">From Benchmark to System Improvement</a></li>
-</ul>
-</li>
-<li><a href="#example-an-end-to-end-mini-case">Example: An End-to-End Mini-Case</a></li>
-<li><a href="#best-practices">Best Practices</a></li>
-<li><a href="#faq">FAQ</a></li>
-<li><a href="#summary">Summary</a></li>
-<li><a href="#appendix">Appendix</a></li>
-</ul>]]>
-      </description>
-      <author>AI with Alex</author>
-      <category domain="https://bodysuperman.github.io/categories/AI-Agent/">AI Agent</category>
-      <category domain="https://bodysuperman.github.io/categories/AI-Agent/AI-Engineering/">AI Engineering</category>
-      <category domain="https://bodysuperman.github.io/tags/LLM/">LLM</category>
-      <category domain="https://bodysuperman.github.io/tags/Coding-Agent/">Coding Agent</category>
-      <category domain="https://bodysuperman.github.io/tags/Agent-Engineering/">Agent Engineering</category>
-      <category domain="https://bodysuperman.github.io/tags/Tool-Calling/">Tool Calling</category>
-      <category domain="https://bodysuperman.github.io/tags/Agent-Evaluation/">Agent Evaluation</category>
-      <pubDate>Wed, 17 Jun 2026 07:09:38 GMT</pubDate>
-    </item>
-    <item>
       <title>从能力到智能：AI Agent 的工具、编程与评估</title>
       <link>https://bodysuperman.github.io/zh-CN/2026/06/17/From-Capability-to-Intelligence-Tools-Coding-and-Evaluation-in-AI-Agents/</link>
       <description>
@@ -452,6 +400,58 @@
 <li><a href="#faq">常见问题</a></li>
 <li><a href="#summary">总结</a></li>
 <li><a href="#appendix">附录</a></li>
+</ul>]]>
+      </description>
+      <author>AI with Alex</author>
+      <category domain="https://bodysuperman.github.io/categories/AI-Agent/">AI Agent</category>
+      <category domain="https://bodysuperman.github.io/categories/AI-Agent/AI-Engineering/">AI Engineering</category>
+      <category domain="https://bodysuperman.github.io/tags/LLM/">LLM</category>
+      <category domain="https://bodysuperman.github.io/tags/Coding-Agent/">Coding Agent</category>
+      <category domain="https://bodysuperman.github.io/tags/Agent-Engineering/">Agent Engineering</category>
+      <category domain="https://bodysuperman.github.io/tags/Tool-Calling/">Tool Calling</category>
+      <category domain="https://bodysuperman.github.io/tags/Agent-Evaluation/">Agent Evaluation</category>
+      <pubDate>Wed, 17 Jun 2026 07:09:38 GMT</pubDate>
+    </item>
+    <item>
+      <title>From Capability to Intelligence: Tools, Coding, and Evaluation in AI Agents</title>
+      <link>https://bodysuperman.github.io/2026/06/17/From-Capability-to-Intelligence-Tools-Coding-and-Evaluation-in-AI-Agents/</link>
+      <description>
+        <![CDATA[<ul>
+<li><a href="#introduction">Introduction</a></li>
+<li><a href="#what-the-three-layer-model-of-agent-intelligence">What: The Three-Layer Model of Agent Intelligence</a></li>
+<li><a href="#tools-the-agents-hands-feet-and-senses">Tools: The Agent’s Hands, Feet, and Senses</a><ul>
+<li><a href="#tool-classification-five-categories">Tool Classification: Five Categories</a></li>
+<li><a href="#universal-principles-of-tool-design">Universal Principles of Tool Design</a></li>
+<li><a href="#the-mcp-ecosystem-and-the-challenge-of-tool-selection">The MCP Ecosystem and the Challenge of Tool Selection</a></li>
+<li><a href="#execution-security-proposer-reviewer-and-sidecar">Execution Security: Proposer-Reviewer and Sidecar</a></li>
+<li><a href="#event-driven-asynchronous-agents">Event-Driven Asynchronous Agents</a></li>
+<li><a href="#proactive-tool-discovery-and-skills">Proactive Tool Discovery and Skills</a></li>
+</ul>
+</li>
+<li><a href="#coding-agent-code-as-the-meta-capability">Coding Agent: Code as the Meta-Capability</a><ul>
+<li><a href="#the-seven-core-tools-and-the-file-system-hub">The Seven Core Tools and the File System Hub</a></li>
+<li><a href="#security-the-lethal-triad-and-trust-boundaries">Security: The Lethal Triad and Trust Boundaries</a></li>
+<li><a href="#harness-engineering-for-coding-agents">Harness Engineering for Coding Agents</a></li>
+<li><a href="#failure-and-error-recovery">Failure and Error Recovery</a></li>
+<li><a href="#six-directions-of-code-as-meta-capability">Six Directions of Code as Meta-Capability</a></li>
+</ul>
+</li>
+<li><a href="#evaluation-knowing-whether-it-actually-works">Evaluation: Knowing Whether It Actually Works</a><ul>
+<li><a href="#a-concrete-example">A Concrete Example</a></li>
+<li><a href="#automated-evaluation-environments">Automated Evaluation Environments</a></li>
+<li><a href="#designing-evaluation-datasets">Designing Evaluation Datasets</a></li>
+<li><a href="#the-metrics-system-passk-vs-passk">The Metrics System: Pass@k vs Pass^k</a></li>
+<li><a href="#llm-as-a-judge-and-rubrics">LLM-as-a-Judge and Rubrics</a></li>
+<li><a href="#pairwise-comparison-and-model-ranking">Pairwise Comparison and Model Ranking</a></li>
+<li><a href="#statistical-significance">Statistical Significance</a></li>
+<li><a href="#from-benchmark-to-system-improvement">From Benchmark to System Improvement</a></li>
+</ul>
+</li>
+<li><a href="#example-an-end-to-end-mini-case">Example: An End-to-End Mini-Case</a></li>
+<li><a href="#best-practices">Best Practices</a></li>
+<li><a href="#faq">FAQ</a></li>
+<li><a href="#summary">Summary</a></li>
+<li><a href="#appendix">Appendix</a></li>
 </ul>]]>
       </description>
       <author>AI with Alex</author>
@@ -661,53 +661,6 @@
       <pubDate>Mon, 18 May 2026 04:00:00 GMT</pubDate>
     </item>
     <item>
-      <title>A Multimodal AI Agent Application: AI Private Chef</title>
-      <link>https://bodysuperman.github.io/2026/05/11/A-Multimodal-AI-Agent-Application-AI-Private-Chef/</link>
-      <description>
-        <![CDATA[<ul>
-<li><a href="#introduction">Introduction</a></li>
-<li><a href="#what-are-we-building">What Are We Building?</a><ul>
-<li><a href="#feature-overview">Feature Overview</a></li>
-<li><a href="#architecture-overview">Architecture Overview</a></li>
-</ul>
-</li>
-<li><a href="#implementation-strategy">Implementation Strategy</a><ul>
-<li><a href="#model-selection">Model Selection</a></li>
-<li><a href="#tool-selection">Tool Selection</a></li>
-<li><a href="#memory-strategy">Memory Strategy</a></li>
-<li><a href="#system-prompt-design">System Prompt Design</a></li>
-</ul>
-</li>
-<li><a href="#prototyping-in-jupyter">Prototyping in Jupyter</a><ul>
-<li><a href="#environment-configuration">Environment Configuration</a></li>
-<li><a href="#dependencies">Dependencies</a></li>
-<li><a href="#loading-configuration">Loading Configuration</a></li>
-<li><a href="#defining-tools">Defining Tools</a></li>
-<li><a href="#initializing-the-multimodal-model">Initializing the Multimodal Model</a></li>
-<li><a href="#memory-management">Memory Management</a></li>
-<li><a href="#creating-the-agent">Creating the Agent</a></li>
-<li><a href="#testing-with-image-input">Testing with Image Input</a></li>
-<li><a href="#testing-conversation-memory">Testing Conversation Memory</a></li>
-</ul>
-</li>
-<li><a href="#deploying-with-langgraph-and-langsmith">Deploying with LangGraph and LangSmith</a><ul>
-<li><a href="#langsmith-setup">LangSmith Setup</a></li>
-<li><a href="#developing-the-agent">Developing the Agent</a></li>
-<li><a href="#local-deployment-with-langgraph-cli">Local Deployment with LangGraph CLI</a></li>
-<li><a href="#testing-in-langsmith-studio">Testing in LangSmith Studio</a>]]>
-      </description>
-      <author>AI with Alex</author>
-      <category domain="https://bodysuperman.github.io/categories/Python/">Python</category>
-      <category domain="https://bodysuperman.github.io/categories/Python/AI/">AI</category>
-      <category domain="https://bodysuperman.github.io/tags/LangChain/">LangChain</category>
-      <category domain="https://bodysuperman.github.io/tags/LangSmith/">LangSmith</category>
-      <category domain="https://bodysuperman.github.io/tags/LangGraph/">LangGraph</category>
-      <category domain="https://bodysuperman.github.io/tags/AI-Agent/">AI Agent</category>
-      <category domain="https://bodysuperman.github.io/tags/LLM/">LLM</category>
-      <category domain="https://bodysuperman.github.io/tags/MultiModal/">MultiModal</category>
-      <pubDate>Mon, 11 May 2026 04:48:28 GMT</pubDate>
-    </item>
-    <item>
       <title>多模态 AI Agent 应用实战：AI 私厨</title>
       <link>https://bodysuperman.github.io/zh-CN/2026/05/11/A-Multimodal-AI-Agent-Application-AI-Private-Chef/</link>
       <description>
@@ -742,6 +695,53 @@
 <li><a href="#developing-the-agent">开发 Agent</a></li>
 <li><a href="#local-deployment-with-langgraph-cli">使用 LangGraph CLI 本地部署</a></li>
 <li><a href="#testing-in-langsmith-studio">在 LangSmith Studio 中测试</a>]]>
+      </description>
+      <author>AI with Alex</author>
+      <category domain="https://bodysuperman.github.io/categories/Python/">Python</category>
+      <category domain="https://bodysuperman.github.io/categories/Python/AI/">AI</category>
+      <category domain="https://bodysuperman.github.io/tags/LangChain/">LangChain</category>
+      <category domain="https://bodysuperman.github.io/tags/LangSmith/">LangSmith</category>
+      <category domain="https://bodysuperman.github.io/tags/LangGraph/">LangGraph</category>
+      <category domain="https://bodysuperman.github.io/tags/AI-Agent/">AI Agent</category>
+      <category domain="https://bodysuperman.github.io/tags/LLM/">LLM</category>
+      <category domain="https://bodysuperman.github.io/tags/MultiModal/">MultiModal</category>
+      <pubDate>Mon, 11 May 2026 04:48:28 GMT</pubDate>
+    </item>
+    <item>
+      <title>A Multimodal AI Agent Application: AI Private Chef</title>
+      <link>https://bodysuperman.github.io/2026/05/11/A-Multimodal-AI-Agent-Application-AI-Private-Chef/</link>
+      <description>
+        <![CDATA[<ul>
+<li><a href="#introduction">Introduction</a></li>
+<li><a href="#what-are-we-building">What Are We Building?</a><ul>
+<li><a href="#feature-overview">Feature Overview</a></li>
+<li><a href="#architecture-overview">Architecture Overview</a></li>
+</ul>
+</li>
+<li><a href="#implementation-strategy">Implementation Strategy</a><ul>
+<li><a href="#model-selection">Model Selection</a></li>
+<li><a href="#tool-selection">Tool Selection</a></li>
+<li><a href="#memory-strategy">Memory Strategy</a></li>
+<li><a href="#system-prompt-design">System Prompt Design</a></li>
+</ul>
+</li>
+<li><a href="#prototyping-in-jupyter">Prototyping in Jupyter</a><ul>
+<li><a href="#environment-configuration">Environment Configuration</a></li>
+<li><a href="#dependencies">Dependencies</a></li>
+<li><a href="#loading-configuration">Loading Configuration</a></li>
+<li><a href="#defining-tools">Defining Tools</a></li>
+<li><a href="#initializing-the-multimodal-model">Initializing the Multimodal Model</a></li>
+<li><a href="#memory-management">Memory Management</a></li>
+<li><a href="#creating-the-agent">Creating the Agent</a></li>
+<li><a href="#testing-with-image-input">Testing with Image Input</a></li>
+<li><a href="#testing-conversation-memory">Testing Conversation Memory</a></li>
+</ul>
+</li>
+<li><a href="#deploying-with-langgraph-and-langsmith">Deploying with LangGraph and LangSmith</a><ul>
+<li><a href="#langsmith-setup">LangSmith Setup</a></li>
+<li><a href="#developing-the-agent">Developing the Agent</a></li>
+<li><a href="#local-deployment-with-langgraph-cli">Local Deployment with LangGraph CLI</a></li>
+<li><a href="#testing-in-langsmith-studio">Testing in LangSmith Studio</a>]]>
       </description>
       <author>AI with Alex</author>
       <category domain="https://bodysuperman.github.io/categories/Python/">Python</category>
@@ -861,49 +861,6 @@
       <pubDate>Mon, 04 May 2026 04:48:28 GMT</pubDate>
     </item>
     <item>
-      <title>LangChain4J 实战：构建医疗 AI 助手 Agent</title>
-      <link>https://bodysuperman.github.io/zh-CN/2026/04/27/LangChain4J-in-Action-Building-a-Medical-AI-Assistant-Agent/</link>
-      <description>
-        <![CDATA[<ul>
-<li><a href="#1-what-is-langchain4j">1. 什么是 LangChain4J？</a><ul>
-<li><a href="#11-the-problem-langchain4j-solves">1.1 LangChain4J 解决的问题</a></li>
-<li><a href="#12-core-concepts">1.2 核心概念</a></li>
-</ul>
-</li>
-<li><a href="#2-project-setup">2. 项目搭建</a><ul>
-<li><a href="#21-dependencies">2.1 依赖</a></li>
-<li><a href="#22-configuration">2.2 配置</a></li>
-</ul>
-</li>
-<li><a href="#3-your-first-llm-integration">3. 你的第一个 LLM 集成</a><ul>
-<li><a href="#31-direct-api-call">3.1 直接 API 调用</a></li>
-<li><a href="#32-spring-boot-auto-configuration">3.2 Spring Boot 自动配置</a></li>
-</ul>
-</li>
-<li><a href="#4-building-the-ai-service">4. 构建 AI 服务</a><ul>
-<li><a href="#41-the-assistant-interface">4.1 助手接口</a></li>
-<li><a href="#42-system-messages">4.2 系统消息</a></li>
-</ul>
-</li>
-<li><a href="#5-adding-chat-memory">5. 添加聊天记忆</a><ul>
-<li><a href="#51-why-memory-matters">5.1 为什么记忆很重要</a></li>
-<li><a href="#52-implementing-memory">5.2 实现记忆</a></li>
-<li><a href="#53-memory-isolation">5.3 记忆隔离</a></li>
-<li><a href="#54-persistent-storage-with-mongodb">5.4 使用 MongoDB 持久化存储</a>]]>
-      </description>
-      <author>AI with Alex</author>
-      <category domain="https://bodysuperman.github.io/categories/Java/">Java</category>
-      <category domain="https://bodysuperman.github.io/categories/Java/AI/">AI</category>
-      <category domain="https://bodysuperman.github.io/categories/Java/AI/Spring-Boot/">Spring Boot</category>
-      <category domain="https://bodysuperman.github.io/tags/LLM/">LLM</category>
-      <category domain="https://bodysuperman.github.io/tags/RAG/">RAG</category>
-      <category domain="https://bodysuperman.github.io/tags/Spring-Boot/">Spring Boot</category>
-      <category domain="https://bodysuperman.github.io/tags/LangChain4J/">LangChain4J</category>
-      <category domain="https://bodysuperman.github.io/tags/OpenAI/">OpenAI</category>
-      <category domain="https://bodysuperman.github.io/tags/Function-Calling/">Function Calling</category>
-      <pubDate>Mon, 27 Apr 2026 04:48:28 GMT</pubDate>
-    </item>
-    <item>
       <title>LangChain4J in Action: Building a Medical AI Assistant Agent</title>
       <link>https://bodysuperman.github.io/2026/04/27/LangChain4J-in-Action-Building-a-Medical-AI-Assistant-Agent/</link>
       <description>
@@ -940,10 +897,53 @@
       <category domain="https://bodysuperman.github.io/categories/Java/AI/Spring-Boot/">Spring Boot</category>
       <category domain="https://bodysuperman.github.io/tags/LLM/">LLM</category>
       <category domain="https://bodysuperman.github.io/tags/RAG/">RAG</category>
-      <category domain="https://bodysuperman.github.io/tags/Spring-Boot/">Spring Boot</category>
       <category domain="https://bodysuperman.github.io/tags/LangChain4J/">LangChain4J</category>
       <category domain="https://bodysuperman.github.io/tags/OpenAI/">OpenAI</category>
       <category domain="https://bodysuperman.github.io/tags/Function-Calling/">Function Calling</category>
+      <category domain="https://bodysuperman.github.io/tags/Spring-Boot/">Spring Boot</category>
+      <pubDate>Mon, 27 Apr 2026 04:48:28 GMT</pubDate>
+    </item>
+    <item>
+      <title>LangChain4J 实战：构建医疗 AI 助手 Agent</title>
+      <link>https://bodysuperman.github.io/zh-CN/2026/04/27/LangChain4J-in-Action-Building-a-Medical-AI-Assistant-Agent/</link>
+      <description>
+        <![CDATA[<ul>
+<li><a href="#1-what-is-langchain4j">1. 什么是 LangChain4J？</a><ul>
+<li><a href="#11-the-problem-langchain4j-solves">1.1 LangChain4J 解决的问题</a></li>
+<li><a href="#12-core-concepts">1.2 核心概念</a></li>
+</ul>
+</li>
+<li><a href="#2-project-setup">2. 项目搭建</a><ul>
+<li><a href="#21-dependencies">2.1 依赖</a></li>
+<li><a href="#22-configuration">2.2 配置</a></li>
+</ul>
+</li>
+<li><a href="#3-your-first-llm-integration">3. 你的第一个 LLM 集成</a><ul>
+<li><a href="#31-direct-api-call">3.1 直接 API 调用</a></li>
+<li><a href="#32-spring-boot-auto-configuration">3.2 Spring Boot 自动配置</a></li>
+</ul>
+</li>
+<li><a href="#4-building-the-ai-service">4. 构建 AI 服务</a><ul>
+<li><a href="#41-the-assistant-interface">4.1 助手接口</a></li>
+<li><a href="#42-system-messages">4.2 系统消息</a></li>
+</ul>
+</li>
+<li><a href="#5-adding-chat-memory">5. 添加聊天记忆</a><ul>
+<li><a href="#51-why-memory-matters">5.1 为什么记忆很重要</a></li>
+<li><a href="#52-implementing-memory">5.2 实现记忆</a></li>
+<li><a href="#53-memory-isolation">5.3 记忆隔离</a></li>
+<li><a href="#54-persistent-storage-with-mongodb">5.4 使用 MongoDB 持久化存储</a>]]>
+      </description>
+      <author>AI with Alex</author>
+      <category domain="https://bodysuperman.github.io/categories/Java/">Java</category>
+      <category domain="https://bodysuperman.github.io/categories/Java/AI/">AI</category>
+      <category domain="https://bodysuperman.github.io/categories/Java/AI/Spring-Boot/">Spring Boot</category>
+      <category domain="https://bodysuperman.github.io/tags/LLM/">LLM</category>
+      <category domain="https://bodysuperman.github.io/tags/RAG/">RAG</category>
+      <category domain="https://bodysuperman.github.io/tags/LangChain4J/">LangChain4J</category>
+      <category domain="https://bodysuperman.github.io/tags/OpenAI/">OpenAI</category>
+      <category domain="https://bodysuperman.github.io/tags/Function-Calling/">Function Calling</category>
+      <category domain="https://bodysuperman.github.io/tags/Spring-Boot/">Spring Boot</category>
       <pubDate>Mon, 27 Apr 2026 04:48:28 GMT</pubDate>
     </item>
   </channel>
