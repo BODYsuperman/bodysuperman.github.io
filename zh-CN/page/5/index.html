@@ -206,6 +206,120 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://bodysuperman.github.io/zh-CN/2025/04/12/Stack-Queue/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+      <meta itemprop="name" content="AI with Alex">
+      <meta itemprop="description" content="Attention(Q,K,V)=softmax(QK^T/sqrt(d_k))V">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="AI with Alex's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/zh-CN/2025/04/12/Stack-Queue/" class="post-title-link" itemprop="url">栈与队列</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2025-04-12 18:40:32 / 修改时间：18:04:19" itemprop="dateCreated datePublished" datetime="2025-04-12T18:40:32+08:00">2025-04-12</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Data-Structure-and-Alogrithm/" itemprop="url" rel="index"><span itemprop="name">Data Structure and Alogrithm</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>5.4k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>5 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <ol>
+<li><a href="#introduction">引言</a>  </li>
+<li><a href="#stack-overview">栈概述</a>  <ul>
+<li><a href="#key-features-of-stack">核心特性</a>  </li>
+<li><a href="#applications-of-stack">应用场景</a></li>
+</ul>
+</li>
+<li><a href="#queue-overview">队列概述</a>  <ul>
+<li><a href="#key-features-of-queue">核心特性</a>  </li>
+<li><a href="#applications-of-queue">应用场景</a>  </li>
+<li><a href="#type">队列类型</a></li>
+</ul>
+</li>
+<li><a href="#implementing-stack">实现栈</a>  <ul>
+<li><a href="#stack-implementation-using-array">基于数组</a>  </li>
+<li><a href="#stack-implementation-using-linked-list">基于链表</a></li>
+</ul>
+</li>
+<li><a href="#implementing-queue">实现队列</a>  <ul>
+<li><a href="#queue-implementation-using-array">基于数组</a>  </li>
+<li><a href="#queue-implementation-using-linked-list">基于链表</a></li>
+</ul>
+</li>
+<li><a href="#implementing-queue-with-two-stacks">用两个栈实现队列</a>  </li>
+<li><a href="#implementing-stack-with-one-queue">用一个队列实现栈</a>  </li>
+<li><a href="#summary">总结</a>
+        
+      
+    </div>
+
+    
+    
+    
+      <!--noindex-->
+      <div class="post-button">
+        <a class="btn" href="/zh-CN/2025/04/12/Stack-Queue/#more" rel="contents">
+          阅读全文 &raquo;
+        </a>
+      </div>
+      <!--/noindex-->
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://bodysuperman.github.io/zh-CN/2025/04/05/Hash-Table/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -725,103 +839,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://bodysuperman.github.io/zh-CN/2025/02/19/doublylinkedlist/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/uploads/avatar.jpg">
-      <meta itemprop="name" content="AI with Alex">
-      <meta itemprop="description" content="Attention(Q,K,V)=softmax(QK^T/sqrt(d_k))V">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="AI with Alex's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/zh-CN/2025/02/19/doublylinkedlist/" class="post-title-link" itemprop="url">双向链表</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2025-02-19 16:56:25" itemprop="dateCreated datePublished" datetime="2025-02-19T16:56:25+08:00">2025-02-19</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Data-Structure-and-Alogrithm/" itemprop="url" rel="index"><span itemprop="name">Data Structure and Alogrithm</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>3.1k</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>3 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="C-双向链表：趣味实用指南"><a href="#C-双向链表：趣味实用指南" class="headerlink" title="C# 双向链表：趣味实用指南"></a>C# 双向链表：趣味实用指南</h1><ol>
-<li><a href="#what-is-a-doubly-linked-list">什么是双向链表？</a></li>
-<li><a href="#creating-a-doubly-linked-list-class">创建双向链表类</a></li>
-<li><a href="#insertion-operations">插入操作</a><ul>
-<li><a href="#insert-at-the-beginning">在头部插入</a></li>
-<li><a href="#insert-at-the-end">在尾部插入</a></li>
-<li><a href="#insert-after-a-spefific-node">在指定节点后插入</a></li>
-</ul>
-</li>
-<li><a href="#deletion-operations">删除操作</a>
-        
-      
-    </div>
-
-    
-    
-    
-      <!--noindex-->
-      <div class="post-button">
-        <a class="btn" href="/zh-CN/2025/02/19/doublylinkedlist/#more" rel="contents">
-          阅读全文 &raquo;
-        </a>
-      </div>
-      <!--/noindex-->
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -896,20 +913,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">62</span>
+          <span class="site-state-item-count">64</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">35</span>
+        <span class="site-state-item-count">36</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">88</span>
+        <span class="site-state-item-count">89</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -958,13 +975,13 @@
       <i class="fa fa-chart-area"></i>
     </span>
       <span class="post-meta-item-text">Symbols count total: </span>
-    <span title="Symbols count total">840k</span>
+    <span title="Symbols count total">928k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">Reading time total &asymp;</span>
-    <span title="Reading time total">12:43</span>
+    <span title="Reading time total">14:03</span>
     
     <!--
     

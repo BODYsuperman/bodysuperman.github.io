@@ -206,6 +206,149 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://bodysuperman.github.io/zh-CN/2026/04/19/Getting-Started-with-Docker-A-Practical-Guide-for-Developers/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+      <meta itemprop="name" content="AI with Alex">
+      <meta itemprop="description" content="Attention(Q,K,V)=softmax(QK^T/sqrt(d_k))V">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="AI with Alex's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/zh-CN/2026/04/19/Getting-Started-with-Docker-A-Practical-Guide-for-Developers/" class="post-title-link" itemprop="url">Docker 入门</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2026-04-19 12:48:28" itemprop="dateCreated datePublished" datetime="2026-04-19T12:48:28+08:00">2026-04-19</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2026-06-05 00:00:00" itemprop="dateModified" datetime="2026-06-05T00:00:00+08:00">2026-06-05</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Docker/" itemprop="url" rel="index"><span itemprop="name">Docker</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Docker/Backend-Development/" itemprop="url" rel="index"><span itemprop="name">Backend Development</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Docker/Backend-Development/DevOps/" itemprop="url" rel="index"><span itemprop="name">DevOps</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>7.7k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>7 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <ul>
+<li><a href="#understanding-docker-technology">了解 Docker 技术</a><ul>
+<li><a href="#application-scenarios-of-docker">Docker 的应用场景</a></li>
+<li><a href="#core-advantages">核心优势</a></li>
+<li><a href="#core-concepts">核心概念</a></li>
+</ul>
+</li>
+<li><a href="#docker-vs-virtual-machines">Docker 与虚拟机对比</a></li>
+<li><a href="#basic-commands">基础命令</a></li>
+<li><a href="#docker-data-volumes">Docker 数据卷</a><ul>
+<li><a href="#what-is-a-data-volume">什么是数据卷</a></li>
+<li><a href="#volume-commands">数据卷命令</a></li>
+<li><a href="#mounting-local-directories">挂载本地目录</a></li>
+</ul>
+</li>
+<li><a href="#docker-networking">Docker 网络</a><ul>
+<li><a href="#default-networks">默认网络</a></li>
+<li><a href="#custom-networks">自定义网络</a></li>
+</ul>
+</li>
+<li><a href="#building-custom-images">构建自定义镜像</a><ul>
+<li><a href="#image-structure">镜像结构</a></li>
+<li><a href="#dockerfile-syntax">Dockerfile 语法</a></li>
+<li><a href="#building-images">构建镜像</a></li>
+</ul>
+</li>
+<li><a href="#docker-compose">Docker Compose</a><ul>
+<li><a href="#basic-syntax">基本语法</a></li>
+<li><a href="#common-commands">常用命令</a></li>
+</ul>
+</li>
+<li><a href="#practical-examples">实战示例</a><ul>
+<li><a href="#deploying-mysql">部署 MySQL</a></li>
+<li><a href="#deploying-a-java-application">部署 Java 应用</a></li>
+</ul>
+</li>
+<li><a href="#best-practices">最佳实践</a></li>
+<li><a href="#faq">常见问题</a></li>
+<li><a href="#summary">总结</a></li>
+<li><a href="#references">参考资料</a></li>
+</ul>
+        
+      
+    </div>
+
+    
+    
+    
+      <!--noindex-->
+      <div class="post-button">
+        <a class="btn" href="/zh-CN/2026/04/19/Getting-Started-with-Docker-A-Practical-Guide-for-Developers/#more" rel="contents">
+          阅读全文 &raquo;
+        </a>
+      </div>
+      <!--/noindex-->
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://bodysuperman.github.io/zh-CN/2026/04/12/Backtracking-Algorithm/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -759,92 +902,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://bodysuperman.github.io/zh-CN/2025/11/03/The-Complete-Guide-to-Modern-CSS-Layouts-From-Flexbox-to-Grid-and-Beyond/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/uploads/avatar.jpg">
-      <meta itemprop="name" content="AI with Alex">
-      <meta itemprop="description" content="Attention(Q,K,V)=softmax(QK^T/sqrt(d_k))V">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="AI with Alex's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/zh-CN/2025/11/03/The-Complete-Guide-to-Modern-CSS-Layouts-From-Flexbox-to-Grid-and-Beyond/" class="post-title-link" itemprop="url">现代 CSS 布局完全指南：从 Flexbox 到 Grid 及更多</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2025-11-03 11:07:07" itemprop="dateCreated datePublished" datetime="2025-11-03T11:07:07+08:00">2025-11-03</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2025-11-05 19:04:19" itemprop="dateModified" datetime="2025-11-05T19:04:19+08:00">2025-11-05</time>
-              </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>10</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>1 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p><a href="/HTML/p2/index.html" target="_blank">项目演示1</a><br><a href="/HTML/p3/index.html" target="_blank">项目演示2</a></p>
-<link rel="stylesheet" href="/css/folder.css" type="text/css"><script src="/js/folder.js" type="text/javascript" async></script>
-      
-    </div>
-
-    
-    
-    
-      <!--noindex-->
-      <div class="post-button">
-        <a class="btn" href="/zh-CN/2025/11/03/The-Complete-Guide-to-Modern-CSS-Layouts-From-Flexbox-to-Grid-and-Beyond/#more" rel="contents">
-          阅读全文 &raquo;
-        </a>
-      </div>
-      <!--/noindex-->
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -919,20 +976,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">62</span>
+          <span class="site-state-item-count">64</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">35</span>
+        <span class="site-state-item-count">36</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">88</span>
+        <span class="site-state-item-count">89</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -981,13 +1038,13 @@
       <i class="fa fa-chart-area"></i>
     </span>
       <span class="post-meta-item-text">Symbols count total: </span>
-    <span title="Symbols count total">840k</span>
+    <span title="Symbols count total">928k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">Reading time total &asymp;</span>
-    <span title="Reading time total">12:43</span>
+    <span title="Reading time total">14:03</span>
     
     <!--
     

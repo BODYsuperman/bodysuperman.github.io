@@ -1,0 +1,1650 @@
+<!DOCTYPE html>
+<html lang="en,zh-CN,default">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/logo-180.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/logo-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/logo-16.png">
+  <link rel="mask-icon" href="/images/logo-512.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|monospace:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"bodysuperman.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null,"use":"Gitalk","text":true},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="Introduction Environment Setup Installing Miniconda and Creating the Environment Installing Dependencies and Configuring API Keys Verification and Checklist   What Is LangGraph LangChain vs. LangGrap">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LangGraph from Zero: Environment Setup, State Management, and Control Flow in Practice">
+<meta property="og:url" content="https://bodysuperman.github.io/2026/09/06/LangGraph-From-Zero-to-Graph/index.html">
+<meta property="og:site_name" content="AI with Alex&#39;s Blog">
+<meta property="og:description" content="Introduction Environment Setup Installing Miniconda and Creating the Environment Installing Dependencies and Configuring API Keys Verification and Checklist   What Is LangGraph LangChain vs. LangGrap">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2026-09-06T02:00:00.000Z">
+<meta property="article:modified_time" content="2026-09-27T02:00:00.000Z">
+<meta property="article:author" content="AI with Alex">
+<meta property="article:tag" content="LangChain">
+<meta property="article:tag" content="LangGraph">
+<meta property="article:tag" content="AI Agent">
+<meta property="article:tag" content="Workflow">
+<meta property="article:tag" content="State Machine">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://bodysuperman.github.io/2026/09/06/LangGraph-From-Zero-to-Graph/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>LangGraph from Zero: Environment Setup, State Management, and Control Flow in Practice | AI with Alex's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="AI with Alex's Blog" type="application/atom+xml">
+<link rel="alternate" href="/rss.xml" title="AI with Alex's Blog" type="application/rss+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+
+
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">AI with Alex's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+  <div class="site-lang-switcher">
+    <span class="lang-item lang-current">English</span>
+      <a class="lang-item lang-link" href="/zh-CN/2026/09/06/LangGraph-From-Zero-to-Graph/" rel="section" title="简体中文">
+        <i class="fa fa-language"></i> 简体中文
+      </a>
+  </div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+   
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://bodysuperman.github.io/2026/09/06/LangGraph-From-Zero-to-Graph/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+      <meta itemprop="name" content="AI with Alex">
+      <meta itemprop="description" content="Attention(Q,K,V)=softmax(QK^T/sqrt(d_k))V">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="AI with Alex's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          LangGraph from Zero: Environment Setup, State Management, and Control Flow in Practice
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2026-09-06 10:00:00" itemprop="dateCreated datePublished" datetime="2026-09-06T10:00:00+08:00">2026-09-06</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2026-09-27 10:00:00" itemprop="dateModified" datetime="2026-09-27T10:00:00+08:00">2026-09-27</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/AI/" itemprop="url" rel="index"><span itemprop="name">AI</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/AI/AI-Agent/" itemprop="url" rel="index"><span itemprop="name">AI Agent</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/AI/AI-Agent/LangGraph/" itemprop="url" rel="index"><span itemprop="name">LangGraph</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>54k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>49 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <ul>
+<li><a href="#introduction">Introduction</a></li>
+<li><a href="#environment-setup">Environment Setup</a><ul>
+<li><a href="#miniconda-and-conda-env">Installing Miniconda and Creating the Environment</a></li>
+<li><a href="#dependencies-and-api-key">Installing Dependencies and Configuring API Keys</a></li>
+<li><a href="#verification-checklist">Verification and Checklist</a></li>
+</ul>
+</li>
+<li><a href="#what-is-langgraph">What Is LangGraph</a><ul>
+<li><a href="#langchain-vs-langgraph">LangChain vs. LangGraph</a></li>
+</ul>
+</li>
+<li><a href="#core-concepts">Core Concepts: The Three Elements and the Runtime Model</a><ul>
+<li><a href="#state-node-edge">State, Node, Edge</a></li>
+<li><a href="#superstep-execution-model">The Superstep Execution Model</a></li>
+<li><a href="#checkpoint-snapshots">The Checkpoint Snapshot Sequence</a></li>
+</ul>
+</li>
+<li><a href="#graph-api-vs-functional-api">Graph API vs Functional API</a></li>
+<li><a href="#first-graph">Your First Graph: Define, Compile, Invoke</a><ul>
+<li><a href="#define-compile-invoke">Building a State Graph in Three Steps</a></li>
+<li><a href="#graph-visualization">Graph Visualization</a></li>
+</ul>
+</li>
+<li><a href="#state-management">State Management</a><ul>
+<li><a href="#defining-state-schema">Three Ways to Define a Schema</a></li>
+<li><a href="#schema-validation-behavior">Validation Behavior Compared</a></li>
+<li><a href="#state-reducers">State Reducers: How Updates Are Merged</a></li>
+<li><a href="#default-overwrite-and-overwrite">Default Overwrite Behavior and the Overwrite Wrapper</a></li>
+<li><a href="#multi-schema">Multi Schema: Input, Output, and Private State</a></li>
+<li><a href="#predefined-states">Predefined States: MessagesState and AgentState</a></li>
+</ul>
+</li>
+<li><a href="#control-flow">Control Flow</a><ul>
+<li><a href="#sequential-structure">Sequential Structure</a></li>
+<li><a href="#branching">Branching</a><ul>
+<li><a href="#parallel-nodes">Parallel Nodes</a></li>
+<li><a href="#conditional-edges">Conditional Branching: add_conditional_edges</a></li>
+<li><a href="#deferred-nodes">Deferred Nodes: defer</a></li>
+<li><a href="#dynamic-fan-out-send">Dynamic Fan-out: Send</a></li>
+<li><a href="#command-goto">Dynamic Jumping: Command(goto)</a></li>
+</ul>
+</li>
+<li><a href="#fan-in">Fan-in: Merging Multiple Branches</a><ul>
+<li><a href="#static-fan-in">Static Fan-in: AND Trigger vs. OR Trigger</a></li>
+<li><a href="#mapreduce">Dynamic Fan-in: The MapReduce Pattern</a></li>
+</ul>
+</li>
+<li><a href="#loops">Loops: The ReAct Pattern</a><ul>
+<li><a href="#react-static-vs-dynamic">Static vs. Dynamic Implementation</a></li>
+<li><a href="#recursion-limit">Recursion Limits and Graceful Exit</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#edges-summary">Edges: A Systematic Summary</a></li>
+<li><a href="#fault-tolerance">Node Execution and Fault Tolerance</a><ul>
+<li><a href="#retry-policy">Retries: RetryPolicy</a></li>
+<li><a href="#default-retry-rules">Default Retry Rules: default_retry_on</a></li>
+<li><a href="#timeout-and-error-handling">Timeouts and Error Handling</a></li>
+<li><a href="#node-caching">Node Caching: CachePolicy</a></li>
+</ul>
+</li>
+<li><a href="#best-practices">Best Practices</a></li>
+<li><a href="#faq">FAQ</a></li>
+<li><a href="#summary">Summary</a></li>
+</ul>
+<span id="more"></span>
+
+<p><a name="introduction"></a></p>
+<h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h2><p>When building agent applications on top of LLMs, you quickly run into a class of problems: the flow is no longer “one question, one answer” but a complex workflow involving branches, loops, parallelism, human intervention, and long-running execution. Organizing this with plain Python function calls quickly becomes unmaintainable — and if the process crashes, all intermediate state is lost.</p>
+<p>LangGraph is an orchestration framework built exactly for this. It models a workflow as a <strong>state graph</strong>: nodes do the computation, edges define the flow, and state carries data between nodes. More importantly, its runtime natively supports persistence, streaming, and fault-tolerant recovery.</p>
+<p>This article is a consolidated tutorial covering the complete path from zero:</p>
+<ol>
+<li><strong>Environment setup</strong>: Miniconda, dependencies, API key configuration;</li>
+<li><strong>Core concepts</strong>: the State &#x2F; Node &#x2F; Edge trio and the Superstep execution model;</li>
+<li><strong>State management</strong>: schema definitions, the reducer merging mechanism, Multi Schema;</li>
+<li><strong>Control flow</strong>: sequences, branches, fan-out&#x2F;fan-in, loops, and recursion limits;</li>
+<li><strong>Fault tolerance</strong>: retries, timeouts, error handling, and node caching.</li>
+</ol>
+<p>All code has been verified against <code>langgraph 1.1.x</code> + Python 3.13. Examples use DeepSeek as the model, which you can swap for any model supported by LangChain.</p>
+<p><a name="environment-setup"></a></p>
+<h2 id="Environment-Setup"><a href="#Environment-Setup" class="headerlink" title="Environment Setup"></a>Environment Setup</h2><p><a name="miniconda-and-conda-env"></a></p>
+<h3 id="Installing-Miniconda-and-Creating-the-Environment"><a href="#Installing-Miniconda-and-Creating-the-Environment" class="headerlink" title="Installing Miniconda and Creating the Environment"></a>Installing Miniconda and Creating the Environment</h3><p>Conda is a package and environment manager. <strong>Miniconda</strong> is its minimal distribution — small and fast to install. Download the installer for your system from the official page: <a target="_blank" rel="noopener" href="https://docs.anaconda.com/miniconda/">https://docs.anaconda.com/miniconda/</a></p>
+<table>
+<thead>
+<tr>
+<th>OS</th>
+<th>Recommended installer</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Windows</td>
+<td><code>Miniconda3 Windows 64-bit</code> (.exe)</td>
+</tr>
+<tr>
+<td>macOS</td>
+<td><code>macOS Apple M1 64-bit</code> (Apple Silicon) or <code>macOS Intel x86 64-bit</code> (Intel)</td>
+</tr>
+<tr>
+<td>Linux</td>
+<td><code>Miniconda3 Linux 64-bit</code> (.sh)</td>
+</tr>
+</tbody></table>
+<p>On Windows, <strong>make sure to check</strong> “Add Miniconda3 to my PATH environment variable”. On macOS &#x2F; Linux, run the install script in a terminal and type <code>yes</code> when prompted to run <code>conda init</code>.</p>
+<p>After installation, verify and create the project environment:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">conda --version</span><br><span class="line"></span><br><span class="line"><span class="comment"># Create an environment named langgraph with Python 3.13</span></span><br><span class="line">conda create -n langgraph python=3.13</span><br><span class="line"></span><br><span class="line"><span class="comment"># Activate it — your prompt will be prefixed with (langgraph)</span></span><br><span class="line">conda activate langgraph</span><br></pre></td></tr></table></figure>
+
+<p>Conda commands you will use regularly:</p>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>conda info --envs</code></td>
+<td>List all virtual environments</td>
+</tr>
+<tr>
+<td><code>conda activate &lt;name&gt;</code></td>
+<td>Enter an environment</td>
+</tr>
+<tr>
+<td><code>conda deactivate</code></td>
+<td>Leave the current environment</td>
+</tr>
+<tr>
+<td><code>conda remove -n &lt;name&gt; --all</code></td>
+<td>Delete an environment</td>
+</tr>
+</tbody></table>
+<p>A virtual environment is an isolated Python runtime — environments never interfere with each other, which is the sanest way to manage dependencies across projects.</p>
+<p><a name="dependencies-and-api-key"></a></p>
+<h3 id="Installing-Dependencies-and-Configuring-API-Keys"><a href="#Installing-Dependencies-and-Configuring-API-Keys" class="headerlink" title="Installing Dependencies and Configuring API Keys"></a>Installing Dependencies and Configuring API Keys</h3><p>Install LangGraph and related dependencies (trim as needed):</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">pip install langgraph langchain langchain-core langchain-openai \</span><br><span class="line">    langchain-deepseek langchain-anthropic python-dotenv loguru jupyter</span><br></pre></td></tr></table></figure>
+
+<p>Key packages:</p>
+<table>
+<thead>
+<tr>
+<th>Package</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>langgraph</code></td>
+<td>Core library for building state graphs</td>
+</tr>
+<tr>
+<td><code>langgraph-checkpoint</code></td>
+<td>Checkpoint mechanism</td>
+</tr>
+<tr>
+<td><code>langgraph-prebuilt</code></td>
+<td>Prebuilt agent components</td>
+</tr>
+<tr>
+<td><code>langchain-core</code></td>
+<td>LangChain base abstractions (messages, Runnables, etc.)</td>
+</tr>
+<tr>
+<td><code>langchain-deepseek</code> &#x2F; <code>langchain-openai</code> &#x2F; <code>langchain-anthropic</code></td>
+<td>Model provider integrations</td>
+</tr>
+<tr>
+<td><code>python-dotenv</code></td>
+<td>Loads <code>.env</code> environment files</td>
+</tr>
+</tbody></table>
+<p>Next, configure your API key. Using DeepSeek as an example (new accounts get free credits), create a key at <a target="_blank" rel="noopener" href="https://platform.deepseek.com/">platform.deepseek.com</a>, then create a <code>.env</code> file in the project root:</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Required: examples default to DeepSeek</span></span><br><span class="line"><span class="attr">DEEPSEEK_API_KEY</span>=<span class="string">sk-your-api-key</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"># Optional: other providers</span></span><br><span class="line"><span class="comment"># OPENAI_API_KEY=sk-...</span></span><br><span class="line"><span class="comment"># ANTHROPIC_API_KEY=sk-ant-...</span></span><br></pre></td></tr></table></figure>
+
+<p>Load it uniformly with two lines at the top of your code. The SDK then reads keys from environment variables automatically — <strong>never hard-code them</strong>:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> dotenv <span class="keyword">import</span> load_dotenv</span><br><span class="line">load_dotenv(override=<span class="literal">True</span>)</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>Add <code>.env</code> to <code>.gitignore</code> so secrets are never committed to Git.</p>
+</blockquote>
+<p><a name="verification-checklist"></a></p>
+<h3 id="Verification-and-Checklist"><a href="#Verification-and-Checklist" class="headerlink" title="Verification and Checklist"></a>Verification and Checklist</h3><p>Use a script to verify everything is ready:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># test_env.py</span></span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="keyword">from</span> importlib.metadata <span class="keyword">import</span> version <span class="keyword">as</span> pkg_version</span><br><span class="line"><span class="keyword">from</span> dotenv <span class="keyword">import</span> load_dotenv</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="string">f&quot;Python version: <span class="subst">&#123;sys.version&#125;</span>&quot;</span>)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">f&quot;LangGraph version: <span class="subst">&#123;pkg_version(<span class="string">&#x27;langgraph&#x27;</span>)&#125;</span>&quot;</span>)</span><br><span class="line"></span><br><span class="line">load_dotenv(override=<span class="literal">True</span>)</span><br><span class="line">key = os.getenv(<span class="string">&quot;DEEPSEEK_API_KEY&quot;</span>)</span><br><span class="line"><span class="keyword">if</span> key:</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&quot;DeepSeek API key configured: <span class="subst">&#123;key[:<span class="number">8</span>]&#125;</span>...<span class="subst">&#123;key[-<span class="number">4</span>:]&#125;</span>&quot;</span>)</span><br><span class="line">    <span class="keyword">from</span> langchain_deepseek <span class="keyword">import</span> ChatDeepSeek</span><br><span class="line">    model = ChatDeepSeek(model=<span class="string">&quot;deepseek-chat&quot;</span>)</span><br><span class="line">    response = model.invoke(<span class="string">&quot;Reply with exactly: all good&quot;</span>)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&quot;Model call test: <span class="subst">&#123;response.content&#125;</span>&quot;</span>)</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;DEEPSEEK_API_KEY not found — configure it in .env&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>Before moving on, confirm each item:</p>
+<ul>
+<li><input disabled="" type="checkbox"> Miniconda installed; <code>conda --version</code> works</li>
+<li><input disabled="" type="checkbox"> <code>langgraph</code> environment created (Python 3.13) and activated</li>
+<li><input disabled="" type="checkbox"> Core dependencies installed; <code>pip show langgraph</code> has output</li>
+<li><input disabled="" type="checkbox"> <code>.env</code> created with an API key that has available credits</li>
+<li><input disabled="" type="checkbox"> The verification script passes end to end</li>
+</ul>
+<p><a name="what-is-langgraph"></a></p>
+<h2 id="What-Is-LangGraph"><a href="#What-Is-LangGraph" class="headerlink" title="What Is LangGraph"></a>What Is LangGraph</h2><p><a name="langchain-vs-langgraph"></a></p>
+<h3 id="LangChain-vs-LangGraph"><a href="#LangChain-vs-LangGraph" class="headerlink" title="LangChain vs. LangGraph"></a>LangChain vs. LangGraph</h3><p><strong>LangChain 1.x</strong> changed its positioning significantly: legacy Chains, Retrievers, Memory, and similar components moved to <code>langchain-classic</code>. LangChain now focuses on agent development, with <code>create_agent</code> as the core entry point, providing high-level abstractions around models, tools, messages, structured output, middleware, and memory management.</p>
+<p><strong>LangGraph</strong> is the lower-level <strong>orchestration framework and agent runtime</strong>. It executes complex workflows and stateful agents, providing runtime capabilities such as persistence, streaming, durable execution, and human-in-the-loop. <code>create_agent</code> is itself built on top of LangGraph.</p>
+<table>
+<thead>
+<tr>
+<th>Dimension</th>
+<th>LangChain</th>
+<th>LangGraph</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Positioning</td>
+<td>High-level agent framework</td>
+<td>Low-level orchestration framework &amp; agent runtime</td>
+</tr>
+<tr>
+<td>Core entry point</td>
+<td><code>create_agent</code></td>
+<td><code>StateGraph</code> &#x2F; <code>@entrypoint</code></td>
+</tr>
+<tr>
+<td>Best for</td>
+<td>Straightforward agent apps</td>
+<td>Complex workflows, persistent state, long-running tasks, human intervention</td>
+</tr>
+<tr>
+<td>Flow control</td>
+<td>Agent loop managed automatically</td>
+<td>Fine-grained control over nodes, edges, conditional branches</td>
+</tr>
+<tr>
+<td>Learning curve</td>
+<td>Lower</td>
+<td>Higher</td>
+</tr>
+</tbody></table>
+<p>In one sentence: <strong>LangChain provides easy-to-use high-level agent abstractions; LangGraph provides reliable, persistent, and finely controllable low-level execution.</strong> Start most agent projects with <code>create_agent</code>; bring in LangGraph when you need complex workflow orchestration, a mix of deterministic and agentic steps, or low-level state control.</p>
+<p>Under the hood, the LangGraph runtime is built on a custom Pregel runtime, borrowing core ideas from Google’s Pregel computation model for organizing and executing complex graph computations.</p>
+<p><a name="core-concepts"></a></p>
+<h2 id="Core-Concepts-The-Three-Elements-and-the-Runtime-Model"><a href="#Core-Concepts-The-Three-Elements-and-the-Runtime-Model" class="headerlink" title="Core Concepts: The Three Elements and the Runtime Model"></a>Core Concepts: The Three Elements and the Runtime Model</h2><p><a name="state-node-edge"></a></p>
+<h3 id="State-Node-Edge"><a href="#State-Node-Edge" class="headerlink" title="State, Node, Edge"></a>State, Node, Edge</h3><p>The LangGraph runtime consists of three basic elements:</p>
+<ul>
+<li><strong>State</strong>: the shared data structure during graph execution — a snapshot of the application at a given moment. It carries context, intermediate results, and data that downstream nodes need to read. It is the core vehicle for passing information between nodes.</li>
+<li><strong>Node</strong>: the unit of execution, usually a function. A node reads the current State, runs its business logic, and returns a <strong>partial update</strong> to the State. Nodes never modify global state directly — merging and committing are handled by the runtime.</li>
+<li><strong>Edge</strong>: defines the flow between nodes, deciding which node runs after the current one. Edges can be fixed, or conditional on the current State — enabling branches, loops, and other complex control flow.</li>
+</ul>
+<p>The simplest possible graph has two nodes:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">START --&gt; node_1 --&gt; node_2 --&gt; END</span><br></pre></td></tr></table></figure>
+
+<p><a name="superstep-execution-model"></a></p>
+<h3 id="The-Superstep-Execution-Model"><a href="#The-Superstep-Execution-Model" class="headerlink" title="The Superstep Execution Model"></a>The Superstep Execution Model</h3><p>Graph execution in LangGraph is organized and advanced in <strong>Supersteps</strong>. Think of a Superstep as one “tick” of the graph; a full run is a series of consecutive Supersteps.</p>
+<p>Each Superstep has three phases:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">┌─────────────────────── Superstep N ───────────────────────┐</span><br><span class="line">│                                                           │</span><br><span class="line">│  ① Plan / Routing                                         │</span><br><span class="line">│     Based on the current State and Edge logic,            │</span><br><span class="line">│     decide which nodes run this tick                      │</span><br><span class="line">│                     │                                     │</span><br><span class="line">│                     ▼                                     │</span><br><span class="line">│  ② Execution                                              │</span><br><span class="line">│     Run the selected nodes (possibly in parallel).        │</span><br><span class="line">│     Each node computes against the state snapshot         │</span><br><span class="line">│     taken at the start of this tick and outputs           │</span><br><span class="line">│     partial updates — updates produced by one node        │</span><br><span class="line">│     are NOT visible to the others during this phase       │</span><br><span class="line">│                     │                                     │</span><br><span class="line">│                     ▼                                     │</span><br><span class="line">│  ③ Update / Commit                                        │</span><br><span class="line">│     When all nodes finish, the runtime merges their       │</span><br><span class="line">│     outputs into the State, producing a new snapshot      │</span><br><span class="line">│     that becomes the input of the next Superstep          │</span><br><span class="line">│                                                           │</span><br><span class="line">└───────────────────────────────────────────────────────────┘</span><br></pre></td></tr></table></figure>
+
+<p>Two key takeaways from this model:</p>
+<ol>
+<li><strong>Parallel nodes execute within the same Superstep</strong>, each reading the same state snapshot, isolated from one another;</li>
+<li><strong>State updates commit at the end of the Superstep</strong> — which is exactly why writing to the same field in parallel requires a reducer (more below).</li>
+</ol>
+<p><a name="checkpoint-snapshots"></a></p>
+<h3 id="The-Checkpoint-Snapshot-Sequence"><a href="#The-Checkpoint-Snapshot-Sequence" class="headerlink" title="The Checkpoint Snapshot Sequence"></a>The Checkpoint Snapshot Sequence</h3><p>At each Superstep boundary, LangGraph can produce a <strong>Checkpoint</strong> snapshot recording the current <code>metadata.step</code>, <code>next</code> (the pending tasks), and the State. For <code>START → node_1 → node_2 → END</code>, one run yields the following sequence:</p>
+<table>
+<thead>
+<tr>
+<th>Snapshot</th>
+<th>step</th>
+<th>next</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Input Checkpoint</td>
+<td>-1</td>
+<td><code>__start__</code></td>
+<td>Created from the <code>graph.invoke</code> input; no user node has run yet</td>
+</tr>
+<tr>
+<td>Checkpoint 0</td>
+<td>0</td>
+<td><code>node_1</code></td>
+<td>Input written into State</td>
+</tr>
+<tr>
+<td>Checkpoint 1</td>
+<td>1</td>
+<td><code>node_2</code></td>
+<td><code>node_1</code>‘s result committed (recorded in <code>tasks.result</code>)</td>
+</tr>
+<tr>
+<td>Checkpoint 2</td>
+<td>2</td>
+<td><code>()</code></td>
+<td><code>node_2</code> done, no pending tasks, run finished</td>
+</tr>
+</tbody></table>
+<p>Note that <code>END</code> is a termination boundary — <strong>it produces no extra node-execution snapshot</strong>. Checkpoints are the foundation of persistence, time-travel debugging, and human-in-the-loop. This article establishes the concept; a follow-up will go deeper.</p>
+<p><a name="graph-api-vs-functional-api"></a></p>
+<h2 id="Graph-API-vs-Functional-API"><a href="#Graph-API-vs-Functional-API" class="headerlink" title="Graph API vs Functional API"></a>Graph API vs Functional API</h2><p>LangGraph offers two APIs for building graphs. They share the same underlying runtime and can be combined in one application.</p>
+<p>The <strong>Graph API</strong> is declarative: you explicitly define State, Nodes, and Edges, organizing the business flow into a visual graph structure. It suits complex branching, state shared across many nodes, parallel execution with result aggregation, and teams that benefit from the graph as a debugging and communication artifact.</p>
+<p>The <strong>Functional API</strong> is imperative: <code>@entrypoint</code> marks the workflow entry, <code>@task</code> marks checkpointable tasks, and the flow is organized with ordinary <code>if/else</code>, loops, and function calls. It suits minimally refactoring existing procedural code, mostly linear flows, simple branching, and rapid prototyping.</p>
+<table>
+<thead>
+<tr>
+<th>Aspect</th>
+<th>Graph API</th>
+<th>Functional API</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Style</td>
+<td>Declarative graph structure</td>
+<td>Imperative function flow</td>
+</tr>
+<tr>
+<td>Core abstractions</td>
+<td>State, Node, Edge</td>
+<td>entrypoint, task</td>
+</tr>
+<tr>
+<td>State management</td>
+<td>Explicit global State</td>
+<td>Mostly function arguments and return values</td>
+</tr>
+<tr>
+<td>Flow expression</td>
+<td>Nodes and edges</td>
+<td>Ordinary Python control flow</td>
+</tr>
+<tr>
+<td>Visualizability</td>
+<td>Strong — natural fit for diagrams and debugging</td>
+<td>Weak — looks like regular code</td>
+</tr>
+<tr>
+<td>Best for</td>
+<td>Complex workflows, multi-branch, multi-node collaboration</td>
+<td>Simple flows, quick prototypes, refactoring existing code</td>
+</tr>
+<tr>
+<td>Learning curve</td>
+<td>Higher</td>
+<td>Lower</td>
+</tr>
+</tbody></table>
+<p><strong>Guidance</strong>: building from scratch or facing a complex structure — use the Graph API; refactoring existing code, prototyping, or a simple linear flow — use the Functional API. When learning LangGraph, master the Graph API first: it best embodies the core idea of describing an executable computation graph explicitly through State, Node, and Edge. The rest of this article uses the Graph API.</p>
+<p><a name="first-graph"></a></p>
+<h2 id="Your-First-Graph-Define-Compile-Invoke"><a href="#Your-First-Graph-Define-Compile-Invoke" class="headerlink" title="Your First Graph: Define, Compile, Invoke"></a>Your First Graph: Define, Compile, Invoke</h2><p><a name="define-compile-invoke"></a></p>
+<h3 id="Building-a-State-Graph-in-Three-Steps"><a href="#Building-a-State-Graph-in-Three-Steps" class="headerlink" title="Building a State Graph in Three Steps"></a>Building a State Graph in Three Steps</h3><p>Building and running a graph has three stages: <strong>define the state graph → compile it → invoke it</strong>.</p>
+<p>First, define the global state and the node functions, then assemble them into a <code>StateGraph</code>:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> langgraph.graph <span class="keyword">import</span> StateGraph, START, END</span><br><span class="line"><span class="keyword">from</span> typing <span class="keyword">import</span> TypedDict, Annotated</span><br><span class="line"><span class="keyword">from</span> operator <span class="keyword">import</span> add</span><br><span class="line"></span><br><span class="line"><span class="comment"># 1. Define the global state</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">OverAllState</span>(<span class="title class_ inherited__">TypedDict</span>):</span><br><span class="line">    logs: Annotated[<span class="built_in">list</span>[<span class="built_in">str</span>], add]   <span class="comment"># field with a reducer: append-merge</span></span><br><span class="line">    cur_id: <span class="built_in">str</span>                        <span class="comment"># field without a reducer: overwrite</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 2. Define nodes: read State, return a partial update</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">node_1</span>(<span class="params">state: OverAllState</span>) -&gt; OverAllState:</span><br><span class="line">    pre_id = state[<span class="string">&quot;cur_id&quot;</span>]</span><br><span class="line">    <span class="keyword">return</span> &#123;</span><br><span class="line">        <span class="string">&quot;logs&quot;</span>: [<span class="string">&quot;node_1 finished&quot;</span>],</span><br><span class="line">        <span class="string">&quot;cur_id&quot;</span>: pre_id + <span class="string">&quot;, node_1&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">node_2</span>(<span class="params">state: OverAllState</span>) -&gt; OverAllState:</span><br><span class="line">    pre_id = state[<span class="string">&quot;cur_id&quot;</span>]</span><br><span class="line">    <span class="keyword">return</span> &#123;</span><br><span class="line">        <span class="string">&quot;logs&quot;</span>: [<span class="string">&quot;node_2 finished&quot;</span>],</span><br><span class="line">        <span class="string">&quot;cur_id&quot;</span>: pre_id + <span class="string">&quot;, node_2&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 3. Assemble the graph structure</span></span><br><span class="line">builder = StateGraph(state_schema=OverAllState)</span><br><span class="line">builder.add_node(<span class="string">&quot;node_1&quot;</span>, node_1)</span><br><span class="line">builder.add_node(<span class="string">&quot;node_2&quot;</span>, node_2)</span><br><span class="line">builder.add_edge(START, <span class="string">&quot;node_1&quot;</span>)</span><br><span class="line">builder.add_edge(<span class="string">&quot;node_1&quot;</span>, <span class="string">&quot;node_2&quot;</span>)</span><br><span class="line">builder.add_edge(<span class="string">&quot;node_2&quot;</span>, END)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 4. Compile into an executable graph</span></span><br><span class="line">graph = builder.<span class="built_in">compile</span>()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 5. Invoke</span></span><br><span class="line"><span class="built_in">print</span>(graph.invoke(&#123;<span class="string">&quot;cur_id&quot;</span>: <span class="string">&quot;start&quot;</span>&#125;))</span><br></pre></td></tr></table></figure>
+
+<p>Output:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&#x27;logs&#x27;: [&#x27;node_1 finished&#x27;, &#x27;node_2 finished&#x27;], &#x27;cur_id&#x27;: &#x27;start, node_1, node_2&#x27;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Look closely at <code>logs</code>: each node returned a single-element list, yet the final result <strong>concatenates</strong> them — that is the reducer declared via <code>Annotated[list[str], add]</code> at work. <code>cur_id</code>, with no reducer, is handled manually: each node reads the old value and returns the concatenated string.</p>
+<p><a name="graph-visualization"></a></p>
+<h3 id="Graph-Visualization"><a href="#Graph-Visualization" class="headerlink" title="Graph Visualization"></a>Graph Visualization</h3><p>LangGraph can express the graph structure in mermaid (a text markup language that renders directly into flowcharts):</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">raw_mermaid = graph.get_graph().draw_mermaid()</span><br><span class="line"><span class="built_in">print</span>(raw_mermaid)</span><br></pre></td></tr></table></figure>
+
+<p>Everything from <code>graph TD;</code> onward is the mermaid source:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">graph TD;</span><br><span class="line">    __start__([&lt;p&gt;__start__&lt;/p&gt;]):::first</span><br><span class="line">    node_1(node_1)</span><br><span class="line">    node_2(node_2)</span><br><span class="line">    __end__([&lt;p&gt;__end__&lt;/p&gt;]):::last</span><br><span class="line">    __start__ --&gt; node_1;</span><br><span class="line">    node_1 --&gt; node_2;</span><br><span class="line">    node_2 --&gt; __end__;</span><br></pre></td></tr></table></figure>
+
+<p>You can also render it to PNG bytes:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">png_bytes = graph.get_graph().draw_mermaid_png()</span><br><span class="line"></span><br><span class="line"><span class="comment"># Display inline in Jupyter</span></span><br><span class="line"><span class="keyword">from</span> IPython.display <span class="keyword">import</span> display, Image</span><br><span class="line">display(Image(png_bytes))</span><br><span class="line"></span><br><span class="line"><span class="comment"># Or save to a file</span></span><br><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&quot;first_demo_graph.png&quot;</span>, <span class="string">&quot;wb&quot;</span>) <span class="keyword">as</span> f:</span><br><span class="line">    f.write(png_bytes)</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><code>draw_mermaid_png()</code> calls an online rendering service under the hood (default: <a target="_blank" rel="noopener" href="https://mermaid.ink/">https://mermaid.ink</a>). It may fail on flaky networks — retrying usually works, and you can point <code>base_url</code> at an alternative renderer.</p>
+</blockquote>
+<p>In Jupyter there is an even shorter path:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> IPython.display <span class="keyword">import</span> display</span><br><span class="line">display(graph)   <span class="comment"># render the compiled graph directly</span></span><br></pre></td></tr></table></figure>
+
+<p><a name="state-management"></a></p>
+<h2 id="State-Management"><a href="#State-Management" class="headerlink" title="State Management"></a>State Management</h2><p><a name="defining-state-schema"></a></p>
+<h3 id="Three-Ways-to-Define-a-Schema"><a href="#Three-Ways-to-Define-a-Schema" class="headerlink" title="Three Ways to Define a Schema"></a>Three Ways to Define a Schema</h3><p>Defining state really means declaring the state’s <strong>Schema</strong> — a complete description of its fields. Three approaches are officially recommended: TypedDict, dataclass, and Pydantic. Graphs built with any of the three behave identically; the differences are limited to field access style and validation behavior.</p>
+<p><strong>TypedDict</strong> — fields accessed as <code>state[&quot;field&quot;]</code>:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> typing <span class="keyword">import</span> TypedDict, Annotated</span><br><span class="line"><span class="keyword">from</span> operator <span class="keyword">import</span> add</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">OverAllState</span>(<span class="title class_ inherited__">TypedDict</span>):</span><br><span class="line">    logs: Annotated[<span class="built_in">list</span>[<span class="built_in">str</span>], add]</span><br><span class="line">    cur_id: <span class="built_in">str</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>dataclass</strong> — fields accessed as <code>state.field</code>:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> dataclasses <span class="keyword">import</span> dataclass</span><br><span class="line"></span><br><span class="line"><span class="meta">@dataclass</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">OverAllState</span>:</span><br><span class="line">    logs: Annotated[<span class="built_in">list</span>[<span class="built_in">str</span>], add]</span><br><span class="line">    cur_id: <span class="built_in">str</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>Pydantic</strong> — field access same as dataclass:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pydantic <span class="keyword">import</span> BaseModel</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">OverAllState</span>(<span class="title class_ inherited__">BaseModel</span>):</span><br><span class="line">    logs: Annotated[<span class="built_in">list</span>[<span class="built_in">str</span>], add]</span><br><span class="line">    cur_id: <span class="built_in">str</span></span><br></pre></td></tr></table></figure>
+
+<p><a name="schema-validation-behavior"></a></p>
+<h3 id="Validation-Behavior-Compared"><a href="#Validation-Behavior-Compared" class="headerlink" title="Validation Behavior Compared"></a>Validation Behavior Compared</h3><p>All three require exact field-name matches; they just fail differently:</p>
+<table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>TypedDict</th>
+<th>dataclass</th>
+<th>Pydantic</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Input field mismatch</td>
+<td>raises <code>KeyError</code></td>
+<td>raises <code>TypeError</code></td>
+<td>raises <code>ValidationError</code></td>
+</tr>
+<tr>
+<td>Node returns unknown field</td>
+<td>update ignored</td>
+<td>update ignored</td>
+<td>update ignored</td>
+</tr>
+</tbody></table>
+<p><strong>TypedDict is the recommended default</strong>, and most official examples use it, because:</p>
+<ul>
+<li>Compared with a plain <code>dict</code>, it provides explicit field constraints and type hints;</li>
+<li>Compared with <code>dataclass</code>, it fits LangGraph’s update model better — nodes return “partial state update” dicts, not complete objects;</li>
+<li>Compared with a <code>Pydantic BaseModel</code>, it is lighter, with no extra validation overhead.</li>
+</ul>
+<p><a name="state-reducers"></a></p>
+<h3 id="State-Reducers-How-Updates-Are-Merged"><a href="#State-Reducers-How-Updates-Are-Merged" class="headerlink" title="State Reducers: How Updates Are Merged"></a>State Reducers: How Updates Are Merged</h3><p>A reducer is LangGraph’s core mechanism for merging state updates. It defines how multiple updates to the same state key — especially from parallel nodes — combine into a single final value.</p>
+<p>Key characteristics:</p>
+<ul>
+<li><strong>Signature</strong>: <code>(Value, Value) -&gt; Value</code> — takes the current value and the incoming update, returns the merged value;</li>
+<li><strong>Declaration</strong>: attached to a state key via <code>Annotated[Type, reducer_function]</code>;</li>
+<li><strong>Default</strong>: keys without a reducer use last-write-wins (overwrite).</li>
+</ul>
+<p>A custom reducer is just a two-argument merge function:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">my_reducer</span>(<span class="params">left: <span class="built_in">list</span>[<span class="built_in">str</span>], right: <span class="built_in">list</span>[<span class="built_in">str</span>]</span>) -&gt; <span class="built_in">list</span>[<span class="built_in">str</span>]:</span><br><span class="line">    <span class="keyword">return</span> left + right</span><br></pre></td></tr></table></figure>
+
+<p><code>left</code> is the accumulated current value; <code>right</code> is the new update. Associate it with a field via <code>Annotated</code>:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">OverAllState</span>(<span class="title class_ inherited__">TypedDict</span>):</span><br><span class="line">    logs: Annotated[<span class="built_in">list</span>[<span class="built_in">str</span>], my_reducer]  <span class="comment"># append across updates</span></span><br><span class="line">    cur_id: <span class="built_in">str</span>                              <span class="comment"># no reducer → overwrite</span></span><br></pre></td></tr></table></figure>
+
+<p><code>Annotated[]</code> is Python’s type-annotation extension mechanism: the first argument is the underlying type, the rest is metadata. <code>Annotated</code> itself assigns no meaning to the metadata — frameworks decide how to interpret it. LangGraph uses it to declare a field’s <strong>type</strong> and its <strong>merge rule</strong> in one place.</p>
+<p>The two built-in reducers you will use most:</p>
+<p><strong>1. <code>operator.add</code></strong>: Python’s built-in addition, equivalent to <code>a + b</code> — works for numeric accumulation and list concatenation:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> operator <span class="keyword">import</span> add</span><br><span class="line"></span><br><span class="line">add(<span class="number">1</span>, <span class="number">2</span>)                  <span class="comment"># 3</span></span><br><span class="line">add([<span class="number">1</span>, <span class="number">2</span>], [<span class="number">3</span>, <span class="number">4</span>])        <span class="comment"># [1, 2, 3, 4]</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>2. <code>add_messages</code></strong>: the reducer dedicated to conversation message lists. It maintains a sequence of <code>BaseMessage</code> objects (<code>HumanMessage</code>, <code>AIMessage</code>, <code>SystemMessage</code>, <code>ToolMessage</code>, …). It is <strong>not</strong> simple list concatenation — it merges <strong>by message <code>id</code></strong>:</p>
+<ul>
+<li>If an incoming message’s <code>id</code> does not exist in the current list, it is appended;</li>
+<li>If the <code>id</code> matches an existing message, the new message <strong>replaces</strong> the old one.</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> langgraph.graph.message <span class="keyword">import</span> add_messages</span><br><span class="line"><span class="keyword">from</span> langchain.messages <span class="keyword">import</span> HumanMessage, AIMessage, SystemMessage</span><br><span class="line"></span><br><span class="line">left = [</span><br><span class="line">    SystemMessage(content=<span class="string">&quot;You are a helpful assistant&quot;</span>, <span class="built_in">id</span>=<span class="string">&#x27;1&#x27;</span>),</span><br><span class="line">    HumanMessage(content=<span class="string">&quot;Hi&quot;</span>, <span class="built_in">id</span>=<span class="string">&#x27;2&#x27;</span>),</span><br><span class="line">    AIMessage(content=<span class="string">&quot;Hello!&quot;</span>, <span class="built_in">id</span>=<span class="string">&#x27;3&#x27;</span>),</span><br><span class="line">]</span><br><span class="line"></span><br><span class="line">right = [</span><br><span class="line">    HumanMessage(content=<span class="string">&quot;I&#x27;m Wang, you&#x27;re Xiao Wang&quot;</span>, <span class="built_in">id</span>=<span class="string">&#x27;2&#x27;</span>),  <span class="comment"># id exists -&gt; replace</span></span><br><span class="line">    AIMessage(content=<span class="string">&quot;Got it, I&#x27;ll remember&quot;</span>, <span class="built_in">id</span>=<span class="string">&#x27;3&#x27;</span>),           <span class="comment"># id exists -&gt; replace</span></span><br><span class="line">    HumanMessage(content=<span class="string">&quot;Who are you?&quot;</span>, <span class="built_in">id</span>=<span class="string">&#x27;4&#x27;</span>),                 <span class="comment"># new id -&gt; append</span></span><br><span class="line">    AIMessage(content=<span class="string">&quot;I&#x27;m Xiao Wang&quot;</span>, <span class="built_in">id</span>=<span class="string">&#x27;5&#x27;</span>),                   <span class="comment"># new id -&gt; append</span></span><br><span class="line">]</span><br><span class="line"></span><br><span class="line">merged = add_messages(left, right)</span><br></pre></td></tr></table></figure>
+
+<p>The merged result keeps the <code>id=&#39;1&#39;</code> system message, replaces <code>id=&#39;2&#39;</code> and <code>id=&#39;3&#39;</code> with the new content, and appends <code>id=&#39;4&#39;</code> and <code>id=&#39;5&#39;</code>. This “append + replace-by-id” semantics is the foundation of multi-turn conversations and agent message flows.</p>
+<p><a name="default-overwrite-and-overwrite"></a></p>
+<h3 id="Default-Overwrite-Behavior-and-the-Overwrite-Wrapper"><a href="#Default-Overwrite-Behavior-and-the-Overwrite-Wrapper" class="headerlink" title="Default Overwrite Behavior and the Overwrite Wrapper"></a>Default Overwrite Behavior and the Overwrite Wrapper</h3><p><strong>Default behavior</strong>: fields without a reducer are simply overwritten by each update:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">OverAllState</span>(<span class="title class_ inherited__">TypedDict</span>):</span><br><span class="line">    logs: <span class="built_in">list</span>[<span class="built_in">str</span>]   <span class="comment"># note: no reducer</span></span><br><span class="line">    <span class="built_in">id</span>: <span class="built_in">str</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">node_a</span>(<span class="params">state: OverAllState</span>):</span><br><span class="line">    <span class="keyword">return</span> &#123;<span class="string">&quot;logs&quot;</span>: [<span class="string">&quot;node_a&quot;</span>], <span class="string">&quot;id&quot;</span>: <span class="string">&quot;node_a&quot;</span>&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">node_b</span>(<span class="params">state: OverAllState</span>):</span><br><span class="line">    <span class="keyword">return</span> &#123;<span class="string">&quot;logs&quot;</span>: [<span class="string">&quot;node_b&quot;</span>], <span class="string">&quot;id&quot;</span>: <span class="string">&quot;node_b&quot;</span>&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># START -&gt; node_a -&gt; node_b -&gt; END</span></span><br><span class="line">result = graph.invoke(&#123;<span class="string">&quot;logs&quot;</span>: [<span class="string">&quot;START&quot;</span>], <span class="string">&quot;id&quot;</span>: <span class="string">&quot;start&quot;</span>&#125;)</span><br><span class="line"><span class="comment"># &#123;&#x27;logs&#x27;: [&#x27;node_b&#x27;], &#x27;id&#x27;: &#x27;node_b&#x27;&#125;   ← old values overwritten</span></span><br></pre></td></tr></table></figure>
+
+<p>The core rule for node updates can be summarized as:</p>
+<blockquote>
+<p>A node returns only the fields it wants to change; fields it does not return stay unchanged; returned fields are merged via their reducer, or overwritten if none is defined.</p>
+</blockquote>
+<p><strong>Overwrite — bypassing the reducer</strong>: when a field has a reducer but one particular update should replace the value outright, wrap it in <code>Overwrite</code>:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> langgraph.types <span class="keyword">import</span> Overwrite</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">node_b</span>(<span class="params">state: OverAllState</span>):</span><br><span class="line">    <span class="keyword">return</span> &#123;</span><br><span class="line">        <span class="string">&quot;logs&quot;</span>: Overwrite([<span class="string">&quot;node_b&quot;</span>]),   <span class="comment"># skip the add reducer for this update</span></span><br><span class="line">        <span class="string">&quot;id&quot;</span>: <span class="string">&quot;node_b&quot;</span></span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>For <code>START -&gt; node_a -&gt; node_b -&gt; node_c</code> with <code>logs</code> bound to <code>add</code>:</p>
+<ul>
+<li>Without <code>Overwrite</code>: <code>[&#39;START&#39;, &#39;node_a&#39;, &#39;node_b&#39;, &#39;node_c&#39;]</code>;</li>
+<li>With <code>Overwrite</code> in <code>node_b</code>: <code>[&#39;node_b&#39;, &#39;node_c&#39;]</code>.</li>
+</ul>
+<p><code>Overwrite</code> affects only the current update — it does not change the field’s reducer definition. <code>node_c</code>‘s normal return still goes through append-merge.</p>
+<p><a name="multi-schema"></a></p>
+<h3 id="Multi-Schema-Input-Output-and-Private-State"><a href="#Multi-Schema-Input-Output-and-Private-State" class="headerlink" title="Multi Schema: Input, Output, and Private State"></a>Multi Schema: Input, Output, and Private State</h3><p>LangGraph supports multiple state schemas in one graph, separating the graph’s boundary from its internal data flow:</p>
+<table>
+<thead>
+<tr>
+<th>State type</th>
+<th>Declared via</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Global &#x2F; internal state</td>
+<td><code>StateGraph(state_schema=...)</code></td>
+<td>The main state used inside the graph</td>
+</tr>
+<tr>
+<td>Input state</td>
+<td><code>input_schema=...</code></td>
+<td>Constrains which fields callers may pass in</td>
+</tr>
+<tr>
+<td>Output state</td>
+<td><code>output_schema=...</code></td>
+<td>Constrains which fields the finished graph returns</td>
+</tr>
+<tr>
+<td>Private state</td>
+<td>Type annotation on a node’s first parameter</td>
+<td>Temporary data passed between specific nodes; not part of graph input&#x2F;output</td>
+</tr>
+</tbody></table>
+<p>Input&#x2F;output states face the <strong>graph boundary</strong>; global&#x2F;private states face <strong>internal data passing</strong>.</p>
+<p>A complete example — three nodes demonstrating global, private, and output state:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> typing <span class="keyword">import</span> TypedDict</span><br><span class="line"><span class="keyword">from</span> langgraph.graph <span class="keyword">import</span> StateGraph, START, END</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">InputState</span>(<span class="title class_ inherited__">TypedDict</span>):</span><br><span class="line">    username: <span class="built_in">str</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">OutputState</span>(<span class="title class_ inherited__">TypedDict</span>):</span><br><span class="line">    graph_output: <span class="built_in">str</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">OverAllState</span>(<span class="title class_ inherited__">TypedDict</span>):</span><br><span class="line">    username: <span class="built_in">str</span></span><br><span class="line">    nickname: <span class="built_in">str</span></span><br><span class="line">    graph_output: <span class="built_in">str</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">PrivateState</span>(<span class="title class_ inherited__">TypedDict</span>):</span><br><span class="line">    greeting: <span class="built_in">str</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">node_1</span>(<span class="params">state: InputState</span>) -&gt; OverAllState:</span><br><span class="line">    <span class="comment"># write to global state</span></span><br><span class="line">    <span class="keyword">return</span> &#123;<span class="string">&quot;nickname&quot;</span>: <span class="string">&quot;Dear &quot;</span> + state[<span class="string">&quot;username&quot;</span>]&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">node_2</span>(<span class="params">state: OverAllState</span>) -&gt; PrivateState:</span><br><span class="line">    <span class="comment"># read global state, write private state</span></span><br><span class="line">    <span class="keyword">return</span> &#123;<span class="string">&quot;greeting&quot;</span>: state[<span class="string">&quot;nickname&quot;</span>] + <span class="string">&quot;, good morning~&quot;</span>&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">node_3</span>(<span class="params">state: PrivateState</span>) -&gt; OutputState:</span><br><span class="line">    <span class="comment"># read private state, write output state</span></span><br><span class="line">    <span class="keyword">return</span> &#123;<span class="string">&quot;graph_output&quot;</span>: state[<span class="string">&quot;greeting&quot;</span>] + <span class="string">&quot; Nice to meet you!&quot;</span>&#125;</span><br><span class="line"></span><br><span class="line">builder = StateGraph(OverAllState, input_schema=InputState, output_schema=OutputState)</span><br><span class="line">builder.add_node(<span class="string">&quot;node_1&quot;</span>, node_1)</span><br><span class="line">builder.add_node(<span class="string">&quot;node_2&quot;</span>, node_2)</span><br><span class="line">builder.add_node(<span class="string">&quot;node_3&quot;</span>, node_3)</span><br><span class="line">builder.add_edge(START, <span class="string">&quot;node_1&quot;</span>)</span><br><span class="line">builder.add_edge(<span class="string">&quot;node_1&quot;</span>, <span class="string">&quot;node_2&quot;</span>)</span><br><span class="line">builder.add_edge(<span class="string">&quot;node_2&quot;</span>, <span class="string">&quot;node_3&quot;</span>)</span><br><span class="line">builder.add_edge(<span class="string">&quot;node_3&quot;</span>, END)</span><br><span class="line"></span><br><span class="line">graph = builder.<span class="built_in">compile</span>()</span><br><span class="line"><span class="built_in">print</span>(graph.invoke(&#123;<span class="string">&quot;username&quot;</span>: <span class="string">&quot;Xiao Huang&quot;</span>&#125;))</span><br></pre></td></tr></table></figure>
+
+<p>Output:</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span> <span class="attr">&quot;graph_output&quot;</span><span class="punctuation">:</span> <span class="string">&quot;Dear Xiao Huang, good morning~ Nice to meet you!&quot;</span> <span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>Internally the graph held <code>username</code>, <code>nickname</code>, and <code>greeting</code> as well, but the final result contains only <code>graph_output</code> — because the output is trimmed to <code>output_schema</code>.</p>
+<p>Under the hood, LangGraph splits state into multiple <strong>Channels</strong> (roughly one per state field). When the <code>StateGraph</code> is created, fields from <code>state_schema</code>, <code>input_schema</code>, and <code>output_schema</code> are recorded; at <code>add_node()</code> time, new fields from the node’s parameter annotation (e.g., private state) are recorded too. At runtime:</p>
+<ul>
+<li>Graph input is trimmed to <code>input_schema</code>;</li>
+<li>Each node receives state trimmed to its parameter type;</li>
+<li>Node returns are partial updates, written to channels by field name;</li>
+<li>The final output is trimmed to <code>output_schema</code>.</li>
+</ul>
+<p><strong>Design conventions</strong> (engineering best practices):</p>
+<ol>
+<li>Input&#x2F;output states should usually be subsets of the global state;</li>
+<li>Private state fields should not share names with global state fields;</li>
+<li>Node functions should explicitly declare parameter and return state types;</li>
+<li>Never access fields inside a node that its parameter type does not declare (you’ll get a <code>KeyError</code>);</li>
+<li>Keep the returned dict consistent with the declared return type.</li>
+</ol>
+<p><a name="predefined-states"></a></p>
+<h3 id="Predefined-States-MessagesState-and-AgentState"><a href="#Predefined-States-MessagesState-and-AgentState" class="headerlink" title="Predefined States: MessagesState and AgentState"></a>Predefined States: MessagesState and AgentState</h3><p><strong>MessagesState</strong> is the official predefined state for LLM scenarios. Its source is a single declaration:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">MessagesState</span>(<span class="title class_ inherited__">TypedDict</span>):</span><br><span class="line">    messages: Annotated[<span class="built_in">list</span>[AnyMessage], add_messages]</span><br></pre></td></tr></table></figure>
+
+<p>It pre-defines the <code>messages</code> field together with its <code>add_messages</code> merge rule. For chatbots, agents, and tool-calling flows, just subclass it and add your own fields:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> langgraph.graph.message <span class="keyword">import</span> MessagesState</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">OverAllState</span>(<span class="title class_ inherited__">MessagesState</span>):</span><br><span class="line">    username: <span class="built_in">str</span></span><br><span class="line">    output: <span class="built_in">str</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">node_a</span>(<span class="params">state: OverAllState</span>) -&gt; OverAllState:</span><br><span class="line">    <span class="keyword">return</span> &#123;<span class="string">&quot;messages&quot;</span>: [HumanMessage(<span class="string">&quot;Hi, I&#x27;m &quot;</span> + state[<span class="string">&quot;username&quot;</span>])]&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">llm_node</span>(<span class="params">state: OverAllState</span>) -&gt; OverAllState:</span><br><span class="line">    res = model.invoke(state[<span class="string">&quot;messages&quot;</span>])</span><br><span class="line">    <span class="keyword">return</span> &#123;<span class="string">&quot;messages&quot;</span>: [res], <span class="string">&quot;output&quot;</span>: res.content&#125;</span><br></pre></td></tr></table></figure>
+
+<p>At runtime, the <code>HumanMessage</code> returned by <code>node_a</code> and the <code>AIMessage</code> returned by <code>llm_node</code> are both merged into <code>messages</code> via <code>add_messages</code>, so the final state contains the full conversation.</p>
+<p><strong>AgentState</strong> (<code>langchain.agents.middleware.types.AgentState</code>) is the state type used internally by LangChain agents. It has three fields:</p>
+<ul>
+<li><code>messages</code>: the message list, also using <code>add_messages</code>;</li>
+<li><code>jump_to</code>: a control field for the LangChain agent middleware system, expressing a flow-jump intent. <strong>It is not a general-purpose jump mechanism</strong> — a custom <code>StateGraph</code> will not jump automatically even if this field is defined; use <code>Command(goto=...)</code> for flow control in plain graphs;</li>
+<li><code>structured_response</code>: where the agent’s structured output lands; the <code>OmitFromInput</code> marker means it is generated internally, never accepted as external input.</li>
+</ul>
+<p><code>AgentState</code> is purpose-built for the LangChain agent runtime — custom LangGraph projects <strong>should not</strong> extend it directly.</p>
+<p><a name="control-flow"></a></p>
+<h2 id="Control-Flow"><a href="#Control-Flow" class="headerlink" title="Control Flow"></a>Control Flow</h2><p><a name="sequential-structure"></a></p>
+<h3 id="Sequential-Structure"><a href="#Sequential-Structure" class="headerlink" title="Sequential Structure"></a>Sequential Structure</h3><p><strong><code>add_edge</code></strong> adds a directed edge between two nodes — the most basic control-flow building block:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">builder.add_edge(START, <span class="string">&quot;node_a&quot;</span>)    <span class="comment"># the graph starts at node_a</span></span><br><span class="line">builder.add_edge(<span class="string">&quot;node_a&quot;</span>, <span class="string">&quot;node_b&quot;</span>) <span class="comment"># node_b runs after node_a</span></span><br><span class="line">builder.add_edge(<span class="string">&quot;node_b&quot;</span>, END)      <span class="comment"># the flow ends after node_b</span></span><br></pre></td></tr></table></figure>
+
+<p>For a chain of sequential nodes, <strong><code>add_sequence</code></strong> is a shortcut:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">builder.add_sequence([node_a, node_b])</span><br><span class="line"><span class="comment"># roughly equivalent to:</span></span><br><span class="line"><span class="comment"># builder.add_node(&quot;node_a&quot;, node_a)</span></span><br><span class="line"><span class="comment"># builder.add_node(&quot;node_b&quot;, node_b)</span></span><br><span class="line"><span class="comment"># builder.add_edge(&quot;node_a&quot;, &quot;node_b&quot;)</span></span><br></pre></td></tr></table></figure>
+
+<p>Function names become node names by default and edges are added between neighbors — ideal for simple linear flows.</p>
+<p><strong>Can the edge to END be omitted?</strong> Yes, but it shouldn’t be. Mechanically, LangGraph computes each Superstep’s task list from updated channels; when no new nodes are activated, the run ends naturally — <code>END</code> is never an actually-executed node, it just expresses “termination semantics”. But explicit <code>END</code> edges make the graph complete and its visualization clearer, which pays off especially in branching and looping scenarios.</p>
+<p>Unlike <code>END</code>, <strong><code>START</code> generally cannot be omitted</strong>: it tells LangGraph which nodes to execute first. Without an edge leaving <code>START</code> (or another way to declare entry points), the runtime cannot determine the initial nodes.</p>
+<p><a name="branching"></a></p>
+<h3 id="Branching"><a href="#Branching" class="headerlink" title="Branching"></a>Branching</h3><p>Branches come in two flavors, distinguished by one core question:</p>
+<blockquote>
+<p><strong>Downstream candidates known at compile time → static branch; targets or task counts decided at runtime → dynamic branch.</strong></p>
+</blockquote>
+<p><a name="parallel-nodes"></a></p>
+<h4 id="Parallel-Nodes"><a href="#Parallel-Nodes" class="headerlink" title="Parallel Nodes"></a>Parallel Nodes</h4><p>Parallel nodes are the simplest static branch: multiple nodes triggered by the same upstream node are activated in the <strong>same Superstep</strong>:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">builder.add_edge(START, <span class="string">&quot;node_a&quot;</span>)</span><br><span class="line">builder.add_edge(START, <span class="string">&quot;node_b&quot;</span>)   <span class="comment"># node_a and node_b run in parallel</span></span><br></pre></td></tr></table></figure>
+
+<p>Things to keep in mind:</p>
+<ul>
+<li>“Parallel” here primarily means <strong>parallel in scheduling semantics</strong> — there is no ordering dependency between the two nodes;</li>
+<li>Their outputs are merged into the state <strong>together at the end of the Superstep</strong>;</li>
+<li>If both write to the <strong>same state field</strong>, that field needs a suitable reducer — otherwise you get an <code>InvalidUpdateError</code>.</li>
+</ul>
+<p><a name="conditional-edges"></a></p>
+<h4 id="Conditional-Branching-add-conditional-edges"><a href="#Conditional-Branching-add-conditional-edges" class="headerlink" title="Conditional Branching: add_conditional_edges"></a>Conditional Branching: add_conditional_edges</h4><p><code>add_conditional_edges</code> selects downstream nodes at runtime based on state. Three core parameters:</p>
+<ul>
+<li><strong><code>source</code></strong>: the node the branch starts from;</li>
+<li><strong><code>path</code></strong>: the routing rule (usually a function). Its return value is the jump target — a single node name &#x2F; <code>END</code>, or a sequence of them;</li>
+<li><strong><code>path_map</code></strong>: maps routing return values to real node names; optional.</li>
+</ul>
+<p><strong>Without path_map</strong>, the router must return valid node names directly:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">router</span>(<span class="params">state: OverAllState</span>) -&gt; <span class="type">Literal</span>[<span class="string">&quot;node_a&quot;</span>, <span class="string">&quot;node_b&quot;</span>]:</span><br><span class="line">    <span class="keyword">if</span> <span class="string">&quot;poem&quot;</span> <span class="keyword">in</span> state[<span class="string">&quot;content_type&quot;</span>]:</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;node_a&quot;</span></span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;node_b&quot;</span></span><br><span class="line"></span><br><span class="line">builder.add_conditional_edges(START, router)</span><br></pre></td></tr></table></figure>
+
+<p><strong>With path_map</strong>, the router can return business-meaningful labels that map onto nodes:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">router</span>(<span class="params">state: OverAllState</span>) -&gt; <span class="type">Literal</span>[<span class="string">&quot;a&quot;</span>, <span class="string">&quot;b&quot;</span>]:</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;a&quot;</span> <span class="keyword">if</span> <span class="string">&quot;poem&quot;</span> <span class="keyword">in</span> state[<span class="string">&quot;content_type&quot;</span>] <span class="keyword">else</span> <span class="string">&quot;b&quot;</span></span><br><span class="line"></span><br><span class="line">builder.add_conditional_edges(</span><br><span class="line">    START,</span><br><span class="line">    router,</span><br><span class="line">    path_map=&#123;<span class="string">&quot;a&quot;</span>: <span class="string">&quot;node_a&quot;</span>, <span class="string">&quot;b&quot;</span>: <span class="string">&quot;node_b&quot;</span>&#125;</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p>Benefits: the router returns labels with clear business meaning, node names stay engineering-oriented, and the rendered graph <strong>shows the route labels on the edges</strong>, making it much easier to read. In visualizations, conditional edges render as <strong>dashed lines</strong> (fixed edges are solid).</p>
+<p><strong>Routing to multiple nodes</strong>: return a sequence to trigger several downstream nodes at once:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">router</span>(<span class="params">state</span>) -&gt; <span class="type">Sequence</span>[<span class="type">Literal</span>[<span class="string">&quot;node_a&quot;</span>, <span class="string">&quot;node_b&quot;</span>, <span class="string">&quot;node_c&quot;</span>]]:</span><br><span class="line">    <span class="keyword">if</span> <span class="string">&quot;poem&quot;</span> <span class="keyword">in</span> state[<span class="string">&quot;content_type&quot;</span>]:</span><br><span class="line">        <span class="keyword">return</span> [<span class="string">&quot;node_a&quot;</span>, <span class="string">&quot;node_c&quot;</span>]   <span class="comment"># trigger both</span></span><br><span class="line">    <span class="keyword">return</span> [<span class="string">&quot;node_b&quot;</span>, <span class="string">&quot;node_c&quot;</span>]</span><br></pre></td></tr></table></figure>
+
+<p>In this case, pass <code>path_map=[&quot;node_a&quot;, &quot;node_b&quot;, &quot;node_c&quot;]</code> explicitly (the list form is equivalent to an identity-mapping dict). Otherwise the renderer cannot infer the mapping from the return value, and the nodes appear “detached” from the drawn structure.</p>
+<p><a name="deferred-nodes"></a></p>
+<h4 id="Deferred-Nodes-defer"><a href="#Deferred-Nodes-defer" class="headerlink" title="Deferred Nodes: defer"></a>Deferred Nodes: defer</h4><p>When certain nodes (logging, auditing, result aggregation, cleanup) should run <strong>after all regular tasks finish</strong>, add them with <code>defer=True</code>:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">builder.add_node(<span class="string">&quot;audit_node&quot;</span>, audit_node, defer=<span class="literal">True</span>)</span><br><span class="line">builder.add_edge(START, <span class="string">&quot;audit_node&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>Although <code>audit_node</code> is also triggered by <code>START</code>, it does not run immediately — it waits until the regular flow ends, then executes in an <strong>extra Superstep</strong>. It therefore sees the committed state of every task node:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">audit_node</span>(<span class="params">state: OverAllState</span>) -&gt; OverAllState:</span><br><span class="line">    logger.info(<span class="string">f&quot;All task nodes finished; poem <span class="subst">&#123;<span class="string">&#x27;generated&#x27;</span> <span class="keyword">if</span> state[<span class="string">&#x27;poem&#x27;</span>] <span class="keyword">else</span> <span class="string">&#x27;missing&#x27;</span>&#125;</span>&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>How it works under the hood (for the curious): at compile time LangGraph creates a special channel type, <code>LastValueAfterFinish</code>, for the incoming edges of <code>defer=True</code> nodes (regular nodes get <code>EphemeralValue</code>). During normal execution the channel is written but never triggers its node; once no new regular nodes remain, the runtime calls <code>finish()</code> on all channels, the special channel becomes available, and the deferred node is triggered in the extra Superstep.</p>
+<p><a name="dynamic-fan-out-send"></a></p>
+<h4 id="Dynamic-Fan-out-Send"><a href="#Dynamic-Fan-out-Send" class="headerlink" title="Dynamic Fan-out: Send"></a>Dynamic Fan-out: Send</h4><p><strong>Fan-out</strong> means one upstream node dispatches multiple downstream tasks, like opening a fan. Unlike static parallelism, <code>Send</code> decides <strong>task count and per-task input at runtime</strong> — e.g., spawning one processing task per element of a list.</p>
+<p>The router returns a sequence of <code>Send</code> instances, each describing one independent task dispatch:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> langgraph.types <span class="keyword">import</span> Send</span><br><span class="line"></span><br><span class="line"><span class="comment"># Send(node, arg)</span></span><br><span class="line"><span class="comment">#   node: target node name (must be registered)</span></span><br><span class="line"><span class="comment">#   arg:  private state passed to that task only — visible solely to that</span></span><br><span class="line"><span class="comment">#         node instance; each Send gets its own independent arg</span></span><br></pre></td></tr></table></figure>
+
+<p>Full example — dynamically generate a poem, a ci poem, and a joke for a topic, all dispatched to the same <code>worker_node</code>:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">CONTENT_TYPES = [<span class="string">&quot;poem&quot;</span>, <span class="string">&quot;ci_poem&quot;</span>, <span class="string">&quot;joke&quot;</span>]</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">WorkerState</span>(<span class="title class_ inherited__">TypedDict</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;Private state, visible only to the worker task&quot;&quot;&quot;</span></span><br><span class="line">    content_type: <span class="type">Literal</span>[<span class="string">&quot;poem&quot;</span>, <span class="string">&quot;ci_poem&quot;</span>, <span class="string">&quot;joke&quot;</span>]</span><br><span class="line">    prompt: <span class="built_in">str</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">worker_node</span>(<span class="params">state: WorkerState</span>) -&gt; OutputState:</span><br><span class="line">    content = model.invoke([HumanMessage(state[<span class="string">&quot;prompt&quot;</span>])]).content</span><br><span class="line">    <span class="keyword">return</span> &#123;state[<span class="string">&quot;content_type&quot;</span>]: content&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">router</span>(<span class="params">state: InputState</span>) -&gt; <span class="type">Sequence</span>[Send]:</span><br><span class="line">    prompts = &#123;<span class="string">&quot;poem&quot;</span>: <span class="string">&quot;a poem&quot;</span>, <span class="string">&quot;ci_poem&quot;</span>: <span class="string">&quot;a ci poem&quot;</span>, <span class="string">&quot;joke&quot;</span>: <span class="string">&quot;a joke&quot;</span>&#125;</span><br><span class="line">    <span class="keyword">return</span> [</span><br><span class="line">        Send(<span class="string">&quot;worker_node&quot;</span>, &#123;</span><br><span class="line">            <span class="string">&quot;content_type&quot;</span>: ct,</span><br><span class="line">            <span class="string">&quot;prompt&quot;</span>: <span class="string">f&quot;Write <span class="subst">&#123;prompts[ct]&#125;</span> about <span class="subst">&#123;state[<span class="string">&#x27;topic&#x27;</span>]&#125;</span>&quot;</span></span><br><span class="line">        &#125;)</span><br><span class="line">        <span class="keyword">for</span> ct <span class="keyword">in</span> CONTENT_TYPES</span><br><span class="line">    ]</span><br><span class="line"></span><br><span class="line">builder.add_conditional_edges(START, router, path_map=[<span class="string">&quot;worker_node&quot;</span>])</span><br></pre></td></tr></table></figure>
+
+<p>At runtime, three tasks pointing at <code>worker_node</code> are created dynamically. They run the same node function but receive different private states, so they produce a poem, a ci poem, and a joke respectively — all in parallel within the same Superstep.</p>
+<p>Two important points:</p>
+<ul>
+<li><code>path_map=[&quot;worker_node&quot;]</code> must be declared explicitly — since <code>Send</code> targets and counts are decided at runtime, the renderer cannot infer them; declaring the candidates makes the conditional edge render correctly;</li>
+<li>If multiple parallel tasks write to the <strong>same</strong> state field, that field must have a reducer to merge the outputs. Here the three tasks write to three different fields (<code>poem</code>, <code>ci_poem</code>, <code>joke</code>), so there is no concurrent-merge issue.</li>
+</ul>
+<p><a name="command-goto"></a></p>
+<h4 id="Dynamic-Jumping-Command-goto"><a href="#Dynamic-Jumping-Command-goto" class="headerlink" title="Dynamic Jumping: Command(goto)"></a>Dynamic Jumping: Command(goto)</h4><p><strong><code>Command</code></strong> is LangGraph’s multi-purpose primitive for controlling graph execution. Its constructor takes four arguments:</p>
+<table>
+<thead>
+<tr>
+<th>Argument</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>update</code></td>
+<td>Updates graph state, equivalent to returning a state-update dict from the node</td>
+</tr>
+<tr>
+<td><code>goto</code></td>
+<td>Specifies the jump target after the node finishes — runtime conditional branching</td>
+</tr>
+<tr>
+<td><code>graph</code></td>
+<td>With subgraphs, specifies which graph level the jump happens in</td>
+</tr>
+<tr>
+<td><code>resume</code></td>
+<td>Resumes an interrupted graph run (human-in-the-loop scenarios)</td>
+</tr>
+</tbody></table>
+<p>When a node needs to <strong>both update state and decide the next hop</strong>, <code>Command</code> fits better than conditional edges:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> langgraph.types <span class="keyword">import</span> Command</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">router</span>(<span class="params">state: OverAllState</span>) -&gt; Command[<span class="type">Literal</span>[<span class="string">&quot;poem_node&quot;</span>, <span class="string">&quot;joke_node&quot;</span>, END]]:</span><br><span class="line">    content_type = state[<span class="string">&quot;content_type&quot;</span>]</span><br><span class="line">    <span class="keyword">if</span> content_type == <span class="string">&quot;poem&quot;</span>:</span><br><span class="line">        <span class="keyword">return</span> Command(goto=<span class="string">&quot;poem_node&quot;</span>)</span><br><span class="line">    <span class="keyword">elif</span> content_type == <span class="string">&quot;joke&quot;</span>:</span><br><span class="line">        <span class="keyword">return</span> Command(goto=<span class="string">&quot;joke_node&quot;</span>)</span><br><span class="line">    <span class="keyword">return</span> Command(goto=END)   <span class="comment"># fallback for invalid values: end the graph</span></span><br></pre></td></tr></table></figure>
+
+<p>Three caveats:</p>
+<ol>
+<li>The return annotation <code>Command[Literal[...]]</code> is <strong>not validated at runtime</strong>. It exists so LangGraph and type checkers know the node’s possible jump targets — this matters a lot for graph rendering; without it, the rendered graph cannot express the potential transitions;</li>
+<li>A node using <code>Command(goto=...)</code> should <strong>not also have regular downstream edges</strong> — otherwise both the edge and the command may fire, triggering multiple downstream nodes;</li>
+<li>Targets of both <code>Send</code> and <code>Command</code> must be registered in advance. “Dynamic” means deciding <strong>task count, task input, or jump path at runtime</strong> — not creating new nodes at runtime.</li>
+</ol>
+<p><strong>Send vs. Command</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>Typical API</th>
+<th>In one line</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Dynamic fan-out</td>
+<td><code>Send</code> + <code>add_conditional_edges()</code></td>
+<td>How many task instances to start at runtime</td>
+</tr>
+<tr>
+<td>Dynamic jump</td>
+<td><code>Command(goto=...)</code></td>
+<td>Where to go after the current node finishes</td>
+</tr>
+</tbody></table>
+<p><a name="fan-in"></a></p>
+<h3 id="Fan-in-Merging-Multiple-Branches"><a href="#Fan-in-Merging-Multiple-Branches" class="headerlink" title="Fan-in: Merging Multiple Branches"></a>Fan-in: Merging Multiple Branches</h3><p>Opposite to fan-out, <strong>fan-in</strong> means multiple upstream branches converge on one downstream node. Depending on the trigger condition, there are two kinds:</p>
+<ul>
+<li><strong>AND trigger</strong>: the downstream node runs only after <em>all</em> upstream branches arrive;</li>
+<li><strong>OR trigger</strong>: the downstream node runs whenever <em>any</em> branch arrives.</li>
+</ul>
+<p>(“AND&#x2F;OR” is an explanatory analogy, not official terminology.)</p>
+<p><a name="static-fan-in"></a></p>
+<h4 id="Static-Fan-in-AND-Trigger-vs-OR-Trigger"><a href="#Static-Fan-in-AND-Trigger-vs-OR-Trigger" class="headerlink" title="Static Fan-in: AND Trigger vs. OR Trigger"></a>Static Fan-in: AND Trigger vs. OR Trigger</h4><p>The two semantics look similar in code but behave completely differently:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># AND trigger: node_e waits for BOTH node_c and node_d, then runs once</span></span><br><span class="line">builder.add_edge([<span class="string">&quot;node_c&quot;</span>, <span class="string">&quot;node_d&quot;</span>], <span class="string">&quot;node_e&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># OR trigger (independent): node_c and node_d each trigger node_e separately</span></span><br><span class="line">builder.add_edge(<span class="string">&quot;node_c&quot;</span>, <span class="string">&quot;node_e&quot;</span>)</span><br><span class="line">builder.add_edge(<span class="string">&quot;node_d&quot;</span>, <span class="string">&quot;node_e&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>Verify with a five-node graph (<code>START → node_a → &#123;node_b, node_c&#125;</code>, <code>node_b → node_d</code>). Nodes read the current Superstep number through the <code>config</code> parameter:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> langchain_core.runnables <span class="keyword">import</span> RunnableConfig</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">node_a</span>(<span class="params">state: EmptyState, config: RunnableConfig</span>) -&gt; EmptyState:</span><br><span class="line">    cur_step = config[<span class="string">&quot;metadata&quot;</span>][<span class="string">&quot;langgraph_step&quot;</span>]</span><br><span class="line">    logger.info(<span class="string">&quot;cur_step: &#123;&#125;, node_a triggered&quot;</span>, cur_step)</span><br><span class="line">    <span class="keyword">return</span> &#123;&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>AND trigger</strong> (<code>add_edge([&quot;node_c&quot;, &quot;node_d&quot;], &quot;node_e&quot;)</code>) logs:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">cur_step: 1, node_a triggered</span><br><span class="line">cur_step: 2, node_b triggered</span><br><span class="line">cur_step: 2, node_c triggered</span><br><span class="line">cur_step: 3, node_d triggered</span><br><span class="line">cur_step: 4, node_e triggered      ← runs once, after all upstream nodes</span><br></pre></td></tr></table></figure>
+
+<p><code>node_c</code> finished at step 2, but <code>node_e</code> waited until step 4 (after <code>node_d</code>).</p>
+<p><strong>OR trigger</strong> (two independent edges) logs:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">cur_step: 1, node_a triggered</span><br><span class="line">cur_step: 2, node_b triggered</span><br><span class="line">cur_step: 2, node_c triggered</span><br><span class="line">cur_step: 3, node_d triggered</span><br><span class="line">cur_step: 3, node_e triggered      ← fires right after node_c</span><br><span class="line">cur_step: 4, node_e triggered      ← fires again after node_d</span><br></pre></td></tr></table></figure>
+
+<p><code>node_e</code> ran <strong>twice</strong>. This is one of the easiest traps in parallel-aggregation scenarios — pick the form that matches your business semantics.</p>
+<p><a name="mapreduce"></a></p>
+<h4 id="Dynamic-Fan-in-The-MapReduce-Pattern"><a href="#Dynamic-Fan-in-The-MapReduce-Pattern" class="headerlink" title="Dynamic Fan-in: The MapReduce Pattern"></a>Dynamic Fan-in: The MapReduce Pattern</h4><p>Fan out subtasks dynamically with <code>Send</code>, merge their intermediate results through a <strong>reducer</strong> (fan-in), and aggregate them in a reduce node — that is the classic <strong>MapReduce</strong> pattern:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">Input                            Map: emit intermediate key-value pairs</span><br><span class="line">  |                                 |</span><br><span class="line">  | &quot;hello world&quot;                   | (hello,1),(world,1)</span><br><span class="line">  | &quot;hello Atguigu&quot;      ──►        | (hello,1),(Atguigu,1)</span><br><span class="line">  | &quot;hello LLM&quot;                     | (hello,1),(LLM,1)</span><br><span class="line">  v                                 v</span><br><span class="line">Shuffle/Group: group by key      Reduce: aggregate</span><br><span class="line">  |                                 |</span><br><span class="line">  | hello -&gt; [1,1,1]                | hello -&gt; 3</span><br><span class="line">  | world -&gt; [1]         ──►        | world -&gt; 1</span><br><span class="line">  | ...                             | ...</span><br></pre></td></tr></table></figure>
+
+<p>Implementing a word-count task:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">OverAllState</span>(<span class="title class_ inherited__">TypedDict</span>):</span><br><span class="line">    input_values: <span class="built_in">list</span>[<span class="built_in">str</span>]</span><br><span class="line">    entries: Annotated[<span class="built_in">list</span>[<span class="built_in">tuple</span>[<span class="built_in">str</span>, <span class="built_in">int</span>]], add]   <span class="comment"># reducer merges mapper outputs</span></span><br><span class="line">    word_counts: <span class="built_in">dict</span>[<span class="built_in">str</span>, <span class="built_in">int</span>]</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">router_map</span>(<span class="params">state: OverAllState</span>) -&gt; <span class="type">Sequence</span>[Send]:</span><br><span class="line">    <span class="comment"># one mapper task per input line</span></span><br><span class="line">    <span class="keyword">return</span> [Send(<span class="string">&quot;mapper_node&quot;</span>, &#123;<span class="string">&quot;input_value&quot;</span>: v&#125;) <span class="keyword">for</span> v <span class="keyword">in</span> state[<span class="string">&quot;input_values&quot;</span>]]</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">MapperInputState</span>(<span class="title class_ inherited__">TypedDict</span>):</span><br><span class="line">    input_value: <span class="built_in">str</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">mapper_node</span>(<span class="params">state: MapperInputState</span>) -&gt; OverAllState:</span><br><span class="line">    words = state[<span class="string">&quot;input_value&quot;</span>].split(<span class="string">&quot; &quot;</span>)</span><br><span class="line">    <span class="keyword">return</span> &#123;<span class="string">&quot;entries&quot;</span>: [(w, <span class="number">1</span>) <span class="keyword">for</span> w <span class="keyword">in</span> words]&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">reducer_node</span>(<span class="params">state: OverAllState</span>) -&gt; OverAllState:</span><br><span class="line">    shuffle_dict = &#123;&#125;</span><br><span class="line">    <span class="keyword">for</span> k, v <span class="keyword">in</span> state[<span class="string">&quot;entries&quot;</span>]:            <span class="comment"># Shuffle / Group</span></span><br><span class="line">        shuffle_dict.setdefault(k, []).append(v)</span><br><span class="line">    <span class="keyword">return</span> &#123;<span class="string">&quot;word_counts&quot;</span>: &#123;k: <span class="built_in">sum</span>(v) <span class="keyword">for</span> k, v <span class="keyword">in</span> shuffle_dict.items()&#125;&#125;  <span class="comment"># Reduce</span></span><br><span class="line"></span><br><span class="line">builder = StateGraph(state_schema=OverAllState)</span><br><span class="line">builder.add_node(<span class="string">&quot;mapper_node&quot;</span>, mapper_node)</span><br><span class="line">builder.add_node(<span class="string">&quot;reducer_node&quot;</span>, reducer_node)</span><br><span class="line">builder.add_conditional_edges(START, router_map, path_map=[<span class="string">&quot;mapper_node&quot;</span>])</span><br><span class="line">builder.add_edge(<span class="string">&quot;mapper_node&quot;</span>, <span class="string">&quot;reducer_node&quot;</span>)   <span class="comment"># AND trigger: wait for all mappers</span></span><br><span class="line">builder.add_edge(<span class="string">&quot;reducer_node&quot;</span>, END)</span><br><span class="line"></span><br><span class="line">graph = builder.<span class="built_in">compile</span>()</span><br><span class="line"><span class="built_in">print</span>(graph.invoke(&#123;<span class="string">&quot;input_values&quot;</span>: [<span class="string">&quot;hello world&quot;</span>, <span class="string">&quot;hello Atguigu&quot;</span>, <span class="string">&quot;hello LLM&quot;</span>]&#125;))</span><br></pre></td></tr></table></figure>
+
+<p>Output:</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;word_counts&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span> <span class="attr">&quot;hello&quot;</span><span class="punctuation">:</span> <span class="number">3</span><span class="punctuation">,</span> <span class="attr">&quot;world&quot;</span><span class="punctuation">:</span> <span class="number">1</span><span class="punctuation">,</span> <span class="attr">&quot;Atguigu&quot;</span><span class="punctuation">:</span> <span class="number">1</span><span class="punctuation">,</span> <span class="attr">&quot;LLM&quot;</span><span class="punctuation">:</span> <span class="number">1</span> <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>The key mechanics: three <code>mapper_node</code> task instances run in parallel, each returning <code>entries</code>; because that field carries the <code>add</code> reducer, the three intermediate results merge into a single state field; the <code>mapper_node → reducer_node</code> edge is an AND trigger, so <code>reducer_node</code> runs once after all mappers complete, doing the grouping and summing.</p>
+<blockquote>
+<p><code>display(graph)</code> shows the <strong>node-level</strong> graph (one <code>mapper_node</code>), while at runtime <code>Send</code> dynamically creates multiple <strong>task instances</strong> based on the input data.</p>
+</blockquote>
+<p><a name="loops"></a></p>
+<h3 id="Loops-The-ReAct-Pattern"><a href="#Loops-The-ReAct-Pattern" class="headerlink" title="Loops: The ReAct Pattern"></a>Loops: The ReAct Pattern</h3><p>The graph architecture underneath LangChain agents is exactly the <strong>ReAct</strong> (Reason + Action) loop:</p>
+<ol>
+<li><strong>Reason</strong>: the LLM reasons over the current messages and decides whether to call a tool;</li>
+<li><strong>Action</strong>: if so, it emits tool-call requests;</li>
+<li><strong>Observation</strong>: tool results come back to the LLM as <code>ToolMessage</code>s;</li>
+<li><strong>Loop</strong>: the LLM reasons over the new observations and decides whether to call more tools;</li>
+<li><strong>Final Answer</strong>: when no more tool calls are made, it produces the final answer and the flow ends.</li>
+</ol>
+<p>Essentially an “LLM → Tool → LLM → Tool → … → LLM” loop:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">START</span><br><span class="line">  ↓</span><br><span class="line">input_node</span><br><span class="line">  ↓</span><br><span class="line">llm_node ◄────────────┐</span><br><span class="line">  ├── has tool_calls → tool_node</span><br><span class="line">  └── no tool_calls  → output_node → END</span><br></pre></td></tr></table></figure>
+
+<p><a name="react-static-vs-dynamic"></a></p>
+<h4 id="Static-vs-Dynamic-Implementation"><a href="#Static-vs-Dynamic-Implementation" class="headerlink" title="Static vs. Dynamic Implementation"></a>Static vs. Dynamic Implementation</h4><p>The same ReAct loop can be implemented two ways. <strong>The essential difference is not whether it can loop, but where the routing logic lives.</strong></p>
+<p><strong>Static implementation</strong> — routing logic sits in a standalone <code>router()</code> function, wired up with <code>add_conditional_edges()</code>. “Static” means the downstream candidate set is fixed at compile time; runtime only picks among them:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">llm_node</span>(<span class="params">state: OverAllState</span>) -&gt; OverAllState:</span><br><span class="line">    ai_msg = model_with_tools.invoke(state[<span class="string">&quot;messages&quot;</span>])</span><br><span class="line">    <span class="keyword">return</span> &#123;<span class="string">&quot;messages&quot;</span>: [ai_msg]&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">router</span>(<span class="params">state: OverAllState</span>) -&gt; <span class="type">Literal</span>[<span class="string">&quot;tool_node&quot;</span>, <span class="string">&quot;output_node&quot;</span>]:</span><br><span class="line">    <span class="keyword">if</span> state[<span class="string">&quot;messages&quot;</span>][-<span class="number">1</span>].tool_calls:</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;tool_node&quot;</span></span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;output_node&quot;</span></span><br><span class="line"></span><br><span class="line">builder.add_edge(START, <span class="string">&quot;input_node&quot;</span>)</span><br><span class="line">builder.add_edge(<span class="string">&quot;input_node&quot;</span>, <span class="string">&quot;llm_node&quot;</span>)</span><br><span class="line">builder.add_conditional_edges(<span class="string">&quot;llm_node&quot;</span>, router)</span><br><span class="line">builder.add_edge(<span class="string">&quot;tool_node&quot;</span>, <span class="string">&quot;llm_node&quot;</span>)   <span class="comment"># the loop: tool results go back to the LLM</span></span><br><span class="line">builder.add_edge(<span class="string">&quot;output_node&quot;</span>, END)</span><br></pre></td></tr></table></figure>
+
+<p><strong>Dynamic implementation</strong> — routing logic is cohesive inside the node’s return value. <code>llm_node</code> uses <code>Command</code> to do “state update + next-hop control” in one shot; no separate <code>router()</code> or conditional edge needed:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">llm_node</span>(<span class="params">state: OverAllState</span>) -&gt; Command[<span class="type">Literal</span>[<span class="string">&quot;tool_node&quot;</span>, <span class="string">&quot;output_node&quot;</span>]]:</span><br><span class="line">    ai_msg = model_with_tools.invoke(state[<span class="string">&quot;messages&quot;</span>])</span><br><span class="line">    goto = <span class="string">&quot;tool_node&quot;</span> <span class="keyword">if</span> ai_msg.tool_calls <span class="keyword">else</span> <span class="string">&quot;output_node&quot;</span></span><br><span class="line">    <span class="keyword">return</span> Command(</span><br><span class="line">        update=&#123;<span class="string">&quot;messages&quot;</span>: [ai_msg]&#125;,</span><br><span class="line">        goto=goto,</span><br><span class="line">    )</span><br><span class="line"></span><br><span class="line">builder.add_edge(START, <span class="string">&quot;input_node&quot;</span>)</span><br><span class="line">builder.add_edge(<span class="string">&quot;input_node&quot;</span>, <span class="string">&quot;llm_node&quot;</span>)</span><br><span class="line">builder.add_edge(<span class="string">&quot;tool_node&quot;</span>, <span class="string">&quot;llm_node&quot;</span>)</span><br><span class="line">builder.add_edge(<span class="string">&quot;output_node&quot;</span>, END)</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Static</th>
+<th>Dynamic</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Routing location</td>
+<td>Standalone <code>router()</code> function</td>
+<td>Inside the node’s return value</td>
+</tr>
+<tr>
+<td>Graph expression</td>
+<td>Explicit conditional edges — more visual</td>
+<td>Cohesive control logic — more compact</td>
+</tr>
+<tr>
+<td>Best for</td>
+<td>Independent routing rules, graph clarity first</td>
+<td>Node result directly determines the next hop</td>
+</tr>
+</tbody></table>
+<p>One subtlety about tool-call retries: the demo drives retries with a system prompt like <code>&quot;If a tool call fails, you must call it again until it succeeds&quot;</code> — <strong>whether to retry is decided by the LLM, not enforced by program logic</strong>. If the model gives up after repeated failures and answers anyway, the graph will not stop it. When you need a hard guarantee, implement retries in code — in <code>tool_node</code> or in the routing logic.</p>
+<p><a name="recursion-limit"></a></p>
+<h4 id="Recursion-Limits-and-Graceful-Exit"><a href="#Recursion-Limits-and-Graceful-Exit" class="headerlink" title="Recursion Limits and Graceful Exit"></a>Recursion Limits and Graceful Exit</h4><p>A loop without a reachable stop condition can run forever. LangGraph provides the <strong>recursion limit</strong>: <code>recursion_limit</code> caps the number of Supersteps in a single run; when exhausted, a <code>GraphRecursionError</code> is raised:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">graph.invoke(<span class="built_in">input</span>, config=&#123;<span class="string">&quot;recursion_limit&quot;</span>: <span class="number">10</span>&#125;)</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><strong>The default value is unreliable</strong>: it varies by version and runtime — 25 in <code>langchain_core.runnables.config</code> (applies to LangChain agents), 10000 in <code>langgraph._internal._config</code> (applies to custom graphs), 10011 on the LangGraph API server side. <strong>Best practice: always pass <code>recursion_limit</code> explicitly.</strong></p>
+</blockquote>
+<p>There are two ways to handle the limit:</p>
+<p><strong>Proactive approach</strong> — use the <code>RemainingSteps</code> managed value to check remaining steps inside the graph and exit gracefully:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> langgraph.managed <span class="keyword">import</span> RemainingSteps</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">OverAllState</span>(<span class="title class_ inherited__">TypedDict</span>):</span><br><span class="line">    remaining_steps: RemainingSteps   <span class="comment"># filled by the runtime automatically</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">router</span>(<span class="params">state: OverAllState</span>) -&gt; <span class="type">Literal</span>[<span class="string">&quot;loop_node&quot;</span>, END]:</span><br><span class="line">    <span class="keyword">if</span> state[<span class="string">&quot;remaining_steps&quot;</span>] &lt; <span class="number">3</span>:</span><br><span class="line">        logger.info(<span class="string">&quot;Not enough steps remaining — terminating graph&quot;</span>)</span><br><span class="line">        <span class="keyword">return</span> END</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;loop_node&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>The current step number plus the remaining steps equals <code>recursion_limit</code>. When steps run low, route to <code>END</code>: the graph <strong>finishes normally</strong>, raises no exception, and can still save intermediate state to a checkpoint or return partial results.</p>
+<p><strong>Reactive approach</strong> — catch the exception outside the graph:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> langgraph.errors <span class="keyword">import</span> GraphRecursionError</span><br><span class="line"></span><br><span class="line"><span class="keyword">try</span>:</span><br><span class="line">    graph.invoke(&#123;&#125;, config=&#123;<span class="string">&quot;recursion_limit&quot;</span>: <span class="number">10</span>&#125;)</span><br><span class="line"><span class="keyword">except</span> GraphRecursionError <span class="keyword">as</span> e:</span><br><span class="line">    logger.info(<span class="string">&quot;Recursion limit reached: &#123;&#125;&quot;</span>, e)</span><br></pre></td></tr></table></figure>
+
+<p>The graph run is aborted by the exception, but the process survives and errors can be handled centrally.</p>
+<table>
+<thead>
+<tr>
+<th>Approach</th>
+<th>Detection</th>
+<th>Handling</th>
+<th>Control flow</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Proactive (<code>RemainingSteps</code>)</td>
+<td>Before the limit</td>
+<td>Conditional routing inside the graph</td>
+<td>Graph continues, ends normally</td>
+</tr>
+<tr>
+<td>Reactive (catch <code>GraphRecursionError</code>)</td>
+<td>After the limit</td>
+<td><code>try/except</code> outside the graph</td>
+<td>Graph run aborted by exception</td>
+</tr>
+</tbody></table>
+<p><strong>Guidance</strong>: when the loop is part of the business logic (ReAct loops, multi-round reflection, self-correction, tool retries), prefer the proactive approach for graceful degradation inside the graph; keep the reactive approach as the last line of defense at the outermost layer.</p>
+<p><a name="edges-summary"></a></p>
+<h2 id="Edges-A-Systematic-Summary"><a href="#Edges-A-Systematic-Summary" class="headerlink" title="Edges: A Systematic Summary"></a>Edges: A Systematic Summary</h2><p>Pulling together everything about edges:</p>
+<table>
+<thead>
+<tr>
+<th>Edge type</th>
+<th>Syntax</th>
+<th>Semantics</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Normal edge</td>
+<td><code>add_edge(&quot;a&quot;, &quot;b&quot;)</code></td>
+<td>b runs right after a</td>
+</tr>
+<tr>
+<td>Conditional edge</td>
+<td><code>add_conditional_edges(&quot;a&quot;, router)</code></td>
+<td>after a, the router decides which node(s) run next</td>
+</tr>
+<tr>
+<td>Entry point</td>
+<td><code>add_edge(START, &quot;a&quot;)</code> or <code>set_entry_point(&quot;a&quot;)</code></td>
+<td>a runs first when the graph starts (equivalent forms)</td>
+</tr>
+<tr>
+<td>Conditional entry point</td>
+<td><code>add_conditional_edges(START, router)</code></td>
+<td>a conditional edge starting at START</td>
+</tr>
+<tr>
+<td>Finish point</td>
+<td><code>add_edge(&quot;a&quot;, END)</code> or <code>set_finish_point(&quot;a&quot;)</code></td>
+<td>the flow ends after a (equivalent forms)</td>
+</tr>
+<tr>
+<td>Conditional finish point</td>
+<td>router returns <code>END</code></td>
+<td>state decides whether to continue or terminate</td>
+</tr>
+</tbody></table>
+<p>Three notes:</p>
+<ol>
+<li>A node can have multiple outgoing edges — their targets run <strong>in parallel</strong> in the next Superstep;</li>
+<li>Conditional edges can also be expressed by returning <code>Command(goto=...)</code> from a node — different mechanism, identical nature and effect;</li>
+<li><strong>Use only one routing mechanism per node</strong> — do not mix normal edges with conditional edges or <code>Command</code>, or multiple paths may fire simultaneously and the run diverges from expectations.</li>
+</ol>
+<p>Also, <code>END</code> is not a regular business node but a special termination marker: in the compiled graph, terminal edges and <code>END</code> have no corresponding channel or node. Terminal edges can be omitted (the runtime stops naturally when no nodes are active), but declaring them explicitly is better for readability and correct visualization.</p>
+<p><a name="fault-tolerance"></a></p>
+<h2 id="Node-Execution-and-Fault-Tolerance"><a href="#Node-Execution-and-Fault-Tolerance" class="headerlink" title="Node Execution and Fault Tolerance"></a>Node Execution and Fault Tolerance</h2><p>An unhandled node failure can take down the whole graph run. LangGraph provides a mechanism for each of four problem classes:</p>
+<table>
+<thead>
+<tr>
+<th>Problem &#x2F; scenario</th>
+<th>Mechanism</th>
+<th>Type</th>
+<th>Version</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Transient failures (network jitter, flaky endpoints)</td>
+<td>Retries: <code>RetryPolicy</code></td>
+<td>Fault tolerance</td>
+<td>Available now</td>
+</tr>
+<tr>
+<td>A node runs too long</td>
+<td>Timeouts: <code>TimeoutPolicy</code></td>
+<td>Fault tolerance</td>
+<td>langgraph≥1.2</td>
+</tr>
+<tr>
+<td>Fallback needed after retries are exhausted</td>
+<td>Error handling: <code>error_handler</code></td>
+<td>Fault tolerance</td>
+<td>langgraph≥1.2</td>
+</tr>
+<tr>
+<td>Same input repeatedly hits an expensive node</td>
+<td>Caching: <code>CachePolicy</code></td>
+<td>Performance</td>
+<td>Available now</td>
+</tr>
+</tbody></table>
+<p>The overall failure-handling order:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Node execution fails</span><br><span class="line">    ↓</span><br><span class="line">RetryPolicy: should this exception be retried?</span><br><span class="line">    ↓ yes, attempts remain        ↓ retries exhausted</span><br><span class="line">Re-run the node               Enter error_handler</span><br><span class="line">                                  ↓ none configured</span><br><span class="line">                              Exception propagates; graph run fails</span><br></pre></td></tr></table></figure>
+
+<p><a name="retry-policy"></a></p>
+<h3 id="Retries-RetryPolicy"><a href="#Retries-RetryPolicy" class="headerlink" title="Retries: RetryPolicy"></a>Retries: RetryPolicy</h3><p>Retries are the most common and fundamental tolerance feature, configured per node via <code>retry_policy=</code> in <code>add_node</code>:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> langgraph.types <span class="keyword">import</span> RetryPolicy</span><br><span class="line"><span class="keyword">from</span> requests.exceptions <span class="keyword">import</span> HTTPError</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">node_a</span>(<span class="params">state: EmptyState</span>) -&gt; EmptyState:</span><br><span class="line">    logger.info(<span class="string">&quot;node a running&quot;</span>)</span><br><span class="line">    <span class="keyword">raise</span> HTTPError(<span class="string">&quot;network timeout...&quot;</span>)</span><br><span class="line"></span><br><span class="line">builder.add_node(</span><br><span class="line">    <span class="string">&quot;node_a&quot;</span>,</span><br><span class="line">    node_a,</span><br><span class="line">    retry_policy=RetryPolicy(max_attempts=<span class="number">3</span>, jitter=<span class="literal">False</span>)</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p>The logs show the node invoked 3 times (about 0.5s and 1s apart — exponential backoff). After all attempts fail, the exception propagates and can be caught by an outer <code>try/except</code>.</p>
+<p><code>RetryPolicy</code> parameters:</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>max_attempts</code></td>
+<td><code>3</code></td>
+<td>Maximum attempts (<strong>including the first execution</strong>)</td>
+</tr>
+<tr>
+<td><code>initial_interval</code></td>
+<td><code>0.5</code></td>
+<td>Seconds to wait before the first retry</td>
+</tr>
+<tr>
+<td><code>backoff_factor</code></td>
+<td><code>2.0</code></td>
+<td>Multiplier applied to the wait after each retry</td>
+</tr>
+<tr>
+<td><code>max_interval</code></td>
+<td><code>128.0</code></td>
+<td>Maximum wait between two retries, in seconds</td>
+</tr>
+<tr>
+<td><code>jitter</code></td>
+<td><code>True</code></td>
+<td>Whether to add random jitter to retry intervals</td>
+</tr>
+<tr>
+<td><code>retry_on</code></td>
+<td><code>default_retry_on</code></td>
+<td>Which exceptions trigger a retry</td>
+</tr>
+</tbody></table>
+<p>Key points:</p>
+<ul>
+<li><code>max_attempts=3</code> means 3 total executions (first + 2 retries), not 3 retries after the first failure;</li>
+<li>Exponential backoff: with <code>initial_interval=0.5, backoff_factor=2.0</code>, waits go roughly <code>0.5s → 1s → 2s → 4s...</code>, capped by <code>max_interval</code>;</li>
+<li><strong>Jitter</strong>: when many concurrent tasks fail together and retry on a fixed schedule, they can slam the recovering service all at once. Random jitter spreads retries out and flattens the spike. Keep the default <code>jitter=True</code> in production;</li>
+<li><code>retry_on</code> accepts three forms: a single exception type <code>retry_on=HTTPError</code>, a tuple <code>retry_on=(HTTPError, ConnectionError)</code>, or a predicate <code>retry_on=lambda exc: isinstance(exc, HTTPError)</code>.</li>
+</ul>
+<p><a name="default-retry-rules"></a></p>
+<h3 id="Default-Retry-Rules-default-retry-on"><a href="#Default-Retry-Rules-default-retry-on" class="headerlink" title="Default Retry Rules: default_retry_on"></a>Default Retry Rules: default_retry_on</h3><p>Without an explicit <code>retry_on</code>, the default <code>default_retry_on</code> applies. Its core logic:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">default_retry_on</span>(<span class="params">exc: Exception</span>) -&gt; <span class="built_in">bool</span>:</span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">isinstance</span>(exc, ConnectionError):</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">True</span>                       <span class="comment"># connection errors: retry</span></span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">isinstance</span>(exc, httpx.HTTPStatusError):</span><br><span class="line">        <span class="keyword">return</span> <span class="number">500</span> &lt;= exc.response.status_code &lt; <span class="number">600</span>   <span class="comment"># only 5xx</span></span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">isinstance</span>(exc, requests.HTTPError):</span><br><span class="line">        <span class="keyword">return</span> <span class="number">500</span> &lt;= exc.response.status_code &lt; <span class="number">600</span> <span class="keyword">if</span> exc.response <span class="keyword">else</span> <span class="literal">True</span></span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">isinstance</span>(exc, (ValueError, TypeError, ArithmeticError, ImportError,</span><br><span class="line">                        LookupError, NameError, SyntaxError, RuntimeError,</span><br><span class="line">                        ReferenceError, StopIteration, StopAsyncIteration,</span><br><span class="line">                        OSError)):</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">False</span>                      <span class="comment"># code/type/syntax/runtime errors: don&#x27;t retry</span></span><br><span class="line">    <span class="keyword">return</span> <span class="literal">True</span>                           <span class="comment"># everything else: retry</span></span><br></pre></td></tr></table></figure>
+
+<p>The design rationale:</p>
+<ul>
+<li><strong>4xx: no retry</strong> — client errors (bad parameters, auth failure, missing resource) won’t fix themselves;</li>
+<li><strong>5xx: retry</strong> — transient server-side failures (unavailable service, gateway errors) are exactly what retries recover from;</li>
+<li><code>ValueError</code>, <code>TypeError</code>, <code>SyntaxError</code>, etc. are code-level bugs — retrying them is pointless.</li>
+</ul>
+<p><a name="timeout-and-error-handling"></a></p>
+<h3 id="Timeouts-and-Error-Handling"><a href="#Timeouts-and-Error-Handling" class="headerlink" title="Timeouts and Error Handling"></a>Timeouts and Error Handling</h3><p>Both features require <code>langgraph&gt;=1.2</code>; covered here conceptually.</p>
+<p><strong>Timeouts (TimeoutPolicy)</strong> cap how long a single node execution may take, preventing a node from blocking the graph on an unresponsive external service:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> langgraph.types <span class="keyword">import</span> TimeoutPolicy</span><br><span class="line"></span><br><span class="line">builder.add_node(<span class="string">&quot;call_model&quot;</span>, call_model, timeout=TimeoutPolicy(run_timeout=<span class="number">60</span>))</span><br></pre></td></tr></table></figure>
+
+<p>After 60 seconds a <code>NodeTimeoutError</code> is raised, handed to <code>RetryPolicy</code> for a retry decision, and only reaching error handling once retries are exhausted. Common parameters: <code>run_timeout</code> (max duration of one run), <code>idle_timeout</code> (max time without observable progress), <code>refresh_on</code> (how idle time gets refreshed).</p>
+<blockquote>
+<p><strong>Note</strong>: node-level timeouts apply <strong>only to async nodes</strong> (<code>async def</code>). A synchronous node blocks its thread once started, and Python has no safe general mechanism for killing a running sync function from outside. For sync nodes, use the <code>timeout</code> parameters provided by the libraries inside (HTTP clients, database drivers, etc.).</p>
+</blockquote>
+<p><strong>Error handling (error_handler)</strong> runs fallback logic after a node finally fails:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">builder.add_node(</span><br><span class="line">    <span class="string">&quot;call_api&quot;</span>,</span><br><span class="line">    call_api,</span><br><span class="line">    retry_policy=RetryPolicy(max_attempts=<span class="number">3</span>),</span><br><span class="line">    error_handler=handle_api_error</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p><code>handle_api_error</code> can return a state update or route elsewhere via <code>Command</code>. Use cases: returning fallback results after an API failure, switching to a backup service, running compensation logic in multi-step business flows, and keeping a single node failure from terminating the whole graph.</p>
+<p><a name="node-caching"></a></p>
+<h3 id="Node-Caching-CachePolicy"><a href="#Node-Caching-CachePolicy" class="headerlink" title="Node Caching: CachePolicy"></a>Node Caching: CachePolicy</h3><p>Node caching means: store a node’s historical results; when the node later receives <strong>identical input</strong>, skip execution and return the cached result — cutting repeated computation, latency, and cost.</p>
+<p>It fits when all of the following hold:</p>
+<ol>
+<li><strong>The node is deterministic</strong>: same input → same output;</li>
+<li><strong>Execution is expensive</strong>: LLM calls, API requests, heavy computation;</li>
+<li><strong>Identical inputs recur</strong>: repeated debugging, repeated flows, branches reusing an intermediate result;</li>
+<li><strong>The input can be stably hashed by the cache-key function</strong>: the default uses <code>pickle</code> serialization, so inputs should be simple serializable structures (<code>str</code>&#x2F;<code>int</code>&#x2F;<code>dict</code>&#x2F;<code>list</code>, …); with file handles, DB connections, model instances, or other complex objects, provide a custom <code>key_func</code>.</li>
+</ol>
+<p>Configuration takes <strong>two steps</strong>, both required:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> langgraph.cache.memory <span class="keyword">import</span> InMemoryCache</span><br><span class="line"><span class="keyword">from</span> langgraph.types <span class="keyword">import</span> CachePolicy</span><br><span class="line"></span><br><span class="line"><span class="comment"># Step 1: declare the cache policy on the node</span></span><br><span class="line">builder.add_node(<span class="string">&quot;node_a&quot;</span>, node_a, cache_policy=CachePolicy(ttl=<span class="number">10</span>))</span><br><span class="line"></span><br><span class="line"><span class="comment"># Step 2: provide a cache backend at compile time</span></span><br><span class="line">graph = builder.<span class="built_in">compile</span>(cache=InMemoryCache())</span><br></pre></td></tr></table></figure>
+
+<p>Setting <code>cache_policy</code> without passing <code>cache=</code> silently does nothing. <code>CachePolicy</code> has just two parameters:</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>key_func</code></td>
+<td>Generates the cache key from node input; default <code>default_cache_key</code> (pickle serialization)</td>
+</tr>
+<tr>
+<td><code>ttl</code></td>
+<td>Cache lifetime in seconds; <code>None</code> means never expires</td>
+</tr>
+</tbody></table>
+<p>Verify the behavior with a node simulating a 3-second operation:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">node_a</span>(<span class="params">state: EmptyState</span>) -&gt; EmptyState:</span><br><span class="line">    logger.info(<span class="string">&quot;node_a called, user: &#123;&#125;&quot;</span>, state[<span class="string">&quot;user&quot;</span>])</span><br><span class="line">    time.sleep(<span class="number">3</span>)   <span class="comment"># simulate expensive work</span></span><br><span class="line">    <span class="keyword">return</span> &#123;<span class="string">&quot;invoke_counts&quot;</span>: <span class="number">1</span>&#125;</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>Call</th>
+<th>Input</th>
+<th>Cache hit?</th>
+<th>Observed behavior</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1st</td>
+<td><code>user=Alice</code></td>
+<td>miss</td>
+<td>Node runs (3s), result cached</td>
+</tr>
+<tr>
+<td>2nd</td>
+<td><code>user=Alice</code> (same)</td>
+<td><strong>hit</strong></td>
+<td>Node skipped, cached result returned</td>
+</tr>
+<tr>
+<td>3rd</td>
+<td><code>user=Bob</code> (different)</td>
+<td>miss</td>
+<td>Node runs, new entry cached</td>
+</tr>
+<tr>
+<td>after ttl expires</td>
+<td><code>user=Alice</code></td>
+<td>miss</td>
+<td>Node runs again, cache rewritten</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p><strong>A note on ttl</strong>: if a node depends on external state (current time, remote API data, database contents, prompt&#x2F;model versions, etc.), do not cache forever — set an appropriate <code>ttl</code>, or fold those variables into the cache-key computation.</p>
+</blockquote>
+<p>Additionally, <code>langgraph&gt;=1.2</code> offers <strong>graph defaults</strong> via <code>set_node_defaults</code>, applying default <code>retry_policy</code>, <code>timeout</code>, <code>error_handler</code>, and <code>cache_policy</code> to all nodes at once instead of repeating the configuration in every <code>add_node</code>.</p>
+<p><a name="best-practices"></a></p>
+<h2 id="Best-Practices"><a href="#Best-Practices" class="headerlink" title="Best Practices"></a>Best Practices</h2><p><strong>Environment and configuration</strong></p>
+<ul>
+<li>Keep API keys in <code>.env</code>, listed in <code>.gitignore</code>; load them with <code>load_dotenv()</code> — never hard-code;</li>
+<li>Isolate project dependencies in a dedicated conda environment.</li>
+</ul>
+<p><strong>State design</strong></p>
+<ul>
+<li>Prefer <code>TypedDict</code> for State schemas;</li>
+<li>Any field written by multiple nodes (especially parallel ones) must have a reducer — otherwise <code>InvalidUpdateError</code>;</li>
+<li>Use <code>input_schema</code> &#x2F; <code>output_schema</code> to constrain the graph boundary; keep private state fields distinct from global ones;</li>
+<li>Nodes return only the fields they change; keep the returned dict consistent with the declared return type.</li>
+</ul>
+<p><strong>Graph structure</strong></p>
+<ul>
+<li>Declare edges to <code>END</code> explicitly — the structure stays complete and visualizations stay clear;</li>
+<li>Use exactly one routing mechanism per node; never mix normal edges with conditional edges or <code>Command</code>;</li>
+<li>With <code>Command(goto=...)</code> or <code>Send</code>, declare possible targets via type annotations &#x2F; <code>path_map</code> so the graph renders correctly;</li>
+<li>Independent routing rules and graph clarity first → conditional edges; node result directly decides the next hop, cohesion first → <code>Command</code>.</li>
+</ul>
+<p><strong>Loops and fault tolerance</strong></p>
+<ul>
+<li><strong>Pass <code>recursion_limit</code> explicitly</strong> — never rely on version-dependent defaults;</li>
+<li>For business loops (ReAct, reflection, retries), exit gracefully with <code>RemainingSteps</code>, and keep an outer <code>GraphRecursionError</code> catch as a safety net;</li>
+<li>In production, keep <code>jitter=True</code> and narrow retryable exceptions with <code>retry_on</code>;</li>
+<li>Enable caching only for deterministic, expensive nodes with recurring inputs — and set a sensible <code>ttl</code>.</li>
+</ul>
+<p><a name="faq"></a></p>
+<h2 id="FAQ"><a href="#FAQ" class="headerlink" title="FAQ"></a>FAQ</h2><p><strong>Q1: <code>conda</code> command not found?</strong></p>
+<p>Windows: make sure “Add Miniconda3 to my PATH” was checked during installation, or just open Anaconda Prompt from the Start menu. macOS &#x2F; Linux: run <code>~/miniconda3/bin/conda init</code> and restart the terminal.</p>
+<p><strong>Q2: <code>import langgraph</code> raises <code>ModuleNotFoundError</code>?</strong></p>
+<p>The package isn’t installed in the current environment. Run <code>conda activate langgraph</code>, check with <code>pip show langgraph</code>, and reinstall if missing.</p>
+<p><strong>Q3: Model calls raise <code>AuthenticationError</code>?</strong></p>
+<p>Check in order: is the key in <code>.env</code> correct, is <code>.env</code> in the project root, and does the code run <code>load_dotenv(override=True)</code> before creating the client?</p>
+<p><strong>Q4: Parallel nodes writing the same field raise <code>InvalidUpdateError</code>?</strong></p>
+<p>Multiple updates to one field within the same Superstep conflict when no reducer is defined. Attach a suitable reducer (<code>operator.add</code>, <code>add_messages</code>, …), or have the nodes write different fields.</p>
+<p><strong>Q5: What’s the difference between <code>add_edge([&quot;a&quot;, &quot;b&quot;], &quot;c&quot;)</code> and two separate edges into <code>c</code>?</strong></p>
+<p>The former is an AND trigger: <code>c</code> runs once after both <code>a</code> and <code>b</code> complete. The latter is an OR trigger: <code>a</code> and <code>b</code> each fire <code>c</code> independently (it may run twice). They are not equivalent — choose by business semantics.</p>
+<p><strong>Q6: In the rendered graph, my conditionally-routed nodes float detached from the structure?</strong></p>
+<p>When the router returns a sequence or <code>Send</code> objects, the renderer cannot infer the mapping. Pass <code>path_map</code> explicitly to declare the candidate downstream nodes.</p>
+<p><strong>Q7: The graph loops forever and finally raises <code>GraphRecursionError</code>?</strong></p>
+<p>Either the loop has no reachable stop condition, or <code>recursion_limit</code> is too small. Review the routing logic, set <code>recursion_limit</code> explicitly, and consider a graceful exit via <code>RemainingSteps</code>.</p>
+<p><strong>Q8: I configured <code>CachePolicy</code> but caching doesn’t work?</strong></p>
+<p>Caching takes two steps: <code>cache_policy=</code> on the node <strong>and</strong> <code>cache=InMemoryCache()</code> at compile time — missing either disables it. Also confirm the two inputs are truly identical and the entry hasn’t outlived its <code>ttl</code>.</p>
+<p><strong>Q9: <code>draw_mermaid_png()</code> fails to render?</strong></p>
+<p>It calls an online service (mermaid.ink by default); network hiccups cause failures, and retrying usually works. You can also point the <code>base_url</code> parameter at an alternative renderer.</p>
+<p><strong>Q10: Can I use the <code>jump_to</code> field to control jumps in my own graph?</strong></p>
+<p>No. It’s an internal field of the LangChain agent middleware system; a plain <code>StateGraph</code> will not jump because of it. Use <code>Command(goto=...)</code> for flow control in custom graphs.</p>
+<p><a name="summary"></a></p>
+<h2 id="Summary"><a href="#Summary" class="headerlink" title="Summary"></a>Summary</h2><p>This article consolidated the core of getting started with LangGraph, from zero:</p>
+<ul>
+<li><strong>Environment</strong>: Miniconda + Python 3.13 + <code>.env</code> for API keys, with a verification script to confirm readiness;</li>
+<li><strong>Positioning</strong>: LangChain offers high-level agent abstractions; LangGraph provides the low-level orchestration and runtime — <code>create_agent</code> itself is built on LangGraph;</li>
+<li><strong>Core model</strong>: the State &#x2F; Node &#x2F; Edge trio, driven by Supersteps (plan → execute → commit), with checkpoints recorded at Superstep boundaries;</li>
+<li><strong>State management</strong>: TypedDict as the schema of choice; reducers decide merge vs. overwrite; Multi Schema separates the graph boundary from internal data flow; <code>MessagesState</code> works out of the box for LLM scenarios;</li>
+<li><strong>Control flow</strong>: sequences, parallelism, conditional branches, <code>defer</code> for wrap-up nodes, <code>Send</code> for dynamic fan-out, <code>Command</code> for dynamic jumps, fan-in aggregation, MapReduce, ReAct loops, and proactive&#x2F;reactive exit strategies under <code>recursion_limit</code>;</li>
+<li><strong>Fault tolerance</strong>: <code>RetryPolicy</code> (exponential backoff + jitter + exception filtering) and node caching (two-step configuration) are available today; timeouts and error handling require <code>langgraph&gt;=1.2</code>.</li>
+</ul>
+<p>With these in hand, you can build workflows in LangGraph that are well-structured, persistent, and fault-tolerant. Natural next topics: persistence and memory management, interrupts and human-in-the-loop, and LangGraph deployment.</p>
+<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ul>
+<li>LangGraph documentation: <a target="_blank" rel="noopener" href="https://docs.langchain.com/oss/python/langgraph">https://docs.langchain.com/oss/python/langgraph</a></li>
+<li>Functional API: <a target="_blank" rel="noopener" href="https://docs.langchain.com/oss/python/langgraph/functional-api">https://docs.langchain.com/oss/python/langgraph/functional-api</a></li>
+<li>Fault tolerance: <a target="_blank" rel="noopener" href="https://docs.langchain.com/oss/python/langgraph/fault-tolerance">https://docs.langchain.com/oss/python/langgraph/fault-tolerance</a></li>
+<li>Miniconda downloads: <a target="_blank" rel="noopener" href="https://docs.anaconda.com/miniconda/">https://docs.anaconda.com/miniconda/</a></li>
+</ul>
+<link rel="stylesheet" href="/css/folder.css" type="text/css"><script src="/js/folder.js" type="text/javascript" async></script>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/LangChain/" rel="tag"># LangChain</a>
+              <a href="/tags/LangGraph/" rel="tag"># LangGraph</a>
+              <a href="/tags/AI-Agent/" rel="tag"># AI Agent</a>
+              <a href="/tags/Workflow/" rel="tag"># Workflow</a>
+              <a href="/tags/State-Machine/" rel="tag"># State Machine</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/zh-CN/2026/09/06/LangGraph-From-Zero-to-Graph/" rel="prev" title="LangGraph 从零开始：环境搭建、状态管理与控制流实战">
+      <i class="fa fa-chevron-left"></i> LangGraph 从零开始：环境搭建、状态管理与控制流实战
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+
+            
+            <div class="post-copyright" style="margin: 0 0 10px 0;">
+              <p class="post-copyright-author" style="margin: 0 0 5px 0 !important;"><strong>Author:</strong> <a href="https://github.com/BODYsuperman" target="_blank">Alex</a></p>
+              <p class="post-copyright-link" style="margin: 0 0 5px 0 !important;"><strong>Article Link:</strong> <a href="https://bodysuperman.github.io/2026/09/06/LangGraph-From-Zero-to-Graph/" target="_blank">https://bodysuperman.github.io/2026/09/06/LangGraph-From-Zero-to-Graph/</a></p>
+              <p class="post-copyright-license" style="margin: 0 !important;"><strong>License:</strong> This article is licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a>. Please credit the original author and include the source link when reposting.</p>
+            </div>
+
+          </div>
+          
+    <div class="comments" id="gitalk-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Introduction"><span class="nav-number">1.</span> <span class="nav-text">Introduction</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Environment-Setup"><span class="nav-number">2.</span> <span class="nav-text">Environment Setup</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Installing-Miniconda-and-Creating-the-Environment"><span class="nav-number">2.1.</span> <span class="nav-text">Installing Miniconda and Creating the Environment</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Installing-Dependencies-and-Configuring-API-Keys"><span class="nav-number">2.2.</span> <span class="nav-text">Installing Dependencies and Configuring API Keys</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Verification-and-Checklist"><span class="nav-number">2.3.</span> <span class="nav-text">Verification and Checklist</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#What-Is-LangGraph"><span class="nav-number">3.</span> <span class="nav-text">What Is LangGraph</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#LangChain-vs-LangGraph"><span class="nav-number">3.1.</span> <span class="nav-text">LangChain vs. LangGraph</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Core-Concepts-The-Three-Elements-and-the-Runtime-Model"><span class="nav-number">4.</span> <span class="nav-text">Core Concepts: The Three Elements and the Runtime Model</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#State-Node-Edge"><span class="nav-number">4.1.</span> <span class="nav-text">State, Node, Edge</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#The-Superstep-Execution-Model"><span class="nav-number">4.2.</span> <span class="nav-text">The Superstep Execution Model</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#The-Checkpoint-Snapshot-Sequence"><span class="nav-number">4.3.</span> <span class="nav-text">The Checkpoint Snapshot Sequence</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Graph-API-vs-Functional-API"><span class="nav-number">5.</span> <span class="nav-text">Graph API vs Functional API</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Your-First-Graph-Define-Compile-Invoke"><span class="nav-number">6.</span> <span class="nav-text">Your First Graph: Define, Compile, Invoke</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Building-a-State-Graph-in-Three-Steps"><span class="nav-number">6.1.</span> <span class="nav-text">Building a State Graph in Three Steps</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Graph-Visualization"><span class="nav-number">6.2.</span> <span class="nav-text">Graph Visualization</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#State-Management"><span class="nav-number">7.</span> <span class="nav-text">State Management</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Three-Ways-to-Define-a-Schema"><span class="nav-number">7.1.</span> <span class="nav-text">Three Ways to Define a Schema</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Validation-Behavior-Compared"><span class="nav-number">7.2.</span> <span class="nav-text">Validation Behavior Compared</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#State-Reducers-How-Updates-Are-Merged"><span class="nav-number">7.3.</span> <span class="nav-text">State Reducers: How Updates Are Merged</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Default-Overwrite-Behavior-and-the-Overwrite-Wrapper"><span class="nav-number">7.4.</span> <span class="nav-text">Default Overwrite Behavior and the Overwrite Wrapper</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Multi-Schema-Input-Output-and-Private-State"><span class="nav-number">7.5.</span> <span class="nav-text">Multi Schema: Input, Output, and Private State</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Predefined-States-MessagesState-and-AgentState"><span class="nav-number">7.6.</span> <span class="nav-text">Predefined States: MessagesState and AgentState</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Control-Flow"><span class="nav-number">8.</span> <span class="nav-text">Control Flow</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Sequential-Structure"><span class="nav-number">8.1.</span> <span class="nav-text">Sequential Structure</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Branching"><span class="nav-number">8.2.</span> <span class="nav-text">Branching</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Parallel-Nodes"><span class="nav-number">8.2.1.</span> <span class="nav-text">Parallel Nodes</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Conditional-Branching-add-conditional-edges"><span class="nav-number">8.2.2.</span> <span class="nav-text">Conditional Branching: add_conditional_edges</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Deferred-Nodes-defer"><span class="nav-number">8.2.3.</span> <span class="nav-text">Deferred Nodes: defer</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Dynamic-Fan-out-Send"><span class="nav-number">8.2.4.</span> <span class="nav-text">Dynamic Fan-out: Send</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Dynamic-Jumping-Command-goto"><span class="nav-number">8.2.5.</span> <span class="nav-text">Dynamic Jumping: Command(goto)</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Fan-in-Merging-Multiple-Branches"><span class="nav-number">8.3.</span> <span class="nav-text">Fan-in: Merging Multiple Branches</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Static-Fan-in-AND-Trigger-vs-OR-Trigger"><span class="nav-number">8.3.1.</span> <span class="nav-text">Static Fan-in: AND Trigger vs. OR Trigger</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Dynamic-Fan-in-The-MapReduce-Pattern"><span class="nav-number">8.3.2.</span> <span class="nav-text">Dynamic Fan-in: The MapReduce Pattern</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Loops-The-ReAct-Pattern"><span class="nav-number">8.4.</span> <span class="nav-text">Loops: The ReAct Pattern</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Static-vs-Dynamic-Implementation"><span class="nav-number">8.4.1.</span> <span class="nav-text">Static vs. Dynamic Implementation</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Recursion-Limits-and-Graceful-Exit"><span class="nav-number">8.4.2.</span> <span class="nav-text">Recursion Limits and Graceful Exit</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Edges-A-Systematic-Summary"><span class="nav-number">9.</span> <span class="nav-text">Edges: A Systematic Summary</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Node-Execution-and-Fault-Tolerance"><span class="nav-number">10.</span> <span class="nav-text">Node Execution and Fault Tolerance</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Retries-RetryPolicy"><span class="nav-number">10.1.</span> <span class="nav-text">Retries: RetryPolicy</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Default-Retry-Rules-default-retry-on"><span class="nav-number">10.2.</span> <span class="nav-text">Default Retry Rules: default_retry_on</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Timeouts-and-Error-Handling"><span class="nav-number">10.3.</span> <span class="nav-text">Timeouts and Error Handling</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Node-Caching-CachePolicy"><span class="nav-number">10.4.</span> <span class="nav-text">Node Caching: CachePolicy</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Best-Practices"><span class="nav-number">11.</span> <span class="nav-text">Best Practices</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#FAQ"><span class="nav-number">12.</span> <span class="nav-text">FAQ</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Summary"><span class="nav-number">13.</span> <span class="nav-text">Summary</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#References"><span class="nav-number">14.</span> <span class="nav-text">References</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="AI with Alex"
+      src="/uploads/avatar.jpg">
+  <p class="site-author-name" itemprop="name">AI with Alex</p>
+  <div class="site-description" itemprop="description">Attention(Q,K,V)=softmax(QK^T/sqrt(d_k))V</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">64</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">36</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">89</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/BODYsuperman" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;BODYsuperman" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/atom.xml" title="RSS Feed → &#x2F;atom.xml"><i class="fas fa-rss fa-fw"></i>RSS Feed</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:meijiaping6@gmail.com" title="Email → mailto:meijiaping6@gmail.com" rel="noopener" target="_blank"><i class="fas fa-envelope fa-fw"></i>Email</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://stackoverflow.com/users/9644964/alexandar-may-msft?tab=answers&sort=votes" title="StackOverflow → https:&#x2F;&#x2F;stackoverflow.com&#x2F;users&#x2F;9644964&#x2F;alexandar-may-msft?tab&#x3D;answers&amp;sort&#x3D;votes" rel="noopener" target="_blank"><i class="fab fa-stack-overflow fa-fw"></i>StackOverflow</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">AI with Alex</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">Symbols count total: </span>
+    <span title="Symbols count total">928k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">Reading time total &asymp;</span>
+    <span title="Reading time total">14:03</span>
+    
+    <!--
+    
+    -->
+</div>
+
+<!--
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a>
+   </div>
+--><script color="0,0,255" opacity="0.5" zIndex="-1" count="99" src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1/dist/canvas-nest.js"></script>
+
+
+
+
+
+
+        
+
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv"  >
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv"  >
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : 'Ov23liVJTzqy1rzaDXXM',
+      clientSecret: '5e785a7d46e69f7509e6c2f7730855a55944df33',
+      repo        : 'blog-comment',
+      owner       : 'BODYsuperman',
+      admin       : ['BODYsuperman'],
+      id          : 'c81de1e6743914b92aa1ac8b8c2df1b4',
+        language: '',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+
+</body>
+</html>

@@ -10,7 +10,181 @@
   <rights>All rights reserved 2026, AI with Alex</rights>
   <subtitle>Attention(Q,K,V)=softmax(QK^T/sqrt(d_k))V</subtitle>
   <title>AI with Alex's Blog</title>
-  <updated>2026-09-25T16:00:00.000Z</updated>
+  <updated>2026-09-27T02:00:00.000Z</updated>
+  <entry>
+    <author>
+      <name>AI with Alex</name>
+    </author>
+    <category term="AI" scheme="https://bodysuperman.github.io/categories/AI/"/>
+    <category term="AI Agent" scheme="https://bodysuperman.github.io/categories/AI/AI-Agent/"/>
+    <category term="LangGraph" scheme="https://bodysuperman.github.io/categories/AI/AI-Agent/LangGraph/"/>
+    <category term="LangChain" scheme="https://bodysuperman.github.io/tags/LangChain/"/>
+    <category term="LangGraph" scheme="https://bodysuperman.github.io/tags/LangGraph/"/>
+    <category term="AI Agent" scheme="https://bodysuperman.github.io/tags/AI-Agent/"/>
+    <category term="Workflow" scheme="https://bodysuperman.github.io/tags/Workflow/"/>
+    <category term="State Machine" scheme="https://bodysuperman.github.io/tags/State-Machine/"/>
+    <id>https://bodysuperman.github.io/2026/09/06/LangGraph-From-Zero-to-Graph/</id>
+    <link href="https://bodysuperman.github.io/2026/09/06/LangGraph-From-Zero-to-Graph/"/>
+    <published>2026-09-06T02:00:00.000Z</published>
+    <summary>
+      <![CDATA[<ul>
+<li><a href="#introduction">Introduction</a></li>
+<li><a href="#environment-setup">Environment Setup</a><ul>
+<li><a href="#miniconda-and-conda-env">Installing Miniconda and Creating the Environment</a></li>
+<li><a href="#dependencies-and-api-key">Installing Dependencies and Configuring API Keys</a></li>
+<li><a href="#verification-checklist">Verification and Checklist</a></li>
+</ul>
+</li>
+<li><a href="#what-is-langgraph">What Is LangGraph</a><ul>
+<li><a href="#langchain-vs-langgraph">LangChain vs. LangGraph</a></li>
+</ul>
+</li>
+<li><a href="#core-concepts">Core Concepts: The Three Elements and the Runtime Model</a><ul>
+<li><a href="#state-node-edge">State, Node, Edge</a></li>
+<li><a href="#superstep-execution-model">The Superstep Execution Model</a></li>
+<li><a href="#checkpoint-snapshots">The Checkpoint Snapshot Sequence</a></li>
+</ul>
+</li>
+<li><a href="#graph-api-vs-functional-api">Graph API vs Functional API</a></li>
+<li><a href="#first-graph">Your First Graph: Define, Compile, Invoke</a><ul>
+<li><a href="#define-compile-invoke">Building a State Graph in Three Steps</a></li>
+<li><a href="#graph-visualization">Graph Visualization</a></li>
+</ul>
+</li>
+<li><a href="#state-management">State Management</a><ul>
+<li><a href="#defining-state-schema">Three Ways to Define a Schema</a></li>
+<li><a href="#schema-validation-behavior">Validation Behavior Compared</a></li>
+<li><a href="#state-reducers">State Reducers: How Updates Are Merged</a></li>
+<li><a href="#default-overwrite-and-overwrite">Default Overwrite Behavior and the Overwrite Wrapper</a></li>
+<li><a href="#multi-schema">Multi Schema: Input, Output, and Private State</a></li>
+<li><a href="#predefined-states">Predefined States: MessagesState and AgentState</a></li>
+</ul>
+</li>
+<li><a href="#control-flow">Control Flow</a><ul>
+<li><a href="#sequential-structure">Sequential Structure</a></li>
+<li><a href="#branching">Branching</a><ul>
+<li><a href="#parallel-nodes">Parallel Nodes</a></li>
+<li><a href="#conditional-edges">Conditional Branching: add_conditional_edges</a></li>
+<li><a href="#deferred-nodes">Deferred Nodes: defer</a></li>
+<li><a href="#dynamic-fan-out-send">Dynamic Fan-out: Send</a></li>
+<li><a href="#command-goto">Dynamic Jumping: Command(goto)</a></li>
+</ul>
+</li>
+<li><a href="#fan-in">Fan-in: Merging Multiple Branches</a><ul>
+<li><a href="#static-fan-in">Static Fan-in: AND Trigger vs. OR Trigger</a></li>
+<li><a href="#mapreduce">Dynamic Fan-in: The MapReduce Pattern</a></li>
+</ul>
+</li>
+<li><a href="#loops">Loops: The ReAct Pattern</a><ul>
+<li><a href="#react-static-vs-dynamic">Static vs. Dynamic Implementation</a></li>
+<li><a href="#recursion-limit">Recursion Limits and Graceful Exit</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#edges-summary">Edges: A Systematic Summary</a></li>
+<li><a href="#fault-tolerance">Node Execution and Fault Tolerance</a><ul>
+<li><a href="#retry-policy">Retries: RetryPolicy</a></li>
+<li><a href="#default-retry-rules">Default Retry Rules: default_retry_on</a></li>
+<li><a href="#timeout-and-error-handling">Timeouts and Error Handling</a></li>
+<li><a href="#node-caching">Node Caching: CachePolicy</a></li>
+</ul>
+</li>
+<li><a href="#best-practices">Best Practices</a></li>
+<li><a href="#faq">FAQ</a></li>
+<li><a href="#summary">Summary</a></li>
+</ul>]]>
+    </summary>
+    <title>LangGraph from Zero: Environment Setup, State Management, and Control Flow in Practice</title>
+    <updated>2026-09-27T02:00:00.000Z</updated>
+  </entry>
+  <entry>
+    <author>
+      <name>AI with Alex</name>
+    </author>
+    <category term="AI" scheme="https://bodysuperman.github.io/categories/AI/"/>
+    <category term="AI Agent" scheme="https://bodysuperman.github.io/categories/AI/AI-Agent/"/>
+    <category term="LangGraph" scheme="https://bodysuperman.github.io/categories/AI/AI-Agent/LangGraph/"/>
+    <category term="LangChain" scheme="https://bodysuperman.github.io/tags/LangChain/"/>
+    <category term="LangGraph" scheme="https://bodysuperman.github.io/tags/LangGraph/"/>
+    <category term="AI Agent" scheme="https://bodysuperman.github.io/tags/AI-Agent/"/>
+    <category term="Workflow" scheme="https://bodysuperman.github.io/tags/Workflow/"/>
+    <category term="State Machine" scheme="https://bodysuperman.github.io/tags/State-Machine/"/>
+    <id>https://bodysuperman.github.io/zh-CN/2026/09/06/LangGraph-From-Zero-to-Graph/</id>
+    <link href="https://bodysuperman.github.io/zh-CN/2026/09/06/LangGraph-From-Zero-to-Graph/"/>
+    <published>2026-09-06T02:00:00.000Z</published>
+    <summary>
+      <![CDATA[<ul>
+<li><a href="#introduction">引言</a></li>
+<li><a href="#environment-setup">环境准备</a><ul>
+<li><a href="#miniconda-and-conda-env">安装 Miniconda 并创建环境</a></li>
+<li><a href="#dependencies-and-api-key">安装依赖与配置 API Key</a></li>
+<li><a href="#verification-checklist">环境验证与检查清单</a></li>
+</ul>
+</li>
+<li><a href="#what-is-langgraph">LangGraph 是什么</a><ul>
+<li><a href="#langchain-vs-langgraph">LangChain 与 LangGraph 的定位</a></li>
+</ul>
+</li>
+<li><a href="#core-concepts">核心概念：三要素与运行机制</a><ul>
+<li><a href="#state-node-edge">State、Node、Edge</a></li>
+<li><a href="#superstep-execution-model">Superstep 执行模型</a></li>
+<li><a href="#checkpoint-snapshots">Checkpoint 快照序列</a></li>
+</ul>
+</li>
+<li><a href="#graph-api-vs-functional-api">Graph API vs Functional API</a></li>
+<li><a href="#first-graph">第一个图：定义、编译、调用</a><ul>
+<li><a href="#define-compile-invoke">三步构建状态图</a></li>
+<li><a href="#graph-visualization">图结构可视化</a></li>
+</ul>
+</li>
+<li><a href="#state-management">状态管理</a><ul>
+<li><a href="#defining-state-schema">三种 Schema 定义方式</a></li>
+<li><a href="#schema-validation-behavior">校验行为对比</a></li>
+<li><a href="#state-reducers">State Reducer：状态合并机制</a></li>
+<li><a href="#default-overwrite-and-overwrite">默认覆盖与 Overwrite</a></li>
+<li><a href="#multi-schema">Multi Schema：输入、输出与私有状态</a></li>
+<li><a href="#predefined-states">预定义状态：MessagesState 与 AgentState</a></li>
+</ul>
+</li>
+<li><a href="#control-flow">控制流</a><ul>
+<li><a href="#sequential-structure">顺序结构</a></li>
+<li><a href="#branching">分支结构</a><ul>
+<li><a href="#parallel-nodes">并行节点</a></li>
+<li><a href="#conditional-edges">条件分支：add_conditional_edges</a></li>
+<li><a href="#deferred-nodes">延迟节点：defer</a></li>
+<li><a href="#dynamic-fan-out-send">动态扇出：Send</a></li>
+<li><a href="#command-goto">动态跳转：Command(goto)</a></li>
+</ul>
+</li>
+<li><a href="#fan-in">多分支汇聚：Fan-in</a><ul>
+<li><a href="#static-fan-in">静态扇入：“与”触发 vs “或”触发</a></li>
+<li><a href="#mapreduce">动态扇入：MapReduce 结构</a></li>
+</ul>
+</li>
+<li><a href="#loops">循环结构：ReAct</a><ul>
+<li><a href="#react-static-vs-dynamic">静态实现与动态实现</a></li>
+<li><a href="#recursion-limit">递归限制与优雅退出</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#edges-summary">边的系统总结</a></li>
+<li><a href="#fault-tolerance">节点执行与容错机制</a><ul>
+<li><a href="#retry-policy">重试机制：RetryPolicy</a></li>
+<li><a href="#default-retry-rules">默认重试规则：default_retry_on</a></li>
+<li><a href="#timeout-and-error-handling">超时控制与错误处理</a></li>
+<li><a href="#node-caching">节点缓存：CachePolicy</a></li>
+</ul>
+</li>
+<li><a href="#best-practices">最佳实践</a></li>
+<li><a href="#faq">常见问题</a></li>
+<li><a href="#summary">总结</a></li>
+</ul>]]>
+    </summary>
+    <title>LangGraph 从零开始：环境搭建、状态管理与控制流实战</title>
+    <updated>2026-09-27T02:00:00.000Z</updated>
+  </entry>
   <entry>
     <author>
       <name>AI with Alex</name>
@@ -120,6 +294,67 @@
     <category term="Developer Tools" scheme="https://bodysuperman.github.io/tags/Developer-Tools/"/>
     <category term="Coding Agent" scheme="https://bodysuperman.github.io/tags/Coding-Agent/"/>
     <category term="MCP‑Protocol" scheme="https://bodysuperman.github.io/tags/MCP%E2%80%91Protocol/"/>
+    <id>https://bodysuperman.github.io/zh-CN/2026/08/23/Deep%E2%80%91Dive-Advanced-Tips-for-Claude-Code/</id>
+    <link href="https://bodysuperman.github.io/zh-CN/2026/08/23/Deep%E2%80%91Dive-Advanced-Tips-for-Claude-Code/"/>
+    <published>2026-08-23T04:48:28.000Z</published>
+    <summary>
+      <![CDATA[<ul>
+<li><a href="#introduction">引言</a></li>
+<li><a href="#the-big-picture-seven-layers-of-extension">全局视角：七层扩展体系</a></li>
+<li><a href="#choosing-the-right-model">选择合适的模型</a><ul>
+<li><a href="#model-comparison">模型对比</a></li>
+<li><a href="#four-ways-to-switch-models">四种切换模型的方式</a></li>
+<li><a href="#settings-file-hierarchy">配置文件层级</a></li>
+</ul>
+</li>
+<li><a href="#core-configuration">核心配置</a><ul>
+<li><a href="#settings-json-permissions-and-defaults">settings.json：权限与默认设置</a></li>
+<li><a href="#claude-md-the-project-handbook">CLAUDE.md：项目手册</a></li>
+<li><a href="#three-layers-of-memory">三层记忆系统</a></li>
+<li><a href="#claudeignore">.claudeignore</a></li>
+</ul>
+</li>
+<li><a href="#daily-commands-and-interactions">日常命令与交互</a><ul>
+<li><a href="#slash-command-cheat-sheet">斜杠命令速查表</a></li>
+<li><a href="#the-four-commands-you-must-master">必须掌握的四个命令</a></li>
+<li><a href="#keyboard-shortcuts">快捷键</a></li>
+<li><a href="#power-interactions">高级交互：!、@ 与图片</a></li>
+</ul>
+</li>
+<li><a href="#the-right-workflow-explore-plan-implement-commit">正确的工作流：探索、规划、实现、提交</a><ul>
+<li><a href="#plan-mode-and-the-three-operating-modes">Plan 模式与三种运行模式</a></li>
+<li><a href="#when-to-plan-and-when-to-just-do-it">何时规划，何时直接动手</a></li>
+<li><a href="#walkthrough-building-a-hello-api-with-express">实战演练：用 Express 构建一个 Hello API</a></li>
+</ul>
+</li>
+<li><a href="#best-practices">最佳实践</a><ul>
+<li><a href="#prompt-writing-principles">提示词编写原则</a></li>
+<li><a href="#context-management">上下文管理</a></li>
+<li><a href="#git-is-your-save-point">Git 是你的存档点</a></li>
+<li><a href="#controlling-costs">控制成本</a></li>
+<li><a href="#working-in-large-codebases">在大型代码库中工作</a></li>
+<li><a href="#three-overlooked-advanced-tips">三个容易被忽视的进阶技巧</a></li>
+</ul>
+</li>
+<li><a href="#starter-kit-for-new-projects">新项目启动套件</a></li>
+<li><a href="#faq">常见问题</a></li>
+<li><a href="#summary">总结</a></li>
+</ul>]]>
+    </summary>
+    <title>深入理解与进阶技巧：Claude Code</title>
+    <updated>2026-09-01T16:00:00.000Z</updated>
+  </entry>
+  <entry>
+    <author>
+      <name>AI with Alex</name>
+    </author>
+    <category term="AI" scheme="https://bodysuperman.github.io/categories/AI/"/>
+    <category term="AI Agent" scheme="https://bodysuperman.github.io/tags/AI-Agent/"/>
+    <category term="LLM" scheme="https://bodysuperman.github.io/tags/LLM/"/>
+    <category term="Claude Code" scheme="https://bodysuperman.github.io/tags/Claude-Code/"/>
+    <category term="Developer Tools" scheme="https://bodysuperman.github.io/tags/Developer-Tools/"/>
+    <category term="Coding Agent" scheme="https://bodysuperman.github.io/tags/Coding-Agent/"/>
+    <category term="MCP‑Protocol" scheme="https://bodysuperman.github.io/tags/MCP%E2%80%91Protocol/"/>
     <id>https://bodysuperman.github.io/2026/08/23/Deep%E2%80%91Dive-Advanced-Tips-for-Claude-Code/</id>
     <link href="https://bodysuperman.github.io/2026/08/23/Deep%E2%80%91Dive-Advanced-Tips-for-Claude-Code/"/>
     <published>2026-08-23T04:48:28.000Z</published>
@@ -176,90 +411,6 @@
     <author>
       <name>AI with Alex</name>
     </author>
-    <category term="AI" scheme="https://bodysuperman.github.io/categories/AI/"/>
-    <category term="AI Agent" scheme="https://bodysuperman.github.io/tags/AI-Agent/"/>
-    <category term="LLM" scheme="https://bodysuperman.github.io/tags/LLM/"/>
-    <category term="Claude Code" scheme="https://bodysuperman.github.io/tags/Claude-Code/"/>
-    <category term="Developer Tools" scheme="https://bodysuperman.github.io/tags/Developer-Tools/"/>
-    <category term="Coding Agent" scheme="https://bodysuperman.github.io/tags/Coding-Agent/"/>
-    <category term="MCP‑Protocol" scheme="https://bodysuperman.github.io/tags/MCP%E2%80%91Protocol/"/>
-    <id>https://bodysuperman.github.io/zh-CN/2026/08/23/Deep%E2%80%91Dive-Advanced-Tips-for-Claude-Code/</id>
-    <link href="https://bodysuperman.github.io/zh-CN/2026/08/23/Deep%E2%80%91Dive-Advanced-Tips-for-Claude-Code/"/>
-    <published>2026-08-23T04:48:28.000Z</published>
-    <summary>
-      <![CDATA[<ul>
-<li><a href="#introduction">引言</a></li>
-<li><a href="#the-big-picture-seven-layers-of-extension">全局视角：七层扩展体系</a></li>
-<li><a href="#choosing-the-right-model">选择合适的模型</a><ul>
-<li><a href="#model-comparison">模型对比</a></li>
-<li><a href="#four-ways-to-switch-models">四种切换模型的方式</a></li>
-<li><a href="#settings-file-hierarchy">配置文件层级</a></li>
-</ul>
-</li>
-<li><a href="#core-configuration">核心配置</a><ul>
-<li><a href="#settings-json-permissions-and-defaults">settings.json：权限与默认设置</a></li>
-<li><a href="#claude-md-the-project-handbook">CLAUDE.md：项目手册</a></li>
-<li><a href="#three-layers-of-memory">三层记忆系统</a></li>
-<li><a href="#claudeignore">.claudeignore</a></li>
-</ul>
-</li>
-<li><a href="#daily-commands-and-interactions">日常命令与交互</a><ul>
-<li><a href="#slash-command-cheat-sheet">斜杠命令速查表</a></li>
-<li><a href="#the-four-commands-you-must-master">必须掌握的四个命令</a></li>
-<li><a href="#keyboard-shortcuts">快捷键</a></li>
-<li><a href="#power-interactions">高级交互：!、@ 与图片</a></li>
-</ul>
-</li>
-<li><a href="#the-right-workflow-explore-plan-implement-commit">正确的工作流：探索、规划、实现、提交</a><ul>
-<li><a href="#plan-mode-and-the-three-operating-modes">Plan 模式与三种运行模式</a></li>
-<li><a href="#when-to-plan-and-when-to-just-do-it">何时规划，何时直接动手</a></li>
-<li><a href="#walkthrough-building-a-hello-api-with-express">实战演练：用 Express 构建一个 Hello API</a></li>
-</ul>
-</li>
-<li><a href="#best-practices">最佳实践</a><ul>
-<li><a href="#prompt-writing-principles">提示词编写原则</a></li>
-<li><a href="#context-management">上下文管理</a></li>
-<li><a href="#git-is-your-save-point">Git 是你的存档点</a></li>
-<li><a href="#controlling-costs">控制成本</a></li>
-<li><a href="#working-in-large-codebases">在大型代码库中工作</a></li>
-<li><a href="#three-overlooked-advanced-tips">三个容易被忽视的进阶技巧</a></li>
-</ul>
-</li>
-<li><a href="#starter-kit-for-new-projects">新项目启动套件</a></li>
-<li><a href="#faq">常见问题</a></li>
-<li><a href="#summary">总结</a></li>
-</ul>]]>
-    </summary>
-    <title>深入理解与进阶技巧：Claude Code</title>
-    <updated>2026-09-01T16:00:00.000Z</updated>
-  </entry>
-  <entry>
-    <author>
-      <name>AI with Alex</name>
-    </author>
-    <category term="AI Engineering" scheme="https://bodysuperman.github.io/categories/AI-Engineering/"/>
-    <category term="Developer Tools" scheme="https://bodysuperman.github.io/categories/AI-Engineering/Developer-Tools/"/>
-    <category term="LLM" scheme="https://bodysuperman.github.io/tags/LLM/"/>
-    <category term="Claude Code" scheme="https://bodysuperman.github.io/tags/Claude-Code/"/>
-    <category term="Context Engineering" scheme="https://bodysuperman.github.io/tags/Context-Engineering/"/>
-    <category term="AI Coding Agent" scheme="https://bodysuperman.github.io/tags/AI-Coding-Agent/"/>
-    <category term="Agent Workflow" scheme="https://bodysuperman.github.io/tags/Agent-Workflow/"/>
-    <category term="Prompt Engineering" scheme="https://bodysuperman.github.io/tags/Prompt-Engineering/"/>
-    <category term="Software Development" scheme="https://bodysuperman.github.io/tags/Software-Development/"/>
-    <id>https://bodysuperman.github.io/2026/08/06/Six-money-saving-tips-for-Claude-Code/</id>
-    <link href="https://bodysuperman.github.io/2026/08/06/Six-money-saving-tips-for-Claude-Code/"/>
-    <published>2026-08-06T08:15:59.000Z</published>
-    <summary>
-      <![CDATA[<p>Anthropic released a blog sharing six money-saving tips for Claude Code: clear the conversation with <code>/clear</code> after completing a task; lock the model and reasoning intensity at the start to avoid invalidating the prompt cache by switching; use <code>@</code> to reference files instead of typing paths manually; add silent parameters to commands that generate a lot of output; run <code>/compact</code> before taking a break; assign large output tasks to sub-agents.</p>
-<p><img src="/2026/08/06/Six-money-saving-tips-for-Claude-Code/pic01.png" alt="pic"></p>]]>
-    </summary>
-    <title>Six money-saving tips for Claude Code</title>
-    <updated>2026-08-16T10:04:19.000Z</updated>
-  </entry>
-  <entry>
-    <author>
-      <name>AI with Alex</name>
-    </author>
     <category term="AI Engineering" scheme="https://bodysuperman.github.io/categories/AI-Engineering/"/>
     <category term="Developer Tools" scheme="https://bodysuperman.github.io/categories/AI-Engineering/Developer-Tools/"/>
     <category term="LLM" scheme="https://bodysuperman.github.io/tags/LLM/"/>
@@ -283,59 +434,24 @@
     <author>
       <name>AI with Alex</name>
     </author>
-    <category term="AI Agent" scheme="https://bodysuperman.github.io/categories/AI-Agent/"/>
-    <category term="AI Engineering" scheme="https://bodysuperman.github.io/categories/AI-Agent/AI-Engineering/"/>
+    <category term="AI Engineering" scheme="https://bodysuperman.github.io/categories/AI-Engineering/"/>
+    <category term="Developer Tools" scheme="https://bodysuperman.github.io/categories/AI-Engineering/Developer-Tools/"/>
     <category term="LLM" scheme="https://bodysuperman.github.io/tags/LLM/"/>
-    <category term="Post Training" scheme="https://bodysuperman.github.io/tags/Post-Training/"/>
-    <category term="Agent Evolution" scheme="https://bodysuperman.github.io/tags/Agent-Evolution/"/>
-    <category term="Multimodal AI" scheme="https://bodysuperman.github.io/tags/Multimodal-AI/"/>
-    <category term="Autonomous Agents" scheme="https://bodysuperman.github.io/tags/Autonomous-Agents/"/>
-    <category term="Generative AI" scheme="https://bodysuperman.github.io/tags/Generative-AI/"/>
-    <id>https://bodysuperman.github.io/2026/06/25/From-Post-Training-to-Real-Time-Perception-Self-Evolving-Agents-and-Multimodal-Interaction/</id>
-    <link href="https://bodysuperman.github.io/2026/06/25/From-Post-Training-to-Real-Time-Perception-Self-Evolving-Agents-and-Multimodal-Interaction/"/>
-    <published>2026-06-25T07:09:38.000Z</published>
+    <category term="Claude Code" scheme="https://bodysuperman.github.io/tags/Claude-Code/"/>
+    <category term="Context Engineering" scheme="https://bodysuperman.github.io/tags/Context-Engineering/"/>
+    <category term="AI Coding Agent" scheme="https://bodysuperman.github.io/tags/AI-Coding-Agent/"/>
+    <category term="Agent Workflow" scheme="https://bodysuperman.github.io/tags/Agent-Workflow/"/>
+    <category term="Prompt Engineering" scheme="https://bodysuperman.github.io/tags/Prompt-Engineering/"/>
+    <category term="Software Development" scheme="https://bodysuperman.github.io/tags/Software-Development/"/>
+    <id>https://bodysuperman.github.io/2026/08/06/Six-money-saving-tips-for-Claude-Code/</id>
+    <link href="https://bodysuperman.github.io/2026/08/06/Six-money-saving-tips-for-Claude-Code/"/>
+    <published>2026-08-06T08:15:59.000Z</published>
     <summary>
-      <![CDATA[<ul>
-<li><a href="#introduction">Introduction</a><ul>
-<li><a href="#capability-paradox">The Capability Paradox</a></li>
-<li><a href="#three-acts">Three Acts of This Article</a></li>
-</ul>
-</li>
-<li><a href="#post-training">Post-Training: Baking Capability Into Parameters</a><ul>
-<li><a href="#three-stage-pipeline">The Three-Stage Pipeline</a></li>
-<li><a href="#sft-rl-comparison">SFT Memorizes, RL Generalizes</a></li>
-<li><a href="#sft-vs-rl-decision">When to Choose SFT vs RL</a></li>
-<li><a href="#reward-design">Reward Design: From Scalar to Generative</a></li>
-<li><a href="#rlvp">RLVP: Reward the Outcome, Penalize the Path</a></li>
-<li><a href="#data-environment">Data and Environment Matter More Than Algorithms</a></li>
-<li><a href="#practical-takeaway-post-training">The Practical Takeaway</a></li>
-</ul>
-</li>
-<li><a href="#self-evolving">Self-Evolving Agents: Learning From Experience</a><ul>
-<li><a href="#preserving-vs-learning">Preserving Experience Is Not Learning</a></li>
-<li><a href="#three-layer-verification">Three-Layer Verification</a></li>
-<li><a href="#four-update-carriers">Four Update Carriers</a></li>
-<li><a href="#dual-loop-architecture">Dual-Loop Architecture</a></li>
-<li><a href="#done-not-progress">When Done Does Not Mean Progress</a></li>
-<li><a href="#safety-boundaries">Safety Boundaries for Continual Evolution</a></li>
-</ul>
-</li>
-<li><a href="#realtime-multimodal">Real-Time Perception and Multimodal Interaction</a><ul>
-<li><a href="#why-realtime">Why Real-Time Changes Everything</a></li>
-<li><a href="#voice-evolution">Voice: Cascaded to End-to-End to Full-Duplex</a></li>
-<li><a href="#computer-use">Computer Use: The Perceive-Think-Act Loop</a></li>
-<li><a href="#robotics">Robotics: VLA, Action Chunking, and Sim2Real</a></li>
-<li><a href="#fast-slow">The Unifying Theme: Fast-Slow Architecture</a></li>
-</ul>
-</li>
-<li><a href="#full-stack">Putting It Together: The Full Stack of a Modern Agent</a></li>
-<li><a href="#best-practices">Best Practices</a></li>
-<li><a href="#faq">FAQ</a></li>
-<li><a href="#summary">Summary</a></li>
-</ul>]]>
+      <![CDATA[<p>Anthropic released a blog sharing six money-saving tips for Claude Code: clear the conversation with <code>/clear</code> after completing a task; lock the model and reasoning intensity at the start to avoid invalidating the prompt cache by switching; use <code>@</code> to reference files instead of typing paths manually; add silent parameters to commands that generate a lot of output; run <code>/compact</code> before taking a break; assign large output tasks to sub-agents.</p>
+<p><img src="/2026/08/06/Six-money-saving-tips-for-Claude-Code/pic01.png" alt="pic"></p>]]>
     </summary>
-    <title>From Post-Training to Real-Time Perception: Self-Evolving Agents and Multimodal Interaction</title>
-    <updated>2026-07-25T07:09:38.000Z</updated>
+    <title>Six money-saving tips for Claude Code</title>
+    <updated>2026-08-16T10:04:19.000Z</updated>
   </entry>
   <entry>
     <author>
@@ -402,54 +518,56 @@
     <category term="AI Agent" scheme="https://bodysuperman.github.io/categories/AI-Agent/"/>
     <category term="AI Engineering" scheme="https://bodysuperman.github.io/categories/AI-Agent/AI-Engineering/"/>
     <category term="LLM" scheme="https://bodysuperman.github.io/tags/LLM/"/>
-    <category term="Coding Agent" scheme="https://bodysuperman.github.io/tags/Coding-Agent/"/>
-    <category term="Agent Engineering" scheme="https://bodysuperman.github.io/tags/Agent-Engineering/"/>
-    <category term="Tool Calling" scheme="https://bodysuperman.github.io/tags/Tool-Calling/"/>
-    <category term="Agent Evaluation" scheme="https://bodysuperman.github.io/tags/Agent-Evaluation/"/>
-    <id>https://bodysuperman.github.io/zh-CN/2026/06/17/From-Capability-to-Intelligence-Tools-Coding-and-Evaluation-in-AI-Agents/</id>
-    <link href="https://bodysuperman.github.io/zh-CN/2026/06/17/From-Capability-to-Intelligence-Tools-Coding-and-Evaluation-in-AI-Agents/"/>
-    <published>2026-06-17T07:09:38.000Z</published>
+    <category term="Post Training" scheme="https://bodysuperman.github.io/tags/Post-Training/"/>
+    <category term="Agent Evolution" scheme="https://bodysuperman.github.io/tags/Agent-Evolution/"/>
+    <category term="Multimodal AI" scheme="https://bodysuperman.github.io/tags/Multimodal-AI/"/>
+    <category term="Autonomous Agents" scheme="https://bodysuperman.github.io/tags/Autonomous-Agents/"/>
+    <category term="Generative AI" scheme="https://bodysuperman.github.io/tags/Generative-AI/"/>
+    <id>https://bodysuperman.github.io/2026/06/25/From-Post-Training-to-Real-Time-Perception-Self-Evolving-Agents-and-Multimodal-Interaction/</id>
+    <link href="https://bodysuperman.github.io/2026/06/25/From-Post-Training-to-Real-Time-Perception-Self-Evolving-Agents-and-Multimodal-Interaction/"/>
+    <published>2026-06-25T07:09:38.000Z</published>
     <summary>
       <![CDATA[<ul>
-<li><a href="#introduction">引言</a></li>
-<li><a href="#what-the-three-layer-model-of-agent-intelligence">是什么：Agent 智能的三层模型</a></li>
-<li><a href="#tools-the-agents-hands-feet-and-senses">工具：Agent 的手脚与感官</a><ul>
-<li><a href="#tool-classification-five-categories">工具分类：五大类别</a></li>
-<li><a href="#universal-principles-of-tool-design">工具设计的通用原则</a></li>
-<li><a href="#the-mcp-ecosystem-and-the-challenge-of-tool-selection">MCP 生态与工具选择的挑战</a></li>
-<li><a href="#execution-security-proposer-reviewer-and-sidecar">执行安全：提案者-审核者与 Sidecar</a></li>
-<li><a href="#event-driven-asynchronous-agents">事件驱动的异步 Agent</a></li>
-<li><a href="#proactive-tool-discovery-and-skills">主动工具发现与技能</a></li>
+<li><a href="#introduction">Introduction</a><ul>
+<li><a href="#capability-paradox">The Capability Paradox</a></li>
+<li><a href="#three-acts">Three Acts of This Article</a></li>
 </ul>
 </li>
-<li><a href="#coding-agent-code-as-the-meta-capability">编程 Agent：代码作为元能力</a><ul>
-<li><a href="#the-seven-core-tools-and-the-file-system-hub">七大核心工具与文件系统枢纽</a></li>
-<li><a href="#security-the-lethal-triad-and-trust-boundaries">安全：致命三角与信任边界</a></li>
-<li><a href="#harness-engineering-for-coding-agents">编程 Agent 的 Harness 工程</a></li>
-<li><a href="#failure-and-error-recovery">失败与错误恢复</a></li>
-<li><a href="#six-directions-of-code-as-meta-capability">代码作为元能力的六个方向</a></li>
+<li><a href="#post-training">Post-Training: Baking Capability Into Parameters</a><ul>
+<li><a href="#three-stage-pipeline">The Three-Stage Pipeline</a></li>
+<li><a href="#sft-rl-comparison">SFT Memorizes, RL Generalizes</a></li>
+<li><a href="#sft-vs-rl-decision">When to Choose SFT vs RL</a></li>
+<li><a href="#reward-design">Reward Design: From Scalar to Generative</a></li>
+<li><a href="#rlvp">RLVP: Reward the Outcome, Penalize the Path</a></li>
+<li><a href="#data-environment">Data and Environment Matter More Than Algorithms</a></li>
+<li><a href="#practical-takeaway-post-training">The Practical Takeaway</a></li>
 </ul>
 </li>
-<li><a href="#evaluation-knowing-whether-it-actually-works">评估：如何知道它到底行不行</a><ul>
-<li><a href="#a-concrete-example">一个具体例子</a></li>
-<li><a href="#automated-evaluation-environments">自动化评估环境</a></li>
-<li><a href="#designing-evaluation-datasets">设计评估数据集</a></li>
-<li><a href="#the-metrics-system-passk-vs-passk">指标体系：Pass@k 与 Pass^k</a></li>
-<li><a href="#llm-as-a-judge-and-rubrics">LLM-as-a-Judge 与评分标准</a></li>
-<li><a href="#pairwise-comparison-and-model-ranking">成对比较与模型排名</a></li>
-<li><a href="#statistical-significance">统计显著性</a></li>
-<li><a href="#from-benchmark-to-system-improvement">从基准测试到系统改进</a></li>
+<li><a href="#self-evolving">Self-Evolving Agents: Learning From Experience</a><ul>
+<li><a href="#preserving-vs-learning">Preserving Experience Is Not Learning</a></li>
+<li><a href="#three-layer-verification">Three-Layer Verification</a></li>
+<li><a href="#four-update-carriers">Four Update Carriers</a></li>
+<li><a href="#dual-loop-architecture">Dual-Loop Architecture</a></li>
+<li><a href="#done-not-progress">When Done Does Not Mean Progress</a></li>
+<li><a href="#safety-boundaries">Safety Boundaries for Continual Evolution</a></li>
 </ul>
 </li>
-<li><a href="#example-an-end-to-end-mini-case">示例：一个端到端的迷你案例</a></li>
-<li><a href="#best-practices">最佳实践</a></li>
-<li><a href="#faq">常见问题</a></li>
-<li><a href="#summary">总结</a></li>
-<li><a href="#appendix">附录</a></li>
+<li><a href="#realtime-multimodal">Real-Time Perception and Multimodal Interaction</a><ul>
+<li><a href="#why-realtime">Why Real-Time Changes Everything</a></li>
+<li><a href="#voice-evolution">Voice: Cascaded to End-to-End to Full-Duplex</a></li>
+<li><a href="#computer-use">Computer Use: The Perceive-Think-Act Loop</a></li>
+<li><a href="#robotics">Robotics: VLA, Action Chunking, and Sim2Real</a></li>
+<li><a href="#fast-slow">The Unifying Theme: Fast-Slow Architecture</a></li>
+</ul>
+</li>
+<li><a href="#full-stack">Putting It Together: The Full Stack of a Modern Agent</a></li>
+<li><a href="#best-practices">Best Practices</a></li>
+<li><a href="#faq">FAQ</a></li>
+<li><a href="#summary">Summary</a></li>
 </ul>]]>
     </summary>
-    <title>从能力到智能：AI Agent 的工具、编程与评估</title>
-    <updated>2026-07-24T07:09:38.000Z</updated>
+    <title>From Post-Training to Real-Time Perception: Self-Evolving Agents and Multimodal Interaction</title>
+    <updated>2026-07-25T07:09:38.000Z</updated>
   </entry>
   <entry>
     <author>
@@ -505,6 +623,62 @@
 </ul>]]>
     </summary>
     <title>From Capability to Intelligence: Tools, Coding, and Evaluation in AI Agents</title>
+    <updated>2026-07-24T07:09:38.000Z</updated>
+  </entry>
+  <entry>
+    <author>
+      <name>AI with Alex</name>
+    </author>
+    <category term="AI Agent" scheme="https://bodysuperman.github.io/categories/AI-Agent/"/>
+    <category term="AI Engineering" scheme="https://bodysuperman.github.io/categories/AI-Agent/AI-Engineering/"/>
+    <category term="LLM" scheme="https://bodysuperman.github.io/tags/LLM/"/>
+    <category term="Coding Agent" scheme="https://bodysuperman.github.io/tags/Coding-Agent/"/>
+    <category term="Agent Engineering" scheme="https://bodysuperman.github.io/tags/Agent-Engineering/"/>
+    <category term="Tool Calling" scheme="https://bodysuperman.github.io/tags/Tool-Calling/"/>
+    <category term="Agent Evaluation" scheme="https://bodysuperman.github.io/tags/Agent-Evaluation/"/>
+    <id>https://bodysuperman.github.io/zh-CN/2026/06/17/From-Capability-to-Intelligence-Tools-Coding-and-Evaluation-in-AI-Agents/</id>
+    <link href="https://bodysuperman.github.io/zh-CN/2026/06/17/From-Capability-to-Intelligence-Tools-Coding-and-Evaluation-in-AI-Agents/"/>
+    <published>2026-06-17T07:09:38.000Z</published>
+    <summary>
+      <![CDATA[<ul>
+<li><a href="#introduction">引言</a></li>
+<li><a href="#what-the-three-layer-model-of-agent-intelligence">是什么：Agent 智能的三层模型</a></li>
+<li><a href="#tools-the-agents-hands-feet-and-senses">工具：Agent 的手脚与感官</a><ul>
+<li><a href="#tool-classification-five-categories">工具分类：五大类别</a></li>
+<li><a href="#universal-principles-of-tool-design">工具设计的通用原则</a></li>
+<li><a href="#the-mcp-ecosystem-and-the-challenge-of-tool-selection">MCP 生态与工具选择的挑战</a></li>
+<li><a href="#execution-security-proposer-reviewer-and-sidecar">执行安全：提案者-审核者与 Sidecar</a></li>
+<li><a href="#event-driven-asynchronous-agents">事件驱动的异步 Agent</a></li>
+<li><a href="#proactive-tool-discovery-and-skills">主动工具发现与技能</a></li>
+</ul>
+</li>
+<li><a href="#coding-agent-code-as-the-meta-capability">编程 Agent：代码作为元能力</a><ul>
+<li><a href="#the-seven-core-tools-and-the-file-system-hub">七大核心工具与文件系统枢纽</a></li>
+<li><a href="#security-the-lethal-triad-and-trust-boundaries">安全：致命三角与信任边界</a></li>
+<li><a href="#harness-engineering-for-coding-agents">编程 Agent 的 Harness 工程</a></li>
+<li><a href="#failure-and-error-recovery">失败与错误恢复</a></li>
+<li><a href="#six-directions-of-code-as-meta-capability">代码作为元能力的六个方向</a></li>
+</ul>
+</li>
+<li><a href="#evaluation-knowing-whether-it-actually-works">评估：如何知道它到底行不行</a><ul>
+<li><a href="#a-concrete-example">一个具体例子</a></li>
+<li><a href="#automated-evaluation-environments">自动化评估环境</a></li>
+<li><a href="#designing-evaluation-datasets">设计评估数据集</a></li>
+<li><a href="#the-metrics-system-passk-vs-passk">指标体系：Pass@k 与 Pass^k</a></li>
+<li><a href="#llm-as-a-judge-and-rubrics">LLM-as-a-Judge 与评分标准</a></li>
+<li><a href="#pairwise-comparison-and-model-ranking">成对比较与模型排名</a></li>
+<li><a href="#statistical-significance">统计显著性</a></li>
+<li><a href="#from-benchmark-to-system-improvement">从基准测试到系统改进</a></li>
+</ul>
+</li>
+<li><a href="#example-an-end-to-end-mini-case">示例：一个端到端的迷你案例</a></li>
+<li><a href="#best-practices">最佳实践</a></li>
+<li><a href="#faq">常见问题</a></li>
+<li><a href="#summary">总结</a></li>
+<li><a href="#appendix">附录</a></li>
+</ul>]]>
+    </summary>
+    <title>从能力到智能：AI Agent 的工具、编程与评估</title>
     <updated>2026-07-24T07:09:38.000Z</updated>
   </entry>
   <entry>
@@ -731,57 +905,6 @@
     <category term="AI Agent" scheme="https://bodysuperman.github.io/tags/AI-Agent/"/>
     <category term="LLM" scheme="https://bodysuperman.github.io/tags/LLM/"/>
     <category term="MultiModal" scheme="https://bodysuperman.github.io/tags/MultiModal/"/>
-    <id>https://bodysuperman.github.io/zh-CN/2026/05/11/A-Multimodal-AI-Agent-Application-AI-Private-Chef/</id>
-    <link href="https://bodysuperman.github.io/zh-CN/2026/05/11/A-Multimodal-AI-Agent-Application-AI-Private-Chef/"/>
-    <published>2026-05-11T04:48:28.000Z</published>
-    <summary>
-      <![CDATA[<ul>
-<li><a href="#introduction">引言</a></li>
-<li><a href="#what-are-we-building">我们要构建什么？</a><ul>
-<li><a href="#feature-overview">功能概览</a></li>
-<li><a href="#architecture-overview">架构概览</a></li>
-</ul>
-</li>
-<li><a href="#implementation-strategy">实现策略</a><ul>
-<li><a href="#model-selection">模型选择</a></li>
-<li><a href="#tool-selection">工具选择</a></li>
-<li><a href="#memory-strategy">记忆策略</a></li>
-<li><a href="#system-prompt-design">系统提示词设计</a></li>
-</ul>
-</li>
-<li><a href="#prototyping-in-jupyter">在 Jupyter 中制作原型</a><ul>
-<li><a href="#environment-configuration">环境配置</a></li>
-<li><a href="#dependencies">依赖</a></li>
-<li><a href="#loading-configuration">加载配置</a></li>
-<li><a href="#defining-tools">定义工具</a></li>
-<li><a href="#initializing-the-multimodal-model">初始化多模态模型</a></li>
-<li><a href="#memory-management">记忆管理</a></li>
-<li><a href="#creating-the-agent">创建 Agent</a></li>
-<li><a href="#testing-with-image-input">图片输入测试</a></li>
-<li><a href="#testing-conversation-memory">对话记忆测试</a></li>
-</ul>
-</li>
-<li><a href="#deploying-with-langgraph-and-langsmith">使用 LangGraph 与 LangSmith 部署</a><ul>
-<li><a href="#langsmith-setup">LangSmith 配置</a></li>
-<li><a href="#developing-the-agent">开发 Agent</a></li>
-<li><a href="#local-deployment-with-langgraph-cli">使用 LangGraph CLI 本地部署</a></li>
-<li><a href="#testing-in-langsmith-studio">在 LangSmith Studio 中测试</a>]]>
-    </summary>
-    <title>多模态 AI Agent 应用实战：AI 私厨</title>
-    <updated>2026-06-09T16:00:00.000Z</updated>
-  </entry>
-  <entry>
-    <author>
-      <name>AI with Alex</name>
-    </author>
-    <category term="Python" scheme="https://bodysuperman.github.io/categories/Python/"/>
-    <category term="AI" scheme="https://bodysuperman.github.io/categories/Python/AI/"/>
-    <category term="LangChain" scheme="https://bodysuperman.github.io/tags/LangChain/"/>
-    <category term="LangSmith" scheme="https://bodysuperman.github.io/tags/LangSmith/"/>
-    <category term="LangGraph" scheme="https://bodysuperman.github.io/tags/LangGraph/"/>
-    <category term="AI Agent" scheme="https://bodysuperman.github.io/tags/AI-Agent/"/>
-    <category term="LLM" scheme="https://bodysuperman.github.io/tags/LLM/"/>
-    <category term="MultiModal" scheme="https://bodysuperman.github.io/tags/MultiModal/"/>
     <id>https://bodysuperman.github.io/2026/05/11/A-Multimodal-AI-Agent-Application-AI-Private-Chef/</id>
     <link href="https://bodysuperman.github.io/2026/05/11/A-Multimodal-AI-Agent-Application-AI-Private-Chef/"/>
     <published>2026-05-11T04:48:28.000Z</published>
@@ -829,54 +952,48 @@
     <category term="AI" scheme="https://bodysuperman.github.io/categories/Python/AI/"/>
     <category term="LangChain" scheme="https://bodysuperman.github.io/tags/LangChain/"/>
     <category term="LangSmith" scheme="https://bodysuperman.github.io/tags/LangSmith/"/>
+    <category term="LangGraph" scheme="https://bodysuperman.github.io/tags/LangGraph/"/>
     <category term="AI Agent" scheme="https://bodysuperman.github.io/tags/AI-Agent/"/>
     <category term="LLM" scheme="https://bodysuperman.github.io/tags/LLM/"/>
     <category term="MultiModal" scheme="https://bodysuperman.github.io/tags/MultiModal/"/>
-    <id>https://bodysuperman.github.io/zh-CN/2026/05/04/LangChain-Core-Components%EF%BC%9AMode-Message-Prompt-Tool-Memory/</id>
-    <link href="https://bodysuperman.github.io/zh-CN/2026/05/04/LangChain-Core-Components%EF%BC%9AMode-Message-Prompt-Tool-Memory/"/>
-    <published>2026-05-04T04:48:28.000Z</published>
+    <id>https://bodysuperman.github.io/zh-CN/2026/05/11/A-Multimodal-AI-Agent-Application-AI-Private-Chef/</id>
+    <link href="https://bodysuperman.github.io/zh-CN/2026/05/11/A-Multimodal-AI-Agent-Application-AI-Private-Chef/"/>
+    <published>2026-05-11T04:48:28.000Z</published>
     <summary>
       <![CDATA[<ul>
-<li><a href="#what-is-langchain">什么是 LangChain？</a><ul>
-<li><a href="#the-platform">平台概览</a></li>
-<li><a href="#what-is-an-agent">什么是 Agent？</a></li>
-<li><a href="#llm-vs-agent-the-difference">LLM 与 Agent 的区别</a></li>
+<li><a href="#introduction">引言</a></li>
+<li><a href="#what-are-we-building">我们要构建什么？</a><ul>
+<li><a href="#feature-overview">功能概览</a></li>
+<li><a href="#architecture-overview">架构概览</a></li>
 </ul>
 </li>
-<li><a href="#models--the-brain">模型（Model）—— 大脑</a><ul>
-<li><a href="#initializing-a-model">初始化模型</a></li>
-<li><a href="#custom-models-and-parameters">自定义模型与参数</a></li>
-<li><a href="#using-model-classes">使用模型类</a></li>
-<li><a href="#calling-the-model-invoke-vs-stream">调用模型：invoke 与 stream</a></li>
-<li><a href="#using-models-in-an-agent">在 Agent 中使用模型</a></li>
+<li><a href="#implementation-strategy">实现策略</a><ul>
+<li><a href="#model-selection">模型选择</a></li>
+<li><a href="#tool-selection">工具选择</a></li>
+<li><a href="#memory-strategy">记忆策略</a></li>
+<li><a href="#system-prompt-design">系统提示词设计</a></li>
 </ul>
 </li>
-<li><a href="#messages--the-building-blocks-of-conversation">消息（Message）—— 对话的基本单元</a><ul>
-<li><a href="#message-types">消息类型</a></li>
-<li><a href="#multimodal-messages">多模态消息</a></li>
-</ul>
-</li>
-<li><a href="#prompts--steering-the-output">提示词（Prompt）—— 引导输出</a><ul>
-<li><a href="#system-prompts">系统提示词</a></li>
-<li><a href="#prompt-engineering">提示词工程</a></li>
-<li><a href="#structured-output">结构化输出</a></li>
-</ul>
-</li>
-<li><a href="#tools--the-hands">工具（Tool）—— 双手</a><ul>
+<li><a href="#prototyping-in-jupyter">在 Jupyter 中制作原型</a><ul>
+<li><a href="#environment-configuration">环境配置</a></li>
+<li><a href="#dependencies">依赖</a></li>
+<li><a href="#loading-configuration">加载配置</a></li>
 <li><a href="#defining-tools">定义工具</a></li>
-<li><a href="#custom-tools">自定义工具</a></li>
-<li><a href="#predefined-tools-tavily-search">预定义工具：Tavily 搜索</a></li>
-<li><a href="#combining-tools-with-an-agent">工具与 Agent 的结合</a></li>
+<li><a href="#initializing-the-multimodal-model">初始化多模态模型</a></li>
+<li><a href="#memory-management">记忆管理</a></li>
+<li><a href="#creating-the-agent">创建 Agent</a></li>
+<li><a href="#testing-with-image-input">图片输入测试</a></li>
+<li><a href="#testing-conversation-memory">对话记忆测试</a></li>
 </ul>
 </li>
-<li><a href="#memory--making-the-agent-remember">记忆（Memory）—— 让 Agent 记住一切</a><ul>
-<li><a href="#short-term-vs-long-term-memory">短期记忆与长期记忆</a></li>
-<li><a href="#short-term-memory-with-inmemorysaver">使用 InMemorySaver 实现短期记忆</a></li>
-<li><a href="#persistent-memory-optional">持久化记忆（可选）</a></li>
-<li><a href="#memory-management-strategies">记忆管理策略</a>]]>
+<li><a href="#deploying-with-langgraph-and-langsmith">使用 LangGraph 与 LangSmith 部署</a><ul>
+<li><a href="#langsmith-setup">LangSmith 配置</a></li>
+<li><a href="#developing-the-agent">开发 Agent</a></li>
+<li><a href="#local-deployment-with-langgraph-cli">使用 LangGraph CLI 本地部署</a></li>
+<li><a href="#testing-in-langsmith-studio">在 LangSmith Studio 中测试</a>]]>
     </summary>
-    <title>LangChain 核心组件：模型、消息、提示词、工具、记忆</title>
-    <updated>2026-06-05T16:00:00.000Z</updated>
+    <title>多模态 AI Agent 应用实战：AI 私厨</title>
+    <updated>2026-06-09T16:00:00.000Z</updated>
   </entry>
   <entry>
     <author>
@@ -939,94 +1056,57 @@
     <author>
       <name>AI with Alex</name>
     </author>
-    <category term="Java" scheme="https://bodysuperman.github.io/categories/Java/"/>
-    <category term="AI" scheme="https://bodysuperman.github.io/categories/Java/AI/"/>
-    <category term="Spring Boot" scheme="https://bodysuperman.github.io/categories/Java/AI/Spring-Boot/"/>
+    <category term="Python" scheme="https://bodysuperman.github.io/categories/Python/"/>
+    <category term="AI" scheme="https://bodysuperman.github.io/categories/Python/AI/"/>
+    <category term="LangChain" scheme="https://bodysuperman.github.io/tags/LangChain/"/>
+    <category term="LangSmith" scheme="https://bodysuperman.github.io/tags/LangSmith/"/>
+    <category term="AI Agent" scheme="https://bodysuperman.github.io/tags/AI-Agent/"/>
     <category term="LLM" scheme="https://bodysuperman.github.io/tags/LLM/"/>
-    <category term="RAG" scheme="https://bodysuperman.github.io/tags/RAG/"/>
-    <category term="LangChain4J" scheme="https://bodysuperman.github.io/tags/LangChain4J/"/>
-    <category term="OpenAI" scheme="https://bodysuperman.github.io/tags/OpenAI/"/>
-    <category term="Function Calling" scheme="https://bodysuperman.github.io/tags/Function-Calling/"/>
-    <category term="Spring Boot" scheme="https://bodysuperman.github.io/tags/Spring-Boot/"/>
-    <id>https://bodysuperman.github.io/2026/04/27/LangChain4J-in-Action-Building-a-Medical-AI-Assistant-Agent/</id>
-    <link href="https://bodysuperman.github.io/2026/04/27/LangChain4J-in-Action-Building-a-Medical-AI-Assistant-Agent/"/>
-    <published>2026-04-27T04:48:28.000Z</published>
+    <category term="MultiModal" scheme="https://bodysuperman.github.io/tags/MultiModal/"/>
+    <id>https://bodysuperman.github.io/zh-CN/2026/05/04/LangChain-Core-Components%EF%BC%9AMode-Message-Prompt-Tool-Memory/</id>
+    <link href="https://bodysuperman.github.io/zh-CN/2026/05/04/LangChain-Core-Components%EF%BC%9AMode-Message-Prompt-Tool-Memory/"/>
+    <published>2026-05-04T04:48:28.000Z</published>
     <summary>
       <![CDATA[<ul>
-<li><a href="#1-what-is-langchain4j">1. What is LangChain4J?</a><ul>
-<li><a href="#11-the-problem-langchain4j-solves">1.1 The Problem LangChain4J Solves</a></li>
-<li><a href="#12-core-concepts">1.2 Core Concepts</a></li>
+<li><a href="#what-is-langchain">什么是 LangChain？</a><ul>
+<li><a href="#the-platform">平台概览</a></li>
+<li><a href="#what-is-an-agent">什么是 Agent？</a></li>
+<li><a href="#llm-vs-agent-the-difference">LLM 与 Agent 的区别</a></li>
 </ul>
 </li>
-<li><a href="#2-project-setup">2. Project Setup</a><ul>
-<li><a href="#21-dependencies">2.1 Dependencies</a></li>
-<li><a href="#22-configuration">2.2 Configuration</a></li>
+<li><a href="#models--the-brain">模型（Model）—— 大脑</a><ul>
+<li><a href="#initializing-a-model">初始化模型</a></li>
+<li><a href="#custom-models-and-parameters">自定义模型与参数</a></li>
+<li><a href="#using-model-classes">使用模型类</a></li>
+<li><a href="#calling-the-model-invoke-vs-stream">调用模型：invoke 与 stream</a></li>
+<li><a href="#using-models-in-an-agent">在 Agent 中使用模型</a></li>
 </ul>
 </li>
-<li><a href="#3-your-first-llm-integration">3. Your First LLM Integration</a><ul>
-<li><a href="#31-direct-api-call">3.1 Direct API Call</a></li>
-<li><a href="#32-spring-boot-auto-configuration">3.2 Spring Boot Auto-Configuration</a></li>
+<li><a href="#messages--the-building-blocks-of-conversation">消息（Message）—— 对话的基本单元</a><ul>
+<li><a href="#message-types">消息类型</a></li>
+<li><a href="#multimodal-messages">多模态消息</a></li>
 </ul>
 </li>
-<li><a href="#4-building-the-ai-service">4. Building the AI Service</a><ul>
-<li><a href="#41-the-assistant-interface">4.1 The Assistant Interface</a></li>
-<li><a href="#42-system-messages">4.2 System Messages</a></li>
+<li><a href="#prompts--steering-the-output">提示词（Prompt）—— 引导输出</a><ul>
+<li><a href="#system-prompts">系统提示词</a></li>
+<li><a href="#prompt-engineering">提示词工程</a></li>
+<li><a href="#structured-output">结构化输出</a></li>
 </ul>
 </li>
-<li><a href="#5-adding-chat-memory">5. Adding Chat Memory</a><ul>
-<li><a href="#51-why-memory-matters">5.1 Why Memory Matters</a></li>
-<li><a href="#52-implementing-memory">5.2 Implementing Memory</a></li>
-<li><a href="#53-memory-isolation">5.3 Memory Isolation</a></li>
-<li><a href="#54-persistent-storage-with-mongodb">5.4 Persistent Storage with MongoDB</a>]]>
+<li><a href="#tools--the-hands">工具（Tool）—— 双手</a><ul>
+<li><a href="#defining-tools">定义工具</a></li>
+<li><a href="#custom-tools">自定义工具</a></li>
+<li><a href="#predefined-tools-tavily-search">预定义工具：Tavily 搜索</a></li>
+<li><a href="#combining-tools-with-an-agent">工具与 Agent 的结合</a></li>
+</ul>
+</li>
+<li><a href="#memory--making-the-agent-remember">记忆（Memory）—— 让 Agent 记住一切</a><ul>
+<li><a href="#short-term-vs-long-term-memory">短期记忆与长期记忆</a></li>
+<li><a href="#short-term-memory-with-inmemorysaver">使用 InMemorySaver 实现短期记忆</a></li>
+<li><a href="#persistent-memory-optional">持久化记忆（可选）</a></li>
+<li><a href="#memory-management-strategies">记忆管理策略</a>]]>
     </summary>
-    <title>LangChain4J in Action: Building a Medical AI Assistant Agent</title>
-    <updated>2026-06-05T16:00:00.000Z</updated>
-  </entry>
-  <entry>
-    <author>
-      <name>AI with Alex</name>
-    </author>
-    <category term="Java" scheme="https://bodysuperman.github.io/categories/Java/"/>
-    <category term="AI" scheme="https://bodysuperman.github.io/categories/Java/AI/"/>
-    <category term="Spring Boot" scheme="https://bodysuperman.github.io/categories/Java/AI/Spring-Boot/"/>
-    <category term="LLM" scheme="https://bodysuperman.github.io/tags/LLM/"/>
-    <category term="RAG" scheme="https://bodysuperman.github.io/tags/RAG/"/>
-    <category term="LangChain4J" scheme="https://bodysuperman.github.io/tags/LangChain4J/"/>
-    <category term="OpenAI" scheme="https://bodysuperman.github.io/tags/OpenAI/"/>
-    <category term="Function Calling" scheme="https://bodysuperman.github.io/tags/Function-Calling/"/>
-    <category term="Spring Boot" scheme="https://bodysuperman.github.io/tags/Spring-Boot/"/>
-    <id>https://bodysuperman.github.io/zh-CN/2026/04/27/LangChain4J-in-Action-Building-a-Medical-AI-Assistant-Agent/</id>
-    <link href="https://bodysuperman.github.io/zh-CN/2026/04/27/LangChain4J-in-Action-Building-a-Medical-AI-Assistant-Agent/"/>
-    <published>2026-04-27T04:48:28.000Z</published>
-    <summary>
-      <![CDATA[<ul>
-<li><a href="#1-what-is-langchain4j">1. 什么是 LangChain4J？</a><ul>
-<li><a href="#11-the-problem-langchain4j-solves">1.1 LangChain4J 解决的问题</a></li>
-<li><a href="#12-core-concepts">1.2 核心概念</a></li>
-</ul>
-</li>
-<li><a href="#2-project-setup">2. 项目搭建</a><ul>
-<li><a href="#21-dependencies">2.1 依赖</a></li>
-<li><a href="#22-configuration">2.2 配置</a></li>
-</ul>
-</li>
-<li><a href="#3-your-first-llm-integration">3. 你的第一个 LLM 集成</a><ul>
-<li><a href="#31-direct-api-call">3.1 直接 API 调用</a></li>
-<li><a href="#32-spring-boot-auto-configuration">3.2 Spring Boot 自动配置</a></li>
-</ul>
-</li>
-<li><a href="#4-building-the-ai-service">4. 构建 AI 服务</a><ul>
-<li><a href="#41-the-assistant-interface">4.1 助手接口</a></li>
-<li><a href="#42-system-messages">4.2 系统消息</a></li>
-</ul>
-</li>
-<li><a href="#5-adding-chat-memory">5. 添加聊天记忆</a><ul>
-<li><a href="#51-why-memory-matters">5.1 为什么记忆很重要</a></li>
-<li><a href="#52-implementing-memory">5.2 实现记忆</a></li>
-<li><a href="#53-memory-isolation">5.3 记忆隔离</a></li>
-<li><a href="#54-persistent-storage-with-mongodb">5.4 使用 MongoDB 持久化存储</a>]]>
-    </summary>
-    <title>LangChain4J 实战：构建医疗 AI 助手 Agent</title>
+    <title>LangChain 核心组件：模型、消息、提示词、工具、记忆</title>
     <updated>2026-06-05T16:00:00.000Z</updated>
   </entry>
 </feed>

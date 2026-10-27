@@ -205,6 +205,175 @@
       
   
   
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en,zh-CN,default">
+    <link itemprop="mainEntityOfPage" href="https://bodysuperman.github.io/2026/09/06/LangGraph-From-Zero-to-Graph/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+      <meta itemprop="name" content="AI with Alex">
+      <meta itemprop="description" content="Attention(Q,K,V)=softmax(QK^T/sqrt(d_k))V">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="AI with Alex's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2026/09/06/LangGraph-From-Zero-to-Graph/" class="post-title-link" itemprop="url">LangGraph from Zero: Environment Setup, State Management, and Control Flow in Practice</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2026-09-06 10:00:00" itemprop="dateCreated datePublished" datetime="2026-09-06T10:00:00+08:00">2026-09-06</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2026-09-27 10:00:00" itemprop="dateModified" datetime="2026-09-27T10:00:00+08:00">2026-09-27</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/AI/" itemprop="url" rel="index"><span itemprop="name">AI</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/AI/AI-Agent/" itemprop="url" rel="index"><span itemprop="name">AI Agent</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/AI/AI-Agent/LangGraph/" itemprop="url" rel="index"><span itemprop="name">LangGraph</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>54k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>49 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <ul>
+<li><a href="#introduction">Introduction</a></li>
+<li><a href="#environment-setup">Environment Setup</a><ul>
+<li><a href="#miniconda-and-conda-env">Installing Miniconda and Creating the Environment</a></li>
+<li><a href="#dependencies-and-api-key">Installing Dependencies and Configuring API Keys</a></li>
+<li><a href="#verification-checklist">Verification and Checklist</a></li>
+</ul>
+</li>
+<li><a href="#what-is-langgraph">What Is LangGraph</a><ul>
+<li><a href="#langchain-vs-langgraph">LangChain vs. LangGraph</a></li>
+</ul>
+</li>
+<li><a href="#core-concepts">Core Concepts: The Three Elements and the Runtime Model</a><ul>
+<li><a href="#state-node-edge">State, Node, Edge</a></li>
+<li><a href="#superstep-execution-model">The Superstep Execution Model</a></li>
+<li><a href="#checkpoint-snapshots">The Checkpoint Snapshot Sequence</a></li>
+</ul>
+</li>
+<li><a href="#graph-api-vs-functional-api">Graph API vs Functional API</a></li>
+<li><a href="#first-graph">Your First Graph: Define, Compile, Invoke</a><ul>
+<li><a href="#define-compile-invoke">Building a State Graph in Three Steps</a></li>
+<li><a href="#graph-visualization">Graph Visualization</a></li>
+</ul>
+</li>
+<li><a href="#state-management">State Management</a><ul>
+<li><a href="#defining-state-schema">Three Ways to Define a Schema</a></li>
+<li><a href="#schema-validation-behavior">Validation Behavior Compared</a></li>
+<li><a href="#state-reducers">State Reducers: How Updates Are Merged</a></li>
+<li><a href="#default-overwrite-and-overwrite">Default Overwrite Behavior and the Overwrite Wrapper</a></li>
+<li><a href="#multi-schema">Multi Schema: Input, Output, and Private State</a></li>
+<li><a href="#predefined-states">Predefined States: MessagesState and AgentState</a></li>
+</ul>
+</li>
+<li><a href="#control-flow">Control Flow</a><ul>
+<li><a href="#sequential-structure">Sequential Structure</a></li>
+<li><a href="#branching">Branching</a><ul>
+<li><a href="#parallel-nodes">Parallel Nodes</a></li>
+<li><a href="#conditional-edges">Conditional Branching: add_conditional_edges</a></li>
+<li><a href="#deferred-nodes">Deferred Nodes: defer</a></li>
+<li><a href="#dynamic-fan-out-send">Dynamic Fan-out: Send</a></li>
+<li><a href="#command-goto">Dynamic Jumping: Command(goto)</a></li>
+</ul>
+</li>
+<li><a href="#fan-in">Fan-in: Merging Multiple Branches</a><ul>
+<li><a href="#static-fan-in">Static Fan-in: AND Trigger vs. OR Trigger</a></li>
+<li><a href="#mapreduce">Dynamic Fan-in: The MapReduce Pattern</a></li>
+</ul>
+</li>
+<li><a href="#loops">Loops: The ReAct Pattern</a><ul>
+<li><a href="#react-static-vs-dynamic">Static vs. Dynamic Implementation</a></li>
+<li><a href="#recursion-limit">Recursion Limits and Graceful Exit</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#edges-summary">Edges: A Systematic Summary</a></li>
+<li><a href="#fault-tolerance">Node Execution and Fault Tolerance</a><ul>
+<li><a href="#retry-policy">Retries: RetryPolicy</a></li>
+<li><a href="#default-retry-rules">Default Retry Rules: default_retry_on</a></li>
+<li><a href="#timeout-and-error-handling">Timeouts and Error Handling</a></li>
+<li><a href="#node-caching">Node Caching: CachePolicy</a></li>
+</ul>
+</li>
+<li><a href="#best-practices">Best Practices</a></li>
+<li><a href="#faq">FAQ</a></li>
+<li><a href="#summary">Summary</a></li>
+</ul>
+        
+      
+    </div>
+
+    
+    
+    
+      <!--noindex-->
+      <div class="post-button">
+        <a class="btn" href="/2026/09/06/LangGraph-From-Zero-to-Graph/#more" rel="contents">
+          Read more &raquo;
+        </a>
+      </div>
+      <!--/noindex-->
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="https://bodysuperman.github.io/2026/08/30/Build-your-own-AI-Skills/">
 
@@ -833,138 +1002,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en,zh-CN,default">
-    <link itemprop="mainEntityOfPage" href="https://bodysuperman.github.io/2026/06/10/Building-AI-Agents-From-Context-to-Memory/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/uploads/avatar.jpg">
-      <meta itemprop="name" content="AI with Alex">
-      <meta itemprop="description" content="Attention(Q,K,V)=softmax(QK^T/sqrt(d_k))V">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="AI with Alex's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2026/06/10/Building-AI-Agents-From-Context-to-Memory/" class="post-title-link" itemprop="url">Building AI Agents: From Context to Memory</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2026-06-10 15:09:38" itemprop="dateCreated datePublished" datetime="2026-06-10T15:09:38+08:00">2026-06-10</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2026-07-23 15:09:38" itemprop="dateModified" datetime="2026-07-23T15:09:38+08:00">2026-07-23</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/AI/" itemprop="url" rel="index"><span itemprop="name">AI</span></a>
-                </span>
-                  , 
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/AI/AI-Agent/" itemprop="url" rel="index"><span itemprop="name">AI Agent</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="Symbols count in article">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>35k</span>
-            </span>
-            <span class="post-meta-item" title="Reading time">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>32 mins.</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <ul>
-<li><a href="#introduction">Introduction</a></li>
-<li><a href="#what-is-an-ai-agent">What Is an AI Agent</a><ul>
-<li><a href="#the-core-formula-llm-context-tools">The Core Formula: LLM + Context + Tools</a></li>
-<li><a href="#the-react-loop-how-agents-actually-work">The ReAct Loop: How Agents Actually Work</a></li>
-</ul>
-</li>
-<li><a href="#context-engineering-the-ceiling-of-agent-capability">Context Engineering: The Ceiling of Agent Capability</a><ul>
-<li><a href="#context-at-the-api-level-static-prefix-dynamic-trajectory">Context at the API Level: Static Prefix + Dynamic Trajectory</a></li>
-<li><a href="#kv-cache-why-prefix-stability-matters">KV Cache: Why Prefix Stability Matters</a></li>
-<li><a href="#prompt-engineering-writing-the-agents-operating-manual">Prompt Engineering: Writing the Agent’s Operating Manual</a></li>
-<li><a href="#agent-skills-load-knowledge-on-demand">Agent Skills: Load Knowledge On Demand</a></li>
-<li><a href="#agent-status-bar-from-implicit-state-to-explicit-knowledge">Agent Status Bar: From Implicit State to Explicit Knowledge</a></li>
-<li><a href="#context-compression-when-less-is-more">Context Compression: When Less Is More</a></li>
-</ul>
-</li>
-<li><a href="#from-context-to-memory-making-agents-remember">From Context to Memory: Making Agents Remember</a><ul>
-<li><a href="#user-memory-building-a-model-of-the-user">User Memory: Building a Model of the User</a></li>
-<li><a href="#four-storage-formats-from-simple-notes-to-advanced-json-cards">Four Storage Formats: From Simple Notes to Advanced JSON Cards</a></li>
-<li><a href="#rag-giving-agents-a-knowledge-base">RAG: Giving Agents a Knowledge Base</a></li>
-<li><a href="#beyond-flat-text-structured-indexing-and-agentic-rag">Beyond Flat Text: Structured Indexing and Agentic RAG</a></li>
-<li><a href="#contextual-retrieval-fixing-chunking-at-the-root">Contextual Retrieval: Fixing Chunking at the Root</a></li>
-<li><a href="#the-two-tier-memory-architecture">The Two-Tier Memory Architecture</a></li>
-</ul>
-</li>
-<li><a href="#harness-engineering-reliability-beyond-the-demo">Harness Engineering: Reliability Beyond the Demo</a><ul>
-<li><a href="#constrain-verify-correct-the-three-safety-layers">Constrain, Verify, Correct: The Three Safety Layers</a></li>
-<li><a href="#workflow-vs-autonomous-choosing-the-right-pattern">Workflow vs. Autonomous: Choosing the Right Pattern</a></li>
-</ul>
-</li>
-<li><a href="#best-practices">Best Practices</a></li>
-<li><a href="#faq">FAQ</a></li>
-<li><a href="#summary">Summary</a></li>
-</ul>
-        
-      
-    </div>
-
-    
-    
-    
-      <!--noindex-->
-      <div class="post-button">
-        <a class="btn" href="/2026/06/10/Building-AI-Agents-From-Context-to-Memory/#more" rel="contents">
-          Read more &raquo;
-        </a>
-      </div>
-      <!--/noindex-->
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1039,20 +1076,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">62</span>
+          <span class="site-state-item-count">64</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">35</span>
+        <span class="site-state-item-count">36</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">88</span>
+        <span class="site-state-item-count">89</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -1101,13 +1138,13 @@
       <i class="fa fa-chart-area"></i>
     </span>
       <span class="post-meta-item-text">Symbols count total: </span>
-    <span title="Symbols count total">840k</span>
+    <span title="Symbols count total">928k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">Reading time total &asymp;</span>
-    <span title="Reading time total">12:43</span>
+    <span title="Reading time total">14:03</span>
     
     <!--
     

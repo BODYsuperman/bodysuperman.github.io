@@ -206,6 +206,175 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://bodysuperman.github.io/zh-CN/2026/09/06/LangGraph-From-Zero-to-Graph/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+      <meta itemprop="name" content="AI with Alex">
+      <meta itemprop="description" content="Attention(Q,K,V)=softmax(QK^T/sqrt(d_k))V">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="AI with Alex's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/zh-CN/2026/09/06/LangGraph-From-Zero-to-Graph/" class="post-title-link" itemprop="url">LangGraph 从零开始：环境搭建、状态管理与控制流实战</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2026-09-06 10:00:00" itemprop="dateCreated datePublished" datetime="2026-09-06T10:00:00+08:00">2026-09-06</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2026-09-27 10:00:00" itemprop="dateModified" datetime="2026-09-27T10:00:00+08:00">2026-09-27</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/AI/" itemprop="url" rel="index"><span itemprop="name">AI</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/AI/AI-Agent/" itemprop="url" rel="index"><span itemprop="name">AI Agent</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/AI/AI-Agent/LangGraph/" itemprop="url" rel="index"><span itemprop="name">LangGraph</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>34k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>31 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <ul>
+<li><a href="#introduction">引言</a></li>
+<li><a href="#environment-setup">环境准备</a><ul>
+<li><a href="#miniconda-and-conda-env">安装 Miniconda 并创建环境</a></li>
+<li><a href="#dependencies-and-api-key">安装依赖与配置 API Key</a></li>
+<li><a href="#verification-checklist">环境验证与检查清单</a></li>
+</ul>
+</li>
+<li><a href="#what-is-langgraph">LangGraph 是什么</a><ul>
+<li><a href="#langchain-vs-langgraph">LangChain 与 LangGraph 的定位</a></li>
+</ul>
+</li>
+<li><a href="#core-concepts">核心概念：三要素与运行机制</a><ul>
+<li><a href="#state-node-edge">State、Node、Edge</a></li>
+<li><a href="#superstep-execution-model">Superstep 执行模型</a></li>
+<li><a href="#checkpoint-snapshots">Checkpoint 快照序列</a></li>
+</ul>
+</li>
+<li><a href="#graph-api-vs-functional-api">Graph API vs Functional API</a></li>
+<li><a href="#first-graph">第一个图：定义、编译、调用</a><ul>
+<li><a href="#define-compile-invoke">三步构建状态图</a></li>
+<li><a href="#graph-visualization">图结构可视化</a></li>
+</ul>
+</li>
+<li><a href="#state-management">状态管理</a><ul>
+<li><a href="#defining-state-schema">三种 Schema 定义方式</a></li>
+<li><a href="#schema-validation-behavior">校验行为对比</a></li>
+<li><a href="#state-reducers">State Reducer：状态合并机制</a></li>
+<li><a href="#default-overwrite-and-overwrite">默认覆盖与 Overwrite</a></li>
+<li><a href="#multi-schema">Multi Schema：输入、输出与私有状态</a></li>
+<li><a href="#predefined-states">预定义状态：MessagesState 与 AgentState</a></li>
+</ul>
+</li>
+<li><a href="#control-flow">控制流</a><ul>
+<li><a href="#sequential-structure">顺序结构</a></li>
+<li><a href="#branching">分支结构</a><ul>
+<li><a href="#parallel-nodes">并行节点</a></li>
+<li><a href="#conditional-edges">条件分支：add_conditional_edges</a></li>
+<li><a href="#deferred-nodes">延迟节点：defer</a></li>
+<li><a href="#dynamic-fan-out-send">动态扇出：Send</a></li>
+<li><a href="#command-goto">动态跳转：Command(goto)</a></li>
+</ul>
+</li>
+<li><a href="#fan-in">多分支汇聚：Fan-in</a><ul>
+<li><a href="#static-fan-in">静态扇入：“与”触发 vs “或”触发</a></li>
+<li><a href="#mapreduce">动态扇入：MapReduce 结构</a></li>
+</ul>
+</li>
+<li><a href="#loops">循环结构：ReAct</a><ul>
+<li><a href="#react-static-vs-dynamic">静态实现与动态实现</a></li>
+<li><a href="#recursion-limit">递归限制与优雅退出</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#edges-summary">边的系统总结</a></li>
+<li><a href="#fault-tolerance">节点执行与容错机制</a><ul>
+<li><a href="#retry-policy">重试机制：RetryPolicy</a></li>
+<li><a href="#default-retry-rules">默认重试规则：default_retry_on</a></li>
+<li><a href="#timeout-and-error-handling">超时控制与错误处理</a></li>
+<li><a href="#node-caching">节点缓存：CachePolicy</a></li>
+</ul>
+</li>
+<li><a href="#best-practices">最佳实践</a></li>
+<li><a href="#faq">常见问题</a></li>
+<li><a href="#summary">总结</a></li>
+</ul>
+        
+      
+    </div>
+
+    
+    
+    
+      <!--noindex-->
+      <div class="post-button">
+        <a class="btn" href="/zh-CN/2026/09/06/LangGraph-From-Zero-to-Graph/#more" rel="contents">
+          阅读全文 &raquo;
+        </a>
+      </div>
+      <!--/noindex-->
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://bodysuperman.github.io/zh-CN/2026/08/30/Build-your-own-AI-Skills/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -833,138 +1002,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://bodysuperman.github.io/zh-CN/2026/06/10/Building-AI-Agents-From-Context-to-Memory/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/uploads/avatar.jpg">
-      <meta itemprop="name" content="AI with Alex">
-      <meta itemprop="description" content="Attention(Q,K,V)=softmax(QK^T/sqrt(d_k))V">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="AI with Alex's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/zh-CN/2026/06/10/Building-AI-Agents-From-Context-to-Memory/" class="post-title-link" itemprop="url">构建 AI Agent：从上下文到记忆</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2026-06-10 15:09:38" itemprop="dateCreated datePublished" datetime="2026-06-10T15:09:38+08:00">2026-06-10</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2026-07-23 15:09:38" itemprop="dateModified" datetime="2026-07-23T15:09:38+08:00">2026-07-23</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/AI/" itemprop="url" rel="index"><span itemprop="name">AI</span></a>
-                </span>
-                  ，
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/AI/AI-Agent/" itemprop="url" rel="index"><span itemprop="name">AI Agent</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>17k</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>16 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <ul>
-<li><a href="#introduction">引言</a></li>
-<li><a href="#what-is-an-ai-agent">什么是 AI Agent</a><ul>
-<li><a href="#the-core-formula-llm-context-tools">核心公式：LLM + 上下文 + 工具</a></li>
-<li><a href="#the-react-loop-how-agents-actually-work">ReAct 循环：Agent 的实际运作方式</a></li>
-</ul>
-</li>
-<li><a href="#context-engineering-the-ceiling-of-agent-capability">上下文工程：Agent 能力的天花板</a><ul>
-<li><a href="#context-at-the-api-level-static-prefix-dynamic-trajectory">API 层面的上下文：静态前缀 + 动态轨迹</a></li>
-<li><a href="#kv-cache-why-prefix-stability-matters">KV Cache：为什么前缀稳定性至关重要</a></li>
-<li><a href="#prompt-engineering-writing-the-agents-operating-manual">提示词工程：编写 Agent 的操作手册</a></li>
-<li><a href="#agent-skills-load-knowledge-on-demand">Agent 技能：按需加载知识</a></li>
-<li><a href="#agent-status-bar-from-implicit-state-to-explicit-knowledge">Agent 状态栏：从隐式状态到显式知识</a></li>
-<li><a href="#context-compression-when-less-is-more">上下文压缩：少即是多</a></li>
-</ul>
-</li>
-<li><a href="#from-context-to-memory-making-agents-remember">从上下文到记忆：让 Agent 拥有记忆力</a><ul>
-<li><a href="#user-memory-building-a-model-of-the-user">用户记忆：构建用户模型</a></li>
-<li><a href="#four-storage-formats-from-simple-notes-to-advanced-json-cards">四种存储格式：从简单笔记到高级 JSON 卡片</a></li>
-<li><a href="#rag-giving-agents-a-knowledge-base">RAG：为 Agent 赋予知识库</a></li>
-<li><a href="#beyond-flat-text-structured-indexing-and-agentic-rag">超越扁平文本：结构化索引与 Agentic RAG</a></li>
-<li><a href="#contextual-retrieval-fixing-chunking-at-the-root">上下文检索：从根源解决分块问题</a></li>
-<li><a href="#the-two-tier-memory-architecture">两层记忆架构</a></li>
-</ul>
-</li>
-<li><a href="#harness-engineering-reliability-beyond-the-demo">Harness 工程：超越 Demo 的可靠性</a><ul>
-<li><a href="#constrain-verify-correct-the-three-safety-layers">约束、验证、纠正：三层安全保障</a></li>
-<li><a href="#workflow-vs-autonomous-choosing-the-right-pattern">工作流 vs. 自主模式：选择正确的模式</a></li>
-</ul>
-</li>
-<li><a href="#best-practices">最佳实践</a></li>
-<li><a href="#faq">常见问题</a></li>
-<li><a href="#summary">总结</a></li>
-</ul>
-        
-      
-    </div>
-
-    
-    
-    
-      <!--noindex-->
-      <div class="post-button">
-        <a class="btn" href="/zh-CN/2026/06/10/Building-AI-Agents-From-Context-to-Memory/#more" rel="contents">
-          阅读全文 &raquo;
-        </a>
-      </div>
-      <!--/noindex-->
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1039,20 +1076,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">62</span>
+          <span class="site-state-item-count">64</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">35</span>
+        <span class="site-state-item-count">36</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">88</span>
+        <span class="site-state-item-count">89</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -1101,13 +1138,13 @@
       <i class="fa fa-chart-area"></i>
     </span>
       <span class="post-meta-item-text">Symbols count total: </span>
-    <span title="Symbols count total">840k</span>
+    <span title="Symbols count total">928k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">Reading time total &asymp;</span>
-    <span title="Reading time total">12:43</span>
+    <span title="Reading time total">14:03</span>
     
     <!--
     
